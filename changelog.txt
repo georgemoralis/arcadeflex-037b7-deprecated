@@ -4,6 +4,11 @@
 -Added working zaxxon driver
 -Added working congo driver
 -Added working wiping driver
+-Added working pingpong driver
+-Added working pengo driver
+-Added working zodiack driver
+-Added working hexa driver
+-Added working pbaction driver
 
 02/01/2021
 ==========
