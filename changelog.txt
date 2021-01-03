@@ -3,6 +3,7 @@
 -Added working arabian driver
 -Added working zaxxon driver
 -Added working congo driver
+-Added working wiping driver
 
 02/01/2021
 ==========
