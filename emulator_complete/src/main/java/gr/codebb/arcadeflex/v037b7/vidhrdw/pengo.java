@@ -3,8 +3,8 @@
  */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
-import static gr.codebb.arcadeflex.arcadeflex.libc.cstring.*;
-import static gr.codebb.arcadeflex.arcadeflex.libc.ptr.*;
+import static gr.codebb.arcadeflex.common.PtrLib.*;
+import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.mame.osdependH.osd_bitmap;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.copybitmap;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;

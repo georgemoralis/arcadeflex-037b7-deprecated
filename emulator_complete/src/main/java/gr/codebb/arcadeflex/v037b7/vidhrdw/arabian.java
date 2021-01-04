@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
-import static gr.codebb.arcadeflex.arcadeflex.libc.ptr.*;
+import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.mame.driverH.*;
 import static gr.codebb.arcadeflex.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.video.*;

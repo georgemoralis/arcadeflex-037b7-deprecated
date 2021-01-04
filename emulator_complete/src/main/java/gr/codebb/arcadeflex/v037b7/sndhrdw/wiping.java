@@ -3,9 +3,8 @@
  */
 package gr.codebb.arcadeflex.v037b7.sndhrdw;
 
-import static gr.codebb.arcadeflex.arcadeflex.libc.cstring.*;
-import static gr.codebb.arcadeflex.arcadeflex.libc.ptr.*;
-import static gr.codebb.arcadeflex.common.ptr.*;
+import static gr.codebb.arcadeflex.common.PtrLib.*;
+import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.sound.streams.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;

@@ -3,6 +3,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.drivers;
 
+import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.mame.driverH.CPU_Z80;
 import static gr.codebb.arcadeflex.mame.driverH.DEFAULT_60HZ_VBLANK_DURATION;
 import static gr.codebb.arcadeflex.mame.driverH.ROT0;
@@ -83,7 +84,6 @@ import static gr.codebb.arcadeflex.vidhrdw.generic.colorram;
 import static gr.codebb.arcadeflex.vidhrdw.generic.videoram;
 import static gr.codebb.arcadeflex.vidhrdw.generic.videoram_size;
 
-import gr.codebb.arcadeflex.arcadeflex.libc.ptr.UBytePtr;
 import gr.codebb.arcadeflex.mame.driverH.GameDriver;
 import gr.codebb.arcadeflex.mame.driverH.MachineCPU;
 import gr.codebb.arcadeflex.mame.driverH.MachineDriver;
