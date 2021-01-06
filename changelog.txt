@@ -4,6 +4,9 @@
 -Added working appooch driver
 -Added working amidar driver
 -Added working bking2 driver
+-Added working blueprnt driver
+-Added working bombjack driver
+-Added working blktiger driver
 
 05/01/2021
 ==========
