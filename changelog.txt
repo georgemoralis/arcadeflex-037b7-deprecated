@@ -5,6 +5,8 @@
 -Added working commando driver
 -Added working cop01 driver
 -Added working cclimber driver
+-Added working crbaloon driver
+-Added working digdug driver
 
 06/01/2021
 ==========
