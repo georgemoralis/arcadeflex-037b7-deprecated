@@ -4,6 +4,9 @@
 -Added working espial driver
 -Added working jrpacman driver
 -Added working ttmahjng driver
+-Added working exctsccr driver
+-Added working exedexes driver
+-Added working fastfred driver
 
 07/01/2021
 ==========

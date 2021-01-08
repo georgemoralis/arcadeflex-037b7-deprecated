@@ -4,8 +4,8 @@
  */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
-import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
+import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
 import static gr.codebb.arcadeflex.old2.mame.common.*;
