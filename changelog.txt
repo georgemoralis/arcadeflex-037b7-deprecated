@@ -1,3 +1,11 @@
+09/01/2021
+==========
+-Added working frogger driver
+-Added working funkybee driver
+-Added working solomon driver
+-Added working hanaawas driver
+-Added working higemaru driver
+
 08/01/2021
 ==========
 -Added working docastle driver
