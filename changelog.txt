@@ -5,6 +5,7 @@
 -Added working solomon driver
 -Added working hanaawas driver
 -Added working higemaru driver
+-Added working wiz driver
 
 08/01/2021
 ==========
