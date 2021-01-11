@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.mame.osdependH.osd_bitmap;
@@ -18,7 +19,6 @@ import static gr.codebb.arcadeflex.old2.mame.tilemapH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.drawgfxH.TRANSPARENCY_PEN;
-import static gr.codebb.arcadeflex.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class galivan {

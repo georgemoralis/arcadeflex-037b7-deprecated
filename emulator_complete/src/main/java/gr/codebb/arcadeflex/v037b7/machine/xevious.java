@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.machine;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.mame.cpuintrfH.*;
@@ -14,9 +15,8 @@ import static gr.codebb.arcadeflex.sound.samples.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.*;
 import static gr.codebb.arcadeflex.v037b7.mame.commonH.REGION_GFX4;
-import static gr.codebb.arcadeflex.v037b7.mame.inptport.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timer.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timerH.*;
+import static gr.codebb.arcadeflex.v056.mame.timer.*;
+import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 
 public class xevious {
 

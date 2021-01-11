@@ -4,15 +4,15 @@
  */
 package gr.codebb.arcadeflex.v037b7.machine;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.Z80_NMI_INT;
-import static gr.codebb.arcadeflex.v037b7.mame.inptport.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timer.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timerH.*;
+import static gr.codebb.arcadeflex.v056.mame.timer.*;
+import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class digdug {

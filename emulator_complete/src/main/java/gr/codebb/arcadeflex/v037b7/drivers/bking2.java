@@ -4,6 +4,11 @@
  */
 package gr.codebb.arcadeflex.v037b7.drivers;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.soundlatch_r;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.soundlatch_w;
 import static gr.codebb.arcadeflex.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
@@ -16,11 +21,6 @@ import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.Z80_NMI_INT;
 import static gr.codebb.arcadeflex.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.v037b7.mame.inptport.*;
-import static gr.codebb.arcadeflex.v037b7.mame.inptportH.*;
-import static gr.codebb.arcadeflex.v037b7.mame.memoryH.*;
-import static gr.codebb.arcadeflex.v037b7.mame.sndintrf.soundlatch_r;
-import static gr.codebb.arcadeflex.v037b7.mame.sndintrf.soundlatch_w;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.MachineSound;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.bking2.*;

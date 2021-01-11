@@ -12,8 +12,8 @@ import static gr.codebb.arcadeflex.old2.mame.mame.Machine;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timer.*;
-import static gr.codebb.arcadeflex.v037b7.mame.timerH.*;
+import static gr.codebb.arcadeflex.v056.mame.timer.*;
+import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class exctsccr {
