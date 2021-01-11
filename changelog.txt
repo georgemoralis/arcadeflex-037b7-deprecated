@@ -7,6 +7,10 @@
 -Added working polyplay driver
 -Added working royalmah driver
 -Added working sauro driver
+-Added working goindol driver
+-Added working gundealr driver
+-Added working gunsmoke driver
+-Added working jack driver
 
 09/01/2021
 ==========
