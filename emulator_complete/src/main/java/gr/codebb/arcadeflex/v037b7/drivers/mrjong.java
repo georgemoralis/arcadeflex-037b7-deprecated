@@ -6,8 +6,6 @@ package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
-import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.drawgfxH.*;
@@ -16,6 +14,8 @@ import static gr.codebb.arcadeflex.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.mrjong.*;
+import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
+import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class mrjong {

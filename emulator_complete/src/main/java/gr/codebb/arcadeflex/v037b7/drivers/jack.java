@@ -21,8 +21,8 @@ import static gr.codebb.arcadeflex.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.jack.*;
+import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class jack {
 
