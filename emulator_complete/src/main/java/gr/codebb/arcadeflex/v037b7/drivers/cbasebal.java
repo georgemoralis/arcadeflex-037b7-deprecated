@@ -12,7 +12,7 @@ import static gr.codebb.arcadeflex.machine.eeprom.*;
 import static gr.codebb.arcadeflex.machine.eepromH.*;
 import static gr.codebb.arcadeflex.machine.kabuki.*;
 import static gr.codebb.arcadeflex.mame.cpuintrfH.*;
-import static gr.codebb.arcadeflex.mame.driverH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.mame.palette.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
