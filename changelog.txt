@@ -4,6 +4,13 @@
 -Added working minivadr driver
 -Added working skyfox driver
 -Added working stfight driver
+-Added working kchamp driver
+-Added working marineb driver
+-Added working marvins driver
+-Added working naughtyb driver
+-Added working olibochu driver
+-Added working pipedrm driver
+-Added working suprloco driver
 
 14/01/2021
 ==========
