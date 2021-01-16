@@ -14,7 +14,7 @@ import static gr.codebb.arcadeflex.old2.mame.common.*;
 import static gr.codebb.arcadeflex.old2.mame.mame.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.vidhrdw.galaxian.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.galaxian.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class fastfred {

@@ -24,7 +24,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.vidhrdw.ninjakd2.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.ninjakd2.*;
 
 public class ninjakd2 {
 

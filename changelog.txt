@@ -6,6 +6,7 @@
 -Added working route16 driver
 -Added working superqix driver
 -Added working tnzs driver
+-Added working galaxian,mrdo,tecmo,thief drivers
 
 15/01/2021
 ==========
