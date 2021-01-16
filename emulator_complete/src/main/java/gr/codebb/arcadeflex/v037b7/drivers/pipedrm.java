@@ -27,7 +27,7 @@ import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.v03b7.vidhrdw.pipedrm.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.pipedrm.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 
 public class pipedrm {

@@ -1,3 +1,12 @@
+16/01/2021
+==========
+-Added working ninjakd2 driver
+-Added working pipedrm driver
+-Added working retofinv driver
+-Added working route16 driver
+-Added working superqix driver
+-Added working tnzs driver
+
 15/01/2021
 ==========
 -Added working locomotn driver
