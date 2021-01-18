@@ -7,17 +7,17 @@ package gr.codebb.arcadeflex.v037b7.vidhrdw;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.marvins.*;
-import static gr.codebb.arcadeflex.mame.osdependH.*;
-import static gr.codebb.arcadeflex.mame.palette.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
-import static gr.codebb.arcadeflex.old2.mame.mame.Machine;
-import static gr.codebb.arcadeflex.old2.mame.tilemapC.*;
-import static gr.codebb.arcadeflex.old2.mame.tilemapH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapC.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.REGION_CPU1;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.REGION_PROMS;
-import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_CPU1;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_PROMS;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class marvins {

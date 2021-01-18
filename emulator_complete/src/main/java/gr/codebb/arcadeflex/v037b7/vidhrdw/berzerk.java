@@ -5,13 +5,13 @@ package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.plot_pixel;
-import static gr.codebb.arcadeflex.old2.mame.mame.Machine;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.v037b7.machine.berzerk.berzerk_irq_end_of_screen;
 import static gr.codebb.arcadeflex.vidhrdw.generic.colorram;
 import static gr.codebb.arcadeflex.vidhrdw.generic.videoram;
 import static gr.codebb.arcadeflex.vidhrdw.generic.videoram_size;
 
-import gr.codebb.arcadeflex.mame.osdependH.osd_bitmap;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ReadHandlerPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.VhUpdatePtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.WriteHandlerPtr;

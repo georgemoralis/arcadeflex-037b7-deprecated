@@ -5,11 +5,11 @@
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
-import static gr.codebb.arcadeflex.mame.osdependH.osd_bitmap;
-import static gr.codebb.arcadeflex.mame.palette.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.video.osd_clearbitmap;
-import static gr.codebb.arcadeflex.old2.mame.tilemapC.*;
-import static gr.codebb.arcadeflex.old2.mame.tilemapH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapC.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 
 public class magix {

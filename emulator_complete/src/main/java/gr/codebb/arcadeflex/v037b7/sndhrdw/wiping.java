@@ -8,8 +8,8 @@ import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.sound.streams.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.MachineSound;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.MachineSound;
 
 public class wiping {
 

@@ -1,14 +1,15 @@
 /** ported to v0.37b7 ported to v0.36 */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.copyscrollbitmap;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
-import static gr.codebb.arcadeflex.mame.osdependH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
-import static gr.codebb.arcadeflex.old2.mame.common.*;
-import static gr.codebb.arcadeflex.old2.mame.mame.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 
 public class goindol {
 

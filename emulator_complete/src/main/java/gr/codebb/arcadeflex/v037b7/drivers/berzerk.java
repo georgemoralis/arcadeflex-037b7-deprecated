@@ -11,21 +11,21 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b7.machine.berzerk.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.sndhrdw.berzerk.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.GameDriver;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineCPU;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineDriver;
-import gr.codebb.arcadeflex.sound.samplesH.Samplesinterface;
+import gr.codebb.arcadeflex.WIP.v037b7.sound.samplesH.Samplesinterface;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.InputPortPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.RomLoadPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.VhConvertColorPromPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.nvramPtr;
-import gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.rectangle;
-import gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.CustomSound_interface;
-import gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.MachineSound;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.rectangle;
+import gr.codebb.arcadeflex.v037b7.mame.sndintrfH.CustomSound_interface;
+import gr.codebb.arcadeflex.v037b7.mame.sndintrfH.MachineSound;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.berzerk.*;
 
 public class berzerk {

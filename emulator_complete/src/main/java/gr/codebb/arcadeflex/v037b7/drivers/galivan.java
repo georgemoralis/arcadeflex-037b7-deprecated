@@ -12,18 +12,18 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.KEYCODE_F2;
-import static gr.codebb.arcadeflex.sound._3526intf.*;
-import static gr.codebb.arcadeflex.sound.dac.*;
-import static gr.codebb.arcadeflex.sound.dacH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound._3526intf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.dac.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.dacH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.galivan.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
-import gr.codebb.arcadeflex.sound._3812intfH.YM3526interface;
+import gr.codebb.arcadeflex.WIP.v037b7.sound._3812intfH.YM3526interface;
 
 public class galivan {
 

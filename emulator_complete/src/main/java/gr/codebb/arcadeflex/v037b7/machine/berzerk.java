@@ -4,10 +4,10 @@
 package gr.codebb.arcadeflex.v037b7.machine;
 
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old2.mame.mame.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 
 public class berzerk {
 

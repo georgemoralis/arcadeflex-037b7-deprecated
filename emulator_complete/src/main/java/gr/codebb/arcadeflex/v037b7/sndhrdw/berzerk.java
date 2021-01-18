@@ -5,11 +5,11 @@ package gr.codebb.arcadeflex.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
-import static gr.codebb.arcadeflex.old2.mame.mame.*;
-import static gr.codebb.arcadeflex.sound.samples.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.samples.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.machine.berzerk.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 
 public class berzerk {
 

@@ -7,7 +7,7 @@ import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 
 public class polyplay {
 

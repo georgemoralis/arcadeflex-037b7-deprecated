@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.sndhrdw;
 
-import static gr.codebb.arcadeflex.sound.samples.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.samples.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 
 public class gotya {

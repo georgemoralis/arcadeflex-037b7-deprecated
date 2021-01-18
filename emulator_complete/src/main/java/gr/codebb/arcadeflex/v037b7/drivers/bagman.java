@@ -11,17 +11,17 @@ import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.sound._5110intf.*;
-import static gr.codebb.arcadeflex.sound._5110intfH.*;
-import static gr.codebb.arcadeflex.sound.ay8910.*;
-import static gr.codebb.arcadeflex.sound.ay8910H.*;
+import static gr.codebb.arcadeflex.v037b7.sound._5110intf.*;
+import static gr.codebb.arcadeflex.v037b7.sound._5110intfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.machine.bagman.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.bagman.*;
-import static gr.codebb.arcadeflex.re.v058.sound.tms5110H.*;
+import static gr.codebb.arcadeflex.v058.sound.tms5110H.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class bagman {

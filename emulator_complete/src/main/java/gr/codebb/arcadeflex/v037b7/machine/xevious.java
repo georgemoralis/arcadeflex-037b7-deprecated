@@ -7,14 +7,14 @@ package gr.codebb.arcadeflex.v037b7.machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
-import static gr.codebb.arcadeflex.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.sound.samples.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.samples.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.REGION_GFX4;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_GFX4;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 

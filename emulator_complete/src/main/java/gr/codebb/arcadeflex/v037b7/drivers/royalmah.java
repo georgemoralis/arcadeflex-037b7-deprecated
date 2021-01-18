@@ -9,17 +9,17 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
-import static gr.codebb.arcadeflex.mame.osdependH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.plot_pixel;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
-import static gr.codebb.arcadeflex.old2.mame.mame.*;
-import static gr.codebb.arcadeflex.sound.ay8910.*;
-import static gr.codebb.arcadeflex.sound.ay8910H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.commonH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.re.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.vidhrdw.generic.*;
 
 public class royalmah {
