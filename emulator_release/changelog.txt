@@ -1,0 +1,9 @@
+v0.37b7.1 release (20/01/2021)
+==============================
+336 - fully supported games
+
+Core
+====
+accurate z80 cpu core
+High score support
+Cheat file support (partial only apply cheats work)

@@ -26,3 +26,5 @@ hs_err_pid*
 /emulator_dev/temp.txt
 /frontend/target/*
 /frontend/temp.txt
+/emulator_release/nbactions.xml
+/emulator_release/temp.txt
