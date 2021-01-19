@@ -18,7 +18,7 @@ import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.docastle.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496.*;
 import static gr.codebb.arcadeflex.v058.sound.sn76496H.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class docastle {
 

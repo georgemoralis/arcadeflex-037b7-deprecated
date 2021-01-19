@@ -19,7 +19,7 @@ import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.bombjack.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.TIME_NOW;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class bombjack {
 

@@ -15,7 +15,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.sndhrdw.pleiads.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class naughtyb {
 

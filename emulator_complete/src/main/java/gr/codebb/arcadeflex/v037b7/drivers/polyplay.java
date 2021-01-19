@@ -20,7 +20,7 @@ import static gr.codebb.arcadeflex.v037b7.sndhrdw.polyplay.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.polyplay.*;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class polyplay {
 

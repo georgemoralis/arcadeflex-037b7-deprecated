@@ -4,10 +4,10 @@
  */
 package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.drivers.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
-import static gr.codebb.arcadeflex.drivers.pacman.driver_pacman;
-import static gr.codebb.arcadeflex.machine.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacman.driver_pacman;
+import static gr.codebb.arcadeflex.WIP.v037b7.machine.scramble.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
@@ -30,7 +30,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.galaxian.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class galaxian {
 

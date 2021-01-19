@@ -14,7 +14,7 @@ import static gr.codebb.arcadeflex.v037b7.machine.berzerk.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.sndhrdw.berzerk.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.GameDriver;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineCPU;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineDriver;

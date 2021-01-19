@@ -5,8 +5,8 @@
 package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
-import static gr.codebb.arcadeflex.machine.tait8741.*;
-import static gr.codebb.arcadeflex.machine.tait8741H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.machine.tait8741.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.machine.tait8741H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;

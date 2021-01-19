@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.machine.segacrpt.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.machine.segacrpt.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.sndhrdw.zaxxon.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.zaxxon.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class zaxxon {
 

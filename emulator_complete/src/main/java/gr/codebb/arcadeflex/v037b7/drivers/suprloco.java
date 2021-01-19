@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.machine.segacrpt.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.machine.segacrpt.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b7.vidhrdw.suprloco.*;
 
 public class suprloco {

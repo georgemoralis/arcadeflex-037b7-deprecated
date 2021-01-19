@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
-import static gr.codebb.arcadeflex.WIP.drivers.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
-import static gr.codebb.arcadeflex.vidhrdw.generic.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 
 public class galaxian {
 
