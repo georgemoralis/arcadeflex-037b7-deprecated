@@ -1,0 +1,514 @@
+19/01/2021
+==========
+-Added build for win64 using jpackager
+
+16/01/2021
+==========
+-Fixed kageki samples in tnzs driver
+
+10/01/2021
+==========
+-Leland driver works (games that doesn't use I86 cpu)
+
+02/01/2021
+==========
+-Finally found the issue in cpuintrf. Berzerk,arabian,airbustr,joyfulr works!
+
+01/01/2021
+==========
+-Added berzerk (doesn't work)
+-Fixed an issue with timer class
+
+31/12/2020
+==========
+-Rewrote memory to 037b7
+-Ported timer to 0.37b7
+-Ported inptports to 0.37b7
+-Ported drawgfxH to 0.37b7
+-Ported sndhrdw to 0.37b7
+-Ported commonH , usrintfH , cleanup libc to 0.37b7
+-Added arabian driver but has the issue when it doesn't restart after loosing
+
+18/11/2018
+==========
+-added working suprloco driver
+-WIP astrocode driver (not yet work correctly)
+
+16/11/2018
+==========
+-Added airbustr but it doesn't work
+
+15/11/2018
+==========
+-Added working olibochu driver
+-Added mermaid driver (has no working flag)
+
+12/11/2018
+==========
+-added partial working senjyo driver (sound and tilemap issues)
+
+10/11/2018
+==========
+-added working mcr1 driver
+-added working mcr2 driver
+
+09/11/2018
+==========
+-added working goindol driver
+
+07/11/2018
+==========
+-added working mitchell driver
+-added working cbasebal driver
+
+05/11/2018
+==========
+-ported adpcm , okim6295 sound to v0.37b7
+-added eeprom
+
+04/11/2018
+==========
+-added working ambush driver
+-added working minivadr driver
+-added dday driver (has wrong colors need to recheck)
+-added working sauro driver
+
+03/11/2018
+==========
+-added working mrjong driver
+-added working gotya driver
+
+02/11/2018
+==========
+-added working zodiack driver
+
+31/10/2018
+==========
+-added working galaxian driver
+
+30/10/2018
+==========
+-added working scramble driver (except hunchbks which is s2650 cpu)
+
+29/10/2018
+==========
+-added working scobra driver
+
+28/10/2018
+==========
+-added working thepit driver
+-added working fastfred driver
+
+25/10/2018
+==========
+-added working speedbal driver
+
+24/10/2018
+==========
+-added working ninjakd2 driver
+
+22/10/2018
+==========
+-added working marineb driver
+
+21/10/2018
+==========
+-added working kyugo driver
+
+18/10/2018
+==========
+-added working galivan,skyfox drivers
+
+16/10/2018
+==========
+-added ym2608 sound chip
+-added working pipedrm driver
+
+13/10/2018
+==========
+-added working thief driver
+
+12/10/2018
+==========
+-adde partial working tehkanwc driver
+-added not working munchmo driver (controller issues)
+
+10/10/2018
+==========
+-added working champbas driver
+-added working gunsmoke driver
+-added working polyplay,royalmah,gundealr,stfight driver
+-fixed draw_color_mask in tilemap (fixed stfight)
+
+08/10/2018
+==========
+-added TMS5110 sound chip
+-added working bagman driver
+-added working locomotn driver
+
+07/10/2018
+==========
+-added working xevious driver
+-added working bosco driver
+-added working hanaawas driver
+
+06/10/2018
+==========
+-added working galaga driver
+-added working yamato driver
+-added working tsamurai driver
+-added working ttmahjng driver
+
+05/10/2018
+==========
+-added working crballon driver
+
+03/10/2018
+==========
+-added sn76477 sound chip
+-added working route16 driver
+-added working rallyx driver
+-added working kingobox driver
+
+02/10/2018
+==========
+-added working congo driver
+-added working exctscc driver
+-added working magix driver
+-added working bking2 driver
+-added working pkunwar driver
+-added working nova2001 driver
+-added working gsword driver
+
+30/09/2018
+==========
+-added ym2610 sound chip
+-added working taito_l driver
+-added working zaxxon driver
+
+29/09/2018
+==========
+-added y8950 sound driver
+-added working snk driver
+
+24/09/2018
+==========
+-Added working kchamp driver 
+-Added working cheekyms driver
+-Added working naughtyb driver
+
+23/09/2018
+==========
+-Added working espial,funkybee drivers
+-Added working exedexes
+-Added samples , dac sound drivers
+
+22/09/2018
+==========
+-Added working appoooh driver
+
+21/09/2018
+==========
+-Reorganized project with the common library
+
+20/09/2018
+==========
+-Fixed Z80 reset. Now blktiger works fine
+
+29/08/2018
+==========
+-Ported palette to 0.37b7
+
+23/07/2018
+==========
+-Added ym2413 sound chip
+-Added speaker sound
+
+22/07/2018
+==========
+-Added fmopl and ym3812 sound chip
+-Added a few drawgfx methods (used by pdrawgfx)
+-Added working tecmo driver
+
+21/07/2018
+==========
+-Added FM emulation and ym2203
+-Added working 1943 driver
+-Added blktiger (sound is not working)
+-Added working commando driver
+-Added MSM5205 sound
+-Added lwings driver (trojan is crashing in tilemap issue)
+
+19/07/2018
+==========
+-Hack in video core to intialaze rendering window only once
+-timeplt driver is now playable
+-Added workign marvins driver
+-Added working jack driver
+-Added working cclimber driver
+
+
+18/07/2018
+==========
+-Added slapfght driver (there are screen size issues)
+-Added working mrdo driver
+-Added vulgus driver (several issues , missing stuff in tilemaps , double screen issue and others)
+-Added timeplt driver (multiscreen issue)
+-Added working pingpong driver
+-Added working kangaroo driver
+
+14/07/2018
+==========
+-Added working cop01 driver
+-Added working digdug driver
+-Added working superqix driver
+
+12/07/2018
+==========
+-Added working 1942 driver
+-Added working bankp driver
+-Added working blueprnt driver
+-Added working higemaru driver
+-Added working wiz driver
+-Added working solomon driver
+-Added working pooyan driver
+-Added working bombjack,pbaction driver
+
+08/07/2018
+==========
+-Added working pengo driver
+-Added working pacman driver
+-Added working docastle driver
+-Added working frogger driver
+-Added working wiping driver
+-Added working ladybug driver
+-Added working hexa driver
+
+07/07/2018
+==========
+-Added WIP system1 driver . Most of the games work others are not tested
+-Added custom gamexml export . This will be used from arcadeflex's frontend
+-Added ay8910 sound chip
+-Added working amidar driver
+
+05/07/2018
+==========
+-dummy gfxobj , sprite classes
+-Implemented correct CRC check for fileio
+-Added hiscore support 
+-Added cheat file support (currectly only Enable/Disable cheat option)
+
+04/07/2018
+==========
+-Added release folder and ant action to copy builded jar file there
+
+03/07/2018
+==========
+-Added ptr class and moved UBytePtr emulation there
+-Moved UShortPtr to ptr class
+
+02/07/2018
+==========
+-Implemented blockmove_8toN_transthrough , blockmove_8toN_transthrough_flipx in drawgfx needed for jrpacman
+
+01/07/2018
+==========
+-Added more libc functions
+-Added namco sound (no stereo functions yet)
+-Added jrpacman driver
+
+30/06/2018
+==========
+-Fixes to libc (cstdio,cstring)
+
+21/06/2018
+==========
+-Added sndintrf.java (mostly done)
+
+19/06/2018
+==========
+-Added working tecmo driver
+-Added generic vidhrdw 
+
+11/06/2018
+==========
+-Added funcPtr and ptr classes
+
+10/6/2018
+=========
+-Added working retofinv driver
+
+3/6/2018
+========
+-Added dummy cpu , snd
+-Added CustomSound interface
+
+2/6/2018
+========
+-Ported commonH to 0.37b7
+-Ported osdependH , ui_textH to 0.37b7
+-Ported usrintfH to 0.37b7
+-Ported paletteH to 0.37b7
+-Ported driverH to 0.37b7
+-Ported cpuintfH to 0.37b7 and some adjustments in z80 cpu (dummy functions)
+-Ported sn76496 to 0.37b7
+-Some functions in arcadeflex's libc library
+
+1/6/2018
+========
+-Ported sndintrfH to 0.37b7
+
+28/05/2018
+==========
+-Finally figure out how to fix gfxlayout for kncljoe driver for not crashing on intialaze gfxdecodeinfo
+
+08/05/2018
+==========
+-Added get_reg ,set_reg functions on Z80
+
+11/03/2018
+==========
+-Implemented set/get content on Z80
+-Implemented daisy chain support for Z80
+
+10/03/2018
+==========
+-Some works on z80 interrupts.Z80 mostly completed
+-Finished all z80 instructions
+-Implemented MEMPTR (WZ) internal Z80 register. Now all ZEXALL tests passes
+
+09/03/2018
+==========
+-Cleanup and refactored z80 code
+
+08/03/2018
+==========
+-Added daa,cpl,scf,ccf (61th test executes correctly)
+
+-More opcodes (62th test executes correctly)
+
+-More opcodes (Zexall test pass all test except the BIT ones ) (WIP)
+
+07/03/2018
+==========
+-Added ed_67,ed_6f (52th test executed correctly)
+
+-Added a lot of RES,SET opcodes  (53th test executed correctly)
+
+-Added NEG opcodes (54th test executed correctly)
+
+-Added ADD16 opcodes (55th test executed correctly)
+
+-Added more ADD16 opcodes (56th , 57th test executed correctly)
+
+-Added XOR,OR,CP,ADD,ADC opcodes (58th test executed correctly)
+
+-Added ADC16,SBC16 opcodes (59th test executed correctly)
+
+-Added BIT opcodes (60th test fails but needs to investicate the MEMPTR register ) 
+
+
+06/03/2018
+==========
+-Added dd_74,fd_74,dd_75,fd_75 (25th test executed correctly) (total 150 opcodes)
+
+-Added dd_46,fd_46,dd_4e,fd_4e,dd_56,fd_56,dd_5e,fd_5e (26th test executed correctly) (total 158 opcodes)
+
+-Added dd_70,fd_70,dd_71,dd_72,dd_73,fd_71,fd_72,fd_73 (27th test executed correctly) (total 166 opcodes)
+
+-Added op_0c (28th test executed correctly) (total 167 opcodes)
+
+-Added op_1b (29th , 30th test executed correctly) (total 168 opcodes)
+
+-Added dd_23,dd_2b (31th test executed correctly) (total 170 opcodes)
+
+-Added fd_23,fd_2b (32th test executed correctly) (total 172 opcodes)
+
+-Added op_33,op_3b (33th test executed correctly) (total 174 opcodes)
+
+-Added xycb_86,xycb_8e,xycb_96,xycb_9e,xycb_a6,xycb_ae,xycb_b6,xycb_be,xycb_c6,xycb_ce,
+       xycb_d6,xycb_de,xycb_e6,xycb_ee,xycb_f6,xycb_fe (34th test executed correctly)  (total 190 opcodes)
+
+-Added xycb_46,xycb_4e,xycb_56,xycb_5e,xycb_66,xycb_6e,xycb_76,xycb_7e (35th test executed correctly) (total 198 opcodes)
+
+-Added op_3d (36th test executed correctly) (total 199 opcodes)
+
+-Added op_04,op_03 (37th , 38th test executed correctly)(total 201 opcodes)
+
+-Added op_15,op_1c,op_1d,op_24,op_25,op_2c,op_2d (39th,40th,41th,42th tests executed correctly) (total 208 opcodes)
+
+-Added op_35 (43th test executed correctly) (total 209 opcodes)
+
+-Added dd_24,dd_25,dd_2c,dd_2d (44th test executed correctly)  (total 213 opcodes)
+
+-Added op_40,op_41,op_42,op_43,op_44,op_45,op_48,op_49,op_4a,op_4b
+       op_4c,op_4d,op_50,op_51,op_52,op_53,op_55,op_57,op_58,op_59,
+       op_5a,op_5b,op_5c,op_5f,op_60,op_61,op_62,op_63,op_64,op_65,
+       op_67,op_68,op_69,op_6a,op_6b,op_6c,op_6d,op_7c,op_7d,op_7f,
+       op_56,op_6e,op_70,op_71,op_72,op_73,op_74,op_75   (45th test executed correctly) (total 261 opcodes)
+
+-Added ed_a9,ed_b9 (46th test executed correctly) (toal 263 opcodes)
+
+-Added ed_a1,ed_b1 (47th test executed correctly) (total 265 opcodes)
+
+-Added dd_34,dd_35,fd_34,fd_35 (48th test executed correctly) (total 269 opcodes)
+
+-Added op_17,op_1f (49th test executed correctly) (total 271 opcodes)
+
+-Added many opcodes from cb_00 to cb_3f (50th test executed correctly)
+
+-A lot more opcodes (mostly MOV and illegal_1,2 ) (51th test executed correctly)
+
+
+
+
+05/03/2018
+==========
+-Restarted z80 emulation based on ZEXALL test
+-We can now execute first instruction
+-Added op_f3,op_ed,ed_56,op_31,op_c3,op_cd,op_f5,op_c5,op_d5,op_e5,
+       op_3e,op_32,op_21,op_06,op_0e,ed_b3,op_c9,op_01,op_d3,ed_42,
+       op_20,op_11,op_7e,op_23,op_0d,op_10,op_22,ed_b0,op_e1,op_d1,
+       op_c1,op_f1,op_47,op_79,op_fe,op_28,op_1a,op_c4,op_db,op_b8,
+       op_ca,op_2a,op_b4,ed_69,ed_79,op_78,op_d6,ed_41,op_3a,op_3c,
+       op_13,op_18  (52 opcodes first output from ZEXALL test)
+
+-Added op_90,op_cb,cb_27,op_4f,op_b1,op_3f,ed_52,op_09,op_fa,op_b6,
+       op_2b,op_af,op_66,op_6f,op_19,op_eb,op_36,op_54,op_5d,op_0b,
+       op_5e,op_7b,op_a1,op_07,op_05,op_7a,op_e6,op_0f,op_26,op_77,
+       op_14,ed_73,op_fd,fd_e1,op_dd,dd_e1,ed_7b,op_00,dd_e5,fd_e5,
+       op_ae,op_29,op_a8,op_46,op_34,op_a0,op_b7,op_4e,op_12,op_dc, 
+       op_c8,op_a9,op_be (53 more opcodes first 4 tests executes correctly)
+
+-Added ed_4b,ed_5b (5th test executed correctly)  (total 107 opcodes)
+
+-Added dd_2a,fd_2a (6th test executed correctly)  (total 109 opcodes)
+
+-Added dd_21,fd_21 (7th test executed correctly)  (total 111 opcodes)
+
+-Added dd_36,fd_36 (8th test executed correctly)  (total 113 opcodes)
+
+-Added dd_26,fd_26,dd_2e,fd_2e (9,10 test executed correctly) (total 117 opcodes)
+
+-Added ed_a8,ed_b8 (11,12 tests executed correctly) (total 119 opcodes)
+
+-Added ed_a0 (13,14 tests executed correctly) (total 120 opcodes)
+
+-Added op_a0 (15 test executed correctly) (total 121 opcodes)
+
+-Added dd_22,fd_22 (16th,17th tests executed correctly) (total 123 opcodes)
+
+-Added op_1e,op_2e (18th test executed correctly) (total 125 opcodes)
+
+-Added ed_43,ed_53 (19th test executed correctly) (total 127 opcodes)
+
+-Added op_02 (20th test executed correctly) (total 128 opcodes)
+
+-Added dd_77,fd_77 (21th test executed correctly) (total 130 opcodes)
+
+-Added dd_7e,fd_7e (22th test executed correctly) (total 132 opcodes)
+
+-Added dd_cb,xycb_06,fd_cb,xycb_0e,xycb_16,xycb_1e,xycb_26,xycb_2e,xycb_36,xycb_3e (23th test executed correctly) (total 142 opcodes)
+
+-Added dd_66,fd_66,dd_6e,fd_6e (24th test executed correctly) (total 146 opcodes)
+
