@@ -8,7 +8,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.machine.mcr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.z80fmly.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.mcr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.mcrH.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.mcr12.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mcr12.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;

@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.vidhrdw.vastar.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.vastar.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.ASSERT_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.CLEAR_LINE;

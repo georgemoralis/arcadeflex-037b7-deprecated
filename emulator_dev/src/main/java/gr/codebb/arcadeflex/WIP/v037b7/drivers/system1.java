@@ -5,8 +5,8 @@
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.segacrpt.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.system1.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.system1H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.system1.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.system1H.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;

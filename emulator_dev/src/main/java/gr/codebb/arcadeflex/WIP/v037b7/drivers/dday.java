@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.vidhrdw.dday.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.dday.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;

@@ -30,6 +30,9 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dooyong.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gladiatr.*;
 
+//new drivers
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mnight.*;
+
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -3789,10 +3792,8 @@ public class driver {
         // driver_jackrabs,	/* (c) 1984 */
 
         /* UPL games */
-        /*TODO*/
-        // driver_mnight,	/* (c) 1987 distributed by Kawakus */
-        /*TODO*/
-        // driver_arkarea,	/* UPL-87007 (c) [1988?] */
+        driver_mnight,	/* (c) 1987 distributed by Kawakus */
+        driver_arkarea,	/* UPL-87007 (c) [1988?] */
         /*
     Urashima Mahjong    UPL-89052
 

@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.astrocde.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.gorf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.astrocde.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.astrocdeH.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.astrocde.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.astrocde.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.samplesH.*;

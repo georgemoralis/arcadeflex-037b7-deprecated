@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 // arcadeflex imports
 
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.slapfght.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.slapfght.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.slapfght.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;

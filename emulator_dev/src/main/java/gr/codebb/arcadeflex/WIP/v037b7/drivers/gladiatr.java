@@ -23,7 +23,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.vidhrdw.gladiatr.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.gladiatr.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.tait8741H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.tait8741.*;
