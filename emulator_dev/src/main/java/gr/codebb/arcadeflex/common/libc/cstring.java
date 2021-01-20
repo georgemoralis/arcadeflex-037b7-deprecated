@@ -122,4 +122,17 @@ public class cstring {
   public static int strcmp(String str1, String str2) {
     return str1.compareTo(str2);
   }
+  
+  public static void memmove(char[] dst,UBytePtr src,int src_offset,int size)
+  {
+      System.arraycopy(src.memory, src.offset+src_offset, dst, 0, size);
+  }
+  public static void memmove(UBytePtr dst,int dst_offset,UBytePtr src,int src_offset,int size)
+  {
+      System.arraycopy(src.memory, src.offset+src_offset, dst.memory, dst.offset+dst_offset, size);
+  }
+  public static void memmove(UBytePtr dst,int dst_offset,char[] src,int size)
+  {
+      System.arraycopy(src, 0, dst.memory, dst.offset+dst_offset, size);
+  }
 }

@@ -2236,32 +2236,19 @@ public class driver {
         driver_basebal2,
         driver_dblplay,
         driver_strkzone,
-        /*TODO*/
-        // driver_redlin2p,	/* (c) 1987 Cinematronics + Tradewest license */
-        /*TODO*/
-        // driver_quarterb,	/* (c) 1987 Leland */
-        /*TODO*/
-        // driver_quartrba,	/* (c) 1987 Leland */
-        /*TODO*/
-        // driver_viper,		/* (c) 1988 Leland */
-        /*TODO*/
-        // driver_teamqb,	/* (c) 1988 Leland */
-        /*TODO*/
-        // driver_teamqb2,	/* (c) 1988 Leland */
-        /*TODO*/
-        // driver_aafb,		/* (c) 1989 Leland */
-        /*TODO*/
-        // driver_aafbd2p,	/* (c) 1989 Leland */
-        /*TODO*/
-        // driver_aafbb,		/* (c) 1989 Leland */
-        /*TODO*/
-        // driver_offroad,	/* (c) 1989 Leland */
-        /*TODO*/
-        // driver_offroadt,	/* (c) 1989 Leland */
-        /*TODO*/
-        // driver_pigout,	/* (c) 1990 Leland */
-        /*TODO*/
-        // driver_pigouta,	/* (c) 1990 Leland */
+        driver_redlin2p,	/* (c) 1987 Cinematronics + Tradewest license */
+        driver_quarterb,	/* (c) 1987 Leland */
+        driver_quartrba,	/* (c) 1987 Leland */
+        driver_viper,		/* (c) 1988 Leland */
+        driver_teamqb,	/* (c) 1988 Leland */
+        driver_teamqb2,	/* (c) 1988 Leland */
+        driver_aafb,		/* (c) 1989 Leland */
+        driver_aafbd2p,	/* (c) 1989 Leland */
+        driver_aafbb,		/* (c) 1989 Leland */
+        driver_offroad,	/* (c) 1989 Leland */
+        driver_offroadt,	/* (c) 1989 Leland */
+        driver_pigout,	/* (c) 1990 Leland */
+        driver_pigouta,	/* (c) 1990 Leland */
         /*TODO*/
         // driver_ataxx,		/* (c) 1990 Leland */
         /*TODO*/

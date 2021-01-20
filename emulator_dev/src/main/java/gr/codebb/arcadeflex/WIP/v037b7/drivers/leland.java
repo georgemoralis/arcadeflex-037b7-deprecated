@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
+import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import gr.codebb.arcadeflex.WIP.v037b7.machine.eepromH.EEPROM_interface;
@@ -46,23 +47,14 @@ import static gr.codebb.arcadeflex.v056.mame.timer.timer_set;
 
 public class leland {
 
-    /*TODO*///	/* define these to 0 to disable, or to 1 to enable */
-/*TODO*///	#define LOG_KEYCARDS		0
-/*TODO*///	#define LOG_KEYCARDS_FULL	0
-/*TODO*///	#define LOG_BANKSWITCHING_M	0
-/*TODO*///	#define LOG_BANKSWITCHING_S	0
-/*TODO*///	#define LOG_SOUNDPORT		0
-/*TODO*///	#define LOG_EEPROM			0
-/*TODO*///	#define LOG_BATTERY_RAM		0
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* Helps document the input ports. */
-/*TODO*///	#define IPT_SLAVEHALT 	IPT_SPECIAL
-/*TODO*///	#define IPT_EEPROM_DATA	IPT_SPECIAL
-/*TODO*///	#define PORT_SERVICE_NO_TOGGLE(mask,default)	\
-/*TODO*///		PORT_BITX(    mask, mask & default, IPT_SERVICE1, DEF_STR( "Service_Mode") ); KEYCODE_F2, IP_JOY_NONE )
-/*TODO*///	
-/*TODO*///	
+    /* define these to 0 to disable, or to 1 to enable */
+    //#define LOG_KEYCARDS		0
+    //#define LOG_KEYCARDS_FULL	0
+    //#define LOG_BANKSWITCHING_M	0
+    //#define LOG_BANKSWITCHING_S	0
+    //#define LOG_SOUNDPORT		0
+    //#define LOG_EEPROM			0
+    //#define LOG_BATTERY_RAM		0
     static int/*UINT8*/ u8_leland_gfx_control;
     public static int/*UINT8*/ u8_leland_dac_control;
 
@@ -257,61 +249,66 @@ public class leland {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Red Line Racer inputs
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static const UINT8 redline_pedal_value[8] = { 0xf0, 0xe0, 0xc0, 0xd0, 0x90, 0xb0, 0x30, 0x70 };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr redline_pedal_1_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int pedal = readinputport(0);
-/*TODO*///		return redline_pedal_value[pedal >> 5] | 0x0f;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr redline_pedal_2_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int pedal = readinputport(2);
-/*TODO*///		return redline_pedal_value[pedal >> 5] | 0x0f;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr redline_wheel_1_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return dial_compute_value(readinputport(4), 0);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr redline_wheel_2_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return dial_compute_value(readinputport(5), 1);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Super Offroad inputs
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr offroad_wheel_1_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return dial_compute_value(readinputport(7), 0);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr offroad_wheel_2_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return dial_compute_value(readinputport(8), 1);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr offroad_wheel_3_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return dial_compute_value(readinputport(9), 2);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+    /**
+     * ***********************************
+     *
+     * Red Line Racer inputs
+     *
+     ************************************
+     */
+    static int redline_pedal_value[] = {0xf0, 0xe0, 0xc0, 0xd0, 0x90, 0xb0, 0x30, 0x70};
+
+    public static ReadHandlerPtr redline_pedal_1_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int pedal = readinputport(0);
+            return redline_pedal_value[pedal >> 5] | 0x0f;
+        }
+    };
+
+    public static ReadHandlerPtr redline_pedal_2_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int pedal = readinputport(2);
+            return redline_pedal_value[pedal >> 5] | 0x0f;
+        }
+    };
+
+    public static ReadHandlerPtr redline_wheel_1_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return dial_compute_value(readinputport(4), 0);
+        }
+    };
+
+    public static ReadHandlerPtr redline_wheel_2_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return dial_compute_value(readinputport(5), 1);
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Super Offroad inputs
+     *
+     ************************************
+     */
+    public static ReadHandlerPtr offroad_wheel_1_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return dial_compute_value(readinputport(7), 0);
+        }
+    };
+
+    public static ReadHandlerPtr offroad_wheel_2_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return dial_compute_value(readinputport(8), 1);
+        }
+    };
+
+    public static ReadHandlerPtr offroad_wheel_3_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return dial_compute_value(readinputport(9), 2);
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -401,15 +398,13 @@ public class leland {
             return ignore_interrupt.handler();
         }
     };
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr master_nmi_clear_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		cpu_set_nmi_line(0, CLEAR_LINE);
-/*TODO*///		return 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+
+    public static ReadHandlerPtr master_nmi_clear_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            cpu_set_nmi_line(0, CLEAR_LINE);
+            return 0;
+        }
+    };
 
     /**
      * ***********************************
@@ -487,64 +482,64 @@ public class leland {
             cpu_setbank(2, address);
         }
     };
-    /*TODO*///	
-/*TODO*///	/* bankswitching for Red Line Racer */
-/*TODO*///	static void redline_bankswitch(void)
-/*TODO*///	{
-/*TODO*///		static const UINT32 bank_list[] = { 0x10000, 0x18000, 0x02000, 0x02000 };
-/*TODO*///		UINT8 *address;
-/*TODO*///	
-/*TODO*///		battery_ram_enable = ((alternate_bank & 3) == 1);
-/*TODO*///	
-/*TODO*///		address = &master_base[bank_list[alternate_bank & 3]];
-/*TODO*///		cpu_setbank(1, address);
-/*TODO*///	
-/*TODO*///		address = battery_ram_enable ? battery_ram : &master_base[0xa000];
-/*TODO*///		cpu_setbank(2, address);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* bankswitching for Viper, Quarterback, Team Quarterback, and All American Football */
-/*TODO*///	static void viper_bankswitch(void)
-/*TODO*///	{
-/*TODO*///		static const UINT32 bank_list[] = { 0x02000, 0x10000, 0x18000, 0x02000 };
-/*TODO*///		UINT8 *address;
-/*TODO*///	
-/*TODO*///		battery_ram_enable = ((alternate_bank & 0x04) != 0);
-/*TODO*///	
-/*TODO*///		address = &master_base[bank_list[alternate_bank & 3]];
-/*TODO*///		if (bank_list[alternate_bank & 3] >= master_length)
-/*TODO*///		{
-/*TODO*///			logerror("%04X:Master bank %02X out of range!\n", cpu_getpreviouspc(), alternate_bank & 3);
-/*TODO*///			address = &master_base[bank_list[0]];
-/*TODO*///		}
-/*TODO*///		cpu_setbank(1, address);
-/*TODO*///	
-/*TODO*///		address = battery_ram_enable ? battery_ram : &master_base[0xa000];
-/*TODO*///		cpu_setbank(2, address);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* bankswitching for Super Offroad, Super Offroad Track Pack, and Pig Out */
-/*TODO*///	static void offroad_bankswitch(void)
-/*TODO*///	{
-/*TODO*///		static const UINT32 bank_list[] = { 0x02000, 0x02000, 0x10000, 0x18000, 0x20000, 0x28000, 0x30000, 0x38000 };
-/*TODO*///		UINT8 *address;
-/*TODO*///	
-/*TODO*///		battery_ram_enable = ((alternate_bank & 7) == 1);
-/*TODO*///	
-/*TODO*///		address = &master_base[bank_list[alternate_bank & 7]];
-/*TODO*///		if (bank_list[alternate_bank & 7] >= master_length)
-/*TODO*///		{
-/*TODO*///			logerror("%04X:Master bank %02X out of range!\n", cpu_getpreviouspc(), alternate_bank & 7);
-/*TODO*///			address = &master_base[bank_list[0]];
-/*TODO*///		}
-/*TODO*///		cpu_setbank(1, address);
-/*TODO*///	
-/*TODO*///		address = battery_ram_enable ? battery_ram : &master_base[0xa000];
-/*TODO*///		cpu_setbank(2, address);
-/*TODO*///	}
-/*TODO*///	
+
+    /* bankswitching for Red Line Racer */
+    public static update_master_bankPtr redline_bankswitch = new update_master_bankPtr() {
+        public void handler() {
+
+            int bank_list[] = {0x10000, 0x18000, 0x02000, 0x02000};
+            UBytePtr address;
+
+            battery_ram_enable = ((u8_alternate_bank & 3) == 1) ? 1 : 0;
+
+            address = new UBytePtr(master_base, bank_list[u8_alternate_bank & 3]);
+            cpu_setbank(1, address);
+
+            address = battery_ram_enable != 0 ? battery_ram : new UBytePtr(master_base, 0xa000);
+            cpu_setbank(2, address);
+        }
+    };
+
+    /* bankswitching for Viper, Quarterback, Team Quarterback, and All American Football */
+    public static update_master_bankPtr viper_bankswitch = new update_master_bankPtr() {
+        public void handler() {
+            int bank_list[] = {0x02000, 0x10000, 0x18000, 0x02000};
+            UBytePtr address;
+
+            battery_ram_enable = ((u8_alternate_bank & 0x04) != 0) ? 1 : 0;
+
+            address = new UBytePtr(master_base, bank_list[u8_alternate_bank & 3]);
+            if (bank_list[u8_alternate_bank & 3] >= master_length) {
+                logerror("%04X:Master bank %02X out of range!\n", cpu_getpreviouspc(), u8_alternate_bank & 3);
+                address = new UBytePtr(master_base, bank_list[0]);
+            }
+            cpu_setbank(1, address);
+
+            address = battery_ram_enable != 0 ? battery_ram : new UBytePtr(master_base, 0xa000);
+            cpu_setbank(2, address);
+        }
+    };
+
+    /* bankswitching for Super Offroad, Super Offroad Track Pack, and Pig Out */
+    public static update_master_bankPtr offroad_bankswitch = new update_master_bankPtr() {
+        public void handler() {
+            int bank_list[] = {0x02000, 0x02000, 0x10000, 0x18000, 0x20000, 0x28000, 0x30000, 0x38000};
+            UBytePtr address;
+
+            battery_ram_enable = ((u8_alternate_bank & 7) == 1) ? 1 : 0;
+
+            address = new UBytePtr(master_base, bank_list[u8_alternate_bank & 7]);
+            if (bank_list[u8_alternate_bank & 7] >= master_length) {
+                logerror("%04X:Master bank %02X out of range!\n", cpu_getpreviouspc(), u8_alternate_bank & 7);
+                address = new UBytePtr(master_base, bank_list[0]);
+            }
+            cpu_setbank(1, address);
+
+            address = battery_ram_enable != 0 ? battery_ram : new UBytePtr(master_base, 0xa000);
+            cpu_setbank(2, address);
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -981,23 +976,20 @@ public class leland {
             //if (LOG_BANKSWITCHING_S != 0) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_getpreviouspc(), data & 1, bankaddress);
         }
     };
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr slave_large_banksw_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		int bankaddress = 0x10000 + 0x8000 * (data & 15);
-/*TODO*///	
-/*TODO*///		if (bankaddress >= slave_length)
-/*TODO*///		{
-/*TODO*///			logerror("%04X:Slave bank %02X out of range!", cpu_getpreviouspc(), data & 15);
-/*TODO*///			bankaddress = 0x10000;
-/*TODO*///		}
-/*TODO*///		cpu_setbank(3, &slave_base[bankaddress]);
-/*TODO*///	
-/*TODO*///		if (LOG_BANKSWITCHING_S != 0) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_getpreviouspc(), data & 15, bankaddress);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+
+    public static WriteHandlerPtr slave_large_banksw_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            int bankaddress = 0x10000 + 0x8000 * (data & 15);
+
+            if (bankaddress >= slave_length) {
+                logerror("%04X:Slave bank %02X out of range!", cpu_getpreviouspc(), data & 15);
+                bankaddress = 0x10000;
+            }
+            cpu_setbank(3, new UBytePtr(slave_base, bankaddress));
+
+            //if (LOG_BANKSWITCHING_S != 0) logerror("%04X:Slave bank = %02X (%05X)\n", cpu_getpreviouspc(), data & 15, bankaddress);
+        }
+    };
 
     /**
      * ***********************************
@@ -1075,24 +1067,22 @@ public class leland {
                 new MemoryWriteAddress(0xf803, 0xf803, slave_small_banksw_w),
                 new MemoryWriteAddress(-1) /* end of table */};
 
-    /*TODO*///	static MemoryReadAddress slave_large_readmem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryReadAddress( 0x0000, 0x1fff, MRA_ROM ),
-/*TODO*///		new MemoryReadAddress( 0x4000, 0xbfff, MRA_BANK3 ),
-/*TODO*///		new MemoryReadAddress( 0xe000, 0xefff, MRA_RAM ),
-/*TODO*///		new MemoryReadAddress( 0xf802, 0xf802, raster_r ),
-/*TODO*///		new MemoryReadAddress( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static MemoryWriteAddress slave_large_writemem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryWriteAddress( 0x0000, 0xbfff, MWA_ROM ),
-/*TODO*///		new MemoryWriteAddress( 0xc000, 0xc000, slave_large_banksw_w ),
-/*TODO*///		new MemoryWriteAddress( 0xe000, 0xefff, MWA_RAM ),
-/*TODO*///		new MemoryWriteAddress( 0xf800, 0xf801, leland_slave_video_addr_w ),
-/*TODO*///		new MemoryWriteAddress( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
+    static MemoryReadAddress slave_large_readmem[]
+            = {
+                new MemoryReadAddress(0x0000, 0x1fff, MRA_ROM),
+                new MemoryReadAddress(0x4000, 0xbfff, MRA_BANK3),
+                new MemoryReadAddress(0xe000, 0xefff, MRA_RAM),
+                new MemoryReadAddress(0xf802, 0xf802, raster_r),
+                new MemoryReadAddress(-1) /* end of table */};
+
+    static MemoryWriteAddress slave_large_writemem[]
+            = {
+                new MemoryWriteAddress(0x0000, 0xbfff, MWA_ROM),
+                new MemoryWriteAddress(0xc000, 0xc000, slave_large_banksw_w),
+                new MemoryWriteAddress(0xe000, 0xefff, MWA_RAM),
+                new MemoryWriteAddress(0xf800, 0xf801, leland_slave_video_addr_w),
+                new MemoryWriteAddress(-1) /* end of table */};
+
     static IOReadPort slave_readport[]
             = {
                 new IOReadPort(0x00, 0x1f, leland_svram_port_r),
@@ -1398,285 +1388,357 @@ public class leland {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_redline = new InputPortPtr(){ public void handler() { 		/* complete, verified in code */
-/*TODO*///		PORT_START();       /* 0xC0 */
-/*TODO*///		PORT_BIT( 0x1f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_ANALOG( 0xe0, 0xe0, IPT_PEDAL | IPF_PLAYER1, 100, 64, 0x00, 0xff );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xC1 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0x70, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNKNOWN );/* used, but for what purpose? */
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xD0 */
-/*TODO*///		PORT_BIT( 0x1f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_ANALOG( 0xe0, 0xe0, IPT_PEDAL | IPF_PLAYER2, 100, 64, 0x00, 0xff );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xD1 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* Analog wheel 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog wheel 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER2, 100, 10, 0, 255 );
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_quarterb = new InputPortPtr(){ public void handler() { 		/* complete, verified in code */
-/*TODO*///		PORT_START();       /* 0x80 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x0e, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x81 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x90 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x91 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* Analog spring stick 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 3 */
-/*TODO*///		PORT_START();       /* Analog spring stick 4 */
-/*TODO*///		PORT_START();       /* Analog spring stick 5 */
-/*TODO*///		PORT_START();       /* Analog spring stick 6 */
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_teamqb = new InputPortPtr(){ public void handler() { 		/* complete, verified in code */
-/*TODO*///		PORT_START();       /* 0x80 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x0e, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x81 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x90 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x91 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* Analog spring stick 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 3 */
-/*TODO*///		PORT_START();       /* Analog spring stick 4 */
-/*TODO*///		PORT_START();       /* Analog spring stick 5 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER3, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 6 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER3, 100, 10, 0, 255 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x7C */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4 );
-/*TODO*///		PORT_BIT( 0x0e, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START3 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START4 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x7F */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4 );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER4 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER4 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER4 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER3 );
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_aafb2p = new InputPortPtr(){ public void handler() { 		/* complete, verified in code */
-/*TODO*///		PORT_START();       /* 0x80 */
-/*TODO*///		PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0xe0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x81 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x02, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x90 */
-/*TODO*///		PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER1 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x91 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* Analog spring stick 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 3 */
-/*TODO*///		PORT_START();       /* Analog spring stick 4 */
-/*TODO*///		PORT_START();       /* Analog spring stick 5 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog spring stick 6 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 100, 10, 0, 255 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x7C */
-/*TODO*///		PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x7F */
-/*TODO*///		PORT_BIT( 0x0f, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_PLAYER2 );
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_offroad = new InputPortPtr(){ public void handler() { 		/* complete, verified from code */
-/*TODO*///		PORT_START();       /* 0xC0 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN );/* read */
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_UNKNOWN );/* read */
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN );/* read */
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xC1 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN3 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xD0 */
-/*TODO*///		PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0xD1 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x08, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* Analog pedal 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog pedal 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog pedal 3 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x00, IPT_PEDAL | IPF_PLAYER3, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog wheel 1 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog wheel 2 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER2, 100, 10, 0, 255 );
-/*TODO*///		PORT_START();       /* Analog wheel 3 */
-/*TODO*///		PORT_ANALOG( 0xff, 0x80, IPT_DIAL | IPF_PLAYER3, 100, 10, 0, 255 );
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static InputPortPtr input_ports_pigout = new InputPortPtr(){ public void handler() { 		/* complete, verified from code */
-/*TODO*///		PORT_START();       /* 0x40 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   | IPF_8WAY | IPF_PLAYER2 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x41 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_SLAVEHALT );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_COIN1 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_UNKNOWN );/* read, but never referenced */
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_COIN2 );
-/*TODO*///		PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x50 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_START3 );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP   | IPF_8WAY | IPF_PLAYER3 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_START2 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER2 );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x51 */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_EEPROM_DATA );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_VBLANK );
-/*TODO*///		PORT_SERVICE_NO_TOGGLE( 0x04, IP_ACTIVE_LOW )
-/*TODO*///		PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///	
-/*TODO*///		PORT_START();       /* 0x7F */
-/*TODO*///		PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNUSED );
-/*TODO*///		PORT_BIT( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP    | IPF_8WAY | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN  | IPF_8WAY | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT  | IPF_8WAY | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1 );
-/*TODO*///		PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_START1 );
-/*TODO*///	INPUT_PORTS_END(); }}; 
-/*TODO*///	
-/*TODO*///	
+    static InputPortPtr input_ports_redline = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified in code */
+            PORT_START();
+            /* 0xC0 */
+            PORT_BIT(0x1f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_ANALOG(0xe0, 0xe0, IPT_PEDAL | IPF_PLAYER1, 100, 64, 0x00, 0xff);
+
+            PORT_START();
+            /* 0xC1 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0x70, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNKNOWN);/* used, but for what purpose? */
+
+            PORT_START();
+            /* 0xD0 */
+            PORT_BIT(0x1f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_ANALOG(0xe0, 0xe0, IPT_PEDAL | IPF_PLAYER2, 100, 64, 0x00, 0xff);
+
+            PORT_START();
+            /* 0xD1 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* Analog wheel 1 */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog wheel 2 */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER2, 100, 10, 0, 255);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_quarterb = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified in code */
+            PORT_START();
+            /* 0x80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2);
+            PORT_BIT(0x0e, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1);
+            PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x81 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x90 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+
+            PORT_START();
+            /* 0x91 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* Analog spring stick 1 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 2 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 3 */
+            PORT_START();
+            /* Analog spring stick 4 */
+            PORT_START();
+            /* Analog spring stick 5 */
+            PORT_START();
+            /* Analog spring stick 6 */
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_teamqb = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified in code */
+            PORT_START();
+            /* 0x80 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2);
+            PORT_BIT(0x0e, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1);
+            PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x81 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x90 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+
+            PORT_START();
+            /* 0x91 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* Analog spring stick 1 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 2 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 3 */
+            PORT_START();
+            /* Analog spring stick 4 */
+            PORT_START();
+            /* Analog spring stick 5 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER3, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 6 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER3, 100, 10, 0, 255);
+
+            PORT_START();
+            /* 0x7C */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER4);
+            PORT_BIT(0x0e, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START3);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START4);
+
+            PORT_START();
+            /* 0x7F */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER4);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER4);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER4);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER4);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER3);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER3);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER3);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER3);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_aafb2p = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified in code */
+            PORT_START();
+            /* 0x80 */
+            PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1);
+            PORT_BIT(0xe0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x81 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x90 */
+            PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER1);
+
+            PORT_START();
+            /* 0x91 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_START1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* Analog spring stick 1 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 2 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 3 */
+            PORT_START();
+            /* Analog spring stick 4 */
+            PORT_START();
+            /* Analog spring stick 5 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_Y | IPF_PLAYER2, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog spring stick 6 */
+            PORT_ANALOG(0xff, 0x80, IPT_AD_STICK_X | IPF_PLAYER2, 100, 10, 0, 255);
+
+            PORT_START();
+            /* 0x7C */
+            PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x7F */
+            PORT_BIT(0x0f, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_PLAYER2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_PLAYER2);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_PLAYER2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_PLAYER2);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_offroad = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified from code */
+            PORT_START();
+            /* 0xC0 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNKNOWN);/* read */
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_UNKNOWN);/* read */
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_UNKNOWN);/* read */
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0xC1 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_COIN3);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0xD0 */
+            PORT_BIT(0xff, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0xD1 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* Analog pedal 1 */
+            PORT_ANALOG(0xff, 0x00, IPT_PEDAL | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog pedal 2 */
+            PORT_ANALOG(0xff, 0x00, IPT_PEDAL | IPF_PLAYER2, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog pedal 3 */
+            PORT_ANALOG(0xff, 0x00, IPT_PEDAL | IPF_PLAYER3, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog wheel 1 */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER1, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog wheel 2 */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER2, 100, 10, 0, 255);
+            PORT_START();
+            /* Analog wheel 3 */
+            PORT_ANALOG(0xff, 0x80, IPT_DIAL | IPF_PLAYER3, 100, 10, 0, 255);
+            INPUT_PORTS_END();
+        }
+    };
+
+    static InputPortPtr input_ports_pigout = new InputPortPtr() {
+        public void handler() {
+            /* complete, verified from code */
+            PORT_START();
+            /* 0x40 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER3);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER3);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER3);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER2);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER2);
+
+            PORT_START();
+            /* 0x41 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_COIN1);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_UNKNOWN);/* read, but never referenced */
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_COIN2);
+            PORT_BIT(0xf0, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x50 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_START3);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER3);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER3);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER3);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_START2);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER2);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER2);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER2);
+
+            PORT_START();
+            /* 0x51 */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_SPECIAL);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_VBLANK);
+            PORT_BITX(0x02, 0x02 & IP_ACTIVE_LOW, IPT_SERVICE1, DEF_STR("Service_Mode"), KEYCODE_F2, IP_JOY_NONE);
+            PORT_BIT(0xf8, IP_ACTIVE_LOW, IPT_UNUSED);
+
+            PORT_START();
+            /* 0x7F */
+            PORT_BIT(0x01, IP_ACTIVE_LOW, IPT_UNUSED);
+            PORT_BIT(0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_UP | IPF_8WAY | IPF_PLAYER1);
+            PORT_BIT(0x04, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN | IPF_8WAY | IPF_PLAYER1);
+            PORT_BIT(0x08, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT | IPF_8WAY | IPF_PLAYER1);
+            PORT_BIT(0x10, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT | IPF_8WAY | IPF_PLAYER1);
+            PORT_BIT(0x20, IP_ACTIVE_LOW, IPT_BUTTON1 | IPF_PLAYER1);
+            PORT_BIT(0x40, IP_ACTIVE_LOW, IPT_BUTTON2 | IPF_PLAYER1);
+            PORT_BIT(0x80, IP_ACTIVE_LOW, IPT_START1);
+            INPUT_PORTS_END();
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -1728,18 +1790,19 @@ public class leland {
             leland_sh_stop,
             null
     );
-    /*TODO*///	
-/*TODO*///	static CustomSound_interface i186_custom_interface = new CustomSound_interface
-/*TODO*///	(
-/*TODO*///	    leland_i186_sh_start
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	static CustomSound_interface redline_custom_interface = new CustomSound_interface
-/*TODO*///	(
-/*TODO*///	  	redline_i186_sh_start
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
+
+    static CustomSound_interface i186_custom_interface = new CustomSound_interface(
+            leland_i186_sh_start,
+            null,
+            null
+    );
+
+    static CustomSound_interface redline_custom_interface = new CustomSound_interface(
+            redline_i186_sh_start,
+            null,
+            null
+    );
+
     /**
      * ***********************************
      *
@@ -1786,165 +1849,148 @@ public class leland {
             },
             nvram_handler
     );
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	static MachineDriver machine_driver_redline = new MachineDriver
-/*TODO*///	(
-/*TODO*///		/* basic machine hardware */
-/*TODO*///		new MachineCPU[] {
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				master_readmem,master_writemem,
-/*TODO*///				master_readport,master_writeport,
-/*TODO*///				master_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				slave_small_readmem,slave_small_writemem,
-/*TODO*///				slave_readport,slave_writeport,
-/*TODO*///		    	ignore_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///		    	CPU_I186 | CPU_AUDIO_CPU,
-/*TODO*///				16000000/2,
-/*TODO*///				leland_i86_readmem,leland_i86_writemem,
-/*TODO*///				leland_i86_readport,redline_i86_writeport,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			)
-/*TODO*///		},
-/*TODO*///		60, (1000000*16)/(256*60),
-/*TODO*///		1,
-/*TODO*///		init_machine,
-/*TODO*///	
-/*TODO*///		/* video hardware */
-/*TODO*///		40*8, 30*8, new rectangle( 0*8, 40*8-1, 0*8, 30*8-1 ),
-/*TODO*///		gfxdecodeinfo,
-/*TODO*///		1024,1024,
-/*TODO*///		null,
-/*TODO*///	
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
-/*TODO*///		leland_vh_eof,
-/*TODO*///		leland_vh_start,
-/*TODO*///		leland_vh_stop,
-/*TODO*///		leland_vh_screenrefresh,
-/*TODO*///	
-/*TODO*///		/* sound hardware */
-/*TODO*///		0,0,0,0,
-/*TODO*///		new MachineSound[] {
-/*TODO*///			new MachineSound( SOUND_AY8910, ay8910_interface ),
-/*TODO*///			new MachineSound( SOUND_CUSTOM, redline_custom_interface )
-/*TODO*///		},
-/*TODO*///		nvram_handler
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static MachineDriver machine_driver_quarterb = new MachineDriver
-/*TODO*///	(
-/*TODO*///		/* basic machine hardware */
-/*TODO*///		new MachineCPU[] {
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				master_readmem,master_writemem,
-/*TODO*///				master_readport,master_writeport,
-/*TODO*///				master_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				slave_small_readmem,slave_small_writemem,
-/*TODO*///				slave_readport,slave_writeport,
-/*TODO*///		    	ignore_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///		    	CPU_I186 | CPU_AUDIO_CPU,
-/*TODO*///				16000000/2,
-/*TODO*///				leland_i86_readmem,leland_i86_writemem,
-/*TODO*///				leland_i86_readport,leland_i86_writeport,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			)
-/*TODO*///		},
-/*TODO*///		60, (1000000*16)/(256*60),
-/*TODO*///		1,
-/*TODO*///		init_machine,
-/*TODO*///	
-/*TODO*///		/* video hardware */
-/*TODO*///		40*8, 30*8, new rectangle( 0*8, 40*8-1, 0*8, 30*8-1 ),
-/*TODO*///		gfxdecodeinfo,
-/*TODO*///		1024,1024,
-/*TODO*///		null,
-/*TODO*///	
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
-/*TODO*///		leland_vh_eof,
-/*TODO*///		leland_vh_start,
-/*TODO*///		leland_vh_stop,
-/*TODO*///		leland_vh_screenrefresh,
-/*TODO*///	
-/*TODO*///		/* sound hardware */
-/*TODO*///		0,0,0,0,
-/*TODO*///		new MachineSound[] {
-/*TODO*///			new MachineSound( SOUND_AY8910, ay8910_interface ),
-/*TODO*///			new MachineSound( SOUND_CUSTOM, i186_custom_interface )
-/*TODO*///		},
-/*TODO*///		nvram_handler
-/*TODO*///	);
-/*TODO*///	
 
-    /*TODO*///	static MachineDriver machine_driver_lelandi = new MachineDriver
-/*TODO*///	(
-/*TODO*///		/* basic machine hardware */
-/*TODO*///		new MachineCPU[] {
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				master_readmem,master_writemem,
-/*TODO*///				master_readport,master_writeport,
-/*TODO*///				master_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///				CPU_Z80,
-/*TODO*///				6000000,
-/*TODO*///				slave_large_readmem,slave_large_writemem,
-/*TODO*///				slave_readport,slave_writeport,
-/*TODO*///		    	ignore_interrupt,1
-/*TODO*///			),
-/*TODO*///			new MachineCPU(
-/*TODO*///		    	CPU_I186 | CPU_AUDIO_CPU,
-/*TODO*///				16000000/2,
-/*TODO*///				leland_i86_readmem,leland_i86_writemem,
-/*TODO*///				leland_i86_readport,leland_i86_writeport,
-/*TODO*///				ignore_interrupt,1
-/*TODO*///			)
-/*TODO*///		},
-/*TODO*///		60, (1000000*16)/(256*60),
-/*TODO*///		1,
-/*TODO*///		init_machine,
-/*TODO*///	
-/*TODO*///		/* video hardware */
-/*TODO*///		40*8, 30*8, new rectangle( 0*8, 40*8-1, 0*8, 30*8-1 ),
-/*TODO*///		gfxdecodeinfo,
-/*TODO*///		1024,1024,
-/*TODO*///		null,
-/*TODO*///	
-/*TODO*///		VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
-/*TODO*///		leland_vh_eof,
-/*TODO*///		leland_vh_start,
-/*TODO*///		leland_vh_stop,
-/*TODO*///		leland_vh_screenrefresh,
-/*TODO*///	
-/*TODO*///		/* sound hardware */
-/*TODO*///		0,0,0,0,
-/*TODO*///		new MachineSound[] {
-/*TODO*///			new MachineSound( SOUND_AY8910, ay8910_interface ),
-/*TODO*///			new MachineSound( SOUND_CUSTOM, i186_custom_interface )
-/*TODO*///		},
-/*TODO*///		nvram_handler
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
+    static MachineDriver machine_driver_redline = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        master_readmem, master_writemem,
+                        master_readport, master_writeport,
+                        master_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        slave_small_readmem, slave_small_writemem,
+                        slave_readport, slave_writeport,
+                        ignore_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_I186 | CPU_AUDIO_CPU,
+                        16000000 / 2,
+                        leland_i86_readmem, leland_i86_writemem,
+                        leland_i86_readport, redline_i86_writeport,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (1000000 * 16) / (256 * 60),
+            1,
+            init_machine,
+            /* video hardware */
+            40 * 8, 30 * 8, new rectangle(0 * 8, 40 * 8 - 1, 0 * 8, 30 * 8 - 1),
+            gfxdecodeinfo,
+            1024, 1024,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
+            leland_vh_eof,
+            leland_vh_start,
+            leland_vh_stop,
+            leland_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_AY8910, ay8910_interface),
+                new MachineSound(SOUND_CUSTOM, redline_custom_interface)
+            },
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_quarterb = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        master_readmem, master_writemem,
+                        master_readport, master_writeport,
+                        master_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        slave_small_readmem, slave_small_writemem,
+                        slave_readport, slave_writeport,
+                        ignore_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_I186 | CPU_AUDIO_CPU,
+                        16000000 / 2,
+                        leland_i86_readmem, leland_i86_writemem,
+                        leland_i86_readport, leland_i86_writeport,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (1000000 * 16) / (256 * 60),
+            1,
+            init_machine,
+            /* video hardware */
+            40 * 8, 30 * 8, new rectangle(0 * 8, 40 * 8 - 1, 0 * 8, 30 * 8 - 1),
+            gfxdecodeinfo,
+            1024, 1024,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
+            leland_vh_eof,
+            leland_vh_start,
+            leland_vh_stop,
+            leland_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_AY8910, ay8910_interface),
+                new MachineSound(SOUND_CUSTOM, i186_custom_interface)
+            },
+            nvram_handler
+    );
+
+    static MachineDriver machine_driver_lelandi = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        master_readmem, master_writemem,
+                        master_readport, master_writeport,
+                        master_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_Z80,
+                        6000000,
+                        slave_large_readmem, slave_large_writemem,
+                        slave_readport, slave_writeport,
+                        ignore_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_I186 | CPU_AUDIO_CPU,
+                        16000000 / 2,
+                        leland_i86_readmem, leland_i86_writemem,
+                        leland_i86_readport, leland_i86_writeport,
+                        ignore_interrupt, 1
+                )
+            },
+            60, (1000000 * 16) / (256 * 60),
+            1,
+            init_machine,
+            /* video hardware */
+            40 * 8, 30 * 8, new rectangle(0 * 8, 40 * 8 - 1, 0 * 8, 30 * 8 - 1),
+            gfxdecodeinfo,
+            1024, 1024,
+            null,
+            VIDEO_TYPE_RASTER | VIDEO_MODIFIES_PALETTE,
+            leland_vh_eof,
+            leland_vh_start,
+            leland_vh_stop,
+            leland_vh_screenrefresh,
+            /* sound hardware */
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(SOUND_AY8910, ay8910_interface),
+                new MachineSound(SOUND_CUSTOM, i186_custom_interface)
+            },
+            nvram_handler
+    );
+
     /**
      * ***********************************
      *
@@ -2149,7 +2195,7 @@ public class leland {
             ROM_END();
         }
     };
-    /*TODO*///	
+
     static RomLoadPtr rom_dangerz = new RomLoadPtr() {
         public void handler() {
             ROM_REGION(0x20000, REGION_CPU1);
@@ -2368,638 +2414,626 @@ public class leland {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	static RomLoadPtr rom_redlin2p = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "13932-01.23t", 0x00000, 0x10000, 0xecdf0fbe );
-/*TODO*///		ROM_LOAD( "13931-01.22t", 0x10000, 0x10000, 0x16d01978 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "13907-01.u3",  0x00000, 0x04000, 0xb760d63e );
-/*TODO*///		ROM_LOAD( "13908-01.u4",  0x10000, 0x02000, 0xa30739d3 );
-/*TODO*///		ROM_CONTINUE(             0x1c000, 0x02000 );
-/*TODO*///		ROM_LOAD( "13909-01.u5",  0x12000, 0x02000, 0xaaf16ad7 );
-/*TODO*///		ROM_CONTINUE(             0x1e000, 0x02000 );
-/*TODO*///		ROM_LOAD( "13910-01.u6",  0x14000, 0x02000, 0xd03469eb );
-/*TODO*///		ROM_CONTINUE(             0x20000, 0x02000 );
-/*TODO*///		ROM_LOAD( "13911-01.u7",  0x16000, 0x02000, 0x8ee1f547 );
-/*TODO*///		ROM_CONTINUE(             0x22000, 0x02000 );
-/*TODO*///		ROM_LOAD( "13912-01.u8",  0x18000, 0x02000, 0xe5b57eac );
-/*TODO*///		ROM_CONTINUE(             0x24000, 0x02000 );
-/*TODO*///		ROM_LOAD( "13913-01.u9",  0x1a000, 0x02000, 0x02886071 );
-/*TODO*///		ROM_CONTINUE(             0x26000, 0x02000 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "17t",    0x0e0000, 0x10000, 0x8d26f221 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "28t",    0x0e0000, 0x10000, 0x7aa21b2c )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "13930-01.u93", 0x00000, 0x04000, 0x0721f42e );
-/*TODO*///		ROM_LOAD( "13929-01.u94", 0x04000, 0x04000, 0x1522e7b2 );
-/*TODO*///		ROM_LOAD( "13928-01.u95", 0x08000, 0x04000, 0xc321b5d1 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "13920-01.u70",  0x00000, 0x4000, 0xf343d34a );
-/*TODO*///		ROM_LOAD( "13921-01.u92",  0x04000, 0x4000, 0xc9ba8d41 );
-/*TODO*///		ROM_LOAD( "13922-01.u69",  0x08000, 0x4000, 0x276cfba0 );
-/*TODO*///		ROM_LOAD( "13923-01.u91",  0x0c000, 0x4000, 0x4a88ea34 );
-/*TODO*///		ROM_LOAD( "13924-01.u68",  0x10000, 0x4000, 0x3995cb7e );
-/*TODO*///		/* 90 = empty / missing */
-/*TODO*///		ROM_LOAD( "13926-01.u67",  0x18000, 0x4000, 0xdaa30add );
-/*TODO*///		ROM_LOAD( "13927-01.u89",  0x1c000, 0x4000, 0x30e60fb5 );
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_quarterb = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "15219-05.49t", 0x00000, 0x10000, 0xff653e4f );
-/*TODO*///		ROM_LOAD( "15218-05.48t", 0x10000, 0x10000, 0x34b83d81 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "15200-01.u3",  0x00000, 0x04000, 0x83297861 );
-/*TODO*///		ROM_LOAD( "15201-01.u4",  0x10000, 0x02000, 0xaf8dbdab );
-/*TODO*///		ROM_CONTINUE(             0x1c000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15202-01.u5",  0x12000, 0x02000, 0x3eeecb3d );
-/*TODO*///		ROM_CONTINUE(             0x1e000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15203-01.u6",  0x14000, 0x02000, 0xb9c5b663 );
-/*TODO*///		ROM_CONTINUE(             0x20000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15204-01.u7",  0x16000, 0x02000, 0xc68821b7 );
-/*TODO*///		ROM_CONTINUE(             0x22000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15205-01.u8",  0x18000, 0x02000, 0x2be843a9 );
-/*TODO*///		ROM_CONTINUE(             0x24000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15206-01.u9",  0x1a000, 0x02000, 0x6bf8d4ab );
-/*TODO*///		ROM_CONTINUE(             0x26000, 0x02000 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "15222-02.45t", 0x040000, 0x10000, 0x710bdc76 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15225-02.62t", 0x040000, 0x10000, 0x041cecde )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15221-02.44t", 0x060000, 0x10000, 0xe0459ddb )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15224-02.61t", 0x060000, 0x10000, 0x9027c579 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15220-02.43t", 0x0e0000, 0x10000, 0x48a8a018 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15223-02.60t", 0x0e0000, 0x10000, 0x6a299766 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "15215-01.u93", 0x00000, 0x04000, 0x4fb678d7 );
-/*TODO*///		ROM_LOAD( "lelqb.94",     0x04000, 0x04000, 0x7b57a44c );
-/*TODO*///		ROM_LOAD( "lelqb.95",     0x08000, 0x04000, 0x29bc33fd );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "15210-01.u70",  0x00000, 0x4000, 0xa5aea20e );
-/*TODO*///		ROM_LOAD( "15214-01.u92",  0x04000, 0x4000, 0x36f261ca );
-/*TODO*///		ROM_LOAD( "15209-01.u69",  0x08000, 0x4000, 0x0f5d74a4 );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		ROM_LOAD( "15208-01.u68",  0x10000, 0x4000, 0x0319aec7 );
-/*TODO*///		ROM_LOAD( "15212-01.u90",  0x14000, 0x4000, 0x38b298d6 );
-/*TODO*///		ROM_LOAD( "15207-01.u67",  0x18000, 0x4000, 0x5ff86aad );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_quartrba = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "15219-02.49t",   0x00000, 0x10000, 0x7fbe1e5a );
-/*TODO*///		ROM_LOAD( "15218-02.48t",   0x10000, 0x10000, 0x6fbd4b27 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "15200-01.u3",  0x00000, 0x04000, 0x83297861 );
-/*TODO*///		ROM_LOAD( "15201-01.u4",  0x10000, 0x02000, 0xaf8dbdab );
-/*TODO*///		ROM_CONTINUE(             0x1c000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15202-01.u5",  0x12000, 0x02000, 0x3eeecb3d );
-/*TODO*///		ROM_CONTINUE(             0x1e000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15203-01.u6",  0x14000, 0x02000, 0xb9c5b663 );
-/*TODO*///		ROM_CONTINUE(             0x20000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15204-01.u7",  0x16000, 0x02000, 0xc68821b7 );
-/*TODO*///		ROM_CONTINUE(             0x22000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15205-01.u8",  0x18000, 0x02000, 0x2be843a9 );
-/*TODO*///		ROM_CONTINUE(             0x24000, 0x02000 );
-/*TODO*///		ROM_LOAD( "15206-01.u9",  0x1a000, 0x02000, 0x6bf8d4ab );
-/*TODO*///		ROM_CONTINUE(             0x26000, 0x02000 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "15222-01.45t", 0x040000, 0x10000, 0x722d1a19 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15225-01.62t", 0x040000, 0x10000, 0xf8c20496 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15221-01.44t", 0x060000, 0x10000, 0xbc6abaaf )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15224-01.61t", 0x060000, 0x10000, 0x7ce3c3b7 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15220-01.43t", 0x0e0000, 0x10000, 0xccb6c8d7 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15223-01.60t", 0x0e0000, 0x10000, 0xc0ee425d )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "15215-01.u93", 0x00000, 0x04000, 0x4fb678d7 );
-/*TODO*///		ROM_LOAD( "lelqb.94",     0x04000, 0x04000, 0x7b57a44c );
-/*TODO*///		ROM_LOAD( "lelqb.95",     0x08000, 0x04000, 0x29bc33fd );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "15210-01.u70",  0x00000, 0x4000, 0xa5aea20e );
-/*TODO*///		ROM_LOAD( "15214-01.u92",  0x04000, 0x4000, 0x36f261ca );
-/*TODO*///		ROM_LOAD( "15209-01.u69",  0x08000, 0x4000, 0x0f5d74a4 );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		ROM_LOAD( "15208-01.u68",  0x10000, 0x4000, 0x0319aec7 );
-/*TODO*///		ROM_LOAD( "15212-01.u90",  0x14000, 0x4000, 0x38b298d6 );
-/*TODO*///		ROM_LOAD( "15207-01.u67",  0x18000, 0x4000, 0x5ff86aad );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_viper = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "15617-03.49t",   0x00000, 0x10000, 0x7e4688a6 );
-/*TODO*///		ROM_LOAD( "15616-03.48t",   0x10000, 0x10000, 0x3fe2f0bf );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "15600-02.u3", 0x00000, 0x02000, 0x0f57f68a );
-/*TODO*///		ROM_LOAD( "viper.u2t",   0x10000, 0x10000, 0x4043d4ee );
-/*TODO*///		ROM_LOAD( "viper.u3t",   0x20000, 0x10000, 0x213bc02b );
-/*TODO*///		ROM_LOAD( "viper.u4t",   0x30000, 0x10000, 0xce0b95b4 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "15620-02.45t", 0x040000, 0x10000, 0x7380ece1 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15623-02.62t", 0x040000, 0x10000, 0x2921d8f9 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15619-02.44t", 0x060000, 0x10000, 0xc8507cc2 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15622-02.61t", 0x060000, 0x10000, 0x32dfda37 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15618-02.43t", 0x0e0000, 0x10000, 0x5562e0c3 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15621-02.60t", 0x0e0000, 0x10000, 0xcb468f2b )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "15609-01.u93", 0x00000, 0x04000, 0x08ad92e9 );
-/*TODO*///		ROM_LOAD( "15610-01.u94", 0x04000, 0x04000, 0xd4e56dfb );
-/*TODO*///		ROM_LOAD( "15611-01.u95", 0x08000, 0x04000, 0x3a2c46fb );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "15604-01.u70",  0x00000, 0x4000, 0x7e3b0cce );
-/*TODO*///		ROM_LOAD( "15608-01.u92",  0x04000, 0x4000, 0xa9bde0ef );
-/*TODO*///		ROM_LOAD( "15603-01.u69",  0x08000, 0x4000, 0xaecc9516 );
-/*TODO*///		ROM_LOAD( "15607-01.u91",  0x0c000, 0x4000, 0x14f06f88 );
-/*TODO*///		ROM_LOAD( "15602-01.u68",  0x10000, 0x4000, 0x4ef613ad );
-/*TODO*///		ROM_LOAD( "15606-01.u90",  0x14000, 0x4000, 0x3c2e8e76 );
-/*TODO*///		ROM_LOAD( "15601-01.u67",  0x18000, 0x4000, 0xdc7006cd );
-/*TODO*///		ROM_LOAD( "15605-01.u89",  0x1c000, 0x4000, 0x4aa9c788 );
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_teamqb = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "15618-03.58t",   0x00000, 0x10000, 0xb32568dc );
-/*TODO*///		ROM_LOAD( "15619-03.59t",   0x10000, 0x10000, 0x40b3319f );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "15600-01.u3",   0x00000, 0x02000, 0x46615844 );
-/*TODO*///		ROM_LOAD( "15601-01.u2t",  0x10000, 0x10000, 0x8e523c58 );
-/*TODO*///		ROM_LOAD( "15602-01.u3t",  0x20000, 0x10000, 0x545b27a1 );
-/*TODO*///		ROM_LOAD( "15603-01.u4t",  0x30000, 0x10000, 0xcdc9c09d );
-/*TODO*///		ROM_LOAD( "15604-01.u5t",  0x40000, 0x10000, 0x3c03e92e );
-/*TODO*///		ROM_LOAD( "15605-01.u6t",  0x50000, 0x10000, 0xcdf7d19c );
-/*TODO*///		ROM_LOAD( "15606-01.u7t",  0x60000, 0x10000, 0x8eeb007c );
-/*TODO*///		ROM_LOAD( "15607-01.u8t",  0x70000, 0x10000, 0x57cb6d2d );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "15623-01.25t", 0x040000, 0x10000, 0x710bdc76 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15620-01.13t", 0x040000, 0x10000, 0x7e5cb8ad )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15624-01.26t", 0x060000, 0x10000, 0xdd090d33 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15621-01.14t", 0x060000, 0x10000, 0xf68c68c9 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15625-01.27t", 0x0e0000, 0x10000, 0xac442523 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15622-01.15t", 0x0e0000, 0x10000, 0x9e84509a )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "15615-01.u93", 0x00000, 0x04000, 0xa7ea6a87 );
-/*TODO*///		ROM_LOAD( "15616-01.u94", 0x04000, 0x04000, 0x4a9b3900 );
-/*TODO*///		ROM_LOAD( "15617-01.u95", 0x08000, 0x04000, 0x2cd95edb );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "15611-01.u70",  0x00000, 0x4000, 0xbf2695fb );
-/*TODO*///		ROM_LOAD( "15614-01.u92",  0x04000, 0x4000, 0xc93fd870 );
-/*TODO*///		ROM_LOAD( "15610-01.u69",  0x08000, 0x4000, 0x3e5b786f );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		ROM_LOAD( "15609-01.u68",  0x10000, 0x4000, 0x0319aec7 );
-/*TODO*///		ROM_LOAD( "15613-01.u90",  0x14000, 0x4000, 0x4805802e );
-/*TODO*///		ROM_LOAD( "15608-01.u67",  0x18000, 0x4000, 0x78f0fd2b );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_teamqb2 = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "15618-03.58t",   0x00000, 0x10000, 0xb32568dc );
-/*TODO*///		ROM_LOAD( "15619-02.59t",   0x10000, 0x10000, 0x6d533714 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "15600-01.u3",   0x00000, 0x02000, 0x46615844 );
-/*TODO*///		ROM_LOAD( "15601-01.u2t",  0x10000, 0x10000, 0x8e523c58 );
-/*TODO*///		ROM_LOAD( "15602-01.u3t",  0x20000, 0x10000, 0x545b27a1 );
-/*TODO*///		ROM_LOAD( "15603-01.u4t",  0x30000, 0x10000, 0xcdc9c09d );
-/*TODO*///		ROM_LOAD( "15604-01.u5t",  0x40000, 0x10000, 0x3c03e92e );
-/*TODO*///		ROM_LOAD( "15605-01.u6t",  0x50000, 0x10000, 0xcdf7d19c );
-/*TODO*///		ROM_LOAD( "15606-01.u7t",  0x60000, 0x10000, 0x8eeb007c );
-/*TODO*///		ROM_LOAD( "15607-01.u8t",  0x70000, 0x10000, 0x57cb6d2d );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "15623-01.25t", 0x040000, 0x10000, 0x710bdc76 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15620-01.13t", 0x040000, 0x10000, 0x7e5cb8ad )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15624-01.26t", 0x060000, 0x10000, 0xdd090d33 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15621-01.14t", 0x060000, 0x10000, 0xf68c68c9 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "15625-01.27t", 0x0e0000, 0x10000, 0xac442523 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "15622-01.15t", 0x0e0000, 0x10000, 0x9e84509a )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "15615-01.u93", 0x00000, 0x04000, 0xa7ea6a87 );
-/*TODO*///		ROM_LOAD( "15616-01.u94", 0x04000, 0x04000, 0x4a9b3900 );
-/*TODO*///		ROM_LOAD( "15617-01.u95", 0x08000, 0x04000, 0x2cd95edb );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "15611-01.u70",  0x00000, 0x4000, 0xbf2695fb );
-/*TODO*///		ROM_LOAD( "15614-01.u92",  0x04000, 0x4000, 0xc93fd870 );
-/*TODO*///		ROM_LOAD( "15610-01.u69",  0x08000, 0x4000, 0x3e5b786f );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		ROM_LOAD( "15609-01.u68",  0x10000, 0x4000, 0x0319aec7 );
-/*TODO*///		ROM_LOAD( "15613-01.u90",  0x14000, 0x4000, 0x4805802e );
-/*TODO*///		ROM_LOAD( "15608-01.u67",  0x18000, 0x4000, 0x78f0fd2b );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_aafb = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "aafbu58t.bin",   0x00000, 0x10000, 0xfa75a4a0 );
-/*TODO*///		ROM_LOAD( "aafbu59t.bin",   0x10000, 0x10000, 0xab6a606f );
-/*TODO*///	
-/*TODO*///		/* Everything from here down may be from the wrong version */
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "24000-02.u3",   0x00000, 0x02000, 0x52df0354 );
-/*TODO*///		ROM_LOAD( "24001-02.u2t",  0x10000, 0x10000, 0x9b20697d );
-/*TODO*///		ROM_LOAD( "24002-02.u3t",  0x20000, 0x10000, 0xbbb92184 );
-/*TODO*///		ROM_LOAD( "15603-01.u4t",  0x30000, 0x10000, 0xcdc9c09d );
-/*TODO*///		ROM_LOAD( "15604-01.u5t",  0x40000, 0x10000, 0x3c03e92e );
-/*TODO*///		ROM_LOAD( "15605-01.u6t",  0x50000, 0x10000, 0xcdf7d19c );
-/*TODO*///		ROM_LOAD( "15606-01.u7t",  0x60000, 0x10000, 0x8eeb007c );
-/*TODO*///		ROM_LOAD( "24002-02.u8t",  0x70000, 0x10000, 0x3d9747c9 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24019-01.u25", 0x040000, 0x10000, 0x9e344768 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24016-01.u13", 0x040000, 0x10000, 0x6997025f )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24020-01.u26", 0x060000, 0x10000, 0x0788f2a5 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24017-01.u14", 0x060000, 0x10000, 0xa48bd721 )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24021-01.u27", 0x0e0000, 0x10000, 0x94081899 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "24011-02.u93", 0x00000, 0x08000, 0x00000000 );
-/*TODO*///		ROM_LOAD( "24012-02.u94", 0x08000, 0x08000, 0x00000000 );
-/*TODO*///		ROM_LOAD( "24013-02.u95", 0x10000, 0x08000, 0x00000000 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "24007-01.u70",  0x00000, 0x4000, 0x40e46aa4 );
-/*TODO*///		ROM_LOAD( "24010-01.u92",  0x04000, 0x4000, 0x78705f42 );
-/*TODO*///		ROM_LOAD( "24006-01.u69",  0x08000, 0x4000, 0x6a576aa9 );
-/*TODO*///		ROM_LOAD( "24009-02.u91",  0x0c000, 0x4000, 0xb857a1ad );
-/*TODO*///		ROM_LOAD( "24005-02.u68",  0x10000, 0x4000, 0x8ea75319 );
-/*TODO*///		ROM_LOAD( "24008-01.u90",  0x14000, 0x4000, 0x4538bc58 );
-/*TODO*///		ROM_LOAD( "24004-02.u67",  0x18000, 0x4000, 0xcd7a3338 );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_aafbb = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "24014-02.u58",   0x00000, 0x10000, 0x5db4a3d0 );
-/*TODO*///		ROM_LOAD( "24015-02.u59",   0x10000, 0x10000, 0x00000000 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "24000-02.u3",   0x00000, 0x02000, 0x52df0354 );
-/*TODO*///		ROM_LOAD( "24001-02.u2t",  0x10000, 0x10000, 0x9b20697d );
-/*TODO*///		ROM_LOAD( "24002-02.u3t",  0x20000, 0x10000, 0xbbb92184 );
-/*TODO*///		ROM_LOAD( "15603-01.u4t",  0x30000, 0x10000, 0xcdc9c09d );
-/*TODO*///		ROM_LOAD( "15604-01.u5t",  0x40000, 0x10000, 0x3c03e92e );
-/*TODO*///		ROM_LOAD( "15605-01.u6t",  0x50000, 0x10000, 0xcdf7d19c );
-/*TODO*///		ROM_LOAD( "15606-01.u7t",  0x60000, 0x10000, 0x8eeb007c );
-/*TODO*///		ROM_LOAD( "24002-02.u8t",  0x70000, 0x10000, 0x3d9747c9 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24019-01.u25", 0x040000, 0x10000, 0x9e344768 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24016-01.u13", 0x040000, 0x10000, 0x6997025f )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24020-01.u26", 0x060000, 0x10000, 0x0788f2a5 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24017-01.u14", 0x060000, 0x10000, 0xa48bd721 )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24021-01.u27", 0x0e0000, 0x10000, 0x94081899 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "24011-02.u93", 0x00000, 0x08000, 0x71f4425b );
-/*TODO*///		ROM_LOAD( "24012-02.u94", 0x08000, 0x08000, 0xb2499547 );
-/*TODO*///		ROM_LOAD( "24013-02.u95", 0x10000, 0x08000, 0x0a604e0d );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "24007-01.u70",  0x00000, 0x4000, 0x40e46aa4 );
-/*TODO*///		ROM_LOAD( "24010-01.u92",  0x04000, 0x4000, 0x78705f42 );
-/*TODO*///		ROM_LOAD( "24006-01.u69",  0x08000, 0x4000, 0x6a576aa9 );
-/*TODO*///		ROM_LOAD( "24009-02.u91",  0x0c000, 0x4000, 0xb857a1ad );
-/*TODO*///		ROM_LOAD( "24005-02.u68",  0x10000, 0x4000, 0x8ea75319 );
-/*TODO*///		ROM_LOAD( "24008-01.u90",  0x14000, 0x4000, 0x4538bc58 );
-/*TODO*///		ROM_LOAD( "24004-02.u67",  0x18000, 0x4000, 0xcd7a3338 );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_aafbd2p = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x20000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "26014-01.58t", 0x00000, 0x10000, 0x79fd14cd );
-/*TODO*///		ROM_LOAD( "26015-01.59t", 0x10000, 0x10000, 0x3b0382f0 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "26000-01.u3",   0x00000, 0x02000, 0x98c06c63 );
-/*TODO*///		ROM_LOAD( "26001-01.2t",   0x10000, 0x10000, 0xf118b9b4 );
-/*TODO*///		ROM_LOAD( "24002-02.u3t",  0x20000, 0x10000, 0xbbb92184 );
-/*TODO*///		ROM_LOAD( "15603-01.u4t",  0x30000, 0x10000, 0xcdc9c09d );
-/*TODO*///		ROM_LOAD( "15604-01.u5t",  0x40000, 0x10000, 0x3c03e92e );
-/*TODO*///		ROM_LOAD( "15605-01.u6t",  0x50000, 0x10000, 0xcdf7d19c );
-/*TODO*///		ROM_LOAD( "15606-01.u7t",  0x60000, 0x10000, 0x8eeb007c );
-/*TODO*///		ROM_LOAD( "24002-02.u8t",  0x70000, 0x10000, 0x3d9747c9 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24019-01.u25", 0x040000, 0x10000, 0x9e344768 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24016-01.u13", 0x040000, 0x10000, 0x6997025f )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24020-01.u26", 0x060000, 0x10000, 0x0788f2a5 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24017-01.u14", 0x060000, 0x10000, 0xa48bd721 )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "24021-01.u27", 0x0e0000, 0x10000, 0x94081899 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077 )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "24011-02.u93", 0x00000, 0x08000, 0x71f4425b );
-/*TODO*///		ROM_LOAD( "24012-02.u94", 0x08000, 0x08000, 0xb2499547 );
-/*TODO*///		ROM_LOAD( "24013-02.u95", 0x10000, 0x08000, 0x0a604e0d );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "24007-01.u70",  0x00000, 0x4000, 0x40e46aa4 );
-/*TODO*///		ROM_LOAD( "24010-01.u92",  0x04000, 0x4000, 0x78705f42 );
-/*TODO*///		ROM_LOAD( "24006-01.u69",  0x08000, 0x4000, 0x6a576aa9 );
-/*TODO*///		ROM_LOAD( "24009-02.u91",  0x0c000, 0x4000, 0xb857a1ad );
-/*TODO*///		ROM_LOAD( "24005-02.u68",  0x10000, 0x4000, 0x8ea75319 );
-/*TODO*///		ROM_LOAD( "24008-01.u90",  0x14000, 0x4000, 0x4538bc58 );
-/*TODO*///		ROM_LOAD( "24004-02.u67",  0x18000, 0x4000, 0xcd7a3338 );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_offroad = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x40000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "22121-04.u58",   0x00000, 0x10000, 0xc5790988 );
-/*TODO*///		ROM_LOAD( "22122-03.u59",   0x10000, 0x10000, 0xae862fdc );
-/*TODO*///		ROM_LOAD( "22120-01.u57",   0x20000, 0x10000, 0xe9f0f175 );
-/*TODO*///		ROM_LOAD( "22119-02.u56",   0x30000, 0x10000, 0x38642f22 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "22100-01.u2",  0x00000, 0x02000, 0x08c96a4b );
-/*TODO*///		ROM_LOAD( "22108-02.u4",  0x30000, 0x10000, 0x0d72780a );
-/*TODO*///		ROM_LOAD( "22109-02.u5",  0x40000, 0x10000, 0x5429ce2c );
-/*TODO*///		ROM_LOAD( "22110-02.u6",  0x50000, 0x10000, 0xf97bad5c );
-/*TODO*///		ROM_LOAD( "22111-01.u7",  0x60000, 0x10000, 0xf79157a1 );
-/*TODO*///		ROM_LOAD( "22112-01.u8",  0x70000, 0x10000, 0x3eef38d3 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///	    ROM_LOAD_V20_EVEN( "22116-03.u25", 0x040000, 0x10000, 0x95bb31d3 )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "22113-03.u13", 0x040000, 0x10000, 0x71b28df6 )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "22117-03.u26", 0x060000, 0x10000, 0x703d81ce )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "22114-03.u14", 0x060000, 0x10000, 0xf8b31bf8 )
-/*TODO*///	    ROM_LOAD_V20_EVEN( "22118-03.u27", 0x0e0000, 0x10000, 0x806ccf8b )
-/*TODO*///	    ROM_LOAD_V20_ODD ( "22115-03.u15", 0x0e0000, 0x10000, 0xc8439a7a )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "22105-01.u93", 0x00000, 0x08000, 0x4426e367 );
-/*TODO*///		ROM_LOAD( "22106-02.u94", 0x08000, 0x08000, 0x687dc1fc );
-/*TODO*///		ROM_LOAD( "22107-02.u95", 0x10000, 0x08000, 0xcee6ee5f );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		/* 70 = empty */
-/*TODO*///		ROM_LOAD( "22104-01.u92",  0x04000, 0x4000, 0x03e0497d );
-/*TODO*///		ROM_LOAD( "22102-01.u69",  0x08000, 0x4000, 0xc3f2e443 );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		/* 68 = empty */
-/*TODO*///		ROM_LOAD( "22103-02.u90",  0x14000, 0x4000, 0x2266757a );
-/*TODO*///		ROM_LOAD( "22101-01.u67",  0x18000, 0x4000, 0xecab0527 );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_offroadt = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x040000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "ortpu58.bin",   0x00000, 0x10000, 0xadbc6211 );
-/*TODO*///		ROM_LOAD( "ortpu59.bin",   0x10000, 0x10000, 0x296dd3b6 );
-/*TODO*///		ROM_LOAD( "ortpu57.bin",   0x20000, 0x10000, 0xe9f0f175 );
-/*TODO*///		ROM_LOAD( "ortpu56.bin",   0x30000, 0x10000, 0x2c1a22b3 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x90000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "ortpu3b.bin", 0x00000, 0x02000, 0x95abb9f1 );
-/*TODO*///		ROM_LOAD( "ortpu2.bin",  0x10000, 0x10000, 0xc46c1627 );
-/*TODO*///		ROM_LOAD( "ortpu3.bin",  0x20000, 0x10000, 0x2276546f );
-/*TODO*///		ROM_LOAD( "ortpu4.bin",  0x30000, 0x10000, 0xaa4b5975 );
-/*TODO*///		ROM_LOAD( "ortpu5.bin",  0x40000, 0x10000, 0x69100b06 );
-/*TODO*///		ROM_LOAD( "ortpu6.bin",  0x50000, 0x10000, 0xb75015b8 );
-/*TODO*///		ROM_LOAD( "ortpu7.bin",  0x60000, 0x10000, 0xa5af5b4f );
-/*TODO*///		ROM_LOAD( "ortpu8.bin",  0x70000, 0x10000, 0x0f735078 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "ortpu25.bin", 0x040000, 0x10000, 0xf952f800 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "ortpu13.bin", 0x040000, 0x10000, 0x7beec9fc )
-/*TODO*///		ROM_LOAD_V20_EVEN( "ortpu26.bin", 0x060000, 0x10000, 0x6227ea94 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "ortpu14.bin", 0x060000, 0x10000, 0x0a44331d )
-/*TODO*///		ROM_LOAD_V20_EVEN( "ortpu27.bin", 0x0e0000, 0x10000, 0xb80c5f99 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "ortpu15.bin", 0x0e0000, 0x10000, 0x2a1a1c3c )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "ortpu93b.bin", 0x00000, 0x08000, 0xf0c1d8b0 );
-/*TODO*///		ROM_LOAD( "ortpu94b.bin", 0x08000, 0x08000, 0x7460d8c0 );
-/*TODO*///		ROM_LOAD( "ortpu95b.bin", 0x10000, 0x08000, 0x081ee7a8 );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x20000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		/* 70 = empty */
-/*TODO*///		ROM_LOAD( "ortpu92b.bin",  0x04000, 0x4000, 0xf9988e28 );
-/*TODO*///		ROM_LOAD( "ortpu69b.bin",  0x08000, 0x4000, 0xfe5f8d8f );
-/*TODO*///		/* 91 = empty */
-/*TODO*///		/* 68 = empty */
-/*TODO*///		ROM_LOAD( "ortpu90b.bin",  0x14000, 0x4000, 0xbda2ecb1 );
-/*TODO*///		ROM_LOAD( "ortpu67b.bin",  0x18000, 0x4000, 0x38c9bf29 );
-/*TODO*///		/* 89 = empty */
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_pigout = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x040000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "poutu58t.bin",  0x00000, 0x10000, 0x8fe4b683 );
-/*TODO*///		ROM_LOAD( "poutu59t.bin",  0x10000, 0x10000, 0xab907762 );
-/*TODO*///		ROM_LOAD( "poutu57t.bin",  0x20000, 0x10000, 0xc22be0ff );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x080000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "poutu3.bin",   0x00000, 0x02000, 0xaf213cb7 );
-/*TODO*///		ROM_LOAD( "poutu2t.bin",  0x10000, 0x10000, 0xb23164c6 );
-/*TODO*///		ROM_LOAD( "poutu3t.bin",  0x20000, 0x10000, 0xd93f105f );
-/*TODO*///		ROM_LOAD( "poutu4t.bin",  0x30000, 0x10000, 0xb7c47bfe );
-/*TODO*///		ROM_LOAD( "poutu5t.bin",  0x40000, 0x10000, 0xd9b9dfbf );
-/*TODO*///		ROM_LOAD( "poutu6t.bin",  0x50000, 0x10000, 0x728c7c1a );
-/*TODO*///		ROM_LOAD( "poutu7t.bin",  0x60000, 0x10000, 0x393bd990 );
-/*TODO*///		ROM_LOAD( "poutu8t.bin",  0x70000, 0x10000, 0xcb9ffaad );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu25t.bin", 0x040000, 0x10000, 0x92cd2617 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu13t.bin", 0x040000, 0x10000, 0x9448c389 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu26t.bin", 0x060000, 0x10000, 0xab57de8f )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu14t.bin", 0x060000, 0x10000, 0x30678e93 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu27t.bin", 0x0e0000, 0x10000, 0x37a8156e )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu15t.bin", 0x0e0000, 0x10000, 0x1c60d58b )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "poutu93.bin", 0x000000, 0x08000, 0xf102a04d );
-/*TODO*///		ROM_LOAD( "poutu94.bin", 0x008000, 0x08000, 0xec63c015 );
-/*TODO*///		ROM_LOAD( "poutu95.bin", 0x010000, 0x08000, 0xba6e797e );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x40000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "poutu70.bin",  0x00000, 0x4000, 0x7db4eaa1 );
-/*TODO*///		ROM_LOAD( "poutu92.bin",  0x04000, 0x4000, 0x20fa57bb );
-/*TODO*///		ROM_LOAD( "poutu69.bin",  0x08000, 0x4000, 0xa16886f3 );
-/*TODO*///		ROM_LOAD( "poutu91.bin",  0x0c000, 0x4000, 0x482a3581 );
-/*TODO*///		ROM_LOAD( "poutu68.bin",  0x10000, 0x4000, 0x7b62a3ed );
-/*TODO*///		ROM_LOAD( "poutu90.bin",  0x14000, 0x4000, 0x9615d710 );
-/*TODO*///		ROM_LOAD( "poutu67.bin",  0x18000, 0x4000, 0xaf85ce79 );
-/*TODO*///		ROM_LOAD( "poutu89.bin",  0x1c000, 0x4000, 0x6c874a05 );
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	static RomLoadPtr rom_pigouta = new RomLoadPtr(){ public void handler(){ 
-/*TODO*///		ROM_REGION( 0x040000, REGION_CPU1 );
-/*TODO*///		ROM_LOAD( "03-29020.01", 0x00000, 0x10000, 0x6c815982 );
-/*TODO*///		ROM_LOAD( "03-29021.01", 0x10000, 0x10000, 0x9de7a763 );
-/*TODO*///		ROM_LOAD( "poutu57t.bin", 0x20000, 0x10000, 0xc22be0ff );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x80000, REGION_CPU2 );
-/*TODO*///		ROM_LOAD( "poutu3.bin",   0x00000, 0x02000, 0xaf213cb7 );
-/*TODO*///		ROM_LOAD( "poutu2t.bin",  0x10000, 0x10000, 0xb23164c6 );
-/*TODO*///		ROM_LOAD( "poutu3t.bin",  0x20000, 0x10000, 0xd93f105f );
-/*TODO*///		ROM_LOAD( "poutu4t.bin",  0x30000, 0x10000, 0xb7c47bfe );
-/*TODO*///		ROM_LOAD( "poutu5t.bin",  0x40000, 0x10000, 0xd9b9dfbf );
-/*TODO*///		ROM_LOAD( "poutu6t.bin",  0x50000, 0x10000, 0x728c7c1a );
-/*TODO*///		ROM_LOAD( "poutu7t.bin",  0x60000, 0x10000, 0x393bd990 );
-/*TODO*///		ROM_LOAD( "poutu8t.bin",  0x70000, 0x10000, 0xcb9ffaad );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x100000, REGION_CPU3 );
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu25t.bin", 0x040000, 0x10000, 0x92cd2617 )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu13t.bin", 0x040000, 0x10000, 0x9448c389 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu26t.bin", 0x060000, 0x10000, 0xab57de8f )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu14t.bin", 0x060000, 0x10000, 0x30678e93 )
-/*TODO*///		ROM_LOAD_V20_EVEN( "poutu27t.bin", 0x0e0000, 0x10000, 0x37a8156e )
-/*TODO*///		ROM_LOAD_V20_ODD ( "poutu15t.bin", 0x0e0000, 0x10000, 0x1c60d58b )
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE );
-/*TODO*///		ROM_LOAD( "poutu93.bin", 0x000000, 0x08000, 0xf102a04d );
-/*TODO*///		ROM_LOAD( "poutu94.bin", 0x008000, 0x08000, 0xec63c015 );
-/*TODO*///		ROM_LOAD( "poutu95.bin", 0x010000, 0x08000, 0xba6e797e );
-/*TODO*///	
-/*TODO*///		ROM_REGION( 0x40000, REGION_USER1 );  /* Ordering: 70/92/69/91/68/90/67/89 */
-/*TODO*///		ROM_LOAD( "poutu70.bin",  0x00000, 0x4000, 0x7db4eaa1 );
-/*TODO*///		ROM_LOAD( "poutu92.bin",  0x04000, 0x4000, 0x20fa57bb );
-/*TODO*///		ROM_LOAD( "poutu69.bin",  0x08000, 0x4000, 0xa16886f3 );
-/*TODO*///		ROM_LOAD( "poutu91.bin",  0x0c000, 0x4000, 0x482a3581 );
-/*TODO*///		ROM_LOAD( "poutu68.bin",  0x10000, 0x4000, 0x7b62a3ed );
-/*TODO*///		ROM_LOAD( "poutu90.bin",  0x14000, 0x4000, 0x9615d710 );
-/*TODO*///		ROM_LOAD( "poutu67.bin",  0x18000, 0x4000, 0xaf85ce79 );
-/*TODO*///		ROM_LOAD( "poutu89.bin",  0x1c000, 0x4000, 0x6c874a05 );
-/*TODO*///	
-/*TODO*///	    ROM_REGION( battery_ram_size, REGION_USER2 );/* extra RAM regions */
-/*TODO*///	ROM_END(); }}; 
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Driver initialization
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	/* also called by Ataxx */
-/*TODO*///	void leland_rotate_memory(int cpunum)
-/*TODO*///	{
-/*TODO*///		int startaddr = 0x10000;
-/*TODO*///		int banks = (memory_region_length(REGION_CPU1 + cpunum) - startaddr) / 0x8000;
-/*TODO*///		UINT8 *ram = memory_region(REGION_CPU1 + cpunum);
-/*TODO*///		UINT8 temp[0x2000];
-/*TODO*///		int i;
-/*TODO*///	
-/*TODO*///		for (i = 0; i < banks; i++)
-/*TODO*///		{
-/*TODO*///			memmove(temp, &ram[startaddr + 0x0000], 0x2000);
-/*TODO*///			memmove(&ram[startaddr + 0x0000], &ram[startaddr + 0x2000], 0x6000);
-/*TODO*///			memmove(&ram[startaddr + 0x6000], temp, 0x2000);
-/*TODO*///			startaddr += 0x8000;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	#ifdef MAME_DEBUG
-/*TODO*///	/*
-/*TODO*///	Copy this code into the init function and modify:
-/*TODO*///	{
-/*TODO*///		UINT8 *ram = memory_region(REGION_CPU1);
-/*TODO*///		FILE *output;
-/*TODO*///	
-/*TODO*///		output = fopen("indyheat.m", "w");
-/*TODO*///		dasm_chunk("Resident", 		&ram[0x00000], 0x0000, 0x2000, output);
-/*TODO*///		dasm_chunk("Bank 0x02000:", &ram[0x02000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x10000:", &ram[0x10000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x18000:", &ram[0x18000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x20000:", &ram[0x20000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x28000:", &ram[0x28000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x30000:", &ram[0x30000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x38000:", &ram[0x38000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x40000:", &ram[0x40000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x48000:", &ram[0x48000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x50000:", &ram[0x50000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x58000:", &ram[0x58000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x60000:", &ram[0x60000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x68000:", &ram[0x68000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x70000:", &ram[0x70000], 0x2000, 0x8000, output);
-/*TODO*///		dasm_chunk("Bank 0x78000:", &ram[0x78000], 0x2000, 0x8000, output);
-/*TODO*///		fclose(output);
-/*TODO*///	}
-/*TODO*///	*/
-/*TODO*///	static void dasm_chunk(char *tag, UINT8 *base, UINT16 pc, UINT32 length, FILE *output)
-/*TODO*///	{
-/*TODO*///		extern unsigned DasmZ80(char *buffer, unsigned _pc);
-/*TODO*///	
-/*TODO*///		UINT8 *old_rom = OP_ROM;
-/*TODO*///		UINT8 *old_ram = OP_RAM;
-/*TODO*///		char buffer[256];
-/*TODO*///		int count, offset, i;
-/*TODO*///	
-/*TODO*///		fprintf(output, "\n\n\n%s:\n", tag);
-/*TODO*///		OP_ROM = OP_RAM = &base[-pc];
-/*TODO*///		for (offset = 0; offset < length; offset += count)
-/*TODO*///		{
-/*TODO*///			count = DasmZ80(buffer, pc);
-/*TODO*///			for (i = 0; i < 4; i++)
-/*TODO*///				if (i < count)
-/*TODO*///					fprintf(output, "%c", (OP_ROM[pc + i] >= 32 && OP_ROM[pc + i] < 127) ? OP_ROM[pc + i] : ' ');
-/*TODO*///				else
-/*TODO*///					fprintf(output, " ");
-/*TODO*///			fprintf(output, " %04X: ", pc);
-/*TODO*///			for (i = 0; i < 4; i++)
-/*TODO*///				if (i < count)
-/*TODO*///					fprintf(output, "%02X ", OP_ROM[pc++]);
-/*TODO*///				else
-/*TODO*///					fprintf(output, "   ");
-/*TODO*///			fprintf(output, "%s\n", buffer);
-/*TODO*///		}
-/*TODO*///		OP_ROM = old_rom;
-/*TODO*///		OP_RAM = old_ram;
-/*TODO*///	}
-/*TODO*///	#endif
-/*TODO*///	
+    static RomLoadPtr rom_redlin2p = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("13932-01.23t", 0x00000, 0x10000, 0xecdf0fbe);
+            ROM_LOAD("13931-01.22t", 0x10000, 0x10000, 0x16d01978);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("13907-01.u3", 0x00000, 0x04000, 0xb760d63e);
+            ROM_LOAD("13908-01.u4", 0x10000, 0x02000, 0xa30739d3);
+            ROM_CONTINUE(0x1c000, 0x02000);
+            ROM_LOAD("13909-01.u5", 0x12000, 0x02000, 0xaaf16ad7);
+            ROM_CONTINUE(0x1e000, 0x02000);
+            ROM_LOAD("13910-01.u6", 0x14000, 0x02000, 0xd03469eb);
+            ROM_CONTINUE(0x20000, 0x02000);
+            ROM_LOAD("13911-01.u7", 0x16000, 0x02000, 0x8ee1f547);
+            ROM_CONTINUE(0x22000, 0x02000);
+            ROM_LOAD("13912-01.u8", 0x18000, 0x02000, 0xe5b57eac);
+            ROM_CONTINUE(0x24000, 0x02000);
+            ROM_LOAD("13913-01.u9", 0x1a000, 0x02000, 0x02886071);
+            ROM_CONTINUE(0x26000, 0x02000);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("17t", 0x0e0000, 0x10000, 0x8d26f221);
+            ROM_LOAD_V20_ODD("28t", 0x0e0000, 0x10000, 0x7aa21b2c);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("13930-01.u93", 0x00000, 0x04000, 0x0721f42e);
+            ROM_LOAD("13929-01.u94", 0x04000, 0x04000, 0x1522e7b2);
+            ROM_LOAD("13928-01.u95", 0x08000, 0x04000, 0xc321b5d1);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("13920-01.u70", 0x00000, 0x4000, 0xf343d34a);
+            ROM_LOAD("13921-01.u92", 0x04000, 0x4000, 0xc9ba8d41);
+            ROM_LOAD("13922-01.u69", 0x08000, 0x4000, 0x276cfba0);
+            ROM_LOAD("13923-01.u91", 0x0c000, 0x4000, 0x4a88ea34);
+            ROM_LOAD("13924-01.u68", 0x10000, 0x4000, 0x3995cb7e);
+            /* 90 = empty / missing */
+            ROM_LOAD("13926-01.u67", 0x18000, 0x4000, 0xdaa30add);
+            ROM_LOAD("13927-01.u89", 0x1c000, 0x4000, 0x30e60fb5);
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_quarterb = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("15219-05.49t", 0x00000, 0x10000, 0xff653e4f);
+            ROM_LOAD("15218-05.48t", 0x10000, 0x10000, 0x34b83d81);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("15200-01.u3", 0x00000, 0x04000, 0x83297861);
+            ROM_LOAD("15201-01.u4", 0x10000, 0x02000, 0xaf8dbdab);
+            ROM_CONTINUE(0x1c000, 0x02000);
+            ROM_LOAD("15202-01.u5", 0x12000, 0x02000, 0x3eeecb3d);
+            ROM_CONTINUE(0x1e000, 0x02000);
+            ROM_LOAD("15203-01.u6", 0x14000, 0x02000, 0xb9c5b663);
+            ROM_CONTINUE(0x20000, 0x02000);
+            ROM_LOAD("15204-01.u7", 0x16000, 0x02000, 0xc68821b7);
+            ROM_CONTINUE(0x22000, 0x02000);
+            ROM_LOAD("15205-01.u8", 0x18000, 0x02000, 0x2be843a9);
+            ROM_CONTINUE(0x24000, 0x02000);
+            ROM_LOAD("15206-01.u9", 0x1a000, 0x02000, 0x6bf8d4ab);
+            ROM_CONTINUE(0x26000, 0x02000);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("15222-02.45t", 0x040000, 0x10000, 0x710bdc76);
+            ROM_LOAD_V20_ODD("15225-02.62t", 0x040000, 0x10000, 0x041cecde);
+            ROM_LOAD_V20_EVEN("15221-02.44t", 0x060000, 0x10000, 0xe0459ddb);
+            ROM_LOAD_V20_ODD("15224-02.61t", 0x060000, 0x10000, 0x9027c579);
+            ROM_LOAD_V20_EVEN("15220-02.43t", 0x0e0000, 0x10000, 0x48a8a018);
+            ROM_LOAD_V20_ODD("15223-02.60t", 0x0e0000, 0x10000, 0x6a299766);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("15215-01.u93", 0x00000, 0x04000, 0x4fb678d7);
+            ROM_LOAD("lelqb.94", 0x04000, 0x04000, 0x7b57a44c);
+            ROM_LOAD("lelqb.95", 0x08000, 0x04000, 0x29bc33fd);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("15210-01.u70", 0x00000, 0x4000, 0xa5aea20e);
+            ROM_LOAD("15214-01.u92", 0x04000, 0x4000, 0x36f261ca);
+            ROM_LOAD("15209-01.u69", 0x08000, 0x4000, 0x0f5d74a4);
+            /* 91 = empty */
+            ROM_LOAD("15208-01.u68", 0x10000, 0x4000, 0x0319aec7);
+            ROM_LOAD("15212-01.u90", 0x14000, 0x4000, 0x38b298d6);
+            ROM_LOAD("15207-01.u67", 0x18000, 0x4000, 0x5ff86aad);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_quartrba = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("15219-02.49t", 0x00000, 0x10000, 0x7fbe1e5a);
+            ROM_LOAD("15218-02.48t", 0x10000, 0x10000, 0x6fbd4b27);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("15200-01.u3", 0x00000, 0x04000, 0x83297861);
+            ROM_LOAD("15201-01.u4", 0x10000, 0x02000, 0xaf8dbdab);
+            ROM_CONTINUE(0x1c000, 0x02000);
+            ROM_LOAD("15202-01.u5", 0x12000, 0x02000, 0x3eeecb3d);
+            ROM_CONTINUE(0x1e000, 0x02000);
+            ROM_LOAD("15203-01.u6", 0x14000, 0x02000, 0xb9c5b663);
+            ROM_CONTINUE(0x20000, 0x02000);
+            ROM_LOAD("15204-01.u7", 0x16000, 0x02000, 0xc68821b7);
+            ROM_CONTINUE(0x22000, 0x02000);
+            ROM_LOAD("15205-01.u8", 0x18000, 0x02000, 0x2be843a9);
+            ROM_CONTINUE(0x24000, 0x02000);
+            ROM_LOAD("15206-01.u9", 0x1a000, 0x02000, 0x6bf8d4ab);
+            ROM_CONTINUE(0x26000, 0x02000);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("15222-01.45t", 0x040000, 0x10000, 0x722d1a19);
+            ROM_LOAD_V20_ODD("15225-01.62t", 0x040000, 0x10000, 0xf8c20496);
+            ROM_LOAD_V20_EVEN("15221-01.44t", 0x060000, 0x10000, 0xbc6abaaf);
+            ROM_LOAD_V20_ODD("15224-01.61t", 0x060000, 0x10000, 0x7ce3c3b7);
+            ROM_LOAD_V20_EVEN("15220-01.43t", 0x0e0000, 0x10000, 0xccb6c8d7);
+            ROM_LOAD_V20_ODD("15223-01.60t", 0x0e0000, 0x10000, 0xc0ee425d);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("15215-01.u93", 0x00000, 0x04000, 0x4fb678d7);
+            ROM_LOAD("lelqb.94", 0x04000, 0x04000, 0x7b57a44c);
+            ROM_LOAD("lelqb.95", 0x08000, 0x04000, 0x29bc33fd);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("15210-01.u70", 0x00000, 0x4000, 0xa5aea20e);
+            ROM_LOAD("15214-01.u92", 0x04000, 0x4000, 0x36f261ca);
+            ROM_LOAD("15209-01.u69", 0x08000, 0x4000, 0x0f5d74a4);
+            /* 91 = empty */
+            ROM_LOAD("15208-01.u68", 0x10000, 0x4000, 0x0319aec7);
+            ROM_LOAD("15212-01.u90", 0x14000, 0x4000, 0x38b298d6);
+            ROM_LOAD("15207-01.u67", 0x18000, 0x4000, 0x5ff86aad);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_viper = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("15617-03.49t", 0x00000, 0x10000, 0x7e4688a6);
+            ROM_LOAD("15616-03.48t", 0x10000, 0x10000, 0x3fe2f0bf);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("15600-02.u3", 0x00000, 0x02000, 0x0f57f68a);
+            ROM_LOAD("viper.u2t", 0x10000, 0x10000, 0x4043d4ee);
+            ROM_LOAD("viper.u3t", 0x20000, 0x10000, 0x213bc02b);
+            ROM_LOAD("viper.u4t", 0x30000, 0x10000, 0xce0b95b4);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("15620-02.45t", 0x040000, 0x10000, 0x7380ece1);
+            ROM_LOAD_V20_ODD("15623-02.62t", 0x040000, 0x10000, 0x2921d8f9);
+            ROM_LOAD_V20_EVEN("15619-02.44t", 0x060000, 0x10000, 0xc8507cc2);
+            ROM_LOAD_V20_ODD("15622-02.61t", 0x060000, 0x10000, 0x32dfda37);
+            ROM_LOAD_V20_EVEN("15618-02.43t", 0x0e0000, 0x10000, 0x5562e0c3);
+            ROM_LOAD_V20_ODD("15621-02.60t", 0x0e0000, 0x10000, 0xcb468f2b);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("15609-01.u93", 0x00000, 0x04000, 0x08ad92e9);
+            ROM_LOAD("15610-01.u94", 0x04000, 0x04000, 0xd4e56dfb);
+            ROM_LOAD("15611-01.u95", 0x08000, 0x04000, 0x3a2c46fb);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("15604-01.u70", 0x00000, 0x4000, 0x7e3b0cce);
+            ROM_LOAD("15608-01.u92", 0x04000, 0x4000, 0xa9bde0ef);
+            ROM_LOAD("15603-01.u69", 0x08000, 0x4000, 0xaecc9516);
+            ROM_LOAD("15607-01.u91", 0x0c000, 0x4000, 0x14f06f88);
+            ROM_LOAD("15602-01.u68", 0x10000, 0x4000, 0x4ef613ad);
+            ROM_LOAD("15606-01.u90", 0x14000, 0x4000, 0x3c2e8e76);
+            ROM_LOAD("15601-01.u67", 0x18000, 0x4000, 0xdc7006cd);
+            ROM_LOAD("15605-01.u89", 0x1c000, 0x4000, 0x4aa9c788);
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_teamqb = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("15618-03.58t", 0x00000, 0x10000, 0xb32568dc);
+            ROM_LOAD("15619-03.59t", 0x10000, 0x10000, 0x40b3319f);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("15600-01.u3", 0x00000, 0x02000, 0x46615844);
+            ROM_LOAD("15601-01.u2t", 0x10000, 0x10000, 0x8e523c58);
+            ROM_LOAD("15602-01.u3t", 0x20000, 0x10000, 0x545b27a1);
+            ROM_LOAD("15603-01.u4t", 0x30000, 0x10000, 0xcdc9c09d);
+            ROM_LOAD("15604-01.u5t", 0x40000, 0x10000, 0x3c03e92e);
+            ROM_LOAD("15605-01.u6t", 0x50000, 0x10000, 0xcdf7d19c);
+            ROM_LOAD("15606-01.u7t", 0x60000, 0x10000, 0x8eeb007c);
+            ROM_LOAD("15607-01.u8t", 0x70000, 0x10000, 0x57cb6d2d);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("15623-01.25t", 0x040000, 0x10000, 0x710bdc76);
+            ROM_LOAD_V20_ODD("15620-01.13t", 0x040000, 0x10000, 0x7e5cb8ad);
+            ROM_LOAD_V20_EVEN("15624-01.26t", 0x060000, 0x10000, 0xdd090d33);
+            ROM_LOAD_V20_ODD("15621-01.14t", 0x060000, 0x10000, 0xf68c68c9);
+            ROM_LOAD_V20_EVEN("15625-01.27t", 0x0e0000, 0x10000, 0xac442523);
+            ROM_LOAD_V20_ODD("15622-01.15t", 0x0e0000, 0x10000, 0x9e84509a);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("15615-01.u93", 0x00000, 0x04000, 0xa7ea6a87);
+            ROM_LOAD("15616-01.u94", 0x04000, 0x04000, 0x4a9b3900);
+            ROM_LOAD("15617-01.u95", 0x08000, 0x04000, 0x2cd95edb);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("15611-01.u70", 0x00000, 0x4000, 0xbf2695fb);
+            ROM_LOAD("15614-01.u92", 0x04000, 0x4000, 0xc93fd870);
+            ROM_LOAD("15610-01.u69", 0x08000, 0x4000, 0x3e5b786f);
+            /* 91 = empty */
+            ROM_LOAD("15609-01.u68", 0x10000, 0x4000, 0x0319aec7);
+            ROM_LOAD("15613-01.u90", 0x14000, 0x4000, 0x4805802e);
+            ROM_LOAD("15608-01.u67", 0x18000, 0x4000, 0x78f0fd2b);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_teamqb2 = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("15618-03.58t", 0x00000, 0x10000, 0xb32568dc);
+            ROM_LOAD("15619-02.59t", 0x10000, 0x10000, 0x6d533714);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("15600-01.u3", 0x00000, 0x02000, 0x46615844);
+            ROM_LOAD("15601-01.u2t", 0x10000, 0x10000, 0x8e523c58);
+            ROM_LOAD("15602-01.u3t", 0x20000, 0x10000, 0x545b27a1);
+            ROM_LOAD("15603-01.u4t", 0x30000, 0x10000, 0xcdc9c09d);
+            ROM_LOAD("15604-01.u5t", 0x40000, 0x10000, 0x3c03e92e);
+            ROM_LOAD("15605-01.u6t", 0x50000, 0x10000, 0xcdf7d19c);
+            ROM_LOAD("15606-01.u7t", 0x60000, 0x10000, 0x8eeb007c);
+            ROM_LOAD("15607-01.u8t", 0x70000, 0x10000, 0x57cb6d2d);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("15623-01.25t", 0x040000, 0x10000, 0x710bdc76);
+            ROM_LOAD_V20_ODD("15620-01.13t", 0x040000, 0x10000, 0x7e5cb8ad);
+            ROM_LOAD_V20_EVEN("15624-01.26t", 0x060000, 0x10000, 0xdd090d33);
+            ROM_LOAD_V20_ODD("15621-01.14t", 0x060000, 0x10000, 0xf68c68c9);
+            ROM_LOAD_V20_EVEN("15625-01.27t", 0x0e0000, 0x10000, 0xac442523);
+            ROM_LOAD_V20_ODD("15622-01.15t", 0x0e0000, 0x10000, 0x9e84509a);
+
+            ROM_REGION(0x0c000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("15615-01.u93", 0x00000, 0x04000, 0xa7ea6a87);
+            ROM_LOAD("15616-01.u94", 0x04000, 0x04000, 0x4a9b3900);
+            ROM_LOAD("15617-01.u95", 0x08000, 0x04000, 0x2cd95edb);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("15611-01.u70", 0x00000, 0x4000, 0xbf2695fb);
+            ROM_LOAD("15614-01.u92", 0x04000, 0x4000, 0xc93fd870);
+            ROM_LOAD("15610-01.u69", 0x08000, 0x4000, 0x3e5b786f);
+            /* 91 = empty */
+            ROM_LOAD("15609-01.u68", 0x10000, 0x4000, 0x0319aec7);
+            ROM_LOAD("15613-01.u90", 0x14000, 0x4000, 0x4805802e);
+            ROM_LOAD("15608-01.u67", 0x18000, 0x4000, 0x78f0fd2b);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_aafb = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("aafbu58t.bin", 0x00000, 0x10000, 0xfa75a4a0);
+            ROM_LOAD("aafbu59t.bin", 0x10000, 0x10000, 0xab6a606f);
+
+            /* Everything from here down may be from the wrong version */
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("24000-02.u3", 0x00000, 0x02000, 0x52df0354);
+            ROM_LOAD("24001-02.u2t", 0x10000, 0x10000, 0x9b20697d);
+            ROM_LOAD("24002-02.u3t", 0x20000, 0x10000, 0xbbb92184);
+            ROM_LOAD("15603-01.u4t", 0x30000, 0x10000, 0xcdc9c09d);
+            ROM_LOAD("15604-01.u5t", 0x40000, 0x10000, 0x3c03e92e);
+            ROM_LOAD("15605-01.u6t", 0x50000, 0x10000, 0xcdf7d19c);
+            ROM_LOAD("15606-01.u7t", 0x60000, 0x10000, 0x8eeb007c);
+            ROM_LOAD("24002-02.u8t", 0x70000, 0x10000, 0x3d9747c9);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("24019-01.u25", 0x040000, 0x10000, 0x9e344768);
+            ROM_LOAD_V20_ODD("24016-01.u13", 0x040000, 0x10000, 0x6997025f);
+            ROM_LOAD_V20_EVEN("24020-01.u26", 0x060000, 0x10000, 0x0788f2a5);
+            ROM_LOAD_V20_ODD("24017-01.u14", 0x060000, 0x10000, 0xa48bd721);
+            ROM_LOAD_V20_EVEN("24021-01.u27", 0x0e0000, 0x10000, 0x94081899);
+            ROM_LOAD_V20_ODD("24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("24011-02.u93", 0x00000, 0x08000, 0x00000000);
+            ROM_LOAD("24012-02.u94", 0x08000, 0x08000, 0x00000000);
+            ROM_LOAD("24013-02.u95", 0x10000, 0x08000, 0x00000000);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("24007-01.u70", 0x00000, 0x4000, 0x40e46aa4);
+            ROM_LOAD("24010-01.u92", 0x04000, 0x4000, 0x78705f42);
+            ROM_LOAD("24006-01.u69", 0x08000, 0x4000, 0x6a576aa9);
+            ROM_LOAD("24009-02.u91", 0x0c000, 0x4000, 0xb857a1ad);
+            ROM_LOAD("24005-02.u68", 0x10000, 0x4000, 0x8ea75319);
+            ROM_LOAD("24008-01.u90", 0x14000, 0x4000, 0x4538bc58);
+            ROM_LOAD("24004-02.u67", 0x18000, 0x4000, 0xcd7a3338);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_aafbb = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("24014-02.u58", 0x00000, 0x10000, 0x5db4a3d0);
+            ROM_LOAD("24015-02.u59", 0x10000, 0x10000, 0x00000000);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("24000-02.u3", 0x00000, 0x02000, 0x52df0354);
+            ROM_LOAD("24001-02.u2t", 0x10000, 0x10000, 0x9b20697d);
+            ROM_LOAD("24002-02.u3t", 0x20000, 0x10000, 0xbbb92184);
+            ROM_LOAD("15603-01.u4t", 0x30000, 0x10000, 0xcdc9c09d);
+            ROM_LOAD("15604-01.u5t", 0x40000, 0x10000, 0x3c03e92e);
+            ROM_LOAD("15605-01.u6t", 0x50000, 0x10000, 0xcdf7d19c);
+            ROM_LOAD("15606-01.u7t", 0x60000, 0x10000, 0x8eeb007c);
+            ROM_LOAD("24002-02.u8t", 0x70000, 0x10000, 0x3d9747c9);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("24019-01.u25", 0x040000, 0x10000, 0x9e344768);
+            ROM_LOAD_V20_ODD("24016-01.u13", 0x040000, 0x10000, 0x6997025f);
+            ROM_LOAD_V20_EVEN("24020-01.u26", 0x060000, 0x10000, 0x0788f2a5);
+            ROM_LOAD_V20_ODD("24017-01.u14", 0x060000, 0x10000, 0xa48bd721);
+            ROM_LOAD_V20_EVEN("24021-01.u27", 0x0e0000, 0x10000, 0x94081899);
+            ROM_LOAD_V20_ODD("24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("24011-02.u93", 0x00000, 0x08000, 0x71f4425b);
+            ROM_LOAD("24012-02.u94", 0x08000, 0x08000, 0xb2499547);
+            ROM_LOAD("24013-02.u95", 0x10000, 0x08000, 0x0a604e0d);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("24007-01.u70", 0x00000, 0x4000, 0x40e46aa4);
+            ROM_LOAD("24010-01.u92", 0x04000, 0x4000, 0x78705f42);
+            ROM_LOAD("24006-01.u69", 0x08000, 0x4000, 0x6a576aa9);
+            ROM_LOAD("24009-02.u91", 0x0c000, 0x4000, 0xb857a1ad);
+            ROM_LOAD("24005-02.u68", 0x10000, 0x4000, 0x8ea75319);
+            ROM_LOAD("24008-01.u90", 0x14000, 0x4000, 0x4538bc58);
+            ROM_LOAD("24004-02.u67", 0x18000, 0x4000, 0xcd7a3338);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_aafbd2p = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x20000, REGION_CPU1);
+            ROM_LOAD("26014-01.58t", 0x00000, 0x10000, 0x79fd14cd);
+            ROM_LOAD("26015-01.59t", 0x10000, 0x10000, 0x3b0382f0);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("26000-01.u3", 0x00000, 0x02000, 0x98c06c63);
+            ROM_LOAD("26001-01.2t", 0x10000, 0x10000, 0xf118b9b4);
+            ROM_LOAD("24002-02.u3t", 0x20000, 0x10000, 0xbbb92184);
+            ROM_LOAD("15603-01.u4t", 0x30000, 0x10000, 0xcdc9c09d);
+            ROM_LOAD("15604-01.u5t", 0x40000, 0x10000, 0x3c03e92e);
+            ROM_LOAD("15605-01.u6t", 0x50000, 0x10000, 0xcdf7d19c);
+            ROM_LOAD("15606-01.u7t", 0x60000, 0x10000, 0x8eeb007c);
+            ROM_LOAD("24002-02.u8t", 0x70000, 0x10000, 0x3d9747c9);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("24019-01.u25", 0x040000, 0x10000, 0x9e344768);
+            ROM_LOAD_V20_ODD("24016-01.u13", 0x040000, 0x10000, 0x6997025f);
+            ROM_LOAD_V20_EVEN("24020-01.u26", 0x060000, 0x10000, 0x0788f2a5);
+            ROM_LOAD_V20_ODD("24017-01.u14", 0x060000, 0x10000, 0xa48bd721);
+            ROM_LOAD_V20_EVEN("24021-01.u27", 0x0e0000, 0x10000, 0x94081899);
+            ROM_LOAD_V20_ODD("24018-01.u15", 0x0e0000, 0x10000, 0x76eb6077);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("24011-02.u93", 0x00000, 0x08000, 0x71f4425b);
+            ROM_LOAD("24012-02.u94", 0x08000, 0x08000, 0xb2499547);
+            ROM_LOAD("24013-02.u95", 0x10000, 0x08000, 0x0a604e0d);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("24007-01.u70", 0x00000, 0x4000, 0x40e46aa4);
+            ROM_LOAD("24010-01.u92", 0x04000, 0x4000, 0x78705f42);
+            ROM_LOAD("24006-01.u69", 0x08000, 0x4000, 0x6a576aa9);
+            ROM_LOAD("24009-02.u91", 0x0c000, 0x4000, 0xb857a1ad);
+            ROM_LOAD("24005-02.u68", 0x10000, 0x4000, 0x8ea75319);
+            ROM_LOAD("24008-01.u90", 0x14000, 0x4000, 0x4538bc58);
+            ROM_LOAD("24004-02.u67", 0x18000, 0x4000, 0xcd7a3338);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_offroad = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x40000, REGION_CPU1);
+            ROM_LOAD("22121-04.u58", 0x00000, 0x10000, 0xc5790988);
+            ROM_LOAD("22122-03.u59", 0x10000, 0x10000, 0xae862fdc);
+            ROM_LOAD("22120-01.u57", 0x20000, 0x10000, 0xe9f0f175);
+            ROM_LOAD("22119-02.u56", 0x30000, 0x10000, 0x38642f22);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("22100-01.u2", 0x00000, 0x02000, 0x08c96a4b);
+            ROM_LOAD("22108-02.u4", 0x30000, 0x10000, 0x0d72780a);
+            ROM_LOAD("22109-02.u5", 0x40000, 0x10000, 0x5429ce2c);
+            ROM_LOAD("22110-02.u6", 0x50000, 0x10000, 0xf97bad5c);
+            ROM_LOAD("22111-01.u7", 0x60000, 0x10000, 0xf79157a1);
+            ROM_LOAD("22112-01.u8", 0x70000, 0x10000, 0x3eef38d3);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("22116-03.u25", 0x040000, 0x10000, 0x95bb31d3);
+            ROM_LOAD_V20_ODD("22113-03.u13", 0x040000, 0x10000, 0x71b28df6);
+            ROM_LOAD_V20_EVEN("22117-03.u26", 0x060000, 0x10000, 0x703d81ce);
+            ROM_LOAD_V20_ODD("22114-03.u14", 0x060000, 0x10000, 0xf8b31bf8);
+            ROM_LOAD_V20_EVEN("22118-03.u27", 0x0e0000, 0x10000, 0x806ccf8b);
+            ROM_LOAD_V20_ODD("22115-03.u15", 0x0e0000, 0x10000, 0xc8439a7a);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("22105-01.u93", 0x00000, 0x08000, 0x4426e367);
+            ROM_LOAD("22106-02.u94", 0x08000, 0x08000, 0x687dc1fc);
+            ROM_LOAD("22107-02.u95", 0x10000, 0x08000, 0xcee6ee5f);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+ /* 70 = empty */
+            ROM_LOAD("22104-01.u92", 0x04000, 0x4000, 0x03e0497d);
+            ROM_LOAD("22102-01.u69", 0x08000, 0x4000, 0xc3f2e443);
+            /* 91 = empty */
+ /* 68 = empty */
+            ROM_LOAD("22103-02.u90", 0x14000, 0x4000, 0x2266757a);
+            ROM_LOAD("22101-01.u67", 0x18000, 0x4000, 0xecab0527);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_offroadt = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x040000, REGION_CPU1);
+            ROM_LOAD("ortpu58.bin", 0x00000, 0x10000, 0xadbc6211);
+            ROM_LOAD("ortpu59.bin", 0x10000, 0x10000, 0x296dd3b6);
+            ROM_LOAD("ortpu57.bin", 0x20000, 0x10000, 0xe9f0f175);
+            ROM_LOAD("ortpu56.bin", 0x30000, 0x10000, 0x2c1a22b3);
+
+            ROM_REGION(0x90000, REGION_CPU2);
+            ROM_LOAD("ortpu3b.bin", 0x00000, 0x02000, 0x95abb9f1);
+            ROM_LOAD("ortpu2.bin", 0x10000, 0x10000, 0xc46c1627);
+            ROM_LOAD("ortpu3.bin", 0x20000, 0x10000, 0x2276546f);
+            ROM_LOAD("ortpu4.bin", 0x30000, 0x10000, 0xaa4b5975);
+            ROM_LOAD("ortpu5.bin", 0x40000, 0x10000, 0x69100b06);
+            ROM_LOAD("ortpu6.bin", 0x50000, 0x10000, 0xb75015b8);
+            ROM_LOAD("ortpu7.bin", 0x60000, 0x10000, 0xa5af5b4f);
+            ROM_LOAD("ortpu8.bin", 0x70000, 0x10000, 0x0f735078);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("ortpu25.bin", 0x040000, 0x10000, 0xf952f800);
+            ROM_LOAD_V20_ODD("ortpu13.bin", 0x040000, 0x10000, 0x7beec9fc);
+            ROM_LOAD_V20_EVEN("ortpu26.bin", 0x060000, 0x10000, 0x6227ea94);
+            ROM_LOAD_V20_ODD("ortpu14.bin", 0x060000, 0x10000, 0x0a44331d);
+            ROM_LOAD_V20_EVEN("ortpu27.bin", 0x0e0000, 0x10000, 0xb80c5f99);
+            ROM_LOAD_V20_ODD("ortpu15.bin", 0x0e0000, 0x10000, 0x2a1a1c3c);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("ortpu93b.bin", 0x00000, 0x08000, 0xf0c1d8b0);
+            ROM_LOAD("ortpu94b.bin", 0x08000, 0x08000, 0x7460d8c0);
+            ROM_LOAD("ortpu95b.bin", 0x10000, 0x08000, 0x081ee7a8);
+
+            ROM_REGION(0x20000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+ /* 70 = empty */
+            ROM_LOAD("ortpu92b.bin", 0x04000, 0x4000, 0xf9988e28);
+            ROM_LOAD("ortpu69b.bin", 0x08000, 0x4000, 0xfe5f8d8f);
+            /* 91 = empty */
+ /* 68 = empty */
+            ROM_LOAD("ortpu90b.bin", 0x14000, 0x4000, 0xbda2ecb1);
+            ROM_LOAD("ortpu67b.bin", 0x18000, 0x4000, 0x38c9bf29);
+            /* 89 = empty */
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_pigout = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x040000, REGION_CPU1);
+            ROM_LOAD("poutu58t.bin", 0x00000, 0x10000, 0x8fe4b683);
+            ROM_LOAD("poutu59t.bin", 0x10000, 0x10000, 0xab907762);
+            ROM_LOAD("poutu57t.bin", 0x20000, 0x10000, 0xc22be0ff);
+
+            ROM_REGION(0x080000, REGION_CPU2);
+            ROM_LOAD("poutu3.bin", 0x00000, 0x02000, 0xaf213cb7);
+            ROM_LOAD("poutu2t.bin", 0x10000, 0x10000, 0xb23164c6);
+            ROM_LOAD("poutu3t.bin", 0x20000, 0x10000, 0xd93f105f);
+            ROM_LOAD("poutu4t.bin", 0x30000, 0x10000, 0xb7c47bfe);
+            ROM_LOAD("poutu5t.bin", 0x40000, 0x10000, 0xd9b9dfbf);
+            ROM_LOAD("poutu6t.bin", 0x50000, 0x10000, 0x728c7c1a);
+            ROM_LOAD("poutu7t.bin", 0x60000, 0x10000, 0x393bd990);
+            ROM_LOAD("poutu8t.bin", 0x70000, 0x10000, 0xcb9ffaad);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("poutu25t.bin", 0x040000, 0x10000, 0x92cd2617);
+            ROM_LOAD_V20_ODD("poutu13t.bin", 0x040000, 0x10000, 0x9448c389);
+            ROM_LOAD_V20_EVEN("poutu26t.bin", 0x060000, 0x10000, 0xab57de8f);
+            ROM_LOAD_V20_ODD("poutu14t.bin", 0x060000, 0x10000, 0x30678e93);
+            ROM_LOAD_V20_EVEN("poutu27t.bin", 0x0e0000, 0x10000, 0x37a8156e);
+            ROM_LOAD_V20_ODD("poutu15t.bin", 0x0e0000, 0x10000, 0x1c60d58b);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("poutu93.bin", 0x000000, 0x08000, 0xf102a04d);
+            ROM_LOAD("poutu94.bin", 0x008000, 0x08000, 0xec63c015);
+            ROM_LOAD("poutu95.bin", 0x010000, 0x08000, 0xba6e797e);
+
+            ROM_REGION(0x40000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("poutu70.bin", 0x00000, 0x4000, 0x7db4eaa1);
+            ROM_LOAD("poutu92.bin", 0x04000, 0x4000, 0x20fa57bb);
+            ROM_LOAD("poutu69.bin", 0x08000, 0x4000, 0xa16886f3);
+            ROM_LOAD("poutu91.bin", 0x0c000, 0x4000, 0x482a3581);
+            ROM_LOAD("poutu68.bin", 0x10000, 0x4000, 0x7b62a3ed);
+            ROM_LOAD("poutu90.bin", 0x14000, 0x4000, 0x9615d710);
+            ROM_LOAD("poutu67.bin", 0x18000, 0x4000, 0xaf85ce79);
+            ROM_LOAD("poutu89.bin", 0x1c000, 0x4000, 0x6c874a05);
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    static RomLoadPtr rom_pigouta = new RomLoadPtr() {
+        public void handler() {
+            ROM_REGION(0x040000, REGION_CPU1);
+            ROM_LOAD("03-29020.01", 0x00000, 0x10000, 0x6c815982);
+            ROM_LOAD("03-29021.01", 0x10000, 0x10000, 0x9de7a763);
+            ROM_LOAD("poutu57t.bin", 0x20000, 0x10000, 0xc22be0ff);
+
+            ROM_REGION(0x80000, REGION_CPU2);
+            ROM_LOAD("poutu3.bin", 0x00000, 0x02000, 0xaf213cb7);
+            ROM_LOAD("poutu2t.bin", 0x10000, 0x10000, 0xb23164c6);
+            ROM_LOAD("poutu3t.bin", 0x20000, 0x10000, 0xd93f105f);
+            ROM_LOAD("poutu4t.bin", 0x30000, 0x10000, 0xb7c47bfe);
+            ROM_LOAD("poutu5t.bin", 0x40000, 0x10000, 0xd9b9dfbf);
+            ROM_LOAD("poutu6t.bin", 0x50000, 0x10000, 0x728c7c1a);
+            ROM_LOAD("poutu7t.bin", 0x60000, 0x10000, 0x393bd990);
+            ROM_LOAD("poutu8t.bin", 0x70000, 0x10000, 0xcb9ffaad);
+
+            ROM_REGION(0x100000, REGION_CPU3);
+            ROM_LOAD_V20_EVEN("poutu25t.bin", 0x040000, 0x10000, 0x92cd2617);
+            ROM_LOAD_V20_ODD("poutu13t.bin", 0x040000, 0x10000, 0x9448c389);
+            ROM_LOAD_V20_EVEN("poutu26t.bin", 0x060000, 0x10000, 0xab57de8f);
+            ROM_LOAD_V20_ODD("poutu14t.bin", 0x060000, 0x10000, 0x30678e93);
+            ROM_LOAD_V20_EVEN("poutu27t.bin", 0x0e0000, 0x10000, 0x37a8156e);
+            ROM_LOAD_V20_ODD("poutu15t.bin", 0x0e0000, 0x10000, 0x1c60d58b);
+
+            ROM_REGION(0x18000, REGION_GFX1 | REGIONFLAG_DISPOSE);
+            ROM_LOAD("poutu93.bin", 0x000000, 0x08000, 0xf102a04d);
+            ROM_LOAD("poutu94.bin", 0x008000, 0x08000, 0xec63c015);
+            ROM_LOAD("poutu95.bin", 0x010000, 0x08000, 0xba6e797e);
+
+            ROM_REGION(0x40000, REGION_USER1);
+            /* Ordering: 70/92/69/91/68/90/67/89 */
+            ROM_LOAD("poutu70.bin", 0x00000, 0x4000, 0x7db4eaa1);
+            ROM_LOAD("poutu92.bin", 0x04000, 0x4000, 0x20fa57bb);
+            ROM_LOAD("poutu69.bin", 0x08000, 0x4000, 0xa16886f3);
+            ROM_LOAD("poutu91.bin", 0x0c000, 0x4000, 0x482a3581);
+            ROM_LOAD("poutu68.bin", 0x10000, 0x4000, 0x7b62a3ed);
+            ROM_LOAD("poutu90.bin", 0x14000, 0x4000, 0x9615d710);
+            ROM_LOAD("poutu67.bin", 0x18000, 0x4000, 0xaf85ce79);
+            ROM_LOAD("poutu89.bin", 0x1c000, 0x4000, 0x6c874a05);
+
+            ROM_REGION(battery_ram_size, REGION_USER2);/* extra RAM regions */
+            ROM_END();
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Driver initialization
+     *
+     ************************************
+     */
+    /* also called by Ataxx */
+    public static void leland_rotate_memory(int cpunum) {
+        int startaddr = 0x10000;
+        int banks = (memory_region_length(REGION_CPU1 + cpunum) - startaddr) / 0x8000;
+        UBytePtr ram = memory_region(REGION_CPU1 + cpunum);
+        char[] /*UINT8*/ temp = new char[0x2000];
+        int i;
+
+        for (i = 0; i < banks; i++) {
+        		memmove(temp, ram,startaddr + 0x0000, 0x2000);
+			memmove(ram,startaddr + 0x0000, ram,startaddr + 0x2000, 0x6000);
+			memmove(ram,startaddr + 0x6000, temp, 0x2000);
+            startaddr += 0x8000;
+        }
+    }
+
     static void init_master_ports(int mvram_base, int io_base) {
         /* set up the master CPU VRAM I/O */
         install_port_read_handler(0, mvram_base, mvram_base + 0x1f, leland_mvram_port_r);
@@ -3182,347 +3216,359 @@ public class leland {
             init_master_ports(0x00, 0xc0);
         }
     };
-    	
-	public static InitDriverPtr init_dblplay = new InitDriverPtr() { public void handler() 
-	{
-		/* initialize the default EEPROM state */
-		char dblplay_eeprom_data[] =
-		{
-			0x18,0xfefe,
-			0x19,0xfefe,
-			0x1a,0xfbfb,
-			0x1c,0x00ff,
-			0x3b,0xffe1,
-			0xffff
-		};
-		init_eeprom(0xff, dblplay_eeprom_data, 0x11, SERIAL_TYPE_ENCRYPT_XOR);
-	
-		/* master CPU bankswitching */
-		update_master_bank = basebal2_bankswitch;
-	
-		/* set up the master CPU I/O ports */
-		init_master_ports(0x80, 0x40);
-	} };
-	
-	public static InitDriverPtr init_strkzone = new InitDriverPtr() { public void handler() 
-	{
-		/* initialize the default EEPROM state */
-		char strkzone_eeprom_data[] =
-		{
-			0x16,0xfefe,
-			0x17,0xfefe,
-			0x18,0xfbfb,
-			0x1a,0x00ff,
-			0x1b,0xffe1,
-			0xffff
-		};
-		init_eeprom(0xff, strkzone_eeprom_data, 0x0f, SERIAL_TYPE_ENCRYPT_XOR);
-	
-		/* master CPU bankswitching */
-		update_master_bank = basebal2_bankswitch;
-	
-		/* set up the master CPU I/O ports */
-		init_master_ports(0x00, 0x40);
-	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_redlin2p = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 redlin2p_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x1f,0xfefe,
-/*TODO*///			0x20,0xfffb,
-/*TODO*///			0x21,0xfa00,
-/*TODO*///			0x22,0xfffe,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, redlin2p_eeprom_data, 0x18, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = redline_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0xc0);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0xc0, 0xc0, redline_pedal_1_r);
-/*TODO*///		install_port_read_handler(0, 0xd0, 0xd0, redline_pedal_2_r);
-/*TODO*///		install_port_read_handler(0, 0xf8, 0xf8, redline_wheel_2_r);
-/*TODO*///		install_port_read_handler(0, 0xfb, 0xfb, redline_wheel_1_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x828);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_quarterb = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 quarterb_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x34,0xfefe,
-/*TODO*///			0x35,0xfefe,
-/*TODO*///			0x36,0xfbfb,
-/*TODO*///			0x38,0x00ff,
-/*TODO*///			0x39,0x53ff,
-/*TODO*///			0x3a,0xffd9,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, quarterb_eeprom_data, 0x24, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = viper_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x40, 0x80);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x9bc);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_viper = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 viper_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x13,0xfefe,
-/*TODO*///			0x14,0xfefe,
-/*TODO*///			0x15,0xfbfb,
-/*TODO*///			0x17,0x00ff,
-/*TODO*///			0x18,0xfcfa,
-/*TODO*///			0x1b,0xfffe,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, viper_eeprom_data, 0x0c, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = viper_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0xc0);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0xa4, 0xa4, dangerz_input_upper_r);
-/*TODO*///		install_port_read_handler(0, 0xb8, 0xb8, dangerz_input_y_r);
-/*TODO*///		install_port_read_handler(0, 0xbc, 0xbc, dangerz_input_x_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_teamqb = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 teamqb_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x36,0xfefe,
-/*TODO*///			0x37,0xfefe,
-/*TODO*///			0x38,0xfbfb,
-/*TODO*///			0x3a,0x5300,
-/*TODO*///			0x3b,0xffd9,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, teamqb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = viper_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x40, 0x80);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
-/*TODO*///		install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_aafb = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 aafb_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x36,0xfefe,
-/*TODO*///			0x37,0xfefe,
-/*TODO*///			0x38,0xfbfb,
-/*TODO*///			0x3a,0x5300,
-/*TODO*///			0x3b,0xffd9,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, aafb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = viper_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0xc0);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
-/*TODO*///		install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_aafbb = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 aafb_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x36,0xfefe,
-/*TODO*///			0x37,0xfefe,
-/*TODO*///			0x38,0xfbfb,
-/*TODO*///			0x3a,0x5300,
-/*TODO*///			0x3b,0xffd9,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, aafb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = viper_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0x40);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
-/*TODO*///		install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_offroad = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 offroad_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x09,0xfefe,
-/*TODO*///			0x0a,0xfffb,
-/*TODO*///			0x0d,0x00ff,
-/*TODO*///			0x0e,0xfffb,
-/*TODO*///			0x36,0xfeff,
-/*TODO*///			0x37,0xfefe,
-/*TODO*///			0x38,0xfffe,
-/*TODO*///			0x39,0x50ff,
-/*TODO*///			0x3a,0x976c,
-/*TODO*///			0x3b,0xffad,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, offroad_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = offroad_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0xc0);
-/*TODO*///		init_master_ports(0x40, 0x80);	/* yes, this is intentional */
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0xf8, 0xf8, offroad_wheel_3_r);
-/*TODO*///		install_port_read_handler(0, 0xf9, 0xf9, offroad_wheel_1_r);
-/*TODO*///		install_port_read_handler(0, 0xfb, 0xfb, offroad_wheel_2_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_offroadt = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 offroadt_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x09,0xfefe,
-/*TODO*///			0x0a,0xfffb,
-/*TODO*///			0x0d,0x00ff,
-/*TODO*///			0x0e,0xfffb,
-/*TODO*///			0x36,0xfeff,
-/*TODO*///			0x37,0xfefe,
-/*TODO*///			0x38,0xfffe,
-/*TODO*///			0x39,0x50ff,
-/*TODO*///			0x3a,0x976c,
-/*TODO*///			0x3b,0xffad,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, offroadt_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT_XOR);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = offroad_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x80, 0x40);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0xf8, 0xf8, offroad_wheel_3_r);
-/*TODO*///		install_port_read_handler(0, 0xf9, 0xf9, offroad_wheel_1_r);
-/*TODO*///		install_port_read_handler(0, 0xfb, 0xfb, offroad_wheel_2_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static public static InitDriverPtr init_pigout = new InitDriverPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		/* initialize the default EEPROM state */
-/*TODO*///		static const UINT16 pigout_eeprom_data[] =
-/*TODO*///		{
-/*TODO*///			0x09,0xfefe,
-/*TODO*///			0x0a,0xfefb,
-/*TODO*///			0x0b,0xfffe,
-/*TODO*///			0x0c,0xfefe,
-/*TODO*///			0x0d,0xfffb,
-/*TODO*///			0x39,0xfcff,
-/*TODO*///			0x3a,0xfb00,
-/*TODO*///			0x3b,0xfffc,
-/*TODO*///			0xffff
-/*TODO*///		};
-/*TODO*///		init_eeprom(0xff, pigout_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT);
-/*TODO*///	
-/*TODO*///		/* master CPU bankswitching */
-/*TODO*///		update_master_bank = offroad_bankswitch;
-/*TODO*///	
-/*TODO*///		leland_rotate_memory(0);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///		leland_rotate_memory(1);
-/*TODO*///	
-/*TODO*///		/* set up the master CPU I/O ports */
-/*TODO*///		init_master_ports(0x00, 0x40);
-/*TODO*///	
-/*TODO*///		/* set up additional input ports */
-/*TODO*///		install_port_read_handler(0, 0x7f, 0x7f, input_port_4_r);
-/*TODO*///	
-/*TODO*///		/* optimize the sound */
-/*TODO*///		leland_i86_optimize_address(0x788);
-/*TODO*///	} };
+
+    public static InitDriverPtr init_dblplay = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char dblplay_eeprom_data[]
+                    = {
+                        0x18, 0xfefe,
+                        0x19, 0xfefe,
+                        0x1a, 0xfbfb,
+                        0x1c, 0x00ff,
+                        0x3b, 0xffe1,
+                        0xffff
+                    };
+            init_eeprom(0xff, dblplay_eeprom_data, 0x11, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = basebal2_bankswitch;
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x80, 0x40);
+        }
+    };
+
+    public static InitDriverPtr init_strkzone = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char strkzone_eeprom_data[]
+                    = {
+                        0x16, 0xfefe,
+                        0x17, 0xfefe,
+                        0x18, 0xfbfb,
+                        0x1a, 0x00ff,
+                        0x1b, 0xffe1,
+                        0xffff
+                    };
+            init_eeprom(0xff, strkzone_eeprom_data, 0x0f, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = basebal2_bankswitch;
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0x40);
+        }
+    };
+
+    public static InitDriverPtr init_redlin2p = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char redlin2p_eeprom_data[]
+                    = {
+                        0x1f, 0xfefe,
+                        0x20, 0xfffb,
+                        0x21, 0xfa00,
+                        0x22, 0xfffe,
+                        0xffff
+                    };
+            init_eeprom(0xff, redlin2p_eeprom_data, 0x18, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = redline_bankswitch;
+
+            leland_rotate_memory(0);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0xc0);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0xc0, 0xc0, redline_pedal_1_r);
+            install_port_read_handler(0, 0xd0, 0xd0, redline_pedal_2_r);
+            install_port_read_handler(0, 0xf8, 0xf8, redline_wheel_2_r);
+            install_port_read_handler(0, 0xfb, 0xfb, redline_wheel_1_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x828);
+        }
+    };
+
+    public static InitDriverPtr init_quarterb = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char quarterb_eeprom_data[]
+                    = {
+                        0x34, 0xfefe,
+                        0x35, 0xfefe,
+                        0x36, 0xfbfb,
+                        0x38, 0x00ff,
+                        0x39, 0x53ff,
+                        0x3a, 0xffd9,
+                        0xffff
+                    };
+            init_eeprom(0xff, quarterb_eeprom_data, 0x24, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = viper_bankswitch;
+
+            leland_rotate_memory(0);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x40, 0x80);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x9bc);
+        }
+    };
+
+    public static InitDriverPtr init_viper = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char viper_eeprom_data[]
+                    = {
+                        0x13, 0xfefe,
+                        0x14, 0xfefe,
+                        0x15, 0xfbfb,
+                        0x17, 0x00ff,
+                        0x18, 0xfcfa,
+                        0x1b, 0xfffe,
+                        0xffff
+                    };
+            init_eeprom(0xff, viper_eeprom_data, 0x0c, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = viper_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0xc0);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0xa4, 0xa4, dangerz_input_upper_r);
+            install_port_read_handler(0, 0xb8, 0xb8, dangerz_input_y_r);
+            install_port_read_handler(0, 0xbc, 0xbc, dangerz_input_x_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_teamqb = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char teamqb_eeprom_data[]
+                    = {
+                        0x36, 0xfefe,
+                        0x37, 0xfefe,
+                        0x38, 0xfbfb,
+                        0x3a, 0x5300,
+                        0x3b, 0xffd9,
+                        0xffff
+                    };
+            init_eeprom(0xff, teamqb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = viper_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x40, 0x80);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
+            install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_aafb = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char aafb_eeprom_data[]
+                    = {
+                        0x36, 0xfefe,
+                        0x37, 0xfefe,
+                        0x38, 0xfbfb,
+                        0x3a, 0x5300,
+                        0x3b, 0xffd9,
+                        0xffff
+                    };
+            init_eeprom(0xff, aafb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = viper_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0xc0);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
+            install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_aafbb = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char aafb_eeprom_data[]
+                    = {
+                        0x36, 0xfefe,
+                        0x37, 0xfefe,
+                        0x38, 0xfbfb,
+                        0x3a, 0x5300,
+                        0x3b, 0xffd9,
+                        0xffff
+                    };
+            init_eeprom(0xff, aafb_eeprom_data, 0x1a, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = viper_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0x40);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0x7c, 0x7c, input_port_10_r);
+            install_port_read_handler(0, 0x7f, 0x7f, input_port_11_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_offroad = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char offroad_eeprom_data[]
+                    = {
+                        0x09, 0xfefe,
+                        0x0a, 0xfffb,
+                        0x0d, 0x00ff,
+                        0x0e, 0xfffb,
+                        0x36, 0xfeff,
+                        0x37, 0xfefe,
+                        0x38, 0xfffe,
+                        0x39, 0x50ff,
+                        0x3a, 0x976c,
+                        0x3b, 0xffad,
+                        0xffff
+                    };
+            init_eeprom(0xff, offroad_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = offroad_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0xc0);
+            init_master_ports(0x40, 0x80);
+            /* yes, this is intentional */
+
+ /* set up additional input ports */
+            install_port_read_handler(0, 0xf8, 0xf8, offroad_wheel_3_r);
+            install_port_read_handler(0, 0xf9, 0xf9, offroad_wheel_1_r);
+            install_port_read_handler(0, 0xfb, 0xfb, offroad_wheel_2_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_offroadt = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char offroadt_eeprom_data[]
+                    = {
+                        0x09, 0xfefe,
+                        0x0a, 0xfffb,
+                        0x0d, 0x00ff,
+                        0x0e, 0xfffb,
+                        0x36, 0xfeff,
+                        0x37, 0xfefe,
+                        0x38, 0xfffe,
+                        0x39, 0x50ff,
+                        0x3a, 0x976c,
+                        0x3b, 0xffad,
+                        0xffff
+                    };
+            init_eeprom(0xff, offroadt_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT_XOR);
+
+            /* master CPU bankswitching */
+            update_master_bank = offroad_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x80, 0x40);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0xf8, 0xf8, offroad_wheel_3_r);
+            install_port_read_handler(0, 0xf9, 0xf9, offroad_wheel_1_r);
+            install_port_read_handler(0, 0xfb, 0xfb, offroad_wheel_2_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
+
+    public static InitDriverPtr init_pigout = new InitDriverPtr() {
+        public void handler() {
+            /* initialize the default EEPROM state */
+            char pigout_eeprom_data[]
+                    = {
+                        0x09, 0xfefe,
+                        0x0a, 0xfefb,
+                        0x0b, 0xfffe,
+                        0x0c, 0xfefe,
+                        0x0d, 0xfffb,
+                        0x39, 0xfcff,
+                        0x3a, 0xfb00,
+                        0x3b, 0xfffc,
+                        0xffff
+                    };
+            init_eeprom(0xff, pigout_eeprom_data, 0x00, SERIAL_TYPE_ENCRYPT);
+
+            /* master CPU bankswitching */
+            update_master_bank = offroad_bankswitch;
+
+            leland_rotate_memory(0);
+            leland_rotate_memory(1);
+            leland_rotate_memory(1);
+
+            /* set up the master CPU I/O ports */
+            init_master_ports(0x00, 0x40);
+
+            /* set up additional input ports */
+            install_port_read_handler(0, 0x7f, 0x7f, input_port_4_r);
+
+            /* optimize the sound */
+            leland_i86_optimize_address(0x788);
+        }
+    };
     /**
      * ***********************************
      *
@@ -3543,23 +3589,23 @@ public class leland {
     public static GameDriver driver_basebal2 = new GameDriver("1987", "basebal2", "leland.java", rom_basebal2, null, machine_driver_leland, input_ports_basebal2, init_basebal2, ROT0, "Cinematronics", "Baseball The Season II");
     public static GameDriver driver_dblplay = new GameDriver("1987", "dblplay", "leland.java", rom_dblplay, null, machine_driver_leland, input_ports_basebal2, init_dblplay, ROT0, "Leland Corp. / Tradewest", "Super Baseball Double Play Home Run Derby");
     public static GameDriver driver_strkzone = new GameDriver("1988", "strkzone", "leland.java", rom_strkzone, null, machine_driver_leland, input_ports_basebal2, init_strkzone, ROT0, "Leland Corp.", "Strike Zone");
-   	
-/*TODO*///	/* large master banks, small slave banks, I86 sound */
-/*TODO*///	public static GameDriver driver_redlin2p	   = new GameDriver("1987"	,"redlin2p"	,"leland.java"	,rom_redlin2p,null	,machine_driver_redline	,input_ports_redline	,init_redlin2p	,ROT270	,	"Cinematronics (Tradewest license)", "Redline Racer (2 players)" )
-/*TODO*///	public static GameDriver driver_quarterb	   = new GameDriver("1987"	,"quarterb"	,"leland.java"	,rom_quarterb,null	,machine_driver_quarterb	,input_ports_quarterb	,init_quarterb	,ROT270	,	"Leland Corp.", "Quarterback" )
-/*TODO*///	public static GameDriver driver_quartrba	   = new GameDriver("1987"	,"quartrba"	,"leland.java"	,rom_quartrba,driver_quarterb	,machine_driver_quarterb	,input_ports_quarterb	,init_quarterb	,ROT270	,	"Leland Corp.", "Quarterback (set 2)" )
-/*TODO*///	
-/*TODO*///	/* large master banks, large slave banks, I86 sound */
-/*TODO*///	public static GameDriver driver_viper	   = new GameDriver("1988"	,"viper"	,"leland.java"	,rom_viper,null	,machine_driver_lelandi	,input_ports_dangerz	,init_viper	,ROT0	,	"Leland Corp.", "Viper" )
-/*TODO*///	public static GameDriver driver_teamqb	   = new GameDriver("1988"	,"teamqb"	,"leland.java"	,rom_teamqb,null	,machine_driver_lelandi	,input_ports_teamqb	,init_teamqb	,ROT270	,	"Leland Corp.", "John Elway's Team Quarterback" )
-/*TODO*///	public static GameDriver driver_teamqb2	   = new GameDriver("1988"	,"teamqb2"	,"leland.java"	,rom_teamqb2,driver_teamqb	,machine_driver_lelandi	,input_ports_teamqb	,init_teamqb	,ROT270	,	"Leland Corp.", "John Elway's Team Quarterback (set 2)" )
-/*TODO*///	public static GameDriver driver_aafb	   = new GameDriver("1989"	,"aafb"	,"leland.java"	,rom_aafb,null	,machine_driver_lelandi	,input_ports_teamqb	,init_aafb	,ROT270	,	"Leland Corp.", "All American Football (rev E)" )
-/*TODO*///	public static GameDriver driver_aafbd2p	   = new GameDriver("1989"	,"aafbd2p"	,"leland.java"	,rom_aafbd2p,driver_aafb	,machine_driver_lelandi	,input_ports_aafb2p	,init_aafbb	,ROT270	,	"Leland Corp.", "All American Football (rev D, 2 Players)" )
-/*TODO*///	public static GameDriver driver_aafbb	   = new GameDriver("1989"	,"aafbb"	,"leland.java"	,rom_aafbb,driver_aafb	,machine_driver_lelandi	,input_ports_teamqb	,init_aafbb	,ROT270	,	"Leland Corp.", "All American Football (rev B)" )
-/*TODO*///	
-/*TODO*///	/* huge master banks, large slave banks, I86 sound */
-/*TODO*///	public static GameDriver driver_offroad	   = new GameDriver("1989"	,"offroad"	,"leland.java"	,rom_offroad,null	,machine_driver_lelandi	,input_ports_offroad	,init_offroad	,ROT0	,	"Leland Corp.", "Ironman Stewart's Super Off-Road" )
-/*TODO*///	public static GameDriver driver_offroadt	   = new GameDriver("1989"	,"offroadt"	,"leland.java"	,rom_offroadt,null	,machine_driver_lelandi	,input_ports_offroad	,init_offroadt	,ROT0	,	"Leland Corp.", "Ironman Stewart's Super Off-Road Track Pack" )
-/*TODO*///	public static GameDriver driver_pigout	   = new GameDriver("1990"	,"pigout"	,"leland.java"	,rom_pigout,null	,machine_driver_lelandi	,input_ports_pigout	,init_pigout	,ROT0	,	"Leland Corp.", "Pigout" )
-/*TODO*///	public static GameDriver driver_pigouta	   = new GameDriver("1990"	,"pigouta"	,"leland.java"	,rom_pigouta,driver_pigout	,machine_driver_lelandi	,input_ports_pigout	,init_pigout	,ROT0	,	"Leland Corp.", "Pigout (alternate)" )
+
+    /* large master banks, small slave banks, I86 sound */
+    public static GameDriver driver_redlin2p = new GameDriver("1987", "redlin2p", "leland.java", rom_redlin2p, null, machine_driver_redline, input_ports_redline, init_redlin2p, ROT270, "Cinematronics (Tradewest license)", "Redline Racer (2 players)");
+    public static GameDriver driver_quarterb = new GameDriver("1987", "quarterb", "leland.java", rom_quarterb, null, machine_driver_quarterb, input_ports_quarterb, init_quarterb, ROT270, "Leland Corp.", "Quarterback");
+    public static GameDriver driver_quartrba = new GameDriver("1987", "quartrba", "leland.java", rom_quartrba, driver_quarterb, machine_driver_quarterb, input_ports_quarterb, init_quarterb, ROT270, "Leland Corp.", "Quarterback (set 2)");
+
+    /* large master banks, large slave banks, I86 sound */
+    public static GameDriver driver_viper = new GameDriver("1988", "viper", "leland.java", rom_viper, null, machine_driver_lelandi, input_ports_dangerz, init_viper, ROT0, "Leland Corp.", "Viper");
+    public static GameDriver driver_teamqb = new GameDriver("1988", "teamqb", "leland.java", rom_teamqb, null, machine_driver_lelandi, input_ports_teamqb, init_teamqb, ROT270, "Leland Corp.", "John Elway's Team Quarterback");
+    public static GameDriver driver_teamqb2 = new GameDriver("1988", "teamqb2", "leland.java", rom_teamqb2, driver_teamqb, machine_driver_lelandi, input_ports_teamqb, init_teamqb, ROT270, "Leland Corp.", "John Elway's Team Quarterback (set 2)");
+    public static GameDriver driver_aafb = new GameDriver("1989", "aafb", "leland.java", rom_aafb, null, machine_driver_lelandi, input_ports_teamqb, init_aafb, ROT270, "Leland Corp.", "All American Football (rev E)");
+    public static GameDriver driver_aafbd2p = new GameDriver("1989", "aafbd2p", "leland.java", rom_aafbd2p, driver_aafb, machine_driver_lelandi, input_ports_aafb2p, init_aafbb, ROT270, "Leland Corp.", "All American Football (rev D, 2 Players)");
+    public static GameDriver driver_aafbb = new GameDriver("1989", "aafbb", "leland.java", rom_aafbb, driver_aafb, machine_driver_lelandi, input_ports_teamqb, init_aafbb, ROT270, "Leland Corp.", "All American Football (rev B)");
+
+    /* huge master banks, large slave banks, I86 sound */
+    public static GameDriver driver_offroad = new GameDriver("1989", "offroad", "leland.java", rom_offroad, null, machine_driver_lelandi, input_ports_offroad, init_offroad, ROT0, "Leland Corp.", "Ironman Stewart's Super Off-Road");
+    public static GameDriver driver_offroadt = new GameDriver("1989", "offroadt", "leland.java", rom_offroadt, null, machine_driver_lelandi, input_ports_offroad, init_offroadt, ROT0, "Leland Corp.", "Ironman Stewart's Super Off-Road Track Pack");
+    public static GameDriver driver_pigout = new GameDriver("1990", "pigout", "leland.java", rom_pigout, null, machine_driver_lelandi, input_ports_pigout, init_pigout, ROT0, "Leland Corp.", "Pigout");
+    public static GameDriver driver_pigouta = new GameDriver("1990", "pigouta", "leland.java", rom_pigouta, driver_pigout, machine_driver_lelandi, input_ports_pigout, init_pigout, ROT0, "Leland Corp.", "Pigout (alternate)");
 }

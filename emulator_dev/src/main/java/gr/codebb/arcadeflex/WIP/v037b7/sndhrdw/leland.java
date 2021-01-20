@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_CPU3;
 import gr.codebb.arcadeflex.common.PtrLib.ShortPtr;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
@@ -13,6 +14,19 @@ import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
 import gr.codebb.arcadeflex.old.sound.streams.StreamInitPtr;
 import static gr.codebb.arcadeflex.old.sound.streams.stream_init;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.IOReadPort;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.IOWritePort;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_BANK6;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_BANK7;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_RAM;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_ROM;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_BANK6;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_BANK7;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_RAM;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_ROM;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryReadAddress;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryWriteAddress;
+import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ReadHandlerPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ShStartPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ShStopPtr;
@@ -155,10 +169,10 @@ public class leland {
 /*TODO*///	static int nondma_stream;
 /*TODO*///	static int extern_stream;
 /*TODO*///	
-/*TODO*///	static UINT8 *ram_base;
+    static UBytePtr ram_base=new UBytePtr();
 /*TODO*///	static UINT8 has_ym2151;
-/*TODO*///	static UINT8 is_redline;
-/*TODO*///	
+    static int/*UINT8*/ is_redline;
+
     static int/*UINT8*/ last_control;
     /*TODO*///	static UINT8 clock_active;
 /*TODO*///	static UINT8 clock_tick;
@@ -172,7 +186,7 @@ public class leland {
 /*TODO*///	static UINT8 ext_active;
 /*TODO*///	static UINT8 *ext_base;
 /*TODO*///	
-/*TODO*///	static UINT8 *active_mask;
+    public static UBytePtr active_mask;
 /*TODO*///	static int total_reads;
 /*TODO*///	
 /*TODO*///	struct mem_state
@@ -451,17 +465,17 @@ public class leland {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound initialization
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ShStartPtr leland_i186_sh_start = new ShStartPtr() { public int handler(MachineSound msound) 
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///	
+    /**
+     * ***********************************
+     *
+     * Sound initialization
+     *
+     ************************************
+     */
+    public static ShStartPtr leland_i186_sh_start = new ShStartPtr() {
+        public int handler(MachineSound msound) {
+            int i;
+            /*TODO*///	
 /*TODO*///		/* bail if nothing to play */
 /*TODO*///		if (Machine.sample_rate == 0)
 /*TODO*///			return 0;
@@ -485,17 +499,19 @@ public class leland {
 /*TODO*///	
 /*TODO*///		/* by default, we're not redline racer */
 /*TODO*///		is_redline = 0;
-/*TODO*///		return 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ShStartPtr redline_i186_sh_start = new ShStartPtr() { public int handler(MachineSound msound) 
-/*TODO*///	{
-/*TODO*///		int result = leland_i186_sh_start(msound);
-/*TODO*///		is_redline = 1;
-/*TODO*///		return result;
-/*TODO*///	} };
-/*TODO*///	
+            return 0;
+        }
+    };
+
+    public static ShStartPtr redline_i186_sh_start = new ShStartPtr() {
+        public int handler(MachineSound msound) {
+            int result = leland_i186_sh_start.handler(msound);
+            is_redline = 1;
+            return result;
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	static void leland_i186_reset(void)
 /*TODO*///	{
@@ -1031,23 +1047,23 @@ public class leland {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	80186 internal I/O reads
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr i186_internal_port_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int shift = 8 * (offset & 1);
-/*TODO*///		int temp, which;
-/*TODO*///	
-/*TODO*///		switch (offset & ~1)
-/*TODO*///		{
-/*TODO*///			case 0x22:
-/*TODO*///				logerror("%05X:ERROR - read from 80186 EOI\n", cpu_get_pc());
-/*TODO*///				break;
+	
+	/*************************************
+	 *
+	 *	80186 internal I/O reads
+	 *
+	 *************************************/
+	
+	public static ReadHandlerPtr i186_internal_port_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		int shift = 8 * (offset & 1);
+		int temp, which;
+	
+		switch (offset & ~1)
+		{
+			case 0x22:
+				logerror("%05X:ERROR - read from 80186 EOI\n", cpu_get_pc());
+				break;
 /*TODO*///	
 /*TODO*///			case 0x24:
 /*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt poll\n", cpu_get_pc());
@@ -1208,23 +1224,23 @@ public class leland {
 /*TODO*///				stream_update(dma_stream, 0);
 /*TODO*///				return (i186.dma[which].control >> shift) & 0xff;
 /*TODO*///	
-/*TODO*///			default:
-/*TODO*///				logerror("%05X:read 80186 port %02X\n", cpu_get_pc(), offset);
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///		return 0x00;
-/*TODO*///	} };
+			default:
+				logerror("%05X:read 80186 port %02X\n", cpu_get_pc(), offset);
+				break;
+		}
+		return 0x00;
+	} };
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	80186 internal I/O writes
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr i186_internal_port_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
+	
+	/*************************************
+	 *
+	 *	80186 internal I/O writes
+	 *
+	 *************************************/
+	
+	public static WriteHandlerPtr i186_internal_port_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
 /*TODO*///		static UINT8 even_byte;
 /*TODO*///		int temp, which;
 /*TODO*///	
@@ -1470,9 +1486,9 @@ public class leland {
 /*TODO*///				logerror("%05X:80186 port %02X = %04X\n", cpu_get_pc(), offset, data);
 /*TODO*///				break;
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+	} };
+	
+	
 /*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
@@ -1805,9 +1821,9 @@ public class leland {
 /*TODO*///		if (LOG_DAC != 0) logerror("DAC %d frequency = %d, step = %08X\n", which, d.frequency, d.step);
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr dac_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
+	
+	public static WriteHandlerPtr dac_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
 /*TODO*///		int which = offset / 2;
 /*TODO*///		struct dac_state *d = &dac[which];
 /*TODO*///	
@@ -1843,11 +1859,11 @@ public class leland {
 /*TODO*///			d.volume = (data ^ 0x00) / DAC_VOLUME_SCALE;
 /*TODO*///			if (LOG_DAC != 0) logerror("%05X:DAC %d volume = %02X\n", cpu_get_pc(), offset / 2, data);
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr redline_dac_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
+	} };
+	
+	
+	public static WriteHandlerPtr redline_dac_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
 /*TODO*///		int which = offset / 0x200;
 /*TODO*///		struct dac_state *d = &dac[which];
 /*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
@@ -1874,9 +1890,9 @@ public class leland {
 /*TODO*///		/* update the volume */
 /*TODO*///		d.volume = (offset & 0x1fe) / 2 / DAC_VOLUME_SCALE;
 /*TODO*///		if (LOG_DAC != 0) logerror("%05X:DAC %d value = %02X, volume = %02X\n", cpu_get_pc(), which, data, (offset & 0x1fe) / 2);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+	} };
+	
+	
 /*TODO*///	public static WriteHandlerPtr dac_10bit_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 /*TODO*///	{
 /*TODO*///		static UINT8 even_byte;
@@ -2095,20 +2111,20 @@ public class leland {
 /*TODO*///	} };
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Optimizations
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	void leland_i86_optimize_address(offs_t offset)
-/*TODO*///	{
-/*TODO*///		if (offset != 0)
-/*TODO*///			active_mask = memory_region(REGION_CPU3) + offset;
-/*TODO*///		else
-/*TODO*///			active_mask = NULL;
-/*TODO*///	}
+	
+	/*************************************
+	 *
+	 *	Optimizations
+	 *
+	 *************************************/
+	
+	public static void leland_i86_optimize_address(int offset)
+	{
+		if (offset != 0)
+			active_mask = new UBytePtr(memory_region(REGION_CPU3) , offset);
+		else
+			active_mask = null;
+	}
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
@@ -2129,53 +2145,53 @@ public class leland {
 /*TODO*///	} };
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound CPU memory handlers
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static MemoryReadAddress leland_i86_readmem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryReadAddress( 0x00000, 0x03fff, MRA_RAM ),
-/*TODO*///		new MemoryReadAddress( 0x0c000, 0x0ffff, MRA_BANK6 ),	/* used by Ataxx */
-/*TODO*///		new MemoryReadAddress( 0x1c000, 0x1ffff, MRA_BANK7 ),	/* used by Super Offroad */
-/*TODO*///		new MemoryReadAddress( 0x20000, 0xfffff, MRA_ROM ),
-/*TODO*///		new MemoryReadAddress( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static MemoryWriteAddress leland_i86_writemem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryWriteAddress( 0x00000, 0x03fff, MWA_RAM, ram_base ),
-/*TODO*///		new MemoryWriteAddress( 0x0c000, 0x0ffff, MWA_BANK6 ),
-/*TODO*///		new MemoryWriteAddress( 0x1c000, 0x1ffff, MWA_BANK7 ),
-/*TODO*///		new MemoryWriteAddress( 0x20000, 0xfffff, MWA_ROM ),
-/*TODO*///		new MemoryWriteAddress( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static IOReadPort leland_i86_readport[] =
-/*TODO*///	{
-/*TODO*///		new IOReadPort( 0xff00, 0xffff, i186_internal_port_r ),
-/*TODO*///	    new IOReadPort( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static IOWritePort redline_i86_writeport[] =
-/*TODO*///	{
-/*TODO*///		new IOWritePort( 0x6000, 0x6fff, redline_dac_w ),
-/*TODO*///		new IOWritePort( 0xff00, 0xffff, i186_internal_port_w ),
-/*TODO*///		new IOWritePort( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static IOWritePort leland_i86_writeport[] =
-/*TODO*///	{
-/*TODO*///		new IOWritePort( 0x0000, 0x000b, dac_w ),
-/*TODO*///		new IOWritePort( 0x0080, 0x008b, dac_w ),
-/*TODO*///		new IOWritePort( 0x00c0, 0x00cb, dac_w ),
-/*TODO*///		new IOWritePort( 0xff00, 0xffff, i186_internal_port_w ),
-/*TODO*///		new IOWritePort( -1 )  /* end of table */
-/*TODO*///	};
-/*TODO*///	
+	
+	/*************************************
+	 *
+	 *	Sound CPU memory handlers
+	 *
+	 *************************************/
+	
+	public static MemoryReadAddress leland_i86_readmem[] =
+	{
+		new MemoryReadAddress( 0x00000, 0x03fff, MRA_RAM ),
+		new MemoryReadAddress( 0x0c000, 0x0ffff, MRA_BANK6 ),	/* used by Ataxx */
+		new MemoryReadAddress( 0x1c000, 0x1ffff, MRA_BANK7 ),	/* used by Super Offroad */
+		new MemoryReadAddress( 0x20000, 0xfffff, MRA_ROM ),
+		new MemoryReadAddress( -1 )  /* end of table */
+	};
+	
+	public static MemoryWriteAddress leland_i86_writemem[] =
+	{
+		new MemoryWriteAddress( 0x00000, 0x03fff, MWA_RAM, ram_base ),
+		new MemoryWriteAddress( 0x0c000, 0x0ffff, MWA_BANK6 ),
+		new MemoryWriteAddress( 0x1c000, 0x1ffff, MWA_BANK7 ),
+		new MemoryWriteAddress( 0x20000, 0xfffff, MWA_ROM ),
+		new MemoryWriteAddress( -1 )  /* end of table */
+	};
+	
+	public static IOReadPort leland_i86_readport[] =
+	{
+		new IOReadPort( 0xff00, 0xffff, i186_internal_port_r ),
+	    new IOReadPort( -1 )  /* end of table */
+	};
+	
+	public static IOWritePort redline_i86_writeport[] =
+	{
+		new IOWritePort( 0x6000, 0x6fff, redline_dac_w ),
+		new IOWritePort( 0xff00, 0xffff, i186_internal_port_w ),
+		new IOWritePort( -1 )  /* end of table */
+	};
+	
+	public static IOWritePort leland_i86_writeport[] =
+	{
+		new IOWritePort( 0x0000, 0x000b, dac_w ),
+		new IOWritePort( 0x0080, 0x008b, dac_w ),
+		new IOWritePort( 0x00c0, 0x00cb, dac_w ),
+		new IOWritePort( 0xff00, 0xffff, i186_internal_port_w ),
+		new IOWritePort( -1 )  /* end of table */
+	};
+	
 /*TODO*///	static IOWritePort ataxx_i86_writeport[] =
 /*TODO*///	{
 /*TODO*///		new IOWritePort( 0xff00, 0xffff, i186_internal_port_w ),

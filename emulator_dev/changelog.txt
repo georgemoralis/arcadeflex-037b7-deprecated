@@ -1,6 +1,7 @@
 20/01/2021
 ==========
 -Added mnight driver (currently it freezes emu)
+-More advances to leland driver (but misses i86 cpu so rest of games can't work)
 
 19/01/2021
 ==========
