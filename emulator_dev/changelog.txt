@@ -1,3 +1,7 @@
+21/01/2021
+==========
+-Added exerion driver (correctly graphics are still corrupted (WIP))
+
 20/01/2021
 ==========
 -Added mnight driver (currently it freezes emu)

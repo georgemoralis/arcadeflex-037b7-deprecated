@@ -32,6 +32,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gladiatr.*;
 
 //new drivers
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mnight.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exerion.*;
 
 public class driver {
 
@@ -3980,12 +3981,9 @@ public class driver {
         // driver_weststry,	/* bootleg */
 
         /* Jaleco games */
-        /*TODO*/
-        // driver_exerion,	/* (c) 1983 Jaleco */
-        /*TODO*/
-        // driver_exeriont,	/* (c) 1983 Jaleco + Taito America license */
-        /*TODO*/
-        // driver_exerionb,	/* bootleg */
+        driver_exerion,	/* (c) 1983 Jaleco */
+        driver_exeriont,	/* (c) 1983 Jaleco + Taito America license */
+        driver_exerionb,	/* bootleg */
         /*TODO*/
         // driver_formatz,	/* (c) 1984 Jaleco */
         /*TODO*/
