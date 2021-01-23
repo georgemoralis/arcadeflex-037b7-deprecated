@@ -33,6 +33,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gladiatr.*;
 //new drivers
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mnight.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exerion.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.polepos.*;
 
 public class driver {
 
@@ -439,8 +440,7 @@ public class driver {
         /*TODO*/
         // driver_toypop,	/* (c) 1986 */
         /* Z8000 games */
-        /*TODO*/
-        // driver_polepos,	/* (c) 1982  */
+        driver_polepos,	/* (c) 1982  */
         /*TODO*/
         // driver_poleposa,	/* (c) 1982 + Atari license */
         /*TODO*/

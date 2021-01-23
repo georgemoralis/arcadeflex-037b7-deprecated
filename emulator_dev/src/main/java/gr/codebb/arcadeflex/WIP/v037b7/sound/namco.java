@@ -1,6 +1,6 @@
 /*
  * ported to v0.37b7 
-*/
+ */
 package gr.codebb.arcadeflex.WIP.v037b7.sound;
 
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
@@ -314,7 +314,7 @@ public class namco extends snd_interface {
         sample_rate = Machine.sample_rate;
         /* get stream channels */
         if (intf.stereo != 0) {
-            throw new UnsupportedOperationException("Namco stereo unsupported ");
+//            throw new UnsupportedOperationException("Namco stereo unsupported ");
             /*TODO*///		int vol[2];
             /*TODO*///
             /*TODO*///		vol[0] = MIXER(intf->volume,MIXER_PAN_LEFT);
@@ -406,44 +406,46 @@ public class namco extends snd_interface {
         }
     };
 
-    /*TODO*///
-    /*TODO*////********************************************************************************/
-    /*TODO*///
-    /*TODO*///void polepos_sound_w(int offset,int data)
-    /*TODO*///{
-    /*TODO*///	sound_channel *voice;
-    /*TODO*///	int base;
-    /*TODO*///
-    /*TODO*///	/* update the streams */
-    /*TODO*///	stream_update(stream, 0);
-    /*TODO*///
-    /*TODO*///	/* set the register */
-    /*TODO*///	namco_soundregs[offset] = data;
-    /*TODO*///
-    /*TODO*///	/* recompute all the voice parameters */
-    /*TODO*///	for (base = 8, voice = channel_list; voice < last_channel; voice++, base += 4)
-    /*TODO*///	{
-    /*TODO*///		voice->frequency = namco_soundregs[0x01 + base];
-    /*TODO*///		voice->frequency = voice->frequency * 256 + namco_soundregs[0x00 + base];
-    /*TODO*///
-    /*TODO*///		/* the volume seems to vary between one of these five places */
-    /*TODO*///		/* it's likely that only 3 or 4 are valid; for now, we just */
-    /*TODO*///		/* take the maximum volume and that seems to do the trick */
-    /*TODO*///		/* volume[0] = left speaker ?, volume[1] = right speaker ? */
-    /*TODO*///		voice->volume[0] = voice->volume[1] = 0;
-    /*TODO*///		// front speaker ?
-    /*TODO*///		voice->volume[1] |= namco_soundregs[0x02 + base] & 0x0f;
-    /*TODO*///		voice->volume[0] |= namco_soundregs[0x02 + base] >> 4;
-    /*TODO*///		// rear speaker ?
-    /*TODO*///		voice->volume[1] |= namco_soundregs[0x03 + base] & 0x0f;
-    /*TODO*///		voice->volume[0] |= namco_soundregs[0x03 + base] >> 4;
-    /*TODO*///		voice->volume[1] |= namco_soundregs[0x23 + base] >> 4;
-    /*TODO*///		voice->wave = &sound_prom[32 * (namco_soundregs[0x23 + base] & 7)];
-    /*TODO*///	}
-    /*TODO*///}
-    /*TODO*///
-    /*TODO*///
-    /*TODO*////********************************************************************************/
+    /**
+     * *****************************************************************************
+     */
+    public static WriteHandlerPtr polepos_sound_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /*TODO*///	sound_channel *voice;
+            /*TODO*///	int base;
+            /*TODO*///
+            /*TODO*///	/* update the streams */
+            /*TODO*///	stream_update(stream, 0);
+            /*TODO*///
+            /*TODO*///	/* set the register */
+            namco_soundregs.write(offset, data);
+            /*TODO*///
+            /*TODO*///	/* recompute all the voice parameters */
+            /*TODO*///	for (base = 8, voice = channel_list; voice < last_channel; voice++, base += 4)
+            /*TODO*///	{
+            /*TODO*///		voice->frequency = namco_soundregs[0x01 + base];
+            /*TODO*///		voice->frequency = voice->frequency * 256 + namco_soundregs[0x00 + base];
+            /*TODO*///
+            /*TODO*///		/* the volume seems to vary between one of these five places */
+            /*TODO*///		/* it's likely that only 3 or 4 are valid; for now, we just */
+            /*TODO*///		/* take the maximum volume and that seems to do the trick */
+            /*TODO*///		/* volume[0] = left speaker ?, volume[1] = right speaker ? */
+            /*TODO*///		voice->volume[0] = voice->volume[1] = 0;
+            /*TODO*///		// front speaker ?
+            /*TODO*///		voice->volume[1] |= namco_soundregs[0x02 + base] & 0x0f;
+            /*TODO*///		voice->volume[0] |= namco_soundregs[0x02 + base] >> 4;
+            /*TODO*///		// rear speaker ?
+            /*TODO*///		voice->volume[1] |= namco_soundregs[0x03 + base] & 0x0f;
+            /*TODO*///		voice->volume[0] |= namco_soundregs[0x03 + base] >> 4;
+            /*TODO*///		voice->volume[1] |= namco_soundregs[0x23 + base] >> 4;
+            /*TODO*///		voice->wave = &sound_prom[32 * (namco_soundregs[0x23 + base] & 7)];
+            /*TODO*///	}
+        }
+    };
+
+    /**
+     * *****************************************************************************
+     */
     public static WriteHandlerPtr mappy_sound_enable_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             sound_enable = offset;
