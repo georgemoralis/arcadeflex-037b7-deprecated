@@ -1,6 +1,7 @@
 24/01/2021
 ==========
 -Improved exerion vidhrdw (now it seems almost correct)
+-Rewrote cpuintrf to v0.37b7
 
 23/01/2021
 ==========

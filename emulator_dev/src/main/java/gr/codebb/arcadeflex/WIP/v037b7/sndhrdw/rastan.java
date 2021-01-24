@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.Z80_NMI_INT;

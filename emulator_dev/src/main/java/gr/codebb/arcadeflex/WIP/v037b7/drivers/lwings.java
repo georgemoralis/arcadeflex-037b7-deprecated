@@ -13,7 +13,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_2;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_RRRRGGGGBBBBxxxx_split1_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_RRRRGGGGBBBBxxxx_split2_w;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.flip_screen_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.MSM5205.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.MSM5205H.*;

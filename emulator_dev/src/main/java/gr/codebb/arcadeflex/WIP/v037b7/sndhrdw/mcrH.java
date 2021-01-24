@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.mcr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 
 public class mcrH {

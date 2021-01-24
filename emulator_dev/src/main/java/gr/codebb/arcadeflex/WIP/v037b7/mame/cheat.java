@@ -7,7 +7,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.mame;
 import static gr.codebb.arcadeflex.common.libc.cstdio.sprintf;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.ui_text.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.ui_textH.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.mame.input.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.old.mame.usrintrf.*;

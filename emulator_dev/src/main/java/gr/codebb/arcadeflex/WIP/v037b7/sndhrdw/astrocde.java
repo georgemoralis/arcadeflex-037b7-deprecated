@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.gorf.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.samples.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.Z80_BC;

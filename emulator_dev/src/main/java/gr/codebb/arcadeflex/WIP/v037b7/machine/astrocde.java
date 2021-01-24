@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.machine;
 
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 

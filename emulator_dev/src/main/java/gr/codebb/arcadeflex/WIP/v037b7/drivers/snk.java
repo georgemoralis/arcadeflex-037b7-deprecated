@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._3526intf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._3812intfH.*;

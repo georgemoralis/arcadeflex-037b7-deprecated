@@ -7,7 +7,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sound;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.astrocdeH.*;
 import gr.codebb.arcadeflex.common.PtrLib.ShortPtr;
 import static gr.codebb.arcadeflex.common.libc.cstdlib.rand;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;

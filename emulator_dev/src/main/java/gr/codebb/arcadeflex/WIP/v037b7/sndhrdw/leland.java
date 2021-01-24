@@ -10,7 +10,7 @@ import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import gr.codebb.arcadeflex.old.sound.streams.StreamInitPtr;
 import static gr.codebb.arcadeflex.old.sound.streams.stream_init;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;

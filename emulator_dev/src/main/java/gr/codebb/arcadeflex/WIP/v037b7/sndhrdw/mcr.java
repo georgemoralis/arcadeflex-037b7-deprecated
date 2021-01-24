@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.mcrH.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
 import static gr.codebb.arcadeflex.old.sound.mixerH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;

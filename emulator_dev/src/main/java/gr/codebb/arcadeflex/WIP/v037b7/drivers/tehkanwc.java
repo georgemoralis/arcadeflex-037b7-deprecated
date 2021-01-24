@@ -10,7 +10,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.MSM5205.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.MSM5205H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;

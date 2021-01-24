@@ -6,7 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sound;
 import static gr.codebb.arcadeflex.common.libc.cstdio.sprintf;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
 import static gr.codebb.arcadeflex.old.sound.streams.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;

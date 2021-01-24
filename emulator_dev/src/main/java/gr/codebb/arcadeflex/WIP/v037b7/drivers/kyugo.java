@@ -7,7 +7,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;

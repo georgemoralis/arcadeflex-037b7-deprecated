@@ -7,7 +7,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.z80fmly.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.z80fmlyH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;

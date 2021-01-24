@@ -50,10 +50,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_xRRRRRGGGG
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_xxxxBBBBGGGGRRRR_w;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region_length;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.cpu_getiloops;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.cpu_set_irq_line;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.ignore_interrupt;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.interrupt;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_getiloops;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_set_irq_line;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.ignore_interrupt;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.interrupt;
 import static gr.codebb.arcadeflex.old.mame.usrintrf.usrintf_showmessage;
 import static gr.codebb.arcadeflex.old.sound.mixerH.MIXER_PAN_CENTER;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.flip_screen_w;

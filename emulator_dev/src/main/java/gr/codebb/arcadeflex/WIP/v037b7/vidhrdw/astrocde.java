@@ -8,7 +8,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.CLEAR_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.video.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
 import static gr.codebb.arcadeflex.old.mame.usrintrf.*;
 import static gr.codebb.arcadeflex.old2.arcadeflex.osd_cpuH.*;

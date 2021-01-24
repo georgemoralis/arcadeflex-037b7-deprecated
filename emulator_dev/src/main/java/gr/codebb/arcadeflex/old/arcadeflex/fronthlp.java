@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.*;
 import static gr.codebb.arcadeflex.old.mame.common.printromlist;
 import static gr.codebb.arcadeflex.old.mame.common.showdisclaimer;
-import static gr.codebb.arcadeflex.old.mame.cpuintrf.cputype_name;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cputype_name;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.ROMFLAG_MASK;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.RomModule;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.sound_name;
