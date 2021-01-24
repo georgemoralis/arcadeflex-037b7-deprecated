@@ -290,6 +290,12 @@ public class PtrLib {
             memory[offset + index * 2] = (char) (value & 0xFF);
             memory[offset + index * 2 + 1] = (char) ((value >> 8) & 0xFF);
         }
+
+        public void writeinc(char value) {
+            memory[offset] = (char) (value & 0xFF);
+            memory[offset + 1] = (char) ((value >> 8) & 0xFF);
+            offset += bsize;
+        }
     }
 
     /**
