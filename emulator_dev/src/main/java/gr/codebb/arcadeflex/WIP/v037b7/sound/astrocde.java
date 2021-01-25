@@ -15,7 +15,6 @@ import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 
-
 public class astrocde extends snd_interface {
 
     public astrocde() {
@@ -86,7 +85,7 @@ public class astrocde extends snd_interface {
         int i, data, data16, noise_plus_osc, vib_plus_osc;
 
         for (i = pos; i < newpos; i++) {
-            if (current_count_N[i] == 0) {
+            if (current_count_N[num] == 0) {
                 randbyte = rand() & 0xff;
             }
 

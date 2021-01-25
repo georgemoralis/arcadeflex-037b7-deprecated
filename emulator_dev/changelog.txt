@@ -1,3 +1,7 @@
+25/01/2021
+==========
+-Fixed astrocde issue. Now seems to work okay
+
 24/01/2021
 ==========
 -Improved exerion vidhrdw (now it seems almost correct)
