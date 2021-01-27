@@ -1,6 +1,7 @@
 27/01/2021
 ==========
 -Added working taito_l driver
+-Added working kyugo driver
 
 18/01/2021
 ==========

@@ -1,6 +1,7 @@
 27/01/2021
 ==========
 -Moved taito_l to working drivers
+-Moved kyuogo to working drivers
 
 25/01/2021
 ==========

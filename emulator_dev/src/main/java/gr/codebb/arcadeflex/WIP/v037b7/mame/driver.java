@@ -19,7 +19,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.amidar.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.cclimber.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.frogger.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.kingobox.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.kyugo.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.kyugo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mitchell.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scobra.*;
@@ -107,16 +107,6 @@ public class driver {
         driver_nunchaku,
         driver_yamagchi,
         driver_tehkanwc,
-        driver_gyrodine,
-        driver_sonofphx,
-        driver_repulse,
-        driver_99lstwar,
-        driver_99lstwra,
-        driver_flashgal,
-        driver_srdmissn,
-        driver_airwolf,
-        driver_skywolf,
-        driver_skywolf2,
         driver_scobra,
         driver_scobras,
         driver_scobrab,
@@ -4922,6 +4912,16 @@ public class driver {
         driver_cachat,
         driver_plgirls,
         driver_plgirls2,
+        driver_gyrodine,
+        driver_sonofphx,
+        driver_repulse,
+        driver_99lstwar,
+        driver_99lstwra,
+        driver_flashgal,
+        driver_srdmissn,
+        driver_airwolf,
+        driver_skywolf,
+        driver_skywolf2,
         /*
      * NOT Working flag
          */

@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
@@ -18,7 +18,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.kyugo.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.kyugo.*;
 
 public class kyugo {
 
