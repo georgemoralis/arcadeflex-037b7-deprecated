@@ -1,3 +1,7 @@
+27/01/2021
+==========
+-Added working taito_l driver
+
 18/01/2021
 ==========
 -Added working thepit driver

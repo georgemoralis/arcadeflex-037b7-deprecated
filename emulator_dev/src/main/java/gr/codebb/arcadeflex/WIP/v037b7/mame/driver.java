@@ -24,7 +24,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mitchell.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scobra.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.snk.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.taito_l.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.taito_l.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tsamurai.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dooyong.*;
@@ -100,20 +100,6 @@ public class driver {
         driver_ftsoccer,
         driver_tdfever,
         driver_tdfeverj,
-        driver_raimais,
-        driver_kurikint,
-        driver_kurikina,
-        driver_fhawk,
-        driver_plotting,
-        driver_champwr,
-        driver_champwru,
-        driver_champwrj,
-        driver_puzznic,
-        driver_horshoes,
-        driver_palamed,
-        driver_cachat,
-        driver_plgirls,
-        driver_plgirls2,
         driver_kingofb,
         driver_ringking,
         driver_tsamurai, // small articafts right-left of screen
@@ -440,7 +426,7 @@ public class driver {
         /*TODO*/
         // driver_toypop,	/* (c) 1986 */
         /* Z8000 games */
-        driver_polepos,	/* (c) 1982  */
+        driver_polepos, /* (c) 1982  */
         /*TODO*/
         // driver_poleposa,	/* (c) 1982 + Atari license */
         /*TODO*/
@@ -2237,19 +2223,19 @@ public class driver {
         driver_basebal2,
         driver_dblplay,
         driver_strkzone,
-        driver_redlin2p,	/* (c) 1987 Cinematronics + Tradewest license */
-        driver_quarterb,	/* (c) 1987 Leland */
-        driver_quartrba,	/* (c) 1987 Leland */
-        driver_viper,		/* (c) 1988 Leland */
-        driver_teamqb,	/* (c) 1988 Leland */
-        driver_teamqb2,	/* (c) 1988 Leland */
-        driver_aafb,		/* (c) 1989 Leland */
-        driver_aafbd2p,	/* (c) 1989 Leland */
-        driver_aafbb,		/* (c) 1989 Leland */
-        driver_offroad,	/* (c) 1989 Leland */
-        driver_offroadt,	/* (c) 1989 Leland */
-        driver_pigout,	/* (c) 1990 Leland */
-        driver_pigouta,	/* (c) 1990 Leland */
+        driver_redlin2p, /* (c) 1987 Cinematronics + Tradewest license */
+        driver_quarterb, /* (c) 1987 Leland */
+        driver_quartrba, /* (c) 1987 Leland */
+        driver_viper, /* (c) 1988 Leland */
+        driver_teamqb, /* (c) 1988 Leland */
+        driver_teamqb2, /* (c) 1988 Leland */
+        driver_aafb, /* (c) 1989 Leland */
+        driver_aafbd2p, /* (c) 1989 Leland */
+        driver_aafbb, /* (c) 1989 Leland */
+        driver_offroad, /* (c) 1989 Leland */
+        driver_offroadt, /* (c) 1989 Leland */
+        driver_pigout, /* (c) 1990 Leland */
+        driver_pigouta, /* (c) 1990 Leland */
         /*TODO*/
         // driver_ataxx,		/* (c) 1990 Leland */
         /*TODO*/
@@ -3780,8 +3766,8 @@ public class driver {
         // driver_jackrabs,	/* (c) 1984 */
 
         /* UPL games */
-        driver_mnight,	/* (c) 1987 distributed by Kawakus */
-        driver_arkarea,	/* UPL-87007 (c) [1988?] */
+        driver_mnight, /* (c) 1987 distributed by Kawakus */
+        driver_arkarea, /* UPL-87007 (c) [1988?] */
         /*
     Urashima Mahjong    UPL-89052
 
@@ -3981,9 +3967,9 @@ public class driver {
         // driver_weststry,	/* bootleg */
 
         /* Jaleco games */
-        driver_exerion,	/* (c) 1983 Jaleco */
-        driver_exeriont,	/* (c) 1983 Jaleco + Taito America license */
-        driver_exerionb,	/* bootleg */
+        driver_exerion, /* (c) 1983 Jaleco */
+        driver_exeriont, /* (c) 1983 Jaleco + Taito America license */
+        driver_exerionb, /* bootleg */
         /*TODO*/
         // driver_formatz,	/* (c) 1984 Jaleco */
         /*TODO*/
@@ -4781,7 +4767,7 @@ public class driver {
         /*RELEASE*///driver_snapjack,
         /*RELEASE*///driver_cavenger,
         /*RELEASE*///driver_rallyx,
-       /*RELEASE*///driver_rallyxm,
+        /*RELEASE*///driver_rallyxm,
         /*RELEASE*///driver_nrallyx,
         /*RELEASE*///driver_nova2001,
         /*RELEASE*///driver_nov2001u,
@@ -4922,6 +4908,20 @@ public class driver {
         /*RELEASE*///driver_suprmous,
         /*RELEASE*///driver_suprmou2,
         /*RELEASE*///driver_machomou,
+        driver_raimais,
+        driver_kurikint,
+        driver_kurikina,
+        driver_fhawk,
+        driver_plotting,
+        driver_champwr,
+        driver_champwru,
+        driver_champwrj,
+        driver_puzznic,
+        driver_horshoes,
+        driver_palamed,
+        driver_cachat,
+        driver_plgirls,
+        driver_plgirls2,
         /*
      * NOT Working flag
          */

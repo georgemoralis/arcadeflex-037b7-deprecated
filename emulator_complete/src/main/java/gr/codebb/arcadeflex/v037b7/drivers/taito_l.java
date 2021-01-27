@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.rastan.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.*;
@@ -28,7 +28,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.taito_l.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.taito_l.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 
 public class taito_l {
