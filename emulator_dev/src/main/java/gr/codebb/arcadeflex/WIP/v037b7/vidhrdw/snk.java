@@ -160,7 +160,7 @@ public class snk {
         }
     }
 
-    static void tnk3_draw_text(osd_bitmap bitmap, int bank, UBytePtr source) {
+    public static void tnk3_draw_text(osd_bitmap bitmap, int bank, UBytePtr source) {
         GfxElement gfx = Machine.gfx[GFX_CHARS];
         int offs;
 

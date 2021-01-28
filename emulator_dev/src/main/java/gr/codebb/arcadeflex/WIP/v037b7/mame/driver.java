@@ -34,6 +34,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gladiatr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mnight.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exerion.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.polepos.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.hal21.*;
 
 public class driver {
 
@@ -3604,12 +3605,9 @@ public class driver {
         /*TODO*/
         // driver_lasso,		/*       'WM' (c) 1982 */
 
-        /*TODO*/
-        // driver_hal21,		/*            (c) 1985 */
-        /*TODO*/
-        // driver_hal21j,	/*            (c) 1985 (Japan) */
-        /*TODO*/
-        // driver_aso,		/*            (c) 1985 */
+        driver_hal21,		
+        driver_hal21j,	
+        driver_aso,		
         /*TODO*/
         // driver_ikari3,	/* A7007 'IK3'(c) 1989 */
         /*TODO*/

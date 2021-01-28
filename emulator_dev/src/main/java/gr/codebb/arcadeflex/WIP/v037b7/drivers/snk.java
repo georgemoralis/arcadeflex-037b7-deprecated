@@ -4,7 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hal21.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.hal21.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.*;

@@ -1,3 +1,7 @@
+28/01/2021
+==========
+-Added working hal21 driver
+
 27/01/2021
 ==========
 -Moved taito_l to working drivers
