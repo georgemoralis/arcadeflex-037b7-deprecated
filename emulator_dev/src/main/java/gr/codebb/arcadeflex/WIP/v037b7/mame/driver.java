@@ -38,6 +38,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.hal21.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mcr3.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.popeye.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.buggychl.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mexico86.*;
 
 public class driver {
 
@@ -1352,12 +1353,6 @@ public class driver {
         // driver_boblbobl,	/* bootleg */
         /*TODO*/
         // driver_sboblbob,	/* bootleg */
-        /*TODO*/
-        // driver_kikikai,	/* A85 (c) 1986 Taito Corporation */
-        /*TODO*/
-        // driver_kicknrun,	/* A87 (c) 1986 Taito Corporation */
-        /*TODO*/
-        // driver_mexico86,	/* bootleg (Micro Research) */
         /*TODO*/
         // driver_rastan,	/* B04 (c) 1987 Taito Corporation Japan (World) */
         /*TODO*/
@@ -4904,6 +4899,8 @@ public class driver {
         driver_strkzone,
         driver_buggychl,
         driver_buggycht,
+        driver_kicknrun,
+        driver_mexico86,
         /*
      * NOT Working flag
          */
@@ -4914,6 +4911,7 @@ public class driver {
         /*RELEASE*///driver_flyboy,
         /*RELEASE*///driver_mermaid,
         /*RELEASE*///driver_superqix,
+        driver_kikikai,
         null
     };
 }

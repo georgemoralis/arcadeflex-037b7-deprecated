@@ -2,7 +2,8 @@
 ==========
 -Added working games from drivers astrocde,dooyong,leland
 -Added m6805,m68705,hd63705 cpus
--Addedw working buggychl driver
+-Added working buggychl driver
+-Added working mexico86 driver
 
 28/01/2021
 ==========
