@@ -1,6 +1,7 @@
 29/01/2021
 ==========
 -Added working games from drivers astrocde,dooyong,leland
+-Added m6805,m68705,hd63705 cpus
 
 28/01/2021
 ==========

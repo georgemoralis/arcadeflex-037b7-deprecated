@@ -18,6 +18,9 @@ import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import java.util.ArrayList;
 import gr.codebb.arcadeflex.v037b7.cpu.Dummy_cpu;
 import gr.codebb.arcadeflex.v037b7.cpu.z80.z80;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6805.m6805;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6805.m68705;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6805.HD63705;
 
 public class cpuintrf {
 
@@ -284,9 +287,9 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M6808,    m6808,	 1,  0,1.00,M6808_INT_NONE,    M6808_INT_IRQ,  M6808_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(HD63701,  hd63701,  1,  0,1.00,HD63701_INT_NONE,  HD63701_INT_IRQ,HD63701_INT_NMI,16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(NSC8105,  nsc8105,  1,  0,1.00,NSC8105_INT_NONE,  NSC8105_INT_IRQ,NSC8105_INT_NMI,16,	  0,16,BE,1, 4,16	),
-                new Dummy_cpu(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   16,	  0,11,BE,1, 3,16	),
-                new Dummy_cpu(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   16,	  0,11,BE,1, 3,16	),
-                new Dummy_cpu(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   16,	  0,16,BE,1, 3,16	),
+                new m6805(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   16,	  0,11,BE,1, 3,16	),
+                new m68705(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   16,	  0,11,BE,1, 3,16	),
+                new HD63705(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   16,	  0,16,BE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 16,	  0,16,BE,1, 4,16	),
@@ -1495,16 +1498,20 @@ public class cpuintrf {
 /*TODO*///#if (HAS_HD63701)
 /*TODO*///			case CPU_HD63701:			irq_line = 0; LOG(("HD63701 IRQ\n")); break;
 /*TODO*///#endif
-/*TODO*///#if (HAS_M6805)
-/*TODO*///			case CPU_M6805: 			irq_line = 0; LOG(("M6805 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M68705)
-/*TODO*///			case CPU_M68705:			irq_line = 0; LOG(("M68705 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD63705)
-/*TODO*///			case CPU_HD63705:			irq_line = 0; LOG(("HD68705 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD6309)
+
+                    case CPU_M6805:
+                        irq_line = 0;
+                        /*LOG(("M6805 IRQ\n"));*/
+                        break;
+                    case CPU_M68705:
+                        irq_line = 0;
+                        /*LOG(("M68705 IRQ\n"));*/
+                        break;
+                    case CPU_HD63705:
+                        irq_line = 0;
+                        /*LOG(("HD68705 IRQ\n"));*/
+                        break;
+                    /*TODO*///#if (HAS_HD6309)
 /*TODO*///			case CPU_HD6309:
 /*TODO*///				switch (num)
 /*TODO*///				{
@@ -2416,10 +2423,11 @@ public class cpuintrf {
     /*TODO*///		return cpuintf[cpu_type].address_bits;
     /*TODO*///	return 0;
     /*TODO*///}
-    
-    /***************************************************************************
-      Returns the address bit mask for a specific CPU type
-    ***************************************************************************/
+    /**
+     * *************************************************************************
+     * Returns the address bit mask for a specific CPU type
+    **************************************************************************
+     */
     public static int cputype_address_mask(int cpu_type) {
         cpu_type &= ~CPU_FLAGS_MASK;
         if (cpu_type < CPU_COUNT) {
@@ -2472,17 +2480,19 @@ public class cpuintrf {
     /*TODO*///		return cpuintf[cpu_type].max_inst_len;
     /*TODO*///	return 0;
     /*TODO*///}
-    
-    /***************************************************************************
-      Returns the name for a specific CPU type
-    ***************************************************************************/
-    public static String cputype_name(int cpu_type)
-    {
-    	cpu_type &= ~CPU_FLAGS_MASK;
-    	if( cpu_type < CPU_COUNT )
-    		return IFC_INFO(cpu_type,null,CPU_INFO_NAME);
-    	return "";
+    /**
+     * *************************************************************************
+     * Returns the name for a specific CPU type
+    **************************************************************************
+     */
+    public static String cputype_name(int cpu_type) {
+        cpu_type &= ~CPU_FLAGS_MASK;
+        if (cpu_type < CPU_COUNT) {
+            return IFC_INFO(cpu_type, null, CPU_INFO_NAME);
+        }
+        return "";
     }
+
     /*TODO*///
     /*TODO*////***************************************************************************
     /*TODO*///  Returns the family name for a specific CPU type
@@ -2648,6 +2658,7 @@ public class cpuintrf {
         }
         return "";
     }
+
     /*TODO*///
 /*TODO*////***************************************************************************
 /*TODO*///  Returns the credits for a specific CPU number
@@ -2679,10 +2690,9 @@ public class cpuintrf {
 /*TODO*///	return (const char *)default_win_layout;
 /*TODO*///}
 /*TODO*///
-   /**
+    /**
      * *************************************************************************
-     * Return a register value for a specific CPU number of the running
-     * machine
+     * Return a register value for a specific CPU number of the running machine
      * *************************************************************************
      */
     public static int/*unsigned*/ cpunum_get_reg(int cpunum, int regnum) {
@@ -2762,7 +2772,7 @@ public class cpuintrf {
             }
         }
     }
-/*TODO*///
+    /*TODO*///
 /*TODO*////***************************************************************************
 /*TODO*///  Return a dissassembled instruction for a specific CPU
 /*TODO*///***************************************************************************/
