@@ -35,6 +35,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mnight.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exerion.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.polepos.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.hal21.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mcr3.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.popeye.*;
 
 public class driver {
 
@@ -663,14 +665,10 @@ public class driver {
         // driver_herbiedk,	/* (c) 1984 CVS */
         /*TODO*/
         /// *TODO*///TESTDRIVER( herocast,
-        /*TODO*/
-        // driver_popeye,
-        /*TODO*/
-        // driver_popeye2,
-        /*TODO*/
-        // driver_popeyef,
-        /*TODO*/
-        // driver_popeyebl,	/* bootleg */
+        driver_popeye,
+        driver_popeye2,
+        driver_popeyef,
+        driver_popeyebl, /* bootleg */
         /*TODO*/
         // driver_punchout,	/* (c) 1984 */
         /*TODO*/
@@ -932,51 +930,36 @@ public class driver {
         // driver_medlanes,	/* [1977?] */
 
         /* Midway "Astrocade" games */
-        driver_seawolf2,
         driver_spacezap, /* (c) 1980 */
-        driver_ebases,
-        driver_wow, /* (c) 1980 */
         driver_gorf, /* (c) 1981 */
         driver_gorfpgm1, /* (c) 1981 */
-        driver_robby, /* (c) 1981 Bally Midway */
         /*TODO*/
         /// *TODO*///TESTDRIVER( profpac,	/* (c) 1983 Bally Midway */
 
         /* MCR3 */
-        /*TODO*/
-        // driver_tapper,	/* (c) 1983 */
-        /*TODO*/
-        // driver_tappera,	/* (c) 1983 */
-        /*TODO*/
-        // driver_sutapper,	/* (c) 1983 */
-        /*TODO*/
-        // driver_rbtapper,	/* (c) 1984 */
-        /*TODO*/
-        // driver_timber,	/* (c) 1984 */
+        driver_tapper,
+        driver_tappera,
+        driver_sutapper,
+        driver_rbtapper,
+        driver_timber, /* (c) 1984 */
         /*TODO*/
         // driver_dotron,	/* (c) 1983 */
         /*TODO*/
         // driver_dotrone,	/* (c) 1983 */
-        /*TODO*/
-        // driver_destderb,	/* (c) 1984 */
-        /*TODO*/
-        // driver_destderm,	/* (c) 1984 */
-        /*TODO*/
-        // driver_sarge,		/* (c) 1985 */
-        /*TODO*/
+        driver_destderb,
+        driver_destderm,
+        driver_sarge,
         // driver_rampage,	/* (c) 1986 */
         /*TODO*/
         // driver_rampage2,	/* (c) 1986 */
         /*TODO*/
         // driver_powerdrv,	/* (c) 1986 */
-        /*TODO*/
-        // driver_maxrpm,	/* (c) 1986 */
+        driver_maxrpm,
         /*TODO*/
         // driver_spyhunt,	/* (c) 1983 */
         /*TODO*/
         // driver_turbotag,	/* (c) 1985 */
-        /*TODO*/
-        // driver_crater,	/* (c) 1984 */
+        driver_crater,
         /* MCR 68000 */
         /*TODO*/
         // driver_zwackery,	/* (c) 1984 */
@@ -2206,14 +2189,6 @@ public class driver {
     Capcom Bowling - (Strata)
          */
         /* Leland games */
-        driver_cerberus,
-        driver_mayhem,
-        driver_wseries,
-        driver_alleymas,
-        driver_dangerz,
-        driver_basebal2,
-        driver_dblplay,
-        driver_strkzone,
         driver_redlin2p, /* (c) 1987 Cinematronics + Tradewest license */
         driver_quarterb, /* (c) 1987 Leland */
         driver_quartrba, /* (c) 1987 Leland */
@@ -3603,11 +3578,7 @@ public class driver {
     code, the ROM code is the same between versions, and usually based
     upon the Japanese title. */
         /*TODO*/
-        // driver_lasso,		/*       'WM' (c) 1982 */
-
-        driver_hal21,		
-        driver_hal21j,	
-        driver_aso,		
+        // driver_lasso,		/*       'WM' (c) 1982 */	
         /*TODO*/
         // driver_ikari3,	/* A7007 'IK3'(c) 1989 */
         /*TODO*/
@@ -4186,11 +4157,6 @@ public class driver {
         /*TODO*/
         // driver_bssoccer,	/* (c) 1996 Suna */
 
-        driver_lastday,
-        driver_lastdaya,
-        driver_pollux,
-        driver_bluehawk,
-        driver_primella,
         driver_rshark,//68000k game TODO
 
         /* NMK games */
@@ -4920,6 +4886,26 @@ public class driver {
         driver_airwolf,
         driver_skywolf,
         driver_skywolf2,
+        driver_hal21,
+        driver_hal21j,
+        driver_aso,
+        driver_seawolf2,
+        driver_ebases,
+        driver_wow,
+        driver_robby,
+        driver_lastday,
+        driver_lastdaya,
+        driver_pollux,
+        driver_bluehawk,
+        driver_primella,
+        driver_cerberus,
+        driver_mayhem,
+        driver_wseries,
+        driver_alleymas,
+        driver_dangerz,
+        driver_basebal2,
+        driver_dblplay,
+        driver_strkzone,
         /*
      * NOT Working flag
          */

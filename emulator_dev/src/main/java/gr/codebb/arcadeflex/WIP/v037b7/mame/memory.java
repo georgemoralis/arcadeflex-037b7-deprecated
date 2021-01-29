@@ -1780,6 +1780,9 @@ public class memory {
         return install_mem_read_handler(cpu, start, end, _handler, -15000);
     }
 
+    public static UBytePtr install_mem_read_handler(int cpu, int start, int end, int handler) {
+        return install_mem_read_handler(cpu, start, end, null, handler);
+    }
     public static UBytePtr install_mem_read_handler(int cpu, int start, int end, ReadHandlerPtr _handler, int handler) {
         char u8_hardware = 0;
         int abitsmin;

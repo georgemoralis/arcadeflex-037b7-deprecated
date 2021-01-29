@@ -1,3 +1,7 @@
+29/01/2021
+==========
+-Added working games from drivers astrocde,dooyong,leland
+
 28/01/2021
 ==========
 -Added working hal21 driver
