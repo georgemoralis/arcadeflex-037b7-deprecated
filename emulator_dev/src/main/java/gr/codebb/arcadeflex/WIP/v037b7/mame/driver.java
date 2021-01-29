@@ -37,6 +37,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.polepos.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.hal21.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mcr3.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.popeye.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.buggychl.*;
 
 public class driver {
 
@@ -1325,11 +1326,6 @@ public class driver {
         // driver_lkageb2,	/* bootleg */
         /*TODO*/
         // driver_lkageb3,	/* bootleg */
-
-        /*TODO*/
-        // driver_buggychl,	/* A22 (c) 1984 Taito Corporation */
-        /*TODO*/
-        // driver_buggycht,	/* A22 (c) 1984 Taito Corporation + Tefri license */
         /*TODO*/
         // TESTDRIVER( flstory,	/* A45 (c) 1985 Taito Corporation */
         /*TODO*/
@@ -4906,6 +4902,8 @@ public class driver {
         driver_basebal2,
         driver_dblplay,
         driver_strkzone,
+        driver_buggychl,
+        driver_buggycht,
         /*
      * NOT Working flag
          */
