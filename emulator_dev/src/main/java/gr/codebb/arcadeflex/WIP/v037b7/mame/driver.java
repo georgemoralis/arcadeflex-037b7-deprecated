@@ -39,8 +39,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mcr3.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.popeye.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.buggychl.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mexico86.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lsasquad.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.arkanoid.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.lsasquad.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.arkanoid.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
 
 public class driver {
@@ -1300,8 +1300,6 @@ public class driver {
         // TESTDRIVER( onna34ro,	/* A52 */
         driver_gladiatr, /* ??? (c) 1986 Taito America Corporation (US) */
         driver_ogonsiro, /* ??? (c) 1986 Taito Corporation (Japan) */
-        driver_lsasquad,
-        driver_storming,
         /*TODO*/
         // driver_tokio,		/* A71 1986 */
         /*TODO*/
@@ -1330,17 +1328,7 @@ public class driver {
         // driver_rainbowe,	/* ??? (c) 1988 Taito Corporation */
         /*TODO*/
         // driver_jumping,	/* bootleg */
-        driver_arkanoid,
-        driver_arknoidu,
-        driver_arknoidj,
-        driver_arkbl2, /* bootleg */
-        /*TODO*/
-        // TESTDRIVER( arkbl3,	/* bootleg */
-        driver_arkatayt,
-        //TESTDRIVER( arkblock,	/* bootleg */
-        driver_arkbloc2,
-        driver_arkangc,
-        driver_arkatour,
+              
         /*TODO*/
         // driver_superman,	/* B61 (c) 1988 Taito Corporation */
 
@@ -4872,6 +4860,15 @@ public class driver {
         driver_bioatack,
         driver_hwrace,
         driver_sfposeid,
+        driver_lsasquad,
+        driver_storming,
+        driver_arkanoid,
+        driver_arknoidu,
+        driver_arknoidj,
+        driver_arkatayt,
+        driver_arkbloc2,
+        driver_arkangc,
+        driver_arkatour,
         /*
      * NOT Working flag
          */
@@ -4884,6 +4881,12 @@ public class driver {
         /*RELEASE*///driver_superqix,
         driver_kikikai,
         driver_kikstart,
+        driver_arkbl2,
+        /*
+        TEST DRIVERS
+        */
+        //TESTDRIVER( arkbl3,	
+        //TESTDRIVER( arkblock,
         null
     };
 }

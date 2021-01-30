@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
+package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
@@ -16,7 +16,7 @@ import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.old.mame.common.coin_lockout_w;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.copybitmap;
-import static gr.codebb.arcadeflex.WIP.v037b7.machine.arkanoid.*;
+import static gr.codebb.arcadeflex.v037b7.machine.arkanoid.*;
 
 public class arkanoid {
 

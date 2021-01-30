@@ -1,6 +1,8 @@
 30/01/2021
 ==========
 -Added working taitosj driver
+-Added working lsasquad driver
+-Added working arkanoid driver
 
 29/01/2021
 ==========

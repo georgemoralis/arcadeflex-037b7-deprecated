@@ -2,9 +2,9 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.machine.lsasquad.*;
+import static gr.codebb.arcadeflex.v037b7.machine.lsasquad.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
@@ -21,7 +21,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.CLEAR_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203interface;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.lsasquad.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.lsasquad.*;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 
 public class lsasquad {
