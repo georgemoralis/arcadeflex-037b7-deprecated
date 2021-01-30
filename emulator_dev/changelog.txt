@@ -1,3 +1,7 @@
+30/01/2021
+==========
+-Added working taitosj driver
+
 29/01/2021
 ==========
 -Added working games from drivers astrocde,dooyong,leland

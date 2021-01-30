@@ -39,6 +39,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mcr3.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.popeye.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.buggychl.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mexico86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lsasquad.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.arkanoid.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
 
 public class driver {
 
@@ -1280,44 +1283,6 @@ public class driver {
         /*TODO*/
         // driver_zookeep3,	/* ZA  (c) 1982 Taito America Corporation */
 
-        /* Taito SJ System games */
-        /*TODO*/
-        // driver_spaceskr,	/* EB  (c) 1981 Taito Corporation */
-        /*TODO*/
-        // driver_junglek,	/* KN  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_junglkj2,	/* KN  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_jungleh,	/* KN  (c) 1982 Taito America Corporation */
-        /*TODO*/
-        // driver_alpine,	/* RH  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_alpinea,	/* RH  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_timetunl,	/* UN  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_wwestern,	/* WW  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_wwester1,	/* WW  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_frontlin,	/* FL  (c) 1982 Taito Corporation */
-        /*TODO*/
-        // driver_elevator,	/* EA  (c) 1983 Taito Corporation */
-        /*TODO*/
-        // driver_elevatob,	/* bootleg */
-        /*TODO*/
-        // driver_tinstar,	/* A10 (c) 1983 Taito Corporation */
-        /*TODO*/
-        // driver_waterski,	/* A03 (c) 1983 Taito Corporation */
-        /*TODO*/
-        // driver_bioatack,	/* AA8 (c) 1983 Taito Corporation + Fox Video Games license */
-        /*TODO*/
-        // driver_hwrace,	/* AC4 (c) 1983 Taito Corporation */
-        /*TODO*/
-        // driver_sfposeid,	/* A14 (c) 1984 Taito Corporation */
-        /*TODO*/
-        // driver_kikstart,	/* A20 */
-
         /* other Taito games */
         /*TODO*/
         // driver_lkage,		/* A54 (c) 1984 Taito Corporation */
@@ -1335,10 +1300,8 @@ public class driver {
         // TESTDRIVER( onna34ro,	/* A52 */
         driver_gladiatr, /* ??? (c) 1986 Taito America Corporation (US) */
         driver_ogonsiro, /* ??? (c) 1986 Taito Corporation (Japan) */
-        /*TODO*/
-        // driver_lsasquad,	/* A64 (c) 1986 Taito Corporation / Taito America (dip switch) */
-        /*TODO*/
-        // driver_storming,	/* A64 (c) 1986 Taito Corporation */
+        driver_lsasquad,
+        driver_storming,
         /*TODO*/
         // driver_tokio,		/* A71 1986 */
         /*TODO*/
@@ -1367,26 +1330,17 @@ public class driver {
         // driver_rainbowe,	/* ??? (c) 1988 Taito Corporation */
         /*TODO*/
         // driver_jumping,	/* bootleg */
-        /*TODO*/
-        // driver_arkanoid,	/* A75 (c) 1986 Taito Corporation Japan (World) */
-        /*TODO*/
-        // driver_arknoidu,	/* A75 (c) 1986 Taito America Corporation + Romstar license (US) */
-        /*TODO*/
-        // driver_arknoidj,	/* A75 (c) 1986 Taito Corporation (Japan) */
-        /*TODO*/
-        // driver_arkbl2,	/* bootleg */
+        driver_arkanoid,
+        driver_arknoidu,
+        driver_arknoidj,
+        driver_arkbl2, /* bootleg */
         /*TODO*/
         // TESTDRIVER( arkbl3,	/* bootleg */
-        /*TODO*/
-        // driver_arkatayt,	/* bootleg */
-        /*TODO*/
-        // TESTDRIVER( arkblock,	/* bootleg */
-        /*TODO*/
-        // driver_arkbloc2,	/* bootleg */
-        /*TODO*/
-        // driver_arkangc,	/* bootleg */
-        /*TODO*/
-        // driver_arkatour,	/* ??? (c) 1987 Taito America Corporation + Romstar license (US) */
+        driver_arkatayt,
+        //TESTDRIVER( arkblock,	/* bootleg */
+        driver_arkbloc2,
+        driver_arkangc,
+        driver_arkatour,
         /*TODO*/
         // driver_superman,	/* B61 (c) 1988 Taito Corporation */
 
@@ -4901,6 +4855,23 @@ public class driver {
         driver_buggycht,
         driver_kicknrun,
         driver_mexico86,
+        driver_spaceskr,
+        driver_junglek,
+        driver_junglkj2,
+        driver_jungleh,
+        driver_alpine,
+        driver_alpinea,
+        driver_timetunl,
+        driver_wwestern,
+        driver_wwester1,
+        driver_frontlin,
+        driver_elevator,
+        driver_elevatob,
+        driver_tinstar,
+        driver_waterski,
+        driver_bioatack,
+        driver_hwrace,
+        driver_sfposeid,
         /*
      * NOT Working flag
          */
@@ -4912,6 +4883,7 @@ public class driver {
         /*RELEASE*///driver_mermaid,
         /*RELEASE*///driver_superqix,
         driver_kikikai,
+        driver_kikstart,
         null
     };
 }
