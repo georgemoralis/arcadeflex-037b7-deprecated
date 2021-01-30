@@ -3,6 +3,7 @@
 -Added working taitosj driver
 -Added working lsasquad driver
 -Added working arkanoid driver
+-Added i8035,i8039,i8048,n7751 cpus
 
 29/01/2021
 ==========
