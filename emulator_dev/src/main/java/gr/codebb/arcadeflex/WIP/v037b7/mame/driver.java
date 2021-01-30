@@ -42,6 +42,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.mexico86.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.lsasquad.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.arkanoid.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.spacefb.*;
 
 public class driver {
 
@@ -1328,7 +1329,7 @@ public class driver {
         // driver_rainbowe,	/* ??? (c) 1988 Taito Corporation */
         /*TODO*/
         // driver_jumping,	/* bootleg */
-              
+
         /*TODO*/
         // driver_superman,	/* B61 (c) 1988 Taito Corporation */
 
@@ -4119,18 +4120,7 @@ public class driver {
         /*TODO*/
         // driver_bigtwin,	/* (c) 1995 */
         /*TODO*/
-        // driver_wbeachvl,	/* (c) 1995 */
-
-        /*TODO*/
-        // driver_spacefb,	/* (c) [1980?] Nintendo */
-        /*TODO*/
-        // driver_spacefbg,	/* 834-0031 (c) 1980 Gremlin */
-        /*TODO*/
-        // driver_spacefbb,	/* bootleg */
-        /*TODO*/
-        // driver_spacebrd,	/* bootleg */
-        /*TODO*/
-        // driver_spacedem,	/* (c) 1980 Nintendo / Fortrek */
+        // driver_wbeachvl,	/* (c) 1995 */        
         /*TODO*/
         // driver_omegrace,	/* (c) 1981 Midway */
 
@@ -4869,6 +4859,11 @@ public class driver {
         driver_arkbloc2,
         driver_arkangc,
         driver_arkatour,
+        driver_spacefb,
+        driver_spacefbg,
+        driver_spacefbb,
+        driver_spacebrd,
+        driver_spacedem,
         /*
      * NOT Working flag
          */
@@ -4884,7 +4879,7 @@ public class driver {
         driver_arkbl2,
         /*
         TEST DRIVERS
-        */
+         */
         //TESTDRIVER( arkbl3,	
         //TESTDRIVER( arkblock,
         null
