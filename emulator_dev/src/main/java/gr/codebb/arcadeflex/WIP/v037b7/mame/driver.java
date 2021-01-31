@@ -43,6 +43,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.lsasquad.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.arkanoid.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.spacefb.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mario.*;
 
 public class driver {
 
@@ -636,12 +637,7 @@ public class driver {
         // driver_dkong3,	/* (c) 1983 Nintendo of America */
         /*TODO*/
         // driver_dkong3j,	/* (c) 1983 Nintendo */
-        /*TODO*/
-        // driver_mario,		/* (c) 1983 Nintendo of America */
-        /*TODO*/
-        // driver_mariojp,	/* (c) 1983 Nintendo */
-        /*TODO*/
-        // driver_masao,		/* bootleg */
+
         /*TODO*/
         // driver_hunchbkd,	/* (c) 1983 Century */
         /*TODO*/
@@ -4863,6 +4859,9 @@ public class driver {
         driver_hustler,
         driver_billiard,
         driver_hustlerb,
+        driver_mario,
+        driver_mariojp,
+        driver_masao,
         /*
      * NOT Working flag
          */
