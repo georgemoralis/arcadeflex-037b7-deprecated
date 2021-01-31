@@ -44,6 +44,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.arkanoid.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.spacefb.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mario.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.gyruss.*;
 
 public class driver {
 
@@ -2746,12 +2747,6 @@ public class driver {
         /*TODO*/
         // driver_pandoras,	/* GX328 (c) 1984 + Interlogic */
         /*TODO*/
-        // driver_gyruss,	/* GX347 (c) 1983 */
-        /*TODO*/
-        // driver_gyrussce,	/* GX347 (c) 1983 + Centuri license */
-        /*TODO*/
-        // driver_venus,		/* bootleg */
-        /*TODO*/
         // driver_trackfld,	/* GX361 (c) 1983 */
         /*TODO*/
         // driver_trackflc,	/* GX361 (c) 1983 + Centuri license */
@@ -4862,6 +4857,9 @@ public class driver {
         driver_mario,
         driver_mariojp,
         driver_masao,
+        driver_gyruss,
+        driver_gyrussce,
+        driver_venus,
         /*
      * NOT Working flag
          */

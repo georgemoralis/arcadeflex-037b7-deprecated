@@ -2,6 +2,7 @@
 ==========
 -Added working scobra driver
 -Added working mario driver
+-Added working gyruss driver
 
 30/01/2021
 ==========
