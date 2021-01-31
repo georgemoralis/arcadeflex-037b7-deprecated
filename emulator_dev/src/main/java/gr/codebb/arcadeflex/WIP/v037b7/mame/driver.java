@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.kingobox.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.kyugo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mitchell.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacman.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scobra.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.scobra.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.snk.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taito_l.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tsamurai.*;
@@ -116,28 +116,6 @@ public class driver {
         driver_nunchaku,
         driver_yamagchi,
         driver_tehkanwc,
-        driver_scobra,
-        driver_scobras,
-        driver_scobrab,
-        driver_stratgyx,
-        driver_stratgys,
-        driver_armorcar,
-        driver_armorca2,
-        driver_moonwar2,
-        driver_monwar2a,
-        driver_spdcoin,
-        driver_tazmania,
-        driver_tazmani2,
-        driver_calipso,
-        driver_anteater,
-        driver_rescue,
-        driver_minefld,
-        driver_losttomb,
-        driver_losttmbh,
-        driver_superbon,
-        driver_hustler,
-        driver_billiard,
-        driver_hustlerb,
         driver_scramble,
         driver_scrambls,
         driver_atlantis,
@@ -241,7 +219,6 @@ public class driver {
         driver_gwara,
         driver_ringkin2,
         driver_teedoff,
-        driver_darkplnt,
         /**
          * TESTDRIVER
          */
@@ -4864,6 +4841,28 @@ public class driver {
         driver_spacefbb,
         driver_spacebrd,
         driver_spacedem,
+        driver_scobra,
+        driver_scobras,
+        driver_scobrab,
+        driver_stratgyx,
+        driver_stratgys,
+        driver_armorcar,
+        driver_armorca2,
+        driver_moonwar2,
+        driver_monwar2a,
+        driver_spdcoin,
+        driver_tazmania,
+        driver_tazmani2,
+        driver_calipso,
+        driver_anteater,
+        driver_rescue,
+        driver_minefld,
+        driver_losttomb,
+        driver_losttmbh,
+        driver_superbon,
+        driver_hustler,
+        driver_billiard,
+        driver_hustlerb,
         /*
      * NOT Working flag
          */
@@ -4877,6 +4876,7 @@ public class driver {
         driver_kikikai,
         driver_kikstart,
         driver_arkbl2,
+        driver_darkplnt,
         /*
         TEST DRIVERS
          */
