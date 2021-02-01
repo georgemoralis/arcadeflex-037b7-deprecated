@@ -23,7 +23,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.kyugo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mitchell.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacman.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.scobra.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.snk.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.snk.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.taito_l.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tsamurai.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
@@ -88,29 +88,6 @@ public class driver {
         driver_lwings,
         driver_lwings2,
         driver_lwingsjp,
-        driver_tnk3,
-        driver_tnk3j,
-        driver_athena,
-        driver_fitegolf,
-        driver_ikari,
-        driver_ikarijp,
-        driver_ikarijpb,
-        driver_victroad,
-        driver_dogosoke,
-        driver_gwar,
-        driver_gwarj,
-        driver_gwarb,
-        driver_bermudat,
-        driver_bermudaj,
-        driver_bermudaa,
-        driver_worldwar,
-        driver_psychos,
-        driver_psychosj,
-        driver_chopper,
-        driver_legofair,
-        driver_ftsoccer,
-        driver_tdfever,
-        driver_tdfeverj,
         driver_kingofb,
         driver_ringking,
         driver_tsamurai, // small articafts right-left of screen
@@ -218,7 +195,6 @@ public class driver {
         driver_getstarj,
         driver_avengers,
         driver_avenger2,
-        driver_gwara,
         driver_ringkin2,
         driver_teedoff,
         /**
@@ -4860,6 +4836,29 @@ public class driver {
         driver_gyruss,
         driver_gyrussce,
         driver_venus,
+        driver_tnk3,
+        driver_tnk3j,
+        driver_athena,
+        driver_fitegolf,
+        driver_ikari,
+        driver_ikarijp,
+        driver_ikarijpb,
+        driver_victroad,
+        driver_dogosoke,
+        driver_gwar,
+        driver_gwarj,
+        driver_gwarb,
+        driver_bermudat,
+        driver_bermudaj,
+        driver_bermudaa,
+        driver_worldwar,
+        driver_psychos,
+        driver_psychosj,
+        driver_chopper,
+        driver_legofair,
+        driver_ftsoccer,
+        driver_tdfever,
+        driver_tdfeverj,
         /*
      * NOT Working flag
          */
@@ -4874,6 +4873,7 @@ public class driver {
         driver_kikstart,
         driver_arkbl2,
         driver_darkplnt,
+        driver_gwara,
         /*
         TEST DRIVERS
          */

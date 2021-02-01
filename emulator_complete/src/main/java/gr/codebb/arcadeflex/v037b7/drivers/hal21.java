@@ -21,7 +21,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound._3812intfH.YM3526interface;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.AY8910interface;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.snk.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.snk.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
