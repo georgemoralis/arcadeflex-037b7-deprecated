@@ -45,6 +45,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.taitosj.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.spacefb.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mario.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.gyruss.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.vigilant.*;
 
 public class driver {
 
@@ -1056,14 +1057,6 @@ public class driver {
         /*TODO*/
         // driver_spelunk2,	/* (c) 1986 licensed from Broderbund */
 
-        /*TODO*/
-        // driver_vigilant,	/* (c) 1988 (World) */
-        /*TODO*/
-        // driver_vigilntu,	/* (c) 1988 (US) */
-        /*TODO*/
-        // driver_vigilntj,	/* (c) 1988 (Japan) */
-        /*TODO*/
-        // driver_kikcubic,	/* (c) 1988 (Japan) */
         /* M72 (and derivatives) */
         /*TODO*/
         // driver_rtype,		/* (c) 1987 (Japan) */
@@ -4859,6 +4852,10 @@ public class driver {
         driver_ftsoccer,
         driver_tdfever,
         driver_tdfeverj,
+        driver_vigilant,
+        driver_vigilntu,
+        driver_vigilntj,
+        driver_kikcubic,
         /*
      * NOT Working flag
          */
