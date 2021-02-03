@@ -46,6 +46,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.spacefb.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mario.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.gyruss.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.vigilant.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.vicdual.*;
 
 public class driver {
 
@@ -2102,56 +2103,6 @@ public class driver {
         // driver_hustle,	/* 16-21 [1977 Gremlin] */
         /*TODO*/
         // driver_blasto,	/* [1978 Gremlin] */
-
-        /* Gremlin/Sega "VIC dual game board" games */
-        /* the numbers listed are the range of ROM part numbers */
-        /*TODO*/
-        // driver_depthch,	/* 50-55 [1977 Gremlin?] */
-        /*TODO*/
-        // driver_safari,	/* 57-66 [1977 Gremlin?] */
-        /*TODO*/
-        // driver_frogs,		/* 112-119 [1978 Gremlin?] */
-        /*TODO*/
-        // driver_sspaceat,	/* 155-162 (c) */
-        /*TODO*/
-        // driver_sspacat2,
-        /*TODO*/
-        // driver_sspacatc,	/* 139-146 (c) */
-        /*TODO*/
-        // driver_headon,	/* 163-167/192-193 (c) Gremlin */
-        /*TODO*/
-        // driver_headonb,	/* 163-167/192-193 (c) Gremlin */
-        /*TODO*/
-        // driver_headon2,	/* ???-??? (c) 1979 Sega */
-        /* ???-??? Fortress */
-        /* ???-??? Gee Bee */
-        /* 255-270  Head On 2 / Deep Scan */
-        /*TODO*/
-        // driver_invho2,	/* 271-286 (c) 1979 Sega */
-        /*TODO*/
-        // driver_samurai,	/* 289-302 + upgrades (c) 1980 Sega */
-        /*TODO*/
-        // driver_invinco,	/* 310-318 (c) 1979 Sega */
-        /*TODO*/
-        // driver_invds,		/* 367-382 (c) 1979 Sega */
-        /*TODO*/
-        // driver_tranqgun,	/* 413-428 (c) 1980 Sega */
-        /* 450-465  Tranquilizer Gun (different version?) */
-        /* ???-??? Car Hunt / Deep Scan */
-        /*TODO*/
-        // driver_spacetrk,	/* 630-645 (c) 1980 Sega */
-        /*TODO*/
-        // driver_sptrekct,	/* (c) 1980 Sega */
-        /*TODO*/
-        // driver_carnival,	/* 651-666 (c) 1980 Sega */
-        /*TODO*/
-        // driver_carnvckt,	/* 501-516 (c) 1980 Sega */
-        /*TODO*/
-        // driver_digger,	/* 684-691 no copyright notice */
-        /*TODO*/
-        // driver_pulsar,	/* 790-805 (c) 1981 Sega */
-        /*TODO*/
-        // driver_heiankyo,	/* (c) [1979?] Denki Onkyo */
 
         /* Sega G-80 vector games */
         /*TODO*/
@@ -4856,6 +4807,27 @@ public class driver {
         driver_vigilntu,
         driver_vigilntj,
         driver_kikcubic,
+        driver_depthch,
+        driver_safari,
+        driver_frogs,
+        driver_sspaceat,
+        driver_sspacat2,
+        driver_sspacatc,
+        driver_headon,
+        driver_headonb,
+        driver_headon2,
+        driver_invho2,
+        driver_samurai,
+        driver_invinco,
+        driver_invds,
+        driver_tranqgun,
+        driver_spacetrk,
+        driver_sptrekct,
+        driver_carnival,
+        driver_carnvckt,
+        driver_digger,
+        driver_pulsar,
+        driver_heiankyo,
         /*
      * NOT Working flag
          */

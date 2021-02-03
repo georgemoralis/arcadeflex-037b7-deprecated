@@ -1,6 +1,7 @@
 03/02/2021
 ==========
 -Added working vigilant driver
+-Added working vicdual driver
 
 01/02/2021
 ==========
