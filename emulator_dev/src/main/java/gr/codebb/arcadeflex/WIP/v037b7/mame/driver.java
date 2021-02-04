@@ -47,6 +47,9 @@ import static gr.codebb.arcadeflex.v037b7.drivers.mario.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.gyruss.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.vigilant.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.vicdual.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.shisen.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.wc90.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.wc90b.*;
 
 public class driver {
 
@@ -1104,12 +1107,6 @@ public class driver {
         /*TODO*/
         // driver_gallop,	/* (c) 1991 (Japan) */
         /* not M72, but same sound hardware */
-        /*TODO*/
-        // driver_sichuan2,	/* (c) 1989 Tamtex */
-        /*TODO*/
-        // driver_sichuana,	/* (c) 1989 Tamtex */
-        /*TODO*/
-        // driver_shisen,	/* (c) 1989 Tamtex */
         /* M92 */
         /*TODO*/
         // driver_bmaster,	/* (c) 1991 Irem */
@@ -2639,12 +2636,7 @@ public class driver {
         /*TODO*/
         // driver_tknight,	/* (c) 1989 Tecmo */
         /*TODO*/
-        // driver_wildfang,	/* (c) 1989 Tecmo */
-        /*TODO*/
-        // driver_wc90,		/* (c) 1989 Tecmo */
-        /*TODO*/
-        // driver_wc90b,		/* bootleg */
-        /*TODO*/
+        // driver_wildfang,	/* (c) 1989 Tecmo */        
         // driver_fstarfrc,	/* (c) 1992 Tecmo */
         /*TODO*/
         // driver_ginkun,	/* (c) 1995 Tecmo */
@@ -4828,6 +4820,11 @@ public class driver {
         driver_digger,
         driver_pulsar,
         driver_heiankyo,
+        driver_wc90,
+        driver_wc90b,
+        driver_sichuan2,
+        driver_sichuana,
+        driver_shisen,
         /*
      * NOT Working flag
          */

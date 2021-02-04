@@ -1,3 +1,7 @@
+04/02/2021
+==========
+-Added working shisen,wc90,wc90b drivers
+
 03/02/2021
 ==========
 -Added working vigilant driver
