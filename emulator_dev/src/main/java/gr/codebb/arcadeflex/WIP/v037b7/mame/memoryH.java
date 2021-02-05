@@ -345,11 +345,12 @@ public class memoryH {
 /*TODO*///#define ABITS1_16BEW	12
 /*TODO*///#define ABITS2_16BEW	3
 /*TODO*///#define ABITS_MIN_16BEW 1			/* minimum memory block is 2 bytes */
-/*TODO*////* 20 bits address */
-/*TODO*///#define ABITS1_20		12
-/*TODO*///#define ABITS2_20		8
-/*TODO*///#define ABITS_MIN_20	0			/* minimum memory block is 1 byte */
-/* 21 bits address */
+    /* 20 bits address */
+    public static final int ABITS1_20 = 12;
+    public static final int ABITS2_20 = 8;
+    public static final int ABITS_MIN_20 = 0;
+    /* minimum memory block is 1 byte */
+ /* 21 bits address */
     public static final int ABITS1_21 = 13;
     public static final int ABITS2_21 = 8;
     public static final int ABITS_MIN_21 = 0;
@@ -455,8 +456,11 @@ public class memoryH {
 
     /*TODO*///#define change_pc16bew(pc)	 change_pc_generic(pc, ABITS2_16BEW, ABITS_MIN_16BEW, 0, cpu_setOPbase16bew)
 /*TODO*///#define change_pc16lew(pc)	 change_pc_generic(pc, ABITS2_16LEW, ABITS_MIN_16LEW, 0, cpu_setOPbase16lew)
-/*TODO*///#define change_pc20(pc) 	 change_pc_generic(pc, ABITS2_20, ABITS_MIN_20, 0, cpu_setOPbase20)
-/*TODO*///#define change_pc21(pc) 	 change_pc_generic(pc, ABITS2_21, ABITS_MIN_21, 0, cpu_setOPbase21)
+    public static void change_pc20(int pc) {
+        change_pc_generic(pc, ABITS2_20, ABITS_MIN_20, 0, cpu_setOPbase20);
+    }
+
+    /*TODO*///#define change_pc21(pc) 	 change_pc_generic(pc, ABITS2_21, ABITS_MIN_21, 0, cpu_setOPbase21)
 /*TODO*///#define change_pc24(pc) 	 change_pc_generic(pc, ABITS2_24, ABITS_MIN_24, 0, cpu_setOPbase24)
 /*TODO*///#define change_pc24bew(pc)	 change_pc_generic(pc, ABITS2_24BEW, ABITS_MIN_24BEW, 0, cpu_setOPbase24bew)
 /*TODO*///#define change_pc26lew(pc)	 change_pc_generic(pc, ABITS2_26LEW, ABITS_MIN_26LEW, 0, cpu_setOPbase26lew)

@@ -1,3 +1,7 @@
+05/02/2021
+==========
+-Draft work on i186 cpu core 
+
 04/02/2021
 ==========
 -Added working shisen,wc90,wc90b drivers
