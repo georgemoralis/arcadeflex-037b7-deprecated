@@ -11,6 +11,7 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.Mod_RM;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_setOPbase20;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
 public class i86 extends cpu_interface {
@@ -177,10 +178,6 @@ public class i86 extends cpu_interface {
 /*TODO*///	}
 /*TODO*///}
 /*TODO*///
-/*TODO*///unsigned i86_get_pc(void)
-/*TODO*///{
-/*TODO*///	return I.pc;
-/*TODO*///}
 /*TODO*///
 /*TODO*///void i86_set_pc(unsigned val)
 /*TODO*///{
@@ -302,10 +299,6 @@ public class i86 extends cpu_interface {
 /*TODO*///		PREFIX(_interrupt)(-1);
 /*TODO*///}
 /*TODO*///
-/*TODO*///void i86_set_irq_callback(int (*callback) (int))
-/*TODO*///{
-/*TODO*///	I.irq_callback = callback;
-/*TODO*///}
 /*TODO*///
 /*TODO*///int i86_execute(int num_cycles)
 /*TODO*///{
@@ -341,70 +334,6 @@ public class i86 extends cpu_interface {
 /*TODO*///	return num_cycles - i86_ICount;
 /*TODO*///}
 /*TODO*///
-/*TODO*////****************************************************************************
-/*TODO*/// * Return a formatted string for a register
-/*TODO*/// ****************************************************************************/
-/*TODO*///const char *i86_info(void *context, int regnum)
-/*TODO*///{
-/*TODO*///	static char buffer[32][63 + 1];
-/*TODO*///	static int which = 0;
-/*TODO*///	i86_Regs *r = context;
-/*TODO*///
-/*TODO*///	which = ++which % 32;
-/*TODO*///	buffer[which][0] = '\0';
-/*TODO*///	if (!context)
-/*TODO*///		r = &I;
-/*TODO*///
-/*TODO*///	switch (regnum)
-/*TODO*///	{
-/*TODO*///	case CPU_INFO_REG + I86_IP: 		sprintf(buffer[which], "IP: %04X", r->pc - r->base[CS]); break;
-/*TODO*///	case CPU_INFO_REG + I86_SP: 		sprintf(buffer[which], "SP: %04X", r->regs.w[SP]);  break;
-/*TODO*///	case CPU_INFO_REG + I86_FLAGS:		sprintf(buffer[which], "F:%04X", r->flags);         break;
-/*TODO*///	case CPU_INFO_REG + I86_AX: 		sprintf(buffer[which], "AX:%04X", r->regs.w[AX]);   break;
-/*TODO*///	case CPU_INFO_REG + I86_CX: 		sprintf(buffer[which], "CX:%04X", r->regs.w[CX]);   break;
-/*TODO*///	case CPU_INFO_REG + I86_DX: 		sprintf(buffer[which], "DX:%04X", r->regs.w[DX]);   break;
-/*TODO*///	case CPU_INFO_REG + I86_BX: 		sprintf(buffer[which], "BX:%04X", r->regs.w[BX]);   break;
-/*TODO*///	case CPU_INFO_REG + I86_BP: 		sprintf(buffer[which], "BP:%04X", r->regs.w[BP]);   break;
-/*TODO*///	case CPU_INFO_REG + I86_SI: 		sprintf(buffer[which], "SI: %04X", r->regs.w[SI]);  break;
-/*TODO*///	case CPU_INFO_REG + I86_DI: 		sprintf(buffer[which], "DI: %04X", r->regs.w[DI]);  break;
-/*TODO*///	case CPU_INFO_REG + I86_ES: 		sprintf(buffer[which], "ES:%04X", r->sregs[ES]);    break;
-/*TODO*///	case CPU_INFO_REG + I86_CS: 		sprintf(buffer[which], "CS:%04X", r->sregs[CS]);    break;
-/*TODO*///	case CPU_INFO_REG + I86_SS: 		sprintf(buffer[which], "SS:%04X", r->sregs[SS]);    break;
-/*TODO*///	case CPU_INFO_REG + I86_DS: 		sprintf(buffer[which], "DS:%04X", r->sregs[DS]);    break;
-/*TODO*///	case CPU_INFO_REG + I86_VECTOR: 	sprintf(buffer[which], "V:%02X", r->int_vector);    break;
-/*TODO*///	case CPU_INFO_REG + I86_PENDING:	sprintf(buffer[which], "P:%X", r->irq_state);       break;
-/*TODO*///	case CPU_INFO_REG + I86_NMI_STATE:	sprintf(buffer[which], "NMI:%X", r->nmi_state);     break;
-/*TODO*///	case CPU_INFO_REG + I86_IRQ_STATE:	sprintf(buffer[which], "IRQ:%X", r->irq_state);     break;
-/*TODO*///	case CPU_INFO_FLAGS:
-/*TODO*///		r->flags = CompressFlags();
-/*TODO*///		sprintf(buffer[which], "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
-/*TODO*///				r->flags & 0x8000 ? '?' : '.',
-/*TODO*///				r->flags & 0x4000 ? '?' : '.',
-/*TODO*///				r->flags & 0x2000 ? '?' : '.',
-/*TODO*///				r->flags & 0x1000 ? '?' : '.',
-/*TODO*///				r->flags & 0x0800 ? 'O' : '.',
-/*TODO*///				r->flags & 0x0400 ? 'D' : '.',
-/*TODO*///				r->flags & 0x0200 ? 'I' : '.',
-/*TODO*///				r->flags & 0x0100 ? 'T' : '.',
-/*TODO*///				r->flags & 0x0080 ? 'S' : '.',
-/*TODO*///				r->flags & 0x0040 ? 'Z' : '.',
-/*TODO*///				r->flags & 0x0020 ? '?' : '.',
-/*TODO*///				r->flags & 0x0010 ? 'A' : '.',
-/*TODO*///				r->flags & 0x0008 ? '?' : '.',
-/*TODO*///				r->flags & 0x0004 ? 'P' : '.',
-/*TODO*///				r->flags & 0x0002 ? 'N' : '.',
-/*TODO*///				r->flags & 0x0001 ? 'C' : '.');
-/*TODO*///		break;
-/*TODO*///	case CPU_INFO_NAME: 		return "I86";
-/*TODO*///	case CPU_INFO_FAMILY:		return "Intel 80x86";
-/*TODO*///	case CPU_INFO_VERSION:		return "1.4";
-/*TODO*///	case CPU_INFO_FILE: 		return __FILE__;
-/*TODO*///	case CPU_INFO_CREDITS:		return "Real mode i286 emulator v1.4 by Fabrice Frances\n(initial work I.based on David Hedley's pcemu)";
-/*TODO*///	case CPU_INFO_REG_LAYOUT:	return (const char *) i86_reg_layout;
-/*TODO*///	case CPU_INFO_WIN_LAYOUT:	return (const char *) i86_win_layout;
-/*TODO*///	}
-/*TODO*///	return buffer[which];
-/*TODO*///}
     @Override
     public void reset(Object param) {
         /*unsigned*/ int i, j, c;
@@ -471,7 +400,7 @@ public class i86 extends cpu_interface {
 
     @Override
     public int get_pc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return I.pc;
     }
 
     @Override
@@ -511,7 +440,7 @@ public class i86 extends cpu_interface {
 
     @Override
     public void set_irq_callback(irqcallbacksPtr callback) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        I.irq_callback = callback;
     }
 
     @Override
@@ -531,7 +460,69 @@ public class i86 extends cpu_interface {
 
     @Override
     public String cpu_info(Object context, int regnum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        /*TODO*///	static char buffer[32][63 + 1];
+/*TODO*///	static int which = 0;
+/*TODO*///	i86_Regs *r = context;
+/*TODO*///
+/*TODO*///	which = ++which % 32;
+/*TODO*///	buffer[which][0] = '\0';
+/*TODO*///	if (!context)
+/*TODO*///		r = &I;
+
+        switch (regnum) {
+            /*TODO*///	case CPU_INFO_REG + I86_IP: 		sprintf(buffer[which], "IP: %04X", r->pc - r->base[CS]); break;
+/*TODO*///	case CPU_INFO_REG + I86_SP: 		sprintf(buffer[which], "SP: %04X", r->regs.w[SP]);  break;
+/*TODO*///	case CPU_INFO_REG + I86_FLAGS:		sprintf(buffer[which], "F:%04X", r->flags);         break;
+/*TODO*///	case CPU_INFO_REG + I86_AX: 		sprintf(buffer[which], "AX:%04X", r->regs.w[AX]);   break;
+/*TODO*///	case CPU_INFO_REG + I86_CX: 		sprintf(buffer[which], "CX:%04X", r->regs.w[CX]);   break;
+/*TODO*///	case CPU_INFO_REG + I86_DX: 		sprintf(buffer[which], "DX:%04X", r->regs.w[DX]);   break;
+/*TODO*///	case CPU_INFO_REG + I86_BX: 		sprintf(buffer[which], "BX:%04X", r->regs.w[BX]);   break;
+/*TODO*///	case CPU_INFO_REG + I86_BP: 		sprintf(buffer[which], "BP:%04X", r->regs.w[BP]);   break;
+/*TODO*///	case CPU_INFO_REG + I86_SI: 		sprintf(buffer[which], "SI: %04X", r->regs.w[SI]);  break;
+/*TODO*///	case CPU_INFO_REG + I86_DI: 		sprintf(buffer[which], "DI: %04X", r->regs.w[DI]);  break;
+/*TODO*///	case CPU_INFO_REG + I86_ES: 		sprintf(buffer[which], "ES:%04X", r->sregs[ES]);    break;
+/*TODO*///	case CPU_INFO_REG + I86_CS: 		sprintf(buffer[which], "CS:%04X", r->sregs[CS]);    break;
+/*TODO*///	case CPU_INFO_REG + I86_SS: 		sprintf(buffer[which], "SS:%04X", r->sregs[SS]);    break;
+/*TODO*///	case CPU_INFO_REG + I86_DS: 		sprintf(buffer[which], "DS:%04X", r->sregs[DS]);    break;
+/*TODO*///	case CPU_INFO_REG + I86_VECTOR: 	sprintf(buffer[which], "V:%02X", r->int_vector);    break;
+/*TODO*///	case CPU_INFO_REG + I86_PENDING:	sprintf(buffer[which], "P:%X", r->irq_state);       break;
+/*TODO*///	case CPU_INFO_REG + I86_NMI_STATE:	sprintf(buffer[which], "NMI:%X", r->nmi_state);     break;
+/*TODO*///	case CPU_INFO_REG + I86_IRQ_STATE:	sprintf(buffer[which], "IRQ:%X", r->irq_state);     break;
+/*TODO*///	case CPU_INFO_FLAGS:
+/*TODO*///		r->flags = CompressFlags();
+/*TODO*///		sprintf(buffer[which], "%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c",
+/*TODO*///				r->flags & 0x8000 ? '?' : '.',
+/*TODO*///				r->flags & 0x4000 ? '?' : '.',
+/*TODO*///				r->flags & 0x2000 ? '?' : '.',
+/*TODO*///				r->flags & 0x1000 ? '?' : '.',
+/*TODO*///				r->flags & 0x0800 ? 'O' : '.',
+/*TODO*///				r->flags & 0x0400 ? 'D' : '.',
+/*TODO*///				r->flags & 0x0200 ? 'I' : '.',
+/*TODO*///				r->flags & 0x0100 ? 'T' : '.',
+/*TODO*///				r->flags & 0x0080 ? 'S' : '.',
+/*TODO*///				r->flags & 0x0040 ? 'Z' : '.',
+/*TODO*///				r->flags & 0x0020 ? '?' : '.',
+/*TODO*///				r->flags & 0x0010 ? 'A' : '.',
+/*TODO*///				r->flags & 0x0008 ? '?' : '.',
+/*TODO*///				r->flags & 0x0004 ? 'P' : '.',
+/*TODO*///				r->flags & 0x0002 ? 'N' : '.',
+/*TODO*///				r->flags & 0x0001 ? 'C' : '.');
+/*TODO*///		break;
+            case CPU_INFO_NAME:
+                return "I86";
+            case CPU_INFO_FAMILY:
+                return "Intel 80x86";
+            case CPU_INFO_VERSION:
+                return "1.4";
+            case CPU_INFO_FILE:
+                return "i86.java";
+            case CPU_INFO_CREDITS:
+                return "Real mode i286 emulator v1.4 by Fabrice Frances\n(initial work I.based on David Hedley's pcemu)";
+            /*TODO*///	case CPU_INFO_REG_LAYOUT:	return (const char *) i86_reg_layout;
+/*TODO*///	case CPU_INFO_WIN_LAYOUT:	return (const char *) i86_win_layout;
+        }
+        throw new UnsupportedOperationException("Not supported yet.");
+        /*TODO*///	return buffer[which];
     }
 
     @Override
@@ -554,11 +545,6 @@ public class i86 extends cpu_interface {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
-    public void set_op_base(int pc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     /**
      * arcadeflex functions
      */
@@ -566,5 +552,10 @@ public class i86 extends cpu_interface {
     public Object init_context() {
         Object reg = new i86_Regs();
         return reg;
+    }
+
+    @Override
+    public void set_op_base(int pc) {
+        cpu_setOPbase20.handler(pc);
     }
 }

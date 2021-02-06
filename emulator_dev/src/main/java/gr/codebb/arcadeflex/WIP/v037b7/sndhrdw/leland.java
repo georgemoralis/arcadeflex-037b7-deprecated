@@ -26,6 +26,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_RAM;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_ROM;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryReadAddress;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryWriteAddress;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.cpu_setbank;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.sound_reset;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ReadHandlerPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ShStartPtr;
@@ -159,88 +161,104 @@ public class leland {
 /*TODO*///	
 /*TODO*///	/* according to the Intel manual, external interrupts are not latched */
 /*TODO*///	/* however, I cannot get this system to work without latching them */
-/*TODO*///	#define LATCH_INTS	1
-/*TODO*///	
+    public static final int LATCH_INTS = 1;
+    /*TODO*///	
 /*TODO*///	#define DAC_VOLUME_SCALE	4
-/*TODO*///	#define CPU_RESUME_TRIGGER	7123
-/*TODO*///	
+    public static final int CPU_RESUME_TRIGGER = 7123;
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	static int dma_stream;
 /*TODO*///	static int nondma_stream;
 /*TODO*///	static int extern_stream;
 /*TODO*///	
     static UBytePtr ram_base = new UBytePtr();
-    /*TODO*///	static UINT8 has_ym2151;
+    static int/*UINT8*/ has_ym2151;
     static int/*UINT8*/ is_redline;
 
     static int/*UINT8*/ last_control;
-    /*TODO*///	static UINT8 clock_active;
-/*TODO*///	static UINT8 clock_tick;
-/*TODO*///	
+    static int/*UINT8*/ clock_active;
+    static int/*UINT8*/ clock_tick;
+
     static int[]/*UINT8*/ u8_sound_command = new int[2];
     static int/*UINT8*/ sound_response;
 
-    /*TODO*///	
-/*TODO*///	static UINT32 ext_start;
-/*TODO*///	static UINT32 ext_stop;
-/*TODO*///	static UINT8 ext_active;
-/*TODO*///	static UINT8 *ext_base;
-/*TODO*///	
+    static int/*UINT32*/ ext_start;
+    static int/*UINT32*/ ext_stop;
+    static int/*UINT8*/ ext_active;
+    static UBytePtr ext_base;
+
     public static UBytePtr active_mask;
-    /*TODO*///	static int total_reads;
-/*TODO*///	
-/*TODO*///	struct mem_state
-/*TODO*///	{
-/*TODO*///		UINT16	lower;
-/*TODO*///		UINT16	upper;
-/*TODO*///		UINT16	middle;
-/*TODO*///		UINT16	middle_size;
-/*TODO*///		UINT16	peripheral;
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	struct timer_state
-/*TODO*///	{
-/*TODO*///		UINT16	control;
-/*TODO*///		UINT16	maxA;
-/*TODO*///		UINT16	maxB;
-/*TODO*///		UINT16	count;
-/*TODO*///		void *	int_timer;
-/*TODO*///		void *	time_timer;
-/*TODO*///		double	last_time;
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	struct dma_state
-/*TODO*///	{
-/*TODO*///		UINT32	source;
-/*TODO*///		UINT32	dest;
-/*TODO*///		UINT16	count;
-/*TODO*///		UINT16	control;
-/*TODO*///		UINT8	finished;
-/*TODO*///		void *	finish_timer;
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	struct intr_state
-/*TODO*///	{
-/*TODO*///		UINT8	pending;
-/*TODO*///		UINT16	ack_mask;
-/*TODO*///		UINT16	priority_mask;
-/*TODO*///		UINT16	in_service;
-/*TODO*///		UINT16	request;
-/*TODO*///		UINT16	status;
-/*TODO*///		UINT16	poll_status;
-/*TODO*///		UINT16	timer;
-/*TODO*///		UINT16	dma[2];
-/*TODO*///		UINT16	ext[4];
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static struct i186_state
-/*TODO*///	{
-/*TODO*///		struct timer_state	timer[3];
-/*TODO*///		struct dma_state	dma[2];
-/*TODO*///		struct intr_state	intr;
-/*TODO*///		struct mem_state	mem;
-/*TODO*///	} i186;
-/*TODO*///	
+    static int total_reads;
+
+    static class mem_state {
+
+        char lower;
+        char upper;
+        char middle;
+        char middle_size;
+        char peripheral;
+    };
+
+    static class timer_state {
+
+        char control;
+        char maxA;
+        char maxB;
+        char count;
+        Object int_timer;
+        Object time_timer;
+        double last_time;
+
+        public static timer_state[] create(int n) {
+            timer_state[] a = new timer_state[n];
+            for (int k = 0; k < n; k++) {
+                a[k] = new timer_state();
+            }
+            return a;
+        }
+    };
+
+    static class dma_state {
+
+        int/*UINT32*/ source;
+        int/*UINT32*/ dest;
+        char count;
+        char control;
+        int/*UINT8*/ u8_finished;
+        Object finish_timer;
+
+        public static dma_state[] create(int n) {
+            dma_state[] a = new dma_state[n];
+            for (int k = 0; k < n; k++) {
+                a[k] = new dma_state();
+            }
+            return a;
+        }
+    };
+
+    static class intr_state {
+
+        int/*UINT8*/ u8_pending;
+        char ack_mask;
+        char priority_mask;
+        char in_service;
+        char request;
+        char status;
+        char poll_status;
+        char timer;
+        char[] dma = new char[2];
+        char[] ext = new char[4];
+    };
+
+    static class i186state {
+
+        timer_state[] timer = timer_state.create(3);
+        dma_state[] dma = dma_state.create(2);
+        intr_state intr = new intr_state();
+        mem_state mem = new mem_state();
+    };
+    static i186state i186_state;
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	#define DAC_BUFFER_SIZE			1024
 /*TODO*///	#define DAC_BUFFER_SIZE_MASK	(DAC_BUFFER_SIZE - 1)
@@ -511,66 +529,78 @@ public class leland {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	static void leland_i186_reset(void)
-/*TODO*///	{
-/*TODO*///		/* kill any live timers */
-/*TODO*///		if (i186.timer[0].int_timer) timer_remove(i186.timer[0].int_timer);
-/*TODO*///		if (i186.timer[1].int_timer) timer_remove(i186.timer[1].int_timer);
-/*TODO*///		if (i186.timer[2].int_timer) timer_remove(i186.timer[2].int_timer);
-/*TODO*///		if (i186.timer[0].time_timer) timer_remove(i186.timer[0].time_timer);
-/*TODO*///		if (i186.timer[1].time_timer) timer_remove(i186.timer[1].time_timer);
-/*TODO*///		if (i186.timer[2].time_timer) timer_remove(i186.timer[2].time_timer);
-/*TODO*///		if (i186.dma[0].finish_timer) timer_remove(i186.dma[0].finish_timer);
-/*TODO*///		if (i186.dma[1].finish_timer) timer_remove(i186.dma[1].finish_timer);
-/*TODO*///	
-/*TODO*///		/* reset the i186 state */
-/*TODO*///		memset(&i186, 0, sizeof(i186));
-/*TODO*///	
-/*TODO*///		/* reset the interrupt state */
-/*TODO*///		i186.intr.priority_mask	= 0x0007;
-/*TODO*///		i186.intr.timer 		= 0x000f;
-/*TODO*///		i186.intr.dma[0]		= 0x000f;
-/*TODO*///		i186.intr.dma[1]		= 0x000f;
-/*TODO*///		i186.intr.ext[0]		= 0x000f;
-/*TODO*///		i186.intr.ext[1]		= 0x000f;
-/*TODO*///		i186.intr.ext[2]		= 0x000f;
-/*TODO*///		i186.intr.ext[3]		= 0x000f;
-/*TODO*///	
+    static void leland_i186_reset() {
+        /* kill any live timers */
+        if (i186_state.timer[0].int_timer != null) {
+            timer_remove(i186_state.timer[0].int_timer);
+        }
+        if (i186_state.timer[1].int_timer != null) {
+            timer_remove(i186_state.timer[1].int_timer);
+        }
+        if (i186_state.timer[2].int_timer != null) {
+            timer_remove(i186_state.timer[2].int_timer);
+        }
+        if (i186_state.timer[0].time_timer != null) {
+            timer_remove(i186_state.timer[0].time_timer);
+        }
+        if (i186_state.timer[1].time_timer != null) {
+            timer_remove(i186_state.timer[1].time_timer);
+        }
+        if (i186_state.timer[2].time_timer != null) {
+            timer_remove(i186_state.timer[2].time_timer);
+        }
+        if (i186_state.dma[0].finish_timer != null) {
+            timer_remove(i186_state.dma[0].finish_timer);
+        }
+        if (i186_state.dma[1].finish_timer != null) {
+            timer_remove(i186_state.dma[1].finish_timer);
+        }
+
+        /* reset the i186 state */
+        i186_state = new i186state();
+
+        /* reset the interrupt state */
+        i186_state.intr.priority_mask = 0x0007;
+        i186_state.intr.timer = 0x000f;
+        i186_state.intr.dma[0] = 0x000f;
+        i186_state.intr.dma[1] = 0x000f;
+        i186_state.intr.ext[0] = 0x000f;
+        i186_state.intr.ext[1] = 0x000f;
+        i186_state.intr.ext[2] = 0x000f;
+        i186_state.intr.ext[3] = 0x000f;
+        /*TODO*///	
 /*TODO*///		/* reset the DAC and counter states as well */
 /*TODO*///		memset(&dac, 0, sizeof(dac));
 /*TODO*///		memset(&counter, 0, sizeof(counter));
 /*TODO*///	
 /*TODO*///		/* send a trigger in case we're suspended */
 /*TODO*///		if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to reset\n");
-/*TODO*///		cpu_trigger(CPU_RESUME_TRIGGER);
-/*TODO*///		total_reads = 0;
-/*TODO*///	
-/*TODO*///		/* reset the sound systems */
-/*TODO*///		sound_reset();
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-    public static void leland_i186_sound_init() {
-        throw new UnsupportedOperationException("Unsupported");
-        /*TODO*///		/* RAM is multiply mapped in the first 128k of address space */
-/*TODO*///		cpu_setbank(6, ram_base);
-/*TODO*///		cpu_setbank(7, ram_base);
-/*TODO*///	
-/*TODO*///		/* reset the I86 registers */
-/*TODO*///		memset(&i186, 0, sizeof(i186));
-/*TODO*///		leland_i186_reset();
-/*TODO*///	
-/*TODO*///		/* reset our internal stuff */
-/*TODO*///		last_control = 0xf8;
-/*TODO*///		clock_active = 0;
-/*TODO*///	
-/*TODO*///		/* reset the external DAC */
-/*TODO*///		ext_start = 0;
-/*TODO*///		ext_stop = 0;
-/*TODO*///		ext_active = 0;
+        cpu_trigger.handler(CPU_RESUME_TRIGGER);
+        total_reads = 0;
+
+        /* reset the sound systems */
+        sound_reset();
     }
+
+    public static void leland_i186_sound_init() {
+        /* RAM is multiply mapped in the first 128k of address space */
+        cpu_setbank(6, new UBytePtr(ram_base));
+        cpu_setbank(7, new UBytePtr(ram_base));
+
+        /* reset the I86 registers */
+        i186_state = new i186state();
+        leland_i186_reset();
+
+        /* reset our internal stuff */
+        last_control = 0xf8;
+        clock_active = 0;
+
+        /* reset the external DAC */
+        ext_start = 0;
+        ext_stop = 0;
+        ext_active = 0;
+    }
+
     /*TODO*///	
 /*TODO*///	
 /*TODO*///	
@@ -613,94 +643,98 @@ public class leland {
 /*TODO*///		return i186.intr.poll_status & 0x1f;
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	static void update_interrupt_state(void)
-/*TODO*///	{
-/*TODO*///		int i, j, new_vector = 0;
-/*TODO*///	
-/*TODO*///		if (LOG_INTERRUPTS != 0) logerror("update_interrupt_status: req=%02X stat=%02X serv=%02X\n", i186.intr.request, i186.intr.status, i186.intr.in_service);
-/*TODO*///	
-/*TODO*///		/* loop over priorities */
-/*TODO*///		for (i = 0; i <= i186.intr.priority_mask; i++)
-/*TODO*///		{
-/*TODO*///			/* note: by checking 4 bits, we also verify that the mask is off */
-/*TODO*///			if ((i186.intr.timer & 15) == i)
-/*TODO*///			{
-/*TODO*///				/* if we're already servicing something at this level, don't generate anything new */
-/*TODO*///				if (i186.intr.in_service & 0x01)
-/*TODO*///					return;
-/*TODO*///	
-/*TODO*///				/* if there's something pending, generate an interrupt */
-/*TODO*///				if (i186.intr.status & 0x07)
-/*TODO*///				{
-/*TODO*///					if (i186.intr.status & 1)
-/*TODO*///						new_vector = 0x08;
-/*TODO*///					else if (i186.intr.status & 2)
-/*TODO*///						new_vector = 0x12;
-/*TODO*///					else if (i186.intr.status & 4)
-/*TODO*///						new_vector = 0x13;
-/*TODO*///					else
-/*TODO*///						usrintf_showmessage("Invalid timer interrupt!");
-/*TODO*///	
-/*TODO*///					/* set the clear mask and generate the int */
-/*TODO*///					i186.intr.ack_mask = 0x0001;
-/*TODO*///					goto generate_int;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* check DMA interrupts */
-/*TODO*///			for (j = 0; j < 2; j++)
-/*TODO*///				if ((i186.intr.dma[j] & 15) == i)
-/*TODO*///				{
-/*TODO*///					/* if we're already servicing something at this level, don't generate anything new */
-/*TODO*///					if (i186.intr.in_service & (0x04 << j))
-/*TODO*///						return;
-/*TODO*///	
-/*TODO*///					/* if there's something pending, generate an interrupt */
-/*TODO*///					if (i186.intr.request & (0x04 << j))
-/*TODO*///					{
-/*TODO*///						new_vector = 0x0a + j;
-/*TODO*///	
-/*TODO*///						/* set the clear mask and generate the int */
-/*TODO*///						i186.intr.ack_mask = 0x0004 << j;
-/*TODO*///						goto generate_int;
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///			/* check external interrupts */
-/*TODO*///			for (j = 0; j < 4; j++)
-/*TODO*///				if ((i186.intr.ext[j] & 15) == i)
-/*TODO*///				{
-/*TODO*///					/* if we're already servicing something at this level, don't generate anything new */
-/*TODO*///					if (i186.intr.in_service & (0x10 << j))
-/*TODO*///						return;
-/*TODO*///	
-/*TODO*///					/* if there's something pending, generate an interrupt */
-/*TODO*///					if (i186.intr.request & (0x10 << j))
-/*TODO*///					{
-/*TODO*///						/* otherwise, generate an interrupt for this request */
-/*TODO*///						new_vector = 0x0c + j;
-/*TODO*///	
-/*TODO*///						/* set the clear mask and generate the int */
-/*TODO*///						i186.intr.ack_mask = 0x0010 << j;
-/*TODO*///						goto generate_int;
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///		}
-/*TODO*///		return;
-/*TODO*///	
-/*TODO*///	generate_int:
-/*TODO*///		/* generate the appropriate interrupt */
-/*TODO*///		i186.intr.poll_status = 0x8000 | new_vector;
-/*TODO*///		if (!i186.intr.pending)
-/*TODO*///			cpu_set_irq_line(2, 0, ASSERT_LINE);
-/*TODO*///		i186.intr.pending = 1;
-/*TODO*///		cpu_trigger(CPU_RESUME_TRIGGER);
-/*TODO*///		if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to interrupt pending\n");
-/*TODO*///		if (LOG_INTERRUPTS != 0) logerror("(%f) **** Requesting interrupt vector %02X\n", timer_get_time(), new_vector);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+
+    static void update_interrupt_state() {
+        int i, j, new_vector = 0;
+
+        //if (LOG_INTERRUPTS != 0) logerror("update_interrupt_status: req=%02X stat=%02X serv=%02X\n", i186.intr.request, i186.intr.status, i186.intr.in_service);
+        /* loop over priorities */
+        for (i = 0; i <= i186_state.intr.priority_mask; i++) {
+            /* note: by checking 4 bits, we also verify that the mask is off */
+            if ((i186_state.intr.timer & 15) == i) {
+                /* if we're already servicing something at this level, don't generate anything new */
+                if ((i186_state.intr.in_service & 0x01) != 0) {
+                    return;
+                }
+
+                /* if there's something pending, generate an interrupt */
+                if ((i186_state.intr.status & 0x07) != 0) {
+                    if ((i186_state.intr.status & 1) != 0) {
+                        new_vector = 0x08;
+                    } else if ((i186_state.intr.status & 2) != 0) {
+                        new_vector = 0x12;
+                    } else if ((i186_state.intr.status & 4) != 0) {
+                        new_vector = 0x13;
+                    } else {
+                        //usrintf_showmessage("Invalid timer interrupt!");
+                    }
+
+                    /* set the clear mask and generate the int */
+                    i186_state.intr.ack_mask = 0x0001;
+                    generate_int(new_vector);
+                    return;
+                }
+            }
+
+            /* check DMA interrupts */
+            for (j = 0; j < 2; j++) {
+                if ((i186_state.intr.dma[j] & 15) == i) {
+                    /* if we're already servicing something at this level, don't generate anything new */
+                    if ((i186_state.intr.in_service & (0x04 << j)) != 0) {
+                        return;
+                    }
+
+                    /* if there's something pending, generate an interrupt */
+                    if ((i186_state.intr.request & (0x04 << j)) != 0) {
+                        new_vector = 0x0a + j;
+
+                        /* set the clear mask and generate the int */
+                        i186_state.intr.ack_mask = (char) (0x0004 << j);
+                        generate_int(new_vector);
+                        return;
+                    }
+                }
+            }
+
+            /* check external interrupts */
+            for (j = 0; j < 4; j++) {
+                if ((i186_state.intr.ext[j] & 15) == i) {
+                    /* if we're already servicing something at this level, don't generate anything new */
+                    if ((i186_state.intr.in_service & (0x10 << j)) != 0) {
+                        return;
+                    }
+
+                    /* if there's something pending, generate an interrupt */
+                    if ((i186_state.intr.request & (0x10 << j)) != 0) {
+                        /* otherwise, generate an interrupt for this request */
+                        new_vector = 0x0c + j;
+
+                        /* set the clear mask and generate the int */
+                        i186_state.intr.ack_mask = (char) (0x0010 << j);
+                        generate_int(new_vector);
+                        return;
+                    }
+                }
+            }
+        }
+        return;
+
+    }
+
+    static void generate_int(int new_vector) {
+        /* generate the appropriate interrupt */
+        i186_state.intr.poll_status = (char) (0x8000 | new_vector);
+        if (i186_state.intr.u8_pending == 0) {
+            cpu_set_irq_line(2, 0, ASSERT_LINE);
+        }
+        i186_state.intr.u8_pending = 1;
+        cpu_trigger.handler(CPU_RESUME_TRIGGER);
+        //if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to interrupt pending\n");
+        //if (LOG_INTERRUPTS != 0) logerror("(%f) **** Requesting interrupt vector %02X\n", timer_get_time(), new_vector);
+
+    }
+
+    /*TODO*///	
 /*TODO*///	static void handle_eoi(int data)
 /*TODO*///	{
 /*TODO*///		int i, j;
@@ -1047,7 +1081,6 @@ public class leland {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	
-
     /**
      * ***********************************
      *
@@ -1640,55 +1673,55 @@ public class leland {
             if (diff == 0) {
                 return;
             }
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///		last_control = data;
-/*TODO*///	
-/*TODO*///		if (LOG_COMM != 0)
-/*TODO*///		{
-/*TODO*///			logerror("%04X:I86 control = %02X", cpu_getpreviouspc(), data);
-/*TODO*///			if (!(data & 0x80)) logerror("  /RESET");
-/*TODO*///			if (!(data & 0x40)) logerror("  ZNMI");
-/*TODO*///			if (!(data & 0x20)) logerror("  INT0");
-/*TODO*///			if (!(data & 0x10)) logerror("  /TEST");
-/*TODO*///			if (!(data & 0x08)) logerror("  INT1");
-/*TODO*///			logerror("\n");
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* /RESET */
-/*TODO*///		cpu_set_reset_line(2, data & 0x80  ? CLEAR_LINE : ASSERT_LINE);
-/*TODO*///	
-/*TODO*///		/* /NMI */
-/*TODO*///	/* 	If the master CPU doesn't get a response by the time it's ready to send
-/*TODO*///		the next command, it uses an NMI to force the issue; unfortunately, this
-/*TODO*///		seems to really screw up the sound system. It turns out it's better to
-/*TODO*///		just wait for the original interrupt to occur naturally */
-/*TODO*///	/*	cpu_set_nmi_line  (2, data & 0x40  ? CLEAR_LINE : ASSERT_LINE);*/
-/*TODO*///	
-/*TODO*///		/* INT0 */
-/*TODO*///		if ((data & 0x20) != 0)
-/*TODO*///		{
-/*TODO*///			if (!LATCH_INTS) i186.intr.request &= ~0x10;
-/*TODO*///		}
-/*TODO*///		else if (i186.intr.ext[0] & 0x10)
-/*TODO*///			i186.intr.request |= 0x10;
-/*TODO*///		else if ((diff & 0x20) != 0)
-/*TODO*///			i186.intr.request |= 0x10;
-/*TODO*///	
-/*TODO*///		/* INT1 */
-/*TODO*///		if ((data & 0x08) != 0)
-/*TODO*///		{
-/*TODO*///			if (!LATCH_INTS) i186.intr.request &= ~0x20;
-/*TODO*///		}
-/*TODO*///		else if (i186.intr.ext[1] & 0x10)
-/*TODO*///			i186.intr.request |= 0x20;
-/*TODO*///		else if ((diff & 0x08) != 0)
-/*TODO*///			i186.intr.request |= 0x20;
-/*TODO*///	
-/*TODO*///		/* handle reset here */
-/*TODO*///		if ((diff & 0x80) && (data & 0x80))
-/*TODO*///			leland_i186_reset();
-/*TODO*///	
-/*TODO*///		update_interrupt_state();
+            last_control = data;
+
+            //if (LOG_COMM != 0)
+            //{
+            //	logerror("%04X:I86 control = %02X", cpu_getpreviouspc(), data);
+            //	if (!(data & 0x80)) logerror("  /RESET");
+            //	if (!(data & 0x40)) logerror("  ZNMI");
+            //	if (!(data & 0x20)) logerror("  INT0");
+            //	if (!(data & 0x10)) logerror("  /TEST");
+            //	if (!(data & 0x08)) logerror("  INT1");
+            //	logerror("\n");
+            //}
+            /* /RESET */
+            cpu_set_reset_line(2, (data & 0x80) != 0 ? CLEAR_LINE : ASSERT_LINE);
+
+            /* /NMI */
+ /* 	If the master CPU doesn't get a response by the time it's ready to send
+		the next command, it uses an NMI to force the issue; unfortunately, this
+		seems to really screw up the sound system. It turns out it's better to
+		just wait for the original interrupt to occur naturally */
+ /*	cpu_set_nmi_line  (2, data & 0x40  ? CLEAR_LINE : ASSERT_LINE);*/
+ /* INT0 */
+            if ((data & 0x20) != 0) {
+                if (LATCH_INTS == 0) {
+                    i186_state.intr.request &= ~0x10;
+                }
+            } else if ((i186_state.intr.ext[0] & 0x10) != 0) {
+                i186_state.intr.request |= 0x10;
+            } else if ((diff & 0x20) != 0) {
+                i186_state.intr.request |= 0x10;
+            }
+
+            /* INT1 */
+            if ((data & 0x08) != 0) {
+                if (LATCH_INTS == 0) {
+                    i186_state.intr.request &= ~0x20;
+                }
+            } else if ((i186_state.intr.ext[1] & 0x10) != 0) {
+                i186_state.intr.request |= 0x20;
+            } else if ((diff & 0x08) != 0) {
+                i186_state.intr.request |= 0x20;
+            }
+
+            /* handle reset here */
+            if ((diff & 0x80) != 0 && (data & 0x80) != 0) {
+                leland_i186_reset();
+            }
+
+            update_interrupt_state();
         }
     };
 

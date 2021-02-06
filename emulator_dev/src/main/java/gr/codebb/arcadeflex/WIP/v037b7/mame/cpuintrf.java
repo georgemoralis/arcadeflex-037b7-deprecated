@@ -25,6 +25,8 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8035;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8039;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8048;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.n7751;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86;
 
 public class cpuintrf {
 
@@ -274,9 +276,10 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M65C02,   m65c02,	 1,  0,1.00,M65C02_INT_NONE,   M65C02_INT_IRQ, M65C02_INT_NMI, 16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(M6510,    m6510,	 1,  0,1.00,M6510_INT_NONE,    M6510_INT_IRQ,  M6510_INT_NMI,  16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(N2A03,    n2a03,	 1,  0,1.00,N2A03_INT_NONE,    N2A03_INT_IRQ,  N2A03_INT_NMI,  16,	  0,16,LE,1, 3,16	),
+                new Dummy_cpu(),
                 new Dummy_cpu(),//CPU0(H6280,    h6280,	 3,  0,1.00,H6280_INT_NONE,    -1,			   H6280_INT_NMI,  21,	  0,21,LE,1, 3,21	),
-                new Dummy_cpu(),//CPU0(I86,	   i86, 	 1,  0,1.00,I86_INT_NONE,	   -1000,		   I86_NMI_INT,    20,	  0,20,LE,1, 5,20	),
-                new Dummy_cpu(),//CPU0(I186,	   i186,	 1,  0,1.00,I186_INT_NONE,	   -1000,		   I186_NMI_INT,   20,	  0,20,LE,1, 5,20	),
+                new i86(),//CPU0(I86,	   i86, 	 1,  0,1.00,I86_INT_NONE,	   -1000,		   I86_NMI_INT,    20,	  0,20,LE,1, 5,20	),
+                new i186(),//CPU0(I186,	   i186,	 1,  0,1.00,I186_INT_NONE,	   -1000,		   I186_NMI_INT,   20,	  0,20,LE,1, 5,20	),
                 new Dummy_cpu(),//CPU0(V20,	   v20, 	 1,  0,1.00,NEC_INT_NONE,	   -1000,		   NEC_NMI_INT,    20,	  0,20,LE,1, 5,20	),
                 new Dummy_cpu(),//CPU0(V30,	   v30, 	 1,  0,1.00,NEC_INT_NONE,	   -1000,		   NEC_NMI_INT,    20,	  0,20,LE,1, 5,20	),
                 new Dummy_cpu(),//CPU0(V33,	   v33, 	 1,  0,1.20,NEC_INT_NONE,	   -1000,		   NEC_NMI_INT,    20,	  0,20,LE,1, 5,20	),
@@ -1449,22 +1452,17 @@ public class cpuintrf {
 /*TODO*///				}
 /*TODO*///				break;
 /*TODO*///#endif
-/*TODO*///#if (HAS_I86)
-/*TODO*///			case CPU_I86:				irq_line = 0; LOG(("I86 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_I88)
-/*TODO*///			case CPU_I88:				irq_line = 0; LOG(("I88 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_I186)
-/*TODO*///			case CPU_I186:				irq_line = 0; LOG(("I186 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_I188)
-/*TODO*///			case CPU_I188:				irq_line = 0; LOG(("I188 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_I286)
-/*TODO*///			case CPU_I286:				irq_line = 0; LOG(("I286 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_V20)
+
+                    case CPU_I86:
+                        irq_line = 0;
+                        //LOG(("I86 IRQ\n"));
+                        break;
+                    case CPU_I186:
+                        irq_line = 0;
+                        //LOG(("I186 IRQ\n"));
+                        break;
+
+                    /*TODO*///#if (HAS_V20)
 /*TODO*///			case CPU_V20:				irq_line = 0; LOG(("V20 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_V30)
