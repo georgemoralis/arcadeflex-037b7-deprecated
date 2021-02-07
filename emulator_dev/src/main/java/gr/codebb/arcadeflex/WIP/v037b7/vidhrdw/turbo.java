@@ -607,18 +607,15 @@ public class turbo
 			if ((turbo_opc & 0x80)==0) va ^= 0xff;
 	
 			/* clear the sprite buffer and draw the road sprites */
-                        //sprite_buffer.offset = 0;
-			//memset(sprite_buffer, 0, VIEW_WIDTH);
+                        //memset(sprite_buffer, 0, VIEW_WIDTH);
                         for (int _k=0 ; _k<VIEW_WIDTH ; _k++ )
                             sprite_buffer.buffer[_k]=0;
-                        //sprite_buffer = new IntSubArray(VIEW_WIDTH);
-			draw_road_sprites(sprite_buffer, y);
-                        //sprite_buffer.offset=0;
-	
+                        
+                        draw_road_sprites(sprite_buffer, y);
+                        
 			/* loop over 8-pixel chunks */
 			dest.inc( dx * 8 );
-                        //System.out.println("offset inc: "+(dx*8));
-                        //System.out.println("offset1: "+dest.offset);
+                        
 			sprite_data.inc( 8 );
 			for (x = 8; x < VIEW_WIDTH; x += 8)
 			{
