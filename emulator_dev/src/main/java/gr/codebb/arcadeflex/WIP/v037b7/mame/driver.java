@@ -53,7 +53,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.wc90b.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bublbobl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.turbo.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.lkage.*;
-
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.*;
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -602,22 +602,14 @@ public class driver {
         // driver_nomnlndg,	/* (c) [1980?] + Gottlieb */
 
         /* Nintendo games */
-        /*TODO*/
-        // driver_radarscp,	/* (c) 1980 Nintendo */
-        /*TODO*/
-        // driver_dkong,		/* (c) 1981 Nintendo of America */
-        /*TODO*/
-        // driver_dkongjp,	/* (c) 1981 Nintendo */
-        /*TODO*/
-        // driver_dkongjpo,	/* (c) 1981 Nintendo */
-        /*TODO*/
-        // driver_dkongjr,	/* (c) 1982 Nintendo of America */
-        /*TODO*/
-        // driver_dkngjrjp,	/* no copyright notice */
-        /*TODO*/
-        // driver_dkjrjp,	/* (c) 1982 Nintendo */
-        /*TODO*/
-        // driver_dkjrbl,	/* (c) 1982 Nintendo of America */
+        driver_radarscp,
+        driver_dkong,
+        driver_dkongjp,
+        driver_dkongjpo,
+        driver_dkongjr,
+        driver_dkngjrjp,
+        driver_dkjrjp,
+        driver_dkjrbl,
         /*TODO*/
         // driver_dkong3,	/* (c) 1983 Nintendo of America */
         /*TODO*/
