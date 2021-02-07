@@ -82,9 +82,22 @@ public class SubArrays {
       this.buffer = buffer;
       this.offset = offset;
     }
+    
+    public IntSubArray(char[] buffer, int offset) {
+      int _longo = buffer.length;
+      int[] _buffer = new int[_longo];
+      for (int _i=0 ; _i<_longo ; _i++)
+          _buffer[_i] = buffer[_i];
+      this.buffer = _buffer;
+      this.offset = offset;
+    }
 
     public int read() {
       return buffer[offset];
+    }
+    
+    public void inc(int value) {
+      offset++;
     }
 
     public int read(int index) {

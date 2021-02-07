@@ -51,6 +51,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.shisen.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.wc90.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.wc90b.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bublbobl.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.turbo.*;
 
 public class driver {
 
@@ -2126,12 +2127,9 @@ public class driver {
         // driver_sindbadm,	/* 834-5244 (c) 1983 Sega */
 
         /* other Sega 8-bit games */
-        /*TODO*/
-        // driver_turbo,		/* (c) 1981 Sega */
-        /*TODO*/
-        // driver_turboa,	/* (c) 1981 Sega */
-        /*TODO*/
-        // driver_turbob,	/* (c) 1981 Sega */
+        driver_turbo,		/* (c) 1981 Sega */
+        driver_turboa,	/* (c) 1981 Sega */
+        driver_turbob,	/* (c) 1981 Sega */
         /*TODO*/
         // TESTDRIVER( kopunch,	/* 834-0103 (c) 1981 Sega */
 
