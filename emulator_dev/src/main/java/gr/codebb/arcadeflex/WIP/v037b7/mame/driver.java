@@ -52,6 +52,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.wc90.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.wc90b.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bublbobl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.turbo.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.lkage.*;
 
 public class driver {
 
@@ -1228,15 +1229,6 @@ public class driver {
         // driver_zookeep3,	/* ZA  (c) 1982 Taito America Corporation */
 
         /* other Taito games */
-        /*TODO*/
-        // driver_lkage,		/* A54 (c) 1984 Taito Corporation */
-        /*TODO*/
-        // driver_lkageb,	/* bootleg */
-        /*TODO*/
-        // driver_lkageb2,	/* bootleg */
-        /*TODO*/
-        // driver_lkageb3,	/* bootleg */
-        /*TODO*/
         // TESTDRIVER( flstory,	/* A45 (c) 1985 Taito Corporation */
         /*TODO*/
         // TESTDRIVER( flstoryj,	/* A45 (c) 1985 Taito Corporation (Japan) */
@@ -2127,9 +2119,9 @@ public class driver {
         // driver_sindbadm,	/* 834-5244 (c) 1983 Sega */
 
         /* other Sega 8-bit games */
-        driver_turbo,		/* (c) 1981 Sega */
-        driver_turboa,	/* (c) 1981 Sega */
-        driver_turbob,	/* (c) 1981 Sega */
+        driver_turbo, /* (c) 1981 Sega */
+        driver_turboa, /* (c) 1981 Sega */
+        driver_turbob, /* (c) 1981 Sega */
         /*TODO*/
         // TESTDRIVER( kopunch,	/* 834-0103 (c) 1981 Sega */
 
@@ -4815,6 +4807,9 @@ public class driver {
         driver_bubbobr1,
         driver_boblbobl,
         driver_sboblbob,
+        driver_lkage,
+        driver_lkageb2,
+        driver_lkageb3,
         /*
      * NOT Working flag
          */
@@ -4831,6 +4826,7 @@ public class driver {
         driver_darkplnt,
         driver_gwara,
         driver_tokio,
+        driver_lkageb,
         /*
         TEST DRIVERS
          */
