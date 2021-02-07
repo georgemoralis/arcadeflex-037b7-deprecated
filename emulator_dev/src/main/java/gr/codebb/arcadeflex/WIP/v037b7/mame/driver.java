@@ -50,6 +50,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.vicdual.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.shisen.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.wc90.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.wc90b.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.bublbobl.*;
 
 public class driver {
 
@@ -1242,21 +1243,6 @@ public class driver {
         // TESTDRIVER( onna34ro,	/* A52 */
         driver_gladiatr, /* ??? (c) 1986 Taito America Corporation (US) */
         driver_ogonsiro, /* ??? (c) 1986 Taito Corporation (Japan) */
-        /*TODO*/
-        // driver_tokio,		/* A71 1986 */
-        /*TODO*/
-        // driver_tokiob,	/* bootleg */
-        /*TODO*/
-        // driver_bublbobl,	/* A78 (c) 1986 Taito Corporation */
-        /*TODO*/
-        // driver_bublbobr,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        /*TODO*/
-        // driver_bubbobr1,	/* A78 (c) 1986 Taito America Corporation + Romstar license */
-        /*TODO*/
-        // driver_boblbobl,	/* bootleg */
-        /*TODO*/
-        // driver_sboblbob,	/* bootleg */
-        /*TODO*/
         // driver_rastan,	/* B04 (c) 1987 Taito Corporation Japan (World) */
         /*TODO*/
         // driver_rastanu,	/* B04 (c) 1987 Taito America Corporation (US) */
@@ -4825,6 +4811,12 @@ public class driver {
         driver_sichuan2,
         driver_sichuana,
         driver_shisen,
+        driver_tokiob,
+        driver_bublbobl,
+        driver_bublbobr,
+        driver_bubbobr1,
+        driver_boblbobl,
+        driver_sboblbob,
         /*
      * NOT Working flag
          */
@@ -4840,6 +4832,7 @@ public class driver {
         driver_arkbl2,
         driver_darkplnt,
         driver_gwara,
+        driver_tokio,
         /*
         TEST DRIVERS
          */
