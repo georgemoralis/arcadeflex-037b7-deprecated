@@ -367,11 +367,14 @@ public class turbo
 	
 		/* compute the current data offset */
 		scanline = ((scanline - data.miny) * data.yscale) >> 16;
+                //data.offset=0;
 		offset = data.offset + (scanline + 1) * data.rowbytes;
+                //int _offsOLD=data.base.offset;
 	
 		/* determine the bitmap location */
 		src = new IntSubArray(data.base, offset & 0x7fff);
                 //src.offset = (data.base.offset + offset) & 0x7fff;
+                //src.offset -= _offsOLD;
 	
 		/* loop over columns */
 		while (xoffs < VIEW_WIDTH)
@@ -385,6 +388,8 @@ public class turbo
                         xoffs++;
 			xcurr += xstep;
 		}
+                //System.out.println("offsetXXXX: "+dest.offset);
+                //dest.offset=0;
                 
                 return dest;
 	}
@@ -586,14 +591,14 @@ public class turbo
 		for (y = 4; y < VIEW_HEIGHT - 4; y++, base.inc(dy))
 		{
 			int sel, coch, babit, slipar_acciar, area, area1, area2, area3, area4, area5, road = 0;
-			IntSubArray sprite_data = sprite_buffer;
-                        System.out.println("--#"+sprite_buffer.offset);
-                        sprite_data.offset=0;
-                        sprite_buffer.offset=0;
+			IntSubArray sprite_data = new IntSubArray(sprite_buffer);
+                        //System.out.println("--#"+sprite_buffer.offset);
+                        //sprite_data.offset=0;
+                        //sprite_buffer.offset=0;
                         
 			UBytePtr dest = new UBytePtr(base);
-                        dest.offset = _origin + _cont;
-                        _cont +=dy;
+                        //dest.offset = _origin + _cont;
+                        //_cont +=dy;
 	
 			/* compute the Y sum between opa and the current scanline (p. 141) */
 			int va = (y + turbo_opa) & 0xff;
@@ -604,8 +609,11 @@ public class turbo
 			/* clear the sprite buffer and draw the road sprites */
                         //sprite_buffer.offset = 0;
 			//memset(sprite_buffer, 0, VIEW_WIDTH);
+                        for (int _k=0 ; _k<VIEW_WIDTH ; _k++ )
+                            sprite_buffer.buffer[_k]=0;
                         //sprite_buffer = new IntSubArray(VIEW_WIDTH);
 			draw_road_sprites(sprite_buffer, y);
+                        //sprite_buffer.offset=0;
 	
 			/* loop over 8-pixel chunks */
 			dest.inc( dx * 8 );
@@ -664,7 +672,7 @@ public class turbo
 					if (road==0 && (slipar_acciar & 0x20)!=0)
 					{
 						road = 1;
-						//draw_offroad_sprites(sprite_buffer, x + i + 2, y);
+						draw_offroad_sprites(sprite_buffer, x + i + 2, y);
 					}
 	
 					/* perform collision detection here */
