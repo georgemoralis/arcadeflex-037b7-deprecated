@@ -54,6 +54,8 @@ import static gr.codebb.arcadeflex.v037b7.drivers.bublbobl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.turbo.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.lkage.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.psychic5.*;
+
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -3725,8 +3727,7 @@ public class driver {
         // driver_pinbo,		/* (c) 1984 Jaleco */
         /*TODO*/
         // driver_pinbos,	/* (c) 1985 Strike */
-        /*TODO*/
-        // driver_psychic5,	/* (c) 1987 Jaleco */
+        driver_psychic5,	/* (c) 1987 Jaleco */
         /*TODO*/
         // driver_ginganin,	/* (c) 1987 Jaleco */
         /*TODO*/
