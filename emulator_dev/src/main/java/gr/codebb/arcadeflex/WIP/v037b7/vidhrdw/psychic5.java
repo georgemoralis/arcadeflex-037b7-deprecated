@@ -55,7 +55,6 @@ public class psychic5 {
 
     static int is_psychic5_title_mode() {
         if (ps5_foreground_videoram.read(0x7C6) == 'H') {
-            System.out.println("hello");
             return 0;
         }
         return 1;
