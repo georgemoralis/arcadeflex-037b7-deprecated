@@ -56,6 +56,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.lkage.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.psychic5.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidearms.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gberet.*;
 
 public class driver {
 
@@ -2670,14 +2671,10 @@ public class driver {
         /*TODO*/
         // driver_shaolins,	/* GX477 (c) 1985 */
 
-        /*TODO*/
-        // driver_gberet,	/* GX577 (c) 1985 */
-        /*TODO*/
-        // driver_rushatck,	/* GX577 (c) 1985 */
-        /*TODO*/
-        // driver_gberetb,	/* bootleg on different hardware */
-        /*TODO*/
-        // driver_mrgoemon,	/* GX621 (c) 1986 (Japan) */
+        driver_gberet,
+        driver_rushatck,
+        driver_gberetb,
+        driver_mrgoemon,
         /*TODO*/
         // driver_jailbrek,	/* GX507 (c) 1986 */
         /*TODO*/
