@@ -57,6 +57,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.psychic5.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidearms.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gberet.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
 
 public class driver {
 
@@ -584,26 +585,16 @@ public class driver {
         // driver_sws93,		/* (c) 1993 (Japan) */
         /* 93.6  Super World Stadium '93 */
         /* Universal games */
-        /*TODO*/
-        // driver_cosmicg,	/* 7907 (c) 1979 */
-        /*TODO*/
-        // driver_cosmica,	/* 7910 (c) [1979] */
-        /*TODO*/
-        // driver_cosmica2,	/* 7910 (c) 1979 */
-        /*TODO*/
-        // driver_panic,		/* (c) 1980 */
-        /*TODO*/
-        // driver_panica,	/* (c) 1980 */
-        /*TODO*/
-        // driver_panicger,	/* (c) 1980 */
-        /*TODO*/
-        // driver_magspot2,	/* 8013 (c) [1980] */
-        /*TODO*/
-        // driver_devzone,	/* 8022 (c) [1980] */
-        /*TODO*/
-        // driver_nomnlnd,	/* (c) [1980?] */
-        /*TODO*/
-        // driver_nomnlndg,	/* (c) [1980?] + Gottlieb */
+         driver_cosmicg,	/* 7907 (c) 1979 */
+        driver_cosmica,	/* 7910 (c) [1979] */
+        driver_cosmica2,	/* 7910 (c) 1979 */
+        driver_panic,		/* (c) 1980 */
+        driver_panica,	/* (c) 1980 */
+        driver_panicger,	/* (c) 1980 */
+        driver_magspot2,	/* 8013 (c) [1980] */
+        driver_devzone,	/* 8022 (c) [1980] */
+        driver_nomnlnd,	/* (c) [1980?] */
+        driver_nomnlndg,	/* (c) [1980?] + Gottlieb */
 
         /* Nintendo games */
         driver_radarscp,

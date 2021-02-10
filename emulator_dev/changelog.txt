@@ -3,6 +3,7 @@
 -Added WIP sidearms driver 
 -Replace IntSubArray with UShortArray in exerion vidhrdw
 -Added WIP gberet driver
+-Added WIP cosmic driver
 
 08/02/2021
 ==========
