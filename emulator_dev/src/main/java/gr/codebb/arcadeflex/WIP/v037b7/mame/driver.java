@@ -55,6 +55,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.turbo.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.lkage.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.psychic5.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidearms.*;
 
 public class driver {
 
@@ -1613,21 +1614,13 @@ public class driver {
         // driver_srumblr2,	/*  9/1986 (c) 1986 */
         /*TODO*/
         // driver_rushcrsh,	/*  9/1986 (c) 1986 */
-        /*TODO*/
-        // driver_sidearms,	/* 12/1986 (c) 1986 (World) */
-        /*TODO*/
-        // driver_sidearmr,	/* 12/1986 (c) 1986 + Romstar license (US) */
-        /*TODO*/
-        // driver_sidearjp,	/* 12/1986 (c) 1986 (Japan) */
-        /*TODO*/
-        // driver_turtship,	/* (c) 1988 Philco (NOT A CAPCOM GAME but runs on modified Sidearms
-        // hardware) */
-        /*TODO*/
-        // driver_dyger,		/* (c) 1989 Philco (NOT A CAPCOM GAME but runs on modified Sidearms hardware)
-        // */
-        /*TODO*/
-        // driver_dygera,	/* (c) 1989 Philco (NOT A CAPCOM GAME but runs on modified Sidearms hardware)
-        // */
+        driver_sidearms,	
+        driver_sidearmr,	
+        driver_sidearjp,	
+        driver_turtship,
+        driver_dyger,
+        driver_dygera,	
+        
 
         /*TODO*/
         // driver_bionicc,	/*  3/1987 (c) 1987 (US) */

@@ -5,7 +5,6 @@
 package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
-import gr.codebb.arcadeflex.common.libc.cstring.*;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;
@@ -17,13 +16,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import gr.codebb.arcadeflex.common.SubArrays.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memcpy;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_gethorzbeampos;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_getscanline;
-import gr.codebb.arcadeflex.common.SubArrays.IntSubArray;
-import gr.codebb.arcadeflex.old.sound.mixer;
-import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_FLIP_X;
-import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_FLIP_Y;
-import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_SWAP_XY;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
+import static gr.codebb.arcadeflex.common.SubArrays.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 
 public class exerion {
 
@@ -41,7 +36,7 @@ public class exerion {
     static int/*UINT8*/ u8_char_bank;
 
     static UBytePtr background_latches;
-    static IntSubArray[] background_gfx = new IntSubArray[4];
+    static UShortArray[] background_gfx = new UShortArray[4];
     static char[] /*UINT8*/ u8_current_latches = new char[16];
     static int last_scanline_update;
 
@@ -118,7 +113,7 @@ public class exerion {
      */
     public static VhStartPtr exerion_vh_start = new VhStartPtr() {
         public int handler() {
-            IntSubArray dst;
+            UShortArray dst;
             UBytePtr src;
             int i, x, y;
 
@@ -129,10 +124,10 @@ public class exerion {
             background_latches = new UBytePtr(Machine.drv.screen_height * 16);
 
             /* allocate memory for the decoded background graphics */
-            background_gfx[0] = new IntSubArray(2 * 256 * 256 * 4);
-            background_gfx[1] = new IntSubArray(background_gfx[0], 256 * 256);
-            background_gfx[2] = new IntSubArray(background_gfx[1], 256 * 256);
-            background_gfx[3] = new IntSubArray(background_gfx[2], 256 * 256);
+            background_gfx[0] = new UShortArray(2 * 256 * 256 * 4);
+            background_gfx[1] = new UShortArray(background_gfx[0], 256 * 256);
+            background_gfx[2] = new UShortArray(background_gfx[1], 256 * 256);
+            background_gfx[3] = new UShortArray(background_gfx[2], 256 * 256);
             if (background_gfx[0] == null) {
                 background_latches = null;
                 return 1;
@@ -155,7 +150,7 @@ public class exerion {
              */
             for (i = 0; i < 4; i++) {
                 src = new UBytePtr(memory_region(REGION_GFX3), i * 0x2000);
-                dst = new IntSubArray(background_gfx[i]);
+                dst = new UShortArray(background_gfx[i]);
 
                 for (y = 0; y < 256; y++) {
                     for (x = 0; x < 128; x += 4) {
@@ -434,10 +429,10 @@ public class exerion {
 
         /* loop over all visible scanlines */
         for (y = VISIBLE_Y_MIN; y < VISIBLE_Y_MAX; y++, latches.inc(16)) {
-            IntSubArray src0 = new IntSubArray(background_gfx[0], latches.read(1) * 256);
-            IntSubArray src1 = new IntSubArray(background_gfx[1], latches.read(3) * 256);
-            IntSubArray src2 = new IntSubArray(background_gfx[2], latches.read(5) * 256);
-            IntSubArray src3 = new IntSubArray(background_gfx[3], latches.read(7) * 256);
+            UShortArray src0 = new UShortArray(background_gfx[0], latches.read(1) * 256);
+            UShortArray src1 = new UShortArray(background_gfx[1], latches.read(3) * 256);
+            UShortArray src2 = new UShortArray(background_gfx[2], latches.read(5) * 256);
+            UShortArray src3 = new UShortArray(background_gfx[3], latches.read(7) * 256);
             int xoffs0 = latches.read(0);
             int xoffs1 = latches.read(2);
             int xoffs2 = latches.read(4);
