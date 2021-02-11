@@ -1,6 +1,7 @@
 11/02/201
 =========
 -Added working dotrikun driver
+-Downloads roms from archive.org
 
 10/02/2021
 ==========
