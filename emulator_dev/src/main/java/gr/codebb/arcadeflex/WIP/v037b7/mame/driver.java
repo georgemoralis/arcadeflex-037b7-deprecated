@@ -59,6 +59,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidearms.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gberet.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.dotrikun.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.sega.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.segar.*;
 
 public class driver {
 
@@ -2056,44 +2058,6 @@ public class driver {
         // driver_hustle,	/* 16-21 [1977 Gremlin] */
         /*TODO*/
         // driver_blasto,	/* [1978 Gremlin] */
-
-        /* Sega G-80 vector games */
-        /*TODO*/
-        // driver_spacfury,	/* (c) 1981 */
-        /*TODO*/
-        // driver_spacfura,	/* no copyright notice */
-        /*TODO*/
-        // driver_zektor,	/* (c) 1982 */
-        /*TODO*/
-        // driver_tacscan,	/* (c) */
-        /*TODO*/
-        // driver_elim2,		/* (c) 1981 Gremlin */
-        /*TODO*/
-        // driver_elim2a,	/* (c) 1981 Gremlin */
-        /*TODO*/
-        // driver_elim4,		/* (c) 1981 Gremlin */
-        /*TODO*/
-        // driver_startrek,	/* (c) 1982 */
-
-        /* Sega G-80 raster games */
-        /*TODO*/
-        // driver_astrob,	/* (c) 1981 */
-        /*TODO*/
-        // driver_astrob2,	/* (c) 1981 */
-        /*TODO*/
-        // driver_astrob1,	/* (c) 1981 */
-        /*TODO*/
-        // driver_005,		/* (c) 1981 */
-        /*TODO*/
-        // driver_monsterb,	/* (c) 1982 */
-        /*TODO*/
-        // driver_spaceod,	/* (c) 1981 */
-        /*TODO*/
-        // driver_pignewt,	/* (c) 1983 */
-        /*TODO*/
-        // driver_pignewta,	/* (c) 1983 */
-        /*TODO*/
-        // driver_sindbadm,	/* 834-5244 (c) 1983 Sega */
 
         /* other Sega 8-bit games */
         driver_turbo, /* (c) 1981 Sega */
@@ -4778,6 +4742,20 @@ public class driver {
         driver_lkageb3,
         driver_dotrikun,
         driver_dotriku2,
+        driver_spacfury,
+        driver_spacfura,
+        driver_zektor,
+        driver_tacscan,
+        driver_elim2,
+        driver_elim2a,
+        driver_elim4,
+        driver_startrek,
+        driver_astrob,
+        driver_astrob2,
+        driver_005,
+        driver_monsterb,
+        driver_spaceod,
+        driver_sindbadm,
         /*
      * NOT Working flag
          */
@@ -4795,6 +4773,12 @@ public class driver {
         driver_gwara,
         driver_tokio,
         driver_lkageb,
+        driver_astrob1,
+        /*
+        NOT WORKING IN MAME EITHER
+         */
+        driver_pignewt,//bad roms?
+        driver_pignewta,//bad roms??
         /*
         TEST DRIVERS
          */
