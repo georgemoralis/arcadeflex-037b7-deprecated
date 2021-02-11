@@ -6,6 +6,7 @@ import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.mame_highscore_enabled;
+import gr.codebb.arcadeflex.old2.arcadeflex.settings;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -49,6 +50,24 @@ public class fileio {
         public int type;
         public int crc;
     }
+    
+    public static void downloadFile(String _rom, String _dstDir) {
+        String _url_ROM = settings.romUrl+_rom+".zip";
+        System.out.println("Downloading "+_url_ROM);
+        try (BufferedInputStream inputStream = new BufferedInputStream(new URL(_url_ROM).openStream());
+            FileOutputStream fileOS = new FileOutputStream(_dstDir+"/"+_rom+".zip")) {
+              byte data[] = new byte[1024];
+              int byteContent;
+              while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
+                  fileOS.write(data, 0, byteContent);
+              }
+              fileOS.close();
+              
+        } catch (IOException e) {
+              e.printStackTrace(System.out);
+        }
+    }
+    
 
     /*TODO*/ //     typedef struct
     /*TODO*/ //     {
@@ -107,6 +126,12 @@ public class fileio {
                     pathc = 1;
                     pathv = new String[1];
                     pathv[0] = "roms";
+                    
+                    if (!(new File(pathv[0] + File.separator + gamename + ".zip").exists())){
+                        //found=1;
+                        System.out.println(gamename+" not FOUND! Trying to download it");
+                        downloadFile(gamename, pathv[0]);
+                    }
                 }
 
                 for (indx = 0; indx < pathc && found == 0; ++indx) {

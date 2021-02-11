@@ -1,7 +1,7 @@
 11/02/201
 =========
 -Added working dotrikun driver
--Added working sega,segar drivers
+-Downloads roms from archive.org
 
 10/02/2021
 ==========
