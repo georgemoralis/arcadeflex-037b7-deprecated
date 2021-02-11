@@ -58,6 +58,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.psychic5.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidearms.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gberet.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.dotrikun.*;
 
 public class driver {
 
@@ -585,17 +586,16 @@ public class driver {
         // driver_sws93,		/* (c) 1993 (Japan) */
         /* 93.6  Super World Stadium '93 */
         /* Universal games */
-         driver_cosmicg,	/* 7907 (c) 1979 */
-        driver_cosmica,	/* 7910 (c) [1979] */
-        driver_cosmica2,	/* 7910 (c) 1979 */
-        driver_panic,		/* (c) 1980 */
-        driver_panica,	/* (c) 1980 */
-        driver_panicger,	/* (c) 1980 */
-        driver_magspot2,	/* 8013 (c) [1980] */
-        driver_devzone,	/* 8022 (c) [1980] */
-        driver_nomnlnd,	/* (c) [1980?] */
-        driver_nomnlndg,	/* (c) [1980?] + Gottlieb */
-
+        driver_cosmicg, /* 7907 (c) 1979 */
+        driver_cosmica, /* 7910 (c) [1979] */
+        driver_cosmica2, /* 7910 (c) 1979 */
+        driver_panic, /* (c) 1980 */
+        driver_panica, /* (c) 1980 */
+        driver_panicger, /* (c) 1980 */
+        driver_magspot2, /* 8013 (c) [1980] */
+        driver_devzone, /* 8022 (c) [1980] */
+        driver_nomnlnd, /* (c) [1980?] */
+        driver_nomnlndg, /* (c) [1980?] + Gottlieb */
         /* Nintendo games */
         driver_radarscp,
         driver_dkong,
@@ -1606,14 +1606,12 @@ public class driver {
         // driver_srumblr2,	/*  9/1986 (c) 1986 */
         /*TODO*/
         // driver_rushcrsh,	/*  9/1986 (c) 1986 */
-        driver_sidearms,	
-        driver_sidearmr,	
-        driver_sidearjp,	
+        driver_sidearms,
+        driver_sidearmr,
+        driver_sidearjp,
         driver_turtship,
         driver_dyger,
-        driver_dygera,	
-        
-
+        driver_dygera,
         /*TODO*/
         // driver_bionicc,	/*  3/1987 (c) 1987 (US) */
         /*TODO*/
@@ -2103,12 +2101,6 @@ public class driver {
         driver_turbob, /* (c) 1981 Sega */
         /*TODO*/
         // TESTDRIVER( kopunch,	/* 834-0103 (c) 1981 Sega */
-
-        /*TODO*/
-        // driver_dotrikun,	/* cabinet test board */
-        /*TODO*/
-        // driver_dotriku2,	/* cabinet test board */
-
         /* Sega System 16 games */
         // Not working
         /*TODO*/
@@ -3708,7 +3700,7 @@ public class driver {
         // driver_pinbo,		/* (c) 1984 Jaleco */
         /*TODO*/
         // driver_pinbos,	/* (c) 1985 Strike */
-        driver_psychic5,	/* (c) 1987 Jaleco */
+        driver_psychic5, /* (c) 1987 Jaleco */
         /*TODO*/
         // driver_ginganin,	/* (c) 1987 Jaleco */
         /*TODO*/
@@ -4784,6 +4776,8 @@ public class driver {
         driver_lkage,
         driver_lkageb2,
         driver_lkageb3,
+        driver_dotrikun,
+        driver_dotriku2,
         /*
      * NOT Working flag
          */
