@@ -61,7 +61,6 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.dotrikun.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sega.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.segar.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.airbustr.*;
 
 public class driver {
 
@@ -4320,7 +4319,7 @@ public class driver {
         /*RELEASE*///driver_frenzy,
         /*RELEASE*///driver_joyfulr,
         /*RELEASE*///driver_mnchmobl,
-        driver_airbustr,
+        /*RELEASE*///driver_airbustr,
         /*RELEASE*///driver_pingpong,
         driver_cclimber,
         driver_cclimbrj,
