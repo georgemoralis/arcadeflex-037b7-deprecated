@@ -5,6 +5,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.i86;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 
 public class I86H {
 
@@ -12,13 +13,20 @@ public class I86H {
     public static final int AX = 0, CX = 1, DX = 2, BX = 3, SP = 4, BP = 5, SI = 6, DI = 7;//typedef enum { AX, CX, DX, BX, SP, BP, SI, DI } WREGS;
 
     public static final int AL = 0, AH = 1, CL = 2, CH = 3, DL = 4, DH = 5, BL = 6, BH = 7, SPL = 8, SPH = 9, BPL = 10, BPH = 11, SIL = 12, SIH = 13, DIL = 14, DIH = 15;
+
     /*TODO*///
 /*TODO*////* parameter x = result, y = source 1, z = source 2 */
 /*TODO*///
 /*TODO*///#define SetTF(x)			(I.TF = (x))
-/*TODO*///#define SetIF(x)			(I.IF = (x))
-/*TODO*///#define SetDF(x)			(I.DirVal = (x) ? -1 : 1)
-/*TODO*///
+    public static void SetIF(int x) {
+        I.IF = x;
+    }
+
+    public static void SetDF(int x) {
+        I.DirVal = (x != 0) ? -1 : 1;
+    }
+
+    /*TODO*///
 /*TODO*///#define SetOFW_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x8000)
 /*TODO*///#define SetOFB_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x80)
 /*TODO*///#define SetOFW_Sub(x,y,z)	(I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x8000)
@@ -62,7 +70,8 @@ public class I86H {
     static final int SegBase(int Seg) {
         return I.sregs[Seg] << 4;
     }
-/*TODO*///#define DefaultBase(Seg) 		((seg_prefix && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg])
+
+    /*TODO*///#define DefaultBase(Seg) 		((seg_prefix && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg])
 /*TODO*///
 /*TODO*///#define GetMemB(Seg,Off)		(cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK))
 /*TODO*///#define GetMemW(Seg,Off)		((WORD)GetMemB(Seg, Off) + (WORD)(GetMemB(Seg, (Off) + 1) << 8))
@@ -78,9 +87,18 @@ public class I86H {
 /*TODO*///#define read_port(port) 		cpu_readport(port)
 /*TODO*///#define write_port(port,val) 	cpu_writeport(port,val)
 /*TODO*///
-/*TODO*///#define FETCH					(cpu_readop_arg(I.pc++))
-/*TODO*///#define FETCHOP					(cpu_readop(I.pc++))
-/*TODO*///#define PEEKOP(addr)			(cpu_readop(addr)) 
+    public static final int FETCH() {
+        int i = cpu_readop_arg(I.pc);
+        I.pc = (I.pc + 1);
+        return i;
+    }
+
+    public static final int FETCHOP() {
+        int i = cpu_readop(I.pc);
+        I.pc = (I.pc + 1);
+        return i;
+    }
+    /*TODO*///#define PEEKOP(addr)			(cpu_readop(addr)) 
 /*TODO*///#define FETCHWORD(var) 			{ var = cpu_readop_arg(I.pc); var += (cpu_readop_arg(I.pc + 1) << 8); I.pc += 2; }
 /*TODO*///#define CHANGE_PC(addr)			change_pc20(addr)
 /*TODO*///#define PUSH(val)				{ I.regs.w[SP] -= 2; WriteWord(((I.base[SS] + I.regs.w[SP]) & AMASK), val); }

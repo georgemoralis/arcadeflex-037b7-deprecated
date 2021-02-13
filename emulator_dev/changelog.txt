@@ -1,8 +1,12 @@
-12/02/201
+13/02/2021
+=========
+-More work on i186 cpu core
+
+12/02/2021
 =========
 -Added WIP airbustr driver
 
-11/02/201
+11/02/2021
 =========
 -Added working dotrikun driver
 -Downloads roms from archive.org

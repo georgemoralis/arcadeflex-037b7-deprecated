@@ -10,6 +10,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86time.i86_timing;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.Mod_RM;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_setOPbase20;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
@@ -136,9 +137,9 @@ public class i86 extends cpu_interface {
 
     static /*UINT8*/ int[] parity_table = new int[256];
 
+    static i86_timing cycles;
+
     /*TODO*///
-/*TODO*///static struct i86_timing cycles;
-/*TODO*///
 /*TODO*////* The interrupt number of a pending external interrupt pending NMI is 2.	*/
 /*TODO*////* For INTR interrupts, the level is caught on the bus during an INTA cycle */
 /*TODO*///
