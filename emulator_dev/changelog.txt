@@ -1,3 +1,7 @@
+15/02/2021
+=========
+-More i186 cpu instructions 
+
 13/02/2021
 =========
 -More work on i186 cpu core

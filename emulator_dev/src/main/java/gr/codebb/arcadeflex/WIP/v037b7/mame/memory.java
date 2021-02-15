@@ -1,6 +1,6 @@
 /*
  * ported to 0.37b7 
-*/
+ */
 package gr.codebb.arcadeflex.WIP.v037b7.mame;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
@@ -1149,6 +1149,35 @@ public class memory {
         return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
     }
 
+    public static int cpu_readmem20(int address) {
+        char u8_hw;
+
+        /* first-level lookup */
+        u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_20 + ABITS_MIN_20)];
+
+        /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+        if (u8_hw == HT_RAM) {
+            //return cpu_bankbase[HT_RAM][address];
+            return cpu_bankbase[HT_RAM].read(address);
+        }
+
+        /* second-level lookup */
+        if (u8_hw >= MH_HARDMAX) {
+            u8_hw -= MH_HARDMAX;
+            u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_20) & MHMASK(ABITS2_20))];
+
+            /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+            if (u8_hw == HT_RAM) {
+                return cpu_bankbase[HT_RAM].read(address);
+            }
+        }
+
+        /* fall back to handler */
+        return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+    }
+
     public static int cpu_readmem21(int address) {
         char u8_hw;
 
@@ -1428,6 +1457,35 @@ public class memory {
         (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
     }
 
+    public static void cpu_writemem20(int address, int data) {
+        char u8_hw;
+
+        /* first-level lookup */
+        u8_hw = u8_cur_mwhard[/*(UINT32)*/address >>> (ABITS2_20 + ABITS_MIN_20)];
+
+        /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+        if (u8_hw == HT_RAM) {
+            cpu_bankbase[HT_RAM].write(address, data);
+            return;
+        }
+        /* second-level lookup */
+        if (u8_hw >= MH_HARDMAX) {
+            u8_hw -= MH_HARDMAX;
+            u8_hw = u8_writehardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_20) & MHMASK(ABITS2_20))];
+
+            /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+            if (u8_hw == HT_RAM) {
+                cpu_bankbase[HT_RAM].write(address, data);
+                return;
+            }
+        }
+
+        /* fall back to handler */
+        (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
+    }
+
     public static void cpu_writemem21(int address, int data) {
         char u8_hw;
 
@@ -1566,8 +1624,8 @@ public class memory {
                     cpu_getactivecpu(), cpu_get_pc());
         }
     };
-    
-        public static setopbase cpu_setOPbase20 = new setopbase() {
+
+    public static setopbase cpu_setOPbase20 = new setopbase() {
         public void handler(int pc) {
             char u8_hw;
 
@@ -1600,7 +1658,7 @@ public class memory {
 
         }
     };
-        
+
     public static setopbase cpu_setOPbase21 = new setopbase() {
         public void handler(int pc) {
             char u8_hw;
@@ -1816,6 +1874,7 @@ public class memory {
     public static UBytePtr install_mem_read_handler(int cpu, int start, int end, int handler) {
         return install_mem_read_handler(cpu, start, end, null, handler);
     }
+
     public static UBytePtr install_mem_read_handler(int cpu, int start, int end, ReadHandlerPtr _handler, int handler) {
         char u8_hardware = 0;
         int abitsmin;

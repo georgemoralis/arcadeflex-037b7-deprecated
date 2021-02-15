@@ -5,7 +5,12 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.i86;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_readmem20;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_readport;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writemem20;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writeport;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
+import static gr.codebb.arcadeflex.common.libc.expressions.BOOL;
 
 public class I86H {
 
@@ -26,23 +31,41 @@ public class I86H {
         I.DirVal = (x != 0) ? -1 : 1;
     }
 
-    /*TODO*///
-/*TODO*///#define SetOFW_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x8000)
-/*TODO*///#define SetOFB_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x80)
+    public static void SetOFW_Add(int x, int y, int z) {
+        I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x8000;
+    }
+
+    /*TODO*///#define SetOFB_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x80)
 /*TODO*///#define SetOFW_Sub(x,y,z)	(I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x8000)
 /*TODO*///#define SetOFB_Sub(x,y,z)	(I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x80)
 /*TODO*///
 /*TODO*///#define SetCFB(x)			(I.CarryVal = (x) & 0x100)
-/*TODO*///#define SetCFW(x)			(I.CarryVal = (x) & 0x10000)
-/*TODO*///#define SetAF(x,y,z)		(I.AuxVal = ((x) ^ ((y) ^ (z))) & 0x10)
-/*TODO*///#define SetSF(x)			(I.SignVal = (x))
+    public static void SetCFW(int x) {
+        I.CarryVal = (x) & 0x10000;
+    }
+
+    public static void SetAF(int x, int y, int z) {
+        I.AuxVal = ((x) ^ ((y) ^ (z))) & 0x10;
+    }
+
+    /*TODO*///#define SetSF(x)			(I.SignVal = (x))
 /*TODO*///#define SetZF(x)			(I.ZeroVal = (x))
 /*TODO*///#define SetPF(x)			(I.ParityVal = (x))
 /*TODO*///
-/*TODO*///#define SetSZPF_Byte(x) 	(I.ParityVal = I.SignVal = I.ZeroVal = (INT8)(x))
-/*TODO*///#define SetSZPF_Word(x) 	(I.ParityVal = I.SignVal = I.ZeroVal = (INT16)(x))
-/*TODO*///
-/*TODO*///#define ADDB(dst,src) { unsigned res=dst+src; SetCFB(res); SetOFB_Add(res,src,dst); SetAF(res,src,dst); SetSZPF_Byte(res); dst=(BYTE)res; }
+    public static void SetSZPF_Byte(int x) {
+        I.SignVal = (byte) (x);
+        I.ZeroVal = (byte) (x);
+        I.ParityVal = (byte) (x);
+
+    }
+
+    public static void SetSZPF_Word(int x) {
+        I.SignVal = (short) (x);
+        I.ZeroVal = (short) (x);
+        I.ParityVal = (short) (x);
+    }
+
+    /*TODO*///#define ADDB(dst,src) { unsigned res=dst+src; SetCFB(res); SetOFB_Add(res,src,dst); SetAF(res,src,dst); SetSZPF_Byte(res); dst=(BYTE)res; }
 /*TODO*///#define ADDW(dst,src) { unsigned res=dst+src; SetCFW(res); SetOFW_Add(res,src,dst); SetAF(res,src,dst); SetSZPF_Word(res); dst=(WORD)res; }
 /*TODO*///
 /*TODO*///#define SUBB(dst,src) { unsigned res=dst-src; SetCFB(res); SetOFB_Sub(res,src,dst); SetAF(res,src,dst); SetSZPF_Byte(res); dst=(BYTE)res; }
@@ -57,36 +80,73 @@ public class I86H {
 /*TODO*///#define XORB(dst,src) 		dst ^= src; I.CarryVal = I.OverVal = I.AuxVal = 0; SetSZPF_Byte(dst)
 /*TODO*///#define XORW(dst,src) 		dst ^= src; I.CarryVal = I.OverVal = I.AuxVal = 0; SetSZPF_Word(dst)
 /*TODO*///
-/*TODO*///#define CF					(I.CarryVal != 0)
-/*TODO*///#define SF					(I.SignVal < 0)
-/*TODO*///#define ZF					(I.ZeroVal == 0)
-/*TODO*///#define PF					parity_table[I.ParityVal]
-/*TODO*///#define AF					(I.AuxVal != 0)
-/*TODO*///#define OF					(I.OverVal != 0)
-/*TODO*///#define DF					(I.DirVal < 0)
-/*TODO*///
-/*TODO*////************************************************************************/
-/*TODO*///
+    static final int CF() {
+        return BOOL(I.CarryVal != 0);
+    }
+
+    static final int SF() {
+        return BOOL(I.SignVal < 0);
+    }
+
+    static final int ZF() {
+        return BOOL(I.ZeroVal == 0);
+    }
+
+    static final int PF() {
+        return BOOL(parity_table[(I.ParityVal & 0xFF)]);
+    }
+
+    static final int AF() {
+        return BOOL(I.AuxVal != 0);
+    }
+
+    static final int OF() {
+        return BOOL(I.OverVal != 0);
+    }
+
+    static final int DF() {
+        return BOOL(I.DirVal < 0);
+    }
+
+    /**
+     * *********************************************************************
+     */
     static final int SegBase(int Seg) {
         return I.sregs[Seg] << 4;
     }
 
-    /*TODO*///#define DefaultBase(Seg) 		((seg_prefix && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg])
-/*TODO*///
-/*TODO*///#define GetMemB(Seg,Off)		(cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK))
+    static final int DefaultBase(int Seg) {
+        return ((seg_prefix != 0 && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg]);
+    }
+
+    /*TODO*///#define GetMemB(Seg,Off)		(cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK))
 /*TODO*///#define GetMemW(Seg,Off)		((WORD)GetMemB(Seg, Off) + (WORD)(GetMemB(Seg, (Off) + 1) << 8))
 /*TODO*///#define PutMemB(Seg,Off,x)		cpu_writemem20((DefaultBase(Seg) + (Off)) & AMASK, (x))
 /*TODO*///#define PutMemW(Seg,Off,x)		{ PutMemB(Seg, Off, (x) & 0xff); PutMemB(Seg, (Off) + 1, ((x) >> 8) & 0xff); }
 /*TODO*///
 /*TODO*///#define PEEKBYTE(ea) 			(cpu_readmem20((ea) & AMASK))
-/*TODO*///#define ReadByte(ea) 			(cpu_readmem20((ea) & AMASK))
-/*TODO*///#define ReadWord(ea)			(cpu_readmem20((ea) & AMASK) + (cpu_readmem20(((ea) + 1) & AMASK) << 8))
-/*TODO*///#define WriteByte(ea,val)		cpu_writemem20((ea) & AMASK, val);
-/*TODO*///#define WriteWord(ea,val)		{ cpu_writemem20((ea) & AMASK, (val) & 0xff); cpu_writemem20(((ea) + 1) & AMASK, ((val) >> 8) & 0xff); }
-/*TODO*///
-/*TODO*///#define read_port(port) 		cpu_readport(port)
-/*TODO*///#define write_port(port,val) 	cpu_writeport(port,val)
-/*TODO*///
+    public static int ReadByte(int ea) {
+        return cpu_readmem20((ea) & AMASK);
+    }
+
+    public static int ReadWord(int ea) {
+        return (cpu_readmem20((ea) & AMASK) + (cpu_readmem20(((ea) + 1) & AMASK) << 8));
+    }
+
+    /*TODO*///#define WriteByte(ea,val)		cpu_writemem20((ea) & AMASK, val);
+    public static void WriteWord(int ea, int val) {
+        cpu_writemem20((ea) & AMASK, (val) & 0xff);
+        cpu_writemem20(((ea) + 1) & AMASK, ((val) >> 8) & 0xff);
+    }
+
+    public static int read_port(int port) {
+        return cpu_readport(port);
+    }
+
+    public static void write_port(int port, int val) {
+        cpu_writeport(port, val);
+    }
+
     public static final int FETCH() {
         int i = cpu_readop_arg(I.pc);
         I.pc = (I.pc + 1);
