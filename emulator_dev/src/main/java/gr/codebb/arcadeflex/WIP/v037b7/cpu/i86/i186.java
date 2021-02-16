@@ -145,8 +145,10 @@ public class i186 extends i86 {
 /*TODO*///	case 0x30:    PREFIX86(_xor_br8)(); break;
 /*TODO*///	case 0x31:    PREFIX86(_xor_wr16)(); break;
 /*TODO*///	case 0x32:    PREFIX86(_xor_r8b)(); break;
-/*TODO*///	case 0x33:    PREFIX86(_xor_r16w)(); break;
-/*TODO*///	case 0x34:    PREFIX86(_xor_ald8)(); break;
+            case 0x33:
+                i86_xor_r16w.handler();
+                break;
+            /*TODO*///	case 0x34:    PREFIX86(_xor_ald8)(); break;
 /*TODO*///	case 0x35:    PREFIX86(_xor_axd16)(); break;
 /*TODO*///	case 0x36:    PREFIX86(_ss)(); break;
 /*TODO*///	case 0x37:    PREFIX86(_aaa)(); break;
@@ -297,16 +299,20 @@ public class i186 extends i86 {
             case 0xb8:
                 i86_mov_axd16.handler();
                 break;
-            /*TODO*///	case 0xb9:    PREFIX86(_mov_cxd16)(); break;
-/*TODO*///	case 0xba:    PREFIX86(_mov_dxd16)(); break;
+            case 0xb9:
+                i86_mov_cxd16.handler();
+                break;
+            /*TODO*///	case 0xba:    PREFIX86(_mov_dxd16)(); break;
 /*TODO*///	case 0xbb:    PREFIX86(_mov_bxd16)(); break;
 /*TODO*///	case 0xbc:    PREFIX86(_mov_spd16)(); break;
 /*TODO*///	case 0xbd:    PREFIX86(_mov_bpd16)(); break;
             case 0xbe:
                 i86_mov_sid16.handler();
                 break;
-            /*TODO*///	case 0xbf:    PREFIX86(_mov_did16)(); break;
-/*TODO*///		  case 0xc0:    PREFIX186(_rotshft_bd8)(); break;
+            case 0xbf:
+                i86_mov_did16.handler();
+                break;
+            /*TODO*///		  case 0xc0:    PREFIX186(_rotshft_bd8)(); break;
 /*TODO*///		  case 0xc1:    PREFIX186(_rotshft_wd8)(); break;
 /*TODO*///	case 0xc2:    PREFIX86(_ret_d16)(); break;
 /*TODO*///	case 0xc3:    PREFIX86(_ret)(); break;
@@ -353,8 +359,10 @@ public class i186 extends i86 {
             case 0xea:
                 i86_jmp_far.handler();
                 break;
-            /*TODO*///	case 0xeb:    PREFIX86(_jmp_d8)(); break;
-/*TODO*///	case 0xec:    PREFIX86(_inaldx)(); break;
+            case 0xeb:
+                i86_jmp_d8.handler();
+                break;
+            /*TODO*///	case 0xec:    PREFIX86(_inaldx)(); break;
 /*TODO*///	case 0xed:    PREFIX86(_inaxdx)(); break;
 /*TODO*///	case 0xee:    PREFIX86(_outdxal)(); break;
             case 0xef:

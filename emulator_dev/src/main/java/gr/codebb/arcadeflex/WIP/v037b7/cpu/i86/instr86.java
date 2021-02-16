@@ -1051,14 +1051,21 @@ public class instr86 {
 /*TODO*///    RegByte(ModRM)=dst;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_xor_r16w)(void)    /* Opcode 0x33 */
-/*TODO*///{
-/*TODO*///    DEF_r16w(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
-/*TODO*///    XORW(dst,src);
-/*TODO*///	RegWord(ModRM)=dst;
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_xor_r16w = new InstructionPtr() /* Opcode 0x33 */ {
+        public void handler() {
+            //DEF_r16w(dst, src);          
+            int /*unsigned*/ ModRM = FETCHOP();
+            int /*unsigned*/ dst = RegWord(ModRM);
+            int /*unsigned*/ src = GetRMWord(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
+            //XORW(dst, src);
+            dst ^= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Word(dst);
+            SetRegWord(ModRM, dst);//RegWord(ModRM) = dst;
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_xor_ald8)(void)    /* Opcode 0x34 */
 /*TODO*///{
 /*TODO*///	DEF_ald8(dst,src);
@@ -2266,15 +2273,15 @@ public class instr86 {
             i86_ICount[0] -= cycles.mov_ri16;
         }
     };
+    static InstructionPtr i86_mov_cxd16 = new InstructionPtr() /* Opcode 0xb9 */ {
+        public void handler() {
 
+            I.regs.SetB(CL, FETCH());
+            I.regs.SetB(CH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
     /*TODO*///
-/*TODO*///static void PREFIX86(_mov_cxd16)(void)    /* Opcode 0xb9 */
-/*TODO*///{
-/*TODO*///	I.regs.b[CL] = FETCH;
-/*TODO*///	I.regs.b[CH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
 /*TODO*///static void PREFIX86(_mov_dxd16)(void)    /* Opcode 0xba */
 /*TODO*///{
 /*TODO*///	I.regs.b[DL] = FETCH;
@@ -2311,14 +2318,14 @@ public class instr86 {
         }
     };
 
+    static InstructionPtr i86_mov_did16 = new InstructionPtr() /* Opcode 0xbf */ {
+        public void handler() {
+            I.regs.SetB(DIL, FETCH());
+            I.regs.SetB(DIH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
     /*TODO*///
-/*TODO*///static void PREFIX86(_mov_did16)(void)    /* Opcode 0xbf */
-/*TODO*///{
-/*TODO*///	I.regs.b[DIL] = FETCH;
-/*TODO*///	I.regs.b[DIH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
 /*TODO*///static void PREFIX86(_ret_d16)(void)    /* Opcode 0xc2 */
 /*TODO*///{
 /*TODO*///	unsigned count = FETCH;
@@ -2720,16 +2727,16 @@ public class instr86 {
         }
     };
 
+    static InstructionPtr i86_jmp_d8 = new InstructionPtr() {
+        public void handler() {
+            int tmp = (int) ((byte) FETCH());
+            I.pc += tmp;
+            /* ASG - can probably assume this is safe
+	CHANGE_PC(I.pc);*/
+            i86_ICount[0] -= cycles.jmp_short;
+        }
+    };
     /*TODO*///
-/*TODO*///static void PREFIX86(_jmp_d8)(void)    /* Opcode 0xeb */
-/*TODO*///{
-/*TODO*///	int tmp = (int)((INT8)FETCH);
-/*TODO*///	I.pc += tmp;
-/*TODO*////* ASG - can probably assume this is safe
-/*TODO*///	CHANGE_PC(I.pc);*/
-/*TODO*///	i86_ICount[0] -= cycles.jmp_short;
-/*TODO*///}
-/*TODO*///
 /*TODO*///static void PREFIX86(_inaldx)(void)    /* Opcode 0xec */
 /*TODO*///{
 /*TODO*///	i86_ICount[0] -= cycles.in_dx8;
