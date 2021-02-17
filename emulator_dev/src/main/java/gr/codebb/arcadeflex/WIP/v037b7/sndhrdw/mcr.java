@@ -51,8 +51,8 @@ public class mcr {
 
     /*TODO*///	
 /*TODO*///	/* Chip Squeak Deluxe-specific globals */
-/*TODO*///	static UINT8 csdeluxe_sound_cpu;
-/*TODO*///	static UINT8 csdeluxe_dac_index;
+    static int/*UINT8*/ u8_csdeluxe_sound_cpu;
+    static int/*UINT8*/ u8_csdeluxe_dac_index;
 /*TODO*///	extern struct pia6821_interface csdeluxe_pia_intf;
 /*TODO*///	
 /*TODO*///	/* Turbo Chip Squeak-specific globals */
@@ -107,15 +107,15 @@ public class mcr {
         /*TODO*///            pia_reset();
         /*TODO*///        }
         /*TODO*///	
-/*TODO*///		/* Chip Squeak Deluxe */
-/*TODO*///		if ((mcr_sound_config & MCR_CHIP_SQUEAK_DELUXE) != 0)
-/*TODO*///		{
-/*TODO*///			pia_config(0, PIA_ALTERNATE_ORDERING | PIA_16BIT_AUTO, &csdeluxe_pia_intf);
-/*TODO*///			csdeluxe_dac_index = dac_index++;
-/*TODO*///			csdeluxe_sound_cpu = sound_cpu++;
-/*TODO*///			csdeluxe_reset_w(1);
-/*TODO*///			csdeluxe_reset_w(0);
-/*TODO*///		}
+		/* Chip Squeak Deluxe */
+		if ((mcr_sound_config & MCR_CHIP_SQUEAK_DELUXE) != 0)
+		{
+			pia_config(0, PIA_ALTERNATE_ORDERING | PIA_16BIT_AUTO, csdeluxe_pia_intf);
+			u8_csdeluxe_dac_index = dac_index++;
+			u8_csdeluxe_sound_cpu = sound_cpu++;
+			csdeluxe_reset_w(1);
+			csdeluxe_reset_w(0);
+		}
 /*TODO*///	
 /*TODO*///		/* Sounds Good */
 /*TODO*///		if ((mcr_sound_config & MCR_SOUNDS_GOOD) != 0)
@@ -299,42 +299,46 @@ public class mcr {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	/********* internal interfaces ***********/
-/*TODO*///	public static WriteHandlerPtr csdeluxe_porta_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		dacval = (dacval & ~0x3fc) | (data << 2);
-/*TODO*///		DAC_signed_data_16_w(csdeluxe_dac_index, dacval << 6);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr csdeluxe_portb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		dacval = (dacval & ~0x003) | (data >> 6);
-/*TODO*///		DAC_signed_data_16_w(csdeluxe_dac_index, dacval << 6);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static void csdeluxe_irq(int state)
-/*TODO*///	{
-/*TODO*///	  	cpu_set_irq_line(csdeluxe_sound_cpu, 4, state ? ASSERT_LINE : CLEAR_LINE);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void csdeluxe_delayed_data_w(int param)
-/*TODO*///	{
-/*TODO*///		pia_0_portb_w(0, param & 0x0f);
-/*TODO*///		pia_0_ca1_w(0, ~param & 0x10);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* external interfaces ***********/
-/*TODO*///	public static WriteHandlerPtr csdeluxe_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		timer_set(TIME_NOW, data, csdeluxe_delayed_data_w);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	void csdeluxe_reset_w(int state)
-/*TODO*///	{
-/*TODO*///		cpu_set_reset_line(csdeluxe_sound_cpu, state ? ASSERT_LINE : CLEAR_LINE);
-/*TODO*///	}
-/*TODO*///	
+	/********* internal interfaces ***********/
+	public static WriteHandlerPtr csdeluxe_porta_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		dacval = (char) ((dacval & ~0x3fc) | (data << 2));
+		DAC_signed_data_16_w.handler(u8_csdeluxe_dac_index, dacval << 6);
+	} };
+	
+	public static WriteHandlerPtr csdeluxe_portb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		dacval = (char) ((dacval & ~0x003) | (data >> 6));
+		DAC_signed_data_16_w.handler(u8_csdeluxe_dac_index, dacval << 6);
+	} };
+	
+	static irqfuncPtr csdeluxe_irq = new irqfuncPtr() {
+            @Override
+            public void handler(int state) {
+                cpu_set_irq_line(u8_csdeluxe_sound_cpu, 4, state!=0 ? ASSERT_LINE : CLEAR_LINE);
+            }
+        };
+        	
+	static timer_callback csdeluxe_delayed_data_w = new timer_callback() {
+            @Override
+            public void handler(int param) {
+                pia_0_portb_w.handler(0, param & 0x0f);
+		pia_0_ca1_w.handler(0, ~param & 0x10);
+            }
+        };
+        
+	
+	/********* external interfaces ***********/
+	public static WriteHandlerPtr csdeluxe_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		timer_set(TIME_NOW, data, csdeluxe_delayed_data_w);
+	} };
+	
+	static void csdeluxe_reset_w(int state)
+	{
+		cpu_set_reset_line(u8_csdeluxe_sound_cpu, state!=0 ? ASSERT_LINE : CLEAR_LINE);
+	}
+	
 
     /**
      * ******* sound interfaces **********
@@ -368,16 +372,16 @@ public class mcr {
 /*TODO*///		new MemoryWriteAddress( -1 )	/* end of table */
 /*TODO*///	};
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* PIA interfaces ***********/
-/*TODO*///	struct pia6821_interface csdeluxe_pia_intf =
-/*TODO*///	{
-/*TODO*///		/*inputs : A/B,CA/B1,CA/B2 */ 0, 0, 0, 0, 0, 0,
-/*TODO*///		/*outputs: A/B,CA/B2       */ csdeluxe_porta_w, csdeluxe_portb_w, 0, 0,
-/*TODO*///		/*irqs   : A/B             */ csdeluxe_irq, csdeluxe_irq
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
+	
+	/********* PIA interfaces ***********/
+	static pia6821_interface csdeluxe_pia_intf = new pia6821_interface
+	(
+		/*inputs : A/B,CA/B1,CA/B2 */ null, null, null, null, null, null,
+		/*outputs: A/B,CA/B2       */ csdeluxe_porta_w, csdeluxe_portb_w, null, null,
+		/*irqs   : A/B             */ csdeluxe_irq, csdeluxe_irq
+	);
+	
+	
 /*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
@@ -406,19 +410,21 @@ public class mcr {
 /*TODO*///	  	cpu_set_irq_line(soundsgood_sound_cpu, 4, state ? ASSERT_LINE : CLEAR_LINE);
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	static void soundsgood_delayed_data_w(int param)
-/*TODO*///	{
-/*TODO*///		pia_1_portb_w(0, (param >> 1) & 0x0f);
-/*TODO*///		pia_1_ca1_w(0, ~param & 0x01);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* external interfaces ***********/
-/*TODO*///	public static WriteHandlerPtr soundsgood_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		timer_set(TIME_NOW, data, soundsgood_delayed_data_w);
-/*TODO*///	} };
-/*TODO*///	
+	static timer_callback soundsgood_delayed_data_w = new timer_callback() {
+            @Override
+            public void handler(int param) {
+                pia_1_portb_w.handler(0, (param >> 1) & 0x0f);
+		pia_1_ca1_w.handler(0, ~param & 0x01);
+            }
+        };
+        
+	
+	/********* external interfaces ***********/
+	public static WriteHandlerPtr soundsgood_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		timer_set(TIME_NOW, data, soundsgood_delayed_data_w);
+	} };
+	
 /*TODO*///	public static ReadHandlerPtr soundsgood_status_r  = new ReadHandlerPtr() { public int handler(int offset)
 /*TODO*///	{
 /*TODO*///		return soundsgood_status;
@@ -436,26 +442,26 @@ public class mcr {
 /*TODO*///		2,
 /*TODO*///		new int[] { 80, 80 }
 /*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* memory interfaces ***********/
-/*TODO*///	static MemoryReadAddress soundsgood_readmem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryReadAddress( 0x000000, 0x03ffff, MRA_ROM ),
-/*TODO*///		new MemoryReadAddress( 0x060000, 0x060007, pia_1_r ),
-/*TODO*///		new MemoryReadAddress( 0x070000, 0x070fff, MRA_BANK1 ),
-/*TODO*///		new MemoryReadAddress( -1 )	/* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static MemoryWriteAddress soundsgood_writemem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryWriteAddress( 0x000000, 0x03ffff, MWA_ROM ),
-/*TODO*///		new MemoryWriteAddress( 0x060000, 0x060007, pia_1_w ),
-/*TODO*///		new MemoryWriteAddress( 0x070000, 0x070fff, MWA_BANK1 ),
-/*TODO*///		new MemoryWriteAddress( -1 )	/* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
+	
+	
+	/********* memory interfaces ***********/
+	static MemoryReadAddress soundsgood_readmem[] =
+	{
+		new MemoryReadAddress( 0x000000, 0x03ffff, MRA_ROM ),
+		new MemoryReadAddress( 0x060000, 0x060007, pia_1_r ),
+		new MemoryReadAddress( 0x070000, 0x070fff, MRA_BANK1 ),
+		new MemoryReadAddress( -1 )	/* end of table */
+	};
+	
+	static MemoryWriteAddress soundsgood_writemem[] =
+	{
+		new MemoryWriteAddress( 0x000000, 0x03ffff, MWA_ROM ),
+		new MemoryWriteAddress( 0x060000, 0x060007, pia_1_w ),
+		new MemoryWriteAddress( 0x070000, 0x070fff, MWA_BANK1 ),
+		new MemoryWriteAddress( -1 )	/* end of table */
+	};
+	
+	
 /*TODO*///	/********* PIA interfaces ***********/
 /*TODO*///	/* Note: we map this board to PIA #1. It is only used in Spy Hunter and Spy Hunter 2 */
 /*TODO*///	/* For Spy Hunter 2, we also have a Turbo Chip Squeak in PIA slot 0, so we don't want */
@@ -608,20 +614,22 @@ public class mcr {
 /*TODO*///	{
 /*TODO*///		cpu_set_irq_line(squawkntalk_sound_cpu, M6808_IRQ_LINE, state ? ASSERT_LINE : CLEAR_LINE);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void squawkntalk_delayed_data_w(int param)
-/*TODO*///	{
-/*TODO*///		pia_0_porta_w(0, ~param & 0x0f);
-/*TODO*///		pia_0_cb1_w(0, ~param & 0x10);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* external interfaces ***********/
-/*TODO*///	public static WriteHandlerPtr squawkntalk_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		timer_set(TIME_NOW, data, squawkntalk_delayed_data_w);
-/*TODO*///	} };
-/*TODO*///	
+	
+	static timer_callback squawkntalk_delayed_data_w = new timer_callback() {
+            @Override
+            public void handler(int param) {
+                pia_0_porta_w.handler(0, ~param & 0x0f);
+		pia_0_cb1_w.handler(0, ~param & 0x10);
+            }
+        };
+	
+	
+	/********* external interfaces ***********/
+	public static WriteHandlerPtr squawkntalk_data_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		timer_set(TIME_NOW, data, squawkntalk_delayed_data_w);
+	} };
+	
 /*TODO*///	void squawkntalk_reset_w(int state)
 /*TODO*///	{
 /*TODO*///		cpu_set_reset_line(squawkntalk_sound_cpu, state ? ASSERT_LINE : CLEAR_LINE);

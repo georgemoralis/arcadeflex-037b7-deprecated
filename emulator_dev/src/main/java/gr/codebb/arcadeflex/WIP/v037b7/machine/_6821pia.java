@@ -145,6 +145,11 @@ public class _6821pia {
      * ***************** static variables ******************
      */
     static pia6821 pia[] = new pia6821[MAX_PIA];
+    
+    static {
+        for (int _i=0 ; _i<MAX_PIA ; _i++)
+            pia[_i] = new pia6821();
+    }
 
     static int swizzle_address[] = {0, 2, 1, 3};
 

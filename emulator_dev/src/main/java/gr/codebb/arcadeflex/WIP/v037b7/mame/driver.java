@@ -895,23 +895,17 @@ public class driver {
         driver_sutapper,
         driver_rbtapper,
         driver_timber, /* (c) 1984 */
-        /*TODO*/
-        // driver_dotron,	/* (c) 1983 */
-        /*TODO*/
-        // driver_dotrone,	/* (c) 1983 */
+        driver_dotron,	/* (c) 1983 */
+        driver_dotrone,	/* (c) 1983 */
         driver_destderb,
         driver_destderm,
         driver_sarge,
-        // driver_rampage,	/* (c) 1986 */
-        /*TODO*/
-        // driver_rampage2,	/* (c) 1986 */
-        /*TODO*/
-        // driver_powerdrv,	/* (c) 1986 */
+        driver_rampage,	/* (c) 1986 */
+        driver_rampage2,	/* (c) 1986 */
+        driver_powerdrv,	/* (c) 1986 */
         driver_maxrpm,
-        /*TODO*/
-        // driver_spyhunt,	/* (c) 1983 */
-        /*TODO*/
-        // driver_turbotag,	/* (c) 1985 */
+        driver_spyhunt,	/* (c) 1983 */
+        driver_turbotag,	/* (c) 1985 */
         driver_crater,
         /* MCR 68000 */
         /*TODO*/

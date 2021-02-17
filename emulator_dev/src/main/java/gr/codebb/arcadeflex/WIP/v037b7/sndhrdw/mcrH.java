@@ -62,14 +62,13 @@ public class mcrH {
 /*TODO*////************ Sounds Good CPU and sound definitions ***************/
 /*TODO*///
 /*TODO*///
-/*TODO*///#define SOUND_CPU_SOUNDS_GOOD						\
-/*TODO*///	{												\
-/*TODO*///		CPU_M68000 | CPU_AUDIO_CPU,					\
-/*TODO*///		16000000/2,	/* 8.0 MHz */					\
-/*TODO*///		soundsgood_readmem,soundsgood_writemem,0,0,	\
-/*TODO*///		ignore_interrupt,1							\
-/*TODO*///	}
-/*TODO*///
+    public static MachineCPU SOUND_CPU_SOUNDS_GOOD = new MachineCPU(
+        CPU_M68000 | CPU_AUDIO_CPU,
+        16000000/2,
+        soundsgood_readmem,soundsgood_writemem,null,null,
+        ignore_interrupt,1
+    );
+
 /*TODO*///#define SOUND_SOUNDS_GOOD SOUND_CHIP_SQUEAK_DELUXE
 /*TODO*///
 /*TODO*///
