@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186.i86_set_irq_callback;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_CPU3;
 import gr.codebb.arcadeflex.common.PtrLib.ShortPtr;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
@@ -14,6 +15,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import gr.codebb.arcadeflex.old.sound.streams.StreamInitPtr;
 import static gr.codebb.arcadeflex.old.sound.streams.stream_init;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.install_mem_read_handler;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.install_mem_write_handler;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.install_port_read_handler;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.install_port_write_handler;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.IOReadPort;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.IOWritePort;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_BANK6;
@@ -28,13 +33,19 @@ import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryReadAddress;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MemoryWriteAddress;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.cpu_setbank;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.sound_reset;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound._2151intf.YM2151_data_port_0_w;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound._2151intf.YM2151_register_port_0_w;
+import static gr.codebb.arcadeflex.WIP.v037b7.sound._2151intf.YM2151_status_port_0_r;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
+import static gr.codebb.arcadeflex.old.sound.streams.stream_update;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ReadHandlerPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ShStartPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ShStopPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.WriteHandlerPtr;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.MAX_SOUND;
 import gr.codebb.arcadeflex.v037b7.mame.sndintrfH.MachineSound;
+import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.SOUND_YM2151;
 import static gr.codebb.arcadeflex.v056.mame.timer.*;
 import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 
@@ -139,38 +150,34 @@ public class leland {
         dac_bufin[dacnum] = bufin;
     }
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	2nd-4th generation sound
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	#define LOG_INTERRUPTS		0
-/*TODO*///	#define LOG_DMA				0
-/*TODO*///	#define LOG_SHORTAGES		0
-/*TODO*///	#define LOG_TIMER			0
-/*TODO*///	#define LOG_COMM			0
-/*TODO*///	#define LOG_PORTS			0
-/*TODO*///	#define LOG_DAC				0
-/*TODO*///	#define LOG_EXTERN			0
-/*TODO*///	#define LOG_PIT				0
-/*TODO*///	#define LOG_OPTIMIZATION	0
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* according to the Intel manual, external interrupts are not latched */
-/*TODO*///	/* however, I cannot get this system to work without latching them */
+    /**
+     * ***********************************
+     *
+     * 2nd-4th generation sound
+     *
+     ************************************
+     */
+    public static final int LOG_INTERRUPTS = 0;
+    public static final int LOG_DMA = 0;
+    public static final int LOG_SHORTAGES = 0;
+    public static final int LOG_TIMER = 0;
+    public static final int LOG_COMM = 0;
+    public static final int LOG_PORTS = 0;
+    public static final int LOG_DAC = 0;
+    public static final int LOG_EXTERN = 0;
+    public static final int LOG_PIT = 0;
+    public static final int LOG_OPTIMIZATION = 0;
+
+    /* according to the Intel manual, external interrupts are not latched */
+ /* however, I cannot get this system to work without latching them */
     public static final int LATCH_INTS = 1;
-    /*TODO*///	
-/*TODO*///	#define DAC_VOLUME_SCALE	4
+    public static final int DAC_VOLUME_SCALE = 4;
     public static final int CPU_RESUME_TRIGGER = 7123;
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	static int dma_stream;
-/*TODO*///	static int nondma_stream;
-/*TODO*///	static int extern_stream;
-/*TODO*///	
+
+    static int dma_stream;
+    static int nondma_stream;
+    static int extern_stream;
+
     static UBytePtr ram_base = new UBytePtr();
     static int/*UINT8*/ has_ym2151;
     static int/*UINT8*/ is_redline;
@@ -258,44 +265,56 @@ public class leland {
         mem_state mem = new mem_state();
     };
     static i186state i186_state;
+
+    static class dac_state {
+
+        short value;
+        short volume;
+        int/*UINT32*/ frequency;
+        int/*UINT32*/ step;
+        int/*UINT32*/ fraction;
+
+        short[] buffer = new short[DAC_BUFFER_SIZE];
+        int/*UINT32*/ bufin;
+        int/*UINT32*/ bufout;
+        int/*UINT32*/ buftarget;
+
+        public static dac_state[] create(int n) {
+            dac_state[] a = new dac_state[n];
+            for (int k = 0; k < n; k++) {
+                a[k] = new dac_state();
+            }
+            return a;
+        }
+    }
+    static dac_state[] dac = dac_state.create(8);
+
+    static class counter_state {
+
+        Object timer;
+        int count;
+        int/*UINT8*/ u8_mode;
+        int/*UINT8*/ u8_readbyte;
+        int/*UINT8*/ u8_writebyte;
+
+        public static counter_state[] create(int n) {
+            counter_state[] a = new counter_state[n];
+            for (int k = 0; k < n; k++) {
+                a[k] = new counter_state();
+            }
+            return a;
+        }
+    }
+    static counter_state[] counter = counter_state.create(9);
+
+    /**
+     * ***********************************
+     *
+     * Manual DAC sound generation
+     *
+     ************************************
+     */
     /*TODO*///	
-/*TODO*///	
-/*TODO*///	#define DAC_BUFFER_SIZE			1024
-/*TODO*///	#define DAC_BUFFER_SIZE_MASK	(DAC_BUFFER_SIZE - 1)
-/*TODO*///	static struct dac_state
-/*TODO*///	{
-/*TODO*///		INT16	value;
-/*TODO*///		INT16	volume;
-/*TODO*///		UINT32	frequency;
-/*TODO*///		UINT32	step;
-/*TODO*///		UINT32	fraction;
-/*TODO*///	
-/*TODO*///		INT16	buffer[DAC_BUFFER_SIZE];
-/*TODO*///		UINT32	bufin;
-/*TODO*///		UINT32	bufout;
-/*TODO*///		UINT32	buftarget;
-/*TODO*///	} dac[8];
-/*TODO*///	
-/*TODO*///	static struct counter_state
-/*TODO*///	{
-/*TODO*///		void *timer;
-/*TODO*///		INT32 count;
-/*TODO*///		UINT8 mode;
-/*TODO*///		UINT8 readbyte;
-/*TODO*///		UINT8 writebyte;
-/*TODO*///	} counter[9];
-/*TODO*///	
-/*TODO*///	static void set_dac_frequency(int which, int frequency);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Manual DAC sound generation
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
 /*TODO*///	static void leland_i186_dac_update(int param, INT16 *buffer, int length)
 /*TODO*///	{
 /*TODO*///		int i, j, start, stop;
@@ -493,30 +512,32 @@ public class leland {
     public static ShStartPtr leland_i186_sh_start = new ShStartPtr() {
         public int handler(MachineSound msound) {
             int i;
+
+            /* bail if nothing to play */
+            if (Machine.sample_rate == 0) {
+                return 0;
+            }
+
+            /* determine which sound hardware is installed */
+            has_ym2151 = 0;
+            for (i = 0; i < MAX_SOUND; i++) {
+                if (Machine.drv.sound[i].sound_type == SOUND_YM2151) {
+                    has_ym2151 = 1;
+                }
+            }
             /*TODO*///	
-/*TODO*///		/* bail if nothing to play */
-/*TODO*///		if (Machine.sample_rate == 0)
-/*TODO*///			return 0;
-/*TODO*///	
-/*TODO*///		/* determine which sound hardware is installed */
-/*TODO*///		has_ym2151 = 0;
-/*TODO*///		for (i = 0; i < MAX_SOUND; i++)
-/*TODO*///			if (Machine.drv.sound[i].sound_type == SOUND_YM2151)
-/*TODO*///				has_ym2151 = 1;
-/*TODO*///	
 /*TODO*///		/* allocate separate streams for the DMA and non-DMA DACs */
 /*TODO*///		dma_stream = stream_init("80186 DMA-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dma_update);
 /*TODO*///		nondma_stream = stream_init("80186 manually-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dac_update);
 /*TODO*///	
-/*TODO*///		/* if we have a 2151, install an externally driven DAC stream */
-/*TODO*///		if (has_ym2151 != 0)
-/*TODO*///		{
-/*TODO*///			ext_base = memory_region(REGION_SOUND1);
+            /* if we have a 2151, install an externally driven DAC stream */
+            if (has_ym2151 != 0) {
+                /*TODO*///			ext_base = memory_region(REGION_SOUND1);
 /*TODO*///			extern_stream = stream_init("80186 externally-driven DACs", 100, Machine.sample_rate, 0, leland_i186_extern_update);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* by default, we're not redline racer */
-/*TODO*///		is_redline = 0;
+            }
+
+            /* by default, we're not redline racer */
+            is_redline = 0;
             return 0;
         }
     };
@@ -610,9 +631,10 @@ public class leland {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	static int int_callback(int line)
-/*TODO*///	{
-/*TODO*///		if (LOG_INTERRUPTS != 0) logerror("(%f) **** Acknowledged interrupt vector %02X\n", timer_get_time(), i186.intr.poll_status & 0x1f);
+    public static irqcallbacksPtr int_callback = new irqcallbacksPtr() {
+        public int handler(int line) {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if (LOG_INTERRUPTS != 0) logerror("(%f) **** Acknowledged interrupt vector %02X\n", timer_get_time(), i186.intr.poll_status & 0x1f);
 /*TODO*///	
 /*TODO*///		/* clear the interrupt */
 /*TODO*///		i86_set_irq_line(0, CLEAR_LINE);
@@ -641,8 +663,8 @@ public class leland {
 /*TODO*///	
 /*TODO*///		/* return the vector */
 /*TODO*///		return i186.intr.poll_status & 0x1f;
-/*TODO*///	}
-/*TODO*///	
+        }
+    };
 
     static void update_interrupt_state() {
         int i, j, new_vector = 0;
@@ -802,285 +824,267 @@ public class leland {
 /*TODO*///	 *
 /*TODO*///	 *************************************/
 /*TODO*///	
-/*TODO*///	static void internal_timer_int(int which)
-/*TODO*///	{
-/*TODO*///		struct timer_state *t = &i186.timer[which];
-/*TODO*///	
-/*TODO*///		if (LOG_TIMER != 0) logerror("Hit interrupt callback for timer %d\n", which);
-/*TODO*///	
-/*TODO*///		/* set the max count bit */
-/*TODO*///		t.control |= 0x0020;
-/*TODO*///	
-/*TODO*///		/* request an interrupt */
-/*TODO*///		if (t.control & 0x2000)
-/*TODO*///		{
-/*TODO*///			i186.intr.status |= 0x01 << which;
-/*TODO*///			update_interrupt_state();
-/*TODO*///			if (LOG_TIMER != 0) logerror("  Generating timer interrupt\n");
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* if we're continuous, reset */
-/*TODO*///		if (t.control & 0x0001)
-/*TODO*///		{
-/*TODO*///			int count = t.maxA ? t.maxA : 0x10000;
-/*TODO*///			t.int_timer = timer_set((double)count * TIME_IN_HZ(2000000), which, internal_timer_int);
-/*TODO*///			if (LOG_TIMER != 0) logerror("  Repriming interrupt\n");
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///			t.int_timer = NULL;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static void internal_timer_sync(int which)
-/*TODO*///	{
-/*TODO*///		struct timer_state *t = &i186.timer[which];
-/*TODO*///	
-/*TODO*///		/* if we have a timing timer running, adjust the count */
-/*TODO*///		if (t.time_timer)
-/*TODO*///		{
-/*TODO*///			double current_time = timer_timeelapsed(t.time_timer);
-/*TODO*///			int net_clocks = (int)((current_time - t.last_time) * 2000000.);
-/*TODO*///			t.last_time = current_time;
-/*TODO*///	
-/*TODO*///			/* set the max count bit if we passed the max */
-/*TODO*///			if ((int)t.count + net_clocks >= t.maxA)
-/*TODO*///				t.control |= 0x0020;
-/*TODO*///	
-/*TODO*///			/* set the new count */
-/*TODO*///			if (t.maxA != 0)
-/*TODO*///				t.count = (t.count + net_clocks) % t.maxA;
-/*TODO*///			else
-/*TODO*///				t.count = t.count + net_clocks;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static void internal_timer_update(int which, int new_count, int new_maxA, int new_maxB, int new_control)
-/*TODO*///	{
-/*TODO*///		struct timer_state *t = &i186.timer[which];
-/*TODO*///		int update_int_timer = 0;
-/*TODO*///	
-/*TODO*///		/* if we have a new count and we're on, update things */
-/*TODO*///		if (new_count != -1)
-/*TODO*///		{
-/*TODO*///			if (t.control & 0x8000)
-/*TODO*///			{
-/*TODO*///				internal_timer_sync(which);
-/*TODO*///				update_int_timer = 1;
-/*TODO*///			}
-/*TODO*///			t.count = new_count;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* if we have a new max and we're on, update things */
-/*TODO*///		if (new_maxA != -1 && new_maxA != t.maxA)
-/*TODO*///		{
-/*TODO*///			if (t.control & 0x8000)
-/*TODO*///			{
-/*TODO*///				internal_timer_sync(which);
-/*TODO*///				update_int_timer = 1;
-/*TODO*///			}
-/*TODO*///			t.maxA = new_maxA;
-/*TODO*///			if (new_maxA == 0) new_maxA = 0x10000;
-/*TODO*///	
-/*TODO*///			/* redline racer controls nothing externally? */
-/*TODO*///			if (is_redline != 0)
-/*TODO*///				;
-/*TODO*///	
-/*TODO*///			/* on the common board, timer 0 controls the 10-bit DAC frequency */
-/*TODO*///			else if (which == 0)
-/*TODO*///				set_dac_frequency(6, 2000000 / new_maxA);
-/*TODO*///	
-/*TODO*///			/* timer 1 controls the externally driven DAC on Indy Heat/WSF */
-/*TODO*///			else if (which == 1 && has_ym2151)
-/*TODO*///				set_dac_frequency(7, 2000000 / (new_maxA * 2));
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* if we have a new max and we're on, update things */
-/*TODO*///		if (new_maxB != -1 && new_maxB != t.maxB)
-/*TODO*///		{
-/*TODO*///			if (t.control & 0x8000)
-/*TODO*///			{
-/*TODO*///				internal_timer_sync(which);
-/*TODO*///				update_int_timer = 1;
-/*TODO*///			}
-/*TODO*///			t.maxB = new_maxB;
-/*TODO*///			if (new_maxB == 0) new_maxB = 0x10000;
-/*TODO*///	
-/*TODO*///			/* timer 1 controls the externally driven DAC on Indy Heat/WSF */
-/*TODO*///			/* they alternate the use of maxA and maxB in a way that makes no */
-/*TODO*///			/* sense according to the 80186 documentation! */
-/*TODO*///			if (which == 1 && has_ym2151)
-/*TODO*///				set_dac_frequency(7, 2000000 / (new_maxB * 2));
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* handle control changes */
-/*TODO*///		if (new_control != -1)
-/*TODO*///		{
-/*TODO*///			int diff;
-/*TODO*///	
-/*TODO*///			/* merge back in the bits we don't modify */
-/*TODO*///			new_control = (new_control & ~0x1fc0) | (t.control & 0x1fc0);
-/*TODO*///	
-/*TODO*///			/* handle the /INH bit */
-/*TODO*///			if (!(new_control & 0x4000))
-/*TODO*///				new_control = (new_control & ~0x8000) | (t.control & 0x8000);
-/*TODO*///			new_control &= ~0x4000;
-/*TODO*///	
-/*TODO*///			/* check for control bits we don't handle */
-/*TODO*///			diff = new_control ^ t.control;
-/*TODO*///			if ((diff & 0x001c) != 0)
-/*TODO*///				logerror("%05X:ERROR! - unsupported timer mode %04X\n", new_control);
-/*TODO*///	
-/*TODO*///			/* if we have real changes, update things */
-/*TODO*///			if (diff != 0)
-/*TODO*///			{
-/*TODO*///				/* if we're going off, make sure our timers are gone */
-/*TODO*///				if ((diff & 0x8000) && !(new_control & 0x8000))
-/*TODO*///				{
-/*TODO*///					/* compute the final count */
-/*TODO*///					internal_timer_sync(which);
-/*TODO*///	
-/*TODO*///					/* nuke the timer and force the interrupt timer to be recomputed */
-/*TODO*///					if (t.time_timer)
-/*TODO*///						timer_remove(t.time_timer);
-/*TODO*///					t.time_timer = NULL;
-/*TODO*///					update_int_timer = 1;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* if we're going on, start the timers running */
-/*TODO*///				else if ((diff & 0x8000) && (new_control & 0x8000))
-/*TODO*///				{
-/*TODO*///					/* start the timing */
-/*TODO*///					t.time_timer = timer_set(TIME_NEVER, 0, NULL);
-/*TODO*///					update_int_timer = 1;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* if something about the interrupt timer changed, force an update */
-/*TODO*///				if (!(diff & 0x8000) && (diff & 0x2000))
-/*TODO*///				{
-/*TODO*///					internal_timer_sync(which);
-/*TODO*///					update_int_timer = 1;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* set the new control register */
-/*TODO*///			t.control = new_control;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* update the interrupt timer */
-/*TODO*///	
-/*TODO*///		/* kludge: the YM2151 games sometimes crank timer 1 really high, and leave interrupts */
-/*TODO*///		/* enabled, even though the handler for timer 1 does nothing. To alleviate this, we */
-/*TODO*///		/* just ignore it */
-/*TODO*///		if (!has_ym2151 || which != 1)
-/*TODO*///			if (update_int_timer != 0)
-/*TODO*///			{
-/*TODO*///				if (t.int_timer)
-/*TODO*///					timer_remove(t.int_timer);
-/*TODO*///				if ((t.control & 0x8000) && (t.control & 0x2000))
-/*TODO*///				{
-/*TODO*///					int diff = t.maxA - t.count;
-/*TODO*///					if (diff <= 0) diff += 0x10000;
-/*TODO*///					t.int_timer = timer_set((double)diff * TIME_IN_HZ(2000000), which, internal_timer_int);
-/*TODO*///					if (LOG_TIMER != 0) logerror("Set interrupt timer for %d\n", which);
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///					t.int_timer = NULL;
-/*TODO*///			}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	80186 internal DMA
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static void dma_timer_callback(int which)
-/*TODO*///	{
-/*TODO*///		struct dma_state *d = &i186.dma[which];
-/*TODO*///	
-/*TODO*///		/* force an update and see if we're really done */
-/*TODO*///		stream_update(dma_stream, 0);
-/*TODO*///	
-/*TODO*///		/* complete the status update */
-/*TODO*///		d.control &= ~0x0002;
-/*TODO*///		d.source += d.count;
-/*TODO*///		d.count = 0;
-/*TODO*///	
-/*TODO*///		/* check for interrupt generation */
-/*TODO*///		if (d.control & 0x0100)
-/*TODO*///		{
-/*TODO*///			if (LOG_DMA != 0) logerror("DMA%d timer callback - requesting interrupt: count = %04X, source = %04X\n", which, d.count, d.source);
-/*TODO*///			i186.intr.request |= 0x04 << which;
-/*TODO*///			update_interrupt_state();
-/*TODO*///		}
-/*TODO*///		d.finish_timer = NULL;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static void update_dma_control(int which, int new_control)
-/*TODO*///	{
-/*TODO*///		struct dma_state *d = &i186.dma[which];
-/*TODO*///		int diff;
-/*TODO*///	
-/*TODO*///		/* handle the CHG bit */
-/*TODO*///		if (!(new_control & 0x0004))
-/*TODO*///			new_control = (new_control & ~0x0002) | (d.control & 0x0002);
-/*TODO*///		new_control &= ~0x0004;
-/*TODO*///	
-/*TODO*///		/* check for control bits we don't handle */
-/*TODO*///		diff = new_control ^ d.control;
-/*TODO*///		if ((diff & 0x6811) != 0)
-/*TODO*///			logerror("%05X:ERROR! - unsupported DMA mode %04X\n", new_control);
-/*TODO*///	
-/*TODO*///		/* if we're going live, set a timer */
-/*TODO*///		if ((diff & 0x0002) && (new_control & 0x0002))
-/*TODO*///		{
-/*TODO*///			/* make sure the parameters meet our expectations */
-/*TODO*///			if ((new_control & 0xfe00) != 0x1600)
-/*TODO*///			{
-/*TODO*///				logerror("Unexpected DMA control %02X\n", new_control);
-/*TODO*///			}
-/*TODO*///			else if (!is_redline && ((d.dest & 1) || (d.dest & 0x3f) > 0x0b))
-/*TODO*///			{
-/*TODO*///				logerror("Unexpected DMA destination %02X\n", d.dest);
-/*TODO*///			}
-/*TODO*///			else if (is_redline && (d.dest & 0xf000) != 0x4000 && (d.dest & 0xf000) != 0x5000)
-/*TODO*///			{
-/*TODO*///				logerror("Unexpected DMA destination %02X\n", d.dest);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* otherwise, set a timer */
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				int count = d.count;
-/*TODO*///				int dacnum;
-/*TODO*///	
-/*TODO*///				/* adjust for redline racer */
-/*TODO*///				if (!is_redline)
-/*TODO*///					dacnum = (d.dest & 0x3f) / 2;
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					dacnum = (d.dest >> 9) & 7;
-/*TODO*///					dac[dacnum].volume = (d.dest & 0x1fe) / 2 / DAC_VOLUME_SCALE;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				if (LOG_DMA != 0) logerror("Initiated DMA %d - count = %04X, source = %04X, dest = %04X\n", which, d.count, d.source, d.dest);
-/*TODO*///	
-/*TODO*///				if (d.finish_timer)
-/*TODO*///					timer_remove(d.finish_timer);
-/*TODO*///				d.finished = 0;
-/*TODO*///				d.finish_timer = timer_set(TIME_IN_HZ(dac[dacnum].frequency) * (double)count, which, dma_timer_callback);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* set the new control register */
-/*TODO*///		d.control = new_control;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+    public static timer_callback internal_timer_int = new timer_callback() {
+        public void handler(int which) {
+            timer_state t = i186_state.timer[which];
+
+            if (LOG_TIMER != 0) {
+                logerror("Hit interrupt callback for timer %d\n", which);
+            }
+
+            /* set the max count bit */
+            t.control |= 0x0020;
+
+            /* request an interrupt */
+            if ((t.control & 0x2000) != 0) {
+                i186_state.intr.status |= 0x01 << which;
+                update_interrupt_state();
+                if (LOG_TIMER != 0) {
+                    logerror("  Generating timer interrupt\n");
+                }
+            }
+
+            /* if we're continuous, reset */
+            if ((t.control & 0x0001) != 0) {
+                int count = t.maxA != 0 ? t.maxA : 0x10000;
+                t.int_timer = timer_set((double) count * TIME_IN_HZ(2000000), which, internal_timer_int);
+                if (LOG_TIMER != 0) {
+                    logerror("  Repriming interrupt\n");
+                }
+            } else {
+                t.int_timer = null;
+            }
+        }
+    };
+
+    static void internal_timer_sync(int which) {
+        timer_state t = i186_state.timer[which];
+
+        /* if we have a timing timer running, adjust the count */
+        if (t.time_timer != null) {
+            double current_time = timer_timeelapsed(t.time_timer);
+            int net_clocks = (int) ((current_time - t.last_time) * 2000000.);
+            t.last_time = current_time;
+
+            /* set the max count bit if we passed the max */
+            if ((int) t.count + net_clocks >= t.maxA) {
+                t.control |= 0x0020;
+            }
+
+            /* set the new count */
+            if (t.maxA != 0) {
+                t.count = (char) ((t.count + net_clocks) % t.maxA);
+            } else {
+                t.count = (char) (t.count + net_clocks);
+            }
+        }
+    }
+
+    static void internal_timer_update(int which, int new_count, int new_maxA, int new_maxB, int new_control) {
+        timer_state t = i186_state.timer[which];
+        int update_int_timer = 0;
+
+        /* if we have a new count and we're on, update things */
+        if (new_count != -1) {
+            if ((t.control & 0x8000) != 0) {
+                internal_timer_sync(which);
+                update_int_timer = 1;
+            }
+            t.count = (char) new_count;
+        }
+
+        /* if we have a new max and we're on, update things */
+        if (new_maxA != -1 && new_maxA != t.maxA) {
+            if ((t.control & 0x8000) != 0) {
+                internal_timer_sync(which);
+                update_int_timer = 1;
+            }
+            t.maxA = (char) new_maxA;
+            if (new_maxA == 0) {
+                new_maxA = 0x10000;
+            }
+
+            /* redline racer controls nothing externally? */
+            if (is_redline != 0) {
+            } /* on the common board, timer 0 controls the 10-bit DAC frequency */ else if (which == 0) {
+                set_dac_frequency(6, 2000000 / new_maxA);
+            } /* timer 1 controls the externally driven DAC on Indy Heat/WSF */ else if (which == 1 && has_ym2151 != 0) {
+                set_dac_frequency(7, 2000000 / (new_maxA * 2));
+            }
+        }
+
+        /* if we have a new max and we're on, update things */
+        if (new_maxB != -1 && new_maxB != t.maxB) {
+            if ((t.control & 0x8000) != 0) {
+                internal_timer_sync(which);
+                update_int_timer = 1;
+            }
+            t.maxB = (char) new_maxB;
+            if (new_maxB == 0) {
+                new_maxB = 0x10000;
+            }
+
+            /* timer 1 controls the externally driven DAC on Indy Heat/WSF */
+ /* they alternate the use of maxA and maxB in a way that makes no */
+ /* sense according to the 80186 documentation! */
+            if (which == 1 && has_ym2151 != 0) {
+                set_dac_frequency(7, 2000000 / (new_maxB * 2));
+            }
+        }
+
+        /* handle control changes */
+        if (new_control != -1) {
+            int diff;
+
+            /* merge back in the bits we don't modify */
+            new_control = (new_control & ~0x1fc0) | (t.control & 0x1fc0);
+
+            /* handle the /INH bit */
+            if ((new_control & 0x4000) == 0) {
+                new_control = (new_control & ~0x8000) | (t.control & 0x8000);
+            }
+            new_control &= ~0x4000;
+
+            /* check for control bits we don't handle */
+            diff = new_control ^ t.control;
+            if ((diff & 0x001c) != 0) {
+                logerror("%05X:ERROR! - unsupported timer mode %04X\n", new_control);
+            }
+
+            /* if we have real changes, update things */
+            if (diff != 0) {
+                /* if we're going off, make sure our timers are gone */
+                if ((diff & 0x8000) != 0 && (new_control & 0x8000) == 0) {
+                    /* compute the final count */
+                    internal_timer_sync(which);
+
+                    /* nuke the timer and force the interrupt timer to be recomputed */
+                    if (t.time_timer != null) {
+                        timer_remove(t.time_timer);
+                    }
+                    t.time_timer = null;
+                    update_int_timer = 1;
+                } /* if we're going on, start the timers running */ else if ((diff & 0x8000) != 0 && (new_control & 0x8000) != 0) {
+                    /* start the timing */
+                    t.time_timer = timer_set(TIME_NEVER, 0, null);
+                    update_int_timer = 1;
+                }
+
+                /* if something about the interrupt timer changed, force an update */
+                if ((diff & 0x8000) == 0 && (diff & 0x2000) != 0) {
+                    internal_timer_sync(which);
+                    update_int_timer = 1;
+                }
+            }
+
+            /* set the new control register */
+            t.control = (char) new_control;
+        }
+
+        /* update the interrupt timer */
+ /* kludge: the YM2151 games sometimes crank timer 1 really high, and leave interrupts */
+ /* enabled, even though the handler for timer 1 does nothing. To alleviate this, we */
+ /* just ignore it */
+        if (has_ym2151 == 0 || which != 1) {
+            if (update_int_timer != 0) {
+                if (t.int_timer != null) {
+                    timer_remove(t.int_timer);
+                }
+                if ((t.control & 0x8000) != 0 && (t.control & 0x2000) != 0) {
+                    int diff = t.maxA - t.count;
+                    if (diff <= 0) {
+                        diff += 0x10000;
+                    }
+                    t.int_timer = timer_set((double) diff * TIME_IN_HZ(2000000), which, internal_timer_int);
+                    if (LOG_TIMER != 0) {
+                        logerror("Set interrupt timer for %d\n", which);
+                    }
+                } else {
+                    t.int_timer = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * ***********************************
+     *
+     * 80186 internal DMA
+     *
+     ************************************
+     */
+    public static timer_callback dma_timer_callback = new timer_callback() {
+        public void handler(int which) {
+            dma_state d = i186_state.dma[which];
+
+            /* force an update and see if we're really done */
+            stream_update(dma_stream, 0);
+
+            /* complete the status update */
+            d.control &= ~0x0002;
+            d.source += d.count;
+            d.count = 0;
+
+            /* check for interrupt generation */
+            if ((d.control & 0x0100) != 0) {
+                //if (LOG_DMA != 0) logerror("DMA%d timer callback - requesting interrupt: count = %04X, source = %04X\n", which, d.count, d.source);
+                i186_state.intr.request |= 0x04 << which;
+                update_interrupt_state();
+            }
+            d.finish_timer = null;
+        }
+    };
+
+    static void update_dma_control(int which, int new_control) {
+        dma_state d = i186_state.dma[which];
+        int diff;
+
+        /* handle the CHG bit */
+        if ((new_control & 0x0004) == 0) {
+            new_control = (new_control & ~0x0002) | (d.control & 0x0002);
+        }
+        new_control &= ~0x0004;
+
+        /* check for control bits we don't handle */
+        diff = new_control ^ d.control;
+        if ((diff & 0x6811) != 0) {
+            logerror("%05X:ERROR! - unsupported DMA mode %04X\n", new_control);
+        }
+
+        /* if we're going live, set a timer */
+        if ((diff & 0x0002) != 0 && (new_control & 0x0002) != 0) {
+            /* make sure the parameters meet our expectations */
+            if ((new_control & 0xfe00) != 0x1600) {
+                logerror("Unexpected DMA control %02X\n", new_control);
+            } else if (is_redline == 0 && ((d.dest & 1) != 0 || (d.dest & 0x3f) > 0x0b)) {
+                logerror("Unexpected DMA destination %02X\n", d.dest);
+            } else if (is_redline != 0 && (d.dest & 0xf000) != 0x4000 && (d.dest & 0xf000) != 0x5000) {
+                logerror("Unexpected DMA destination %02X\n", d.dest);
+            } /* otherwise, set a timer */ else {
+                int count = d.count;
+                int dacnum;
+
+                /* adjust for redline racer */
+                if (is_redline == 0) {
+                    dacnum = (d.dest & 0x3f) / 2;
+                } else {
+                    dacnum = (d.dest >> 9) & 7;
+                    dac[dacnum].volume = (short) ((d.dest & 0x1fe) / 2 / DAC_VOLUME_SCALE);
+                }
+
+                //if (LOG_DMA != 0) logerror("Initiated DMA %d - count = %04X, source = %04X, dest = %04X\n", which, d.count, d.source, d.dest);
+                if (d.finish_timer != null) {
+                    timer_remove(d.finish_timer);
+                }
+                d.u8_finished = 0;
+                d.finish_timer = timer_set(TIME_IN_HZ(dac[dacnum].frequency) * (double) count, which, dma_timer_callback);
+            }
+        }
+
+        /* set the new control register */
+        d.control = (char) new_control;
+    }
+
     /**
      * ***********************************
      *
@@ -1097,166 +1101,225 @@ public class leland {
                 case 0x22:
                     logerror("%05X:ERROR - read from 80186 EOI\n", cpu_get_pc());
                     break;
-                /*TODO*///	
-/*TODO*///			case 0x24:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt poll\n", cpu_get_pc());
-/*TODO*///				if (i186.intr.poll_status & 0x8000)
-/*TODO*///					int_callback(0);
-/*TODO*///				return (i186.intr.poll_status >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x26:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt poll status\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.poll_status >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x28:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt mask\n", cpu_get_pc());
-/*TODO*///				temp  = (i186.intr.timer  >> 3) & 0x01;
-/*TODO*///				temp |= (i186.intr.dma[0] >> 1) & 0x04;
-/*TODO*///				temp |= (i186.intr.dma[1] >> 0) & 0x08;
-/*TODO*///				temp |= (i186.intr.ext[0] << 1) & 0x10;
-/*TODO*///				temp |= (i186.intr.ext[1] << 2) & 0x20;
-/*TODO*///				temp |= (i186.intr.ext[2] << 3) & 0x40;
-/*TODO*///				temp |= (i186.intr.ext[3] << 4) & 0x80;
-/*TODO*///				return (temp >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x2a:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt priority mask\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.priority_mask >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x2c:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt in-service\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.in_service >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x2e:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt request\n", cpu_get_pc());
-/*TODO*///				temp = i186.intr.request & ~0x0001;
-/*TODO*///				if (i186.intr.status & 0x0007)
-/*TODO*///					temp |= 1;
-/*TODO*///				return (temp >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x30:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 interrupt status\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.status >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x32:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 timer interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.timer >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x34:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA 0 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.dma[0] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x36:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA 1 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.dma[1] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x38:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 INT 0 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.ext[0] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x3a:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 INT 1 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.ext[1] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x3c:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 INT 2 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.ext[2] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x3e:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 INT 3 interrupt control\n", cpu_get_pc());
-/*TODO*///				return (i186.intr.ext[3] >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x50:
-/*TODO*///			case 0x58:
-/*TODO*///			case 0x60:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 Timer %d count\n", cpu_get_pc(), (offset - 0x50) / 8);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				if (!(offset & 1))
-/*TODO*///					internal_timer_sync(which);
-/*TODO*///				return (i186.timer[which].count >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x52:
-/*TODO*///			case 0x5a:
-/*TODO*///			case 0x62:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 Timer %d max A\n", cpu_get_pc(), (offset - 0x50) / 8);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				return (i186.timer[which].maxA >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x54:
-/*TODO*///			case 0x5c:
-/*TODO*///				logerror("%05X:read 80186 Timer %d max B\n", cpu_get_pc(), (offset - 0x50) / 8);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				return (i186.timer[which].maxB >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0x56:
-/*TODO*///			case 0x5e:
-/*TODO*///			case 0x66:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 Timer %d control\n", cpu_get_pc(), (offset - 0x50) / 8);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				return (i186.timer[which].control >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xa0:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 upper chip select\n", cpu_get_pc());
-/*TODO*///				return (i186.mem.upper >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xa2:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 lower chip select\n", cpu_get_pc());
-/*TODO*///				return (i186.mem.lower >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xa4:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 peripheral chip select\n", cpu_get_pc());
-/*TODO*///				return (i186.mem.peripheral >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xa6:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 middle chip select\n", cpu_get_pc());
-/*TODO*///				return (i186.mem.middle >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xa8:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 middle P chip select\n", cpu_get_pc());
-/*TODO*///				return (i186.mem.middle_size >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xc0:
-/*TODO*///			case 0xd0:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d lower source address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].source >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xc2:
-/*TODO*///			case 0xd2:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d upper source address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].source >> (shift + 16)) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xc4:
-/*TODO*///			case 0xd4:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d lower dest address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].dest >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xc6:
-/*TODO*///			case 0xd6:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d upper dest address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].dest >> (shift + 16)) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xc8:
-/*TODO*///			case 0xd8:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d transfer count\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].count >> shift) & 0xff;
-/*TODO*///	
-/*TODO*///			case 0xca:
-/*TODO*///			case 0xda:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:read 80186 DMA%d control\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				return (i186.dma[which].control >> shift) & 0xff;
-/*TODO*///	
+
+                case 0x24:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt poll\n", cpu_get_pc());
+                    }
+                    if ((i186_state.intr.poll_status & 0x8000) != 0) {
+                        int_callback.handler(0);
+                    }
+                    return (i186_state.intr.poll_status >> shift) & 0xff;
+
+                case 0x26:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt poll status\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.poll_status >> shift) & 0xff;
+
+                case 0x28:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt mask\n", cpu_get_pc());
+                    }
+                    temp = (i186_state.intr.timer >> 3) & 0x01;
+                    temp |= (i186_state.intr.dma[0] >> 1) & 0x04;
+                    temp |= (i186_state.intr.dma[1] >> 0) & 0x08;
+                    temp |= (i186_state.intr.ext[0] << 1) & 0x10;
+                    temp |= (i186_state.intr.ext[1] << 2) & 0x20;
+                    temp |= (i186_state.intr.ext[2] << 3) & 0x40;
+                    temp |= (i186_state.intr.ext[3] << 4) & 0x80;
+                    return (temp >> shift) & 0xff;
+
+                case 0x2a:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt priority mask\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.priority_mask >> shift) & 0xff;
+
+                case 0x2c:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt in-service\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.in_service >> shift) & 0xff;
+
+                case 0x2e:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt request\n", cpu_get_pc());
+                    }
+                    temp = i186_state.intr.request & ~0x0001;
+                    if ((i186_state.intr.status & 0x0007) != 0) {
+                        temp |= 1;
+                    }
+                    return (temp >> shift) & 0xff;
+
+                case 0x30:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 interrupt status\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.status >> shift) & 0xff;
+
+                case 0x32:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 timer interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.timer >> shift) & 0xff;
+
+                case 0x34:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA 0 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.dma[0] >> shift) & 0xff;
+
+                case 0x36:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA 1 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.dma[1] >> shift) & 0xff;
+
+                case 0x38:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 INT 0 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.ext[0] >> shift) & 0xff;
+
+                case 0x3a:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 INT 1 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.ext[1] >> shift) & 0xff;
+
+                case 0x3c:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 INT 2 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.ext[2] >> shift) & 0xff;
+
+                case 0x3e:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 INT 3 interrupt control\n", cpu_get_pc());
+                    }
+                    return (i186_state.intr.ext[3] >> shift) & 0xff;
+
+                case 0x50:
+                case 0x58:
+                case 0x60:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 Timer %d count\n", cpu_get_pc(), (offset - 0x50) / 8);
+                    }
+                    which = (offset - 0x50) / 8;
+                    if ((offset & 1) == 0) {
+                        internal_timer_sync(which);
+                    }
+                    return (i186_state.timer[which].count >> shift) & 0xff;
+
+                case 0x52:
+                case 0x5a:
+                case 0x62:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 Timer %d max A\n", cpu_get_pc(), (offset - 0x50) / 8);
+                    }
+                    which = (offset - 0x50) / 8;
+                    return (i186_state.timer[which].maxA >> shift) & 0xff;
+
+                case 0x54:
+                case 0x5c:
+                    logerror("%05X:read 80186 Timer %d max B\n", cpu_get_pc(), (offset - 0x50) / 8);
+                    which = (offset - 0x50) / 8;
+                    return (i186_state.timer[which].maxB >> shift) & 0xff;
+
+                case 0x56:
+                case 0x5e:
+                case 0x66:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 Timer %d control\n", cpu_get_pc(), (offset - 0x50) / 8);
+                    }
+                    which = (offset - 0x50) / 8;
+                    return (i186_state.timer[which].control >> shift) & 0xff;
+
+                case 0xa0:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 upper chip select\n", cpu_get_pc());
+                    }
+                    return (i186_state.mem.upper >> shift) & 0xff;
+
+                case 0xa2:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 lower chip select\n", cpu_get_pc());
+                    }
+                    return (i186_state.mem.lower >> shift) & 0xff;
+
+                case 0xa4:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 peripheral chip select\n", cpu_get_pc());
+                    }
+                    return (i186_state.mem.peripheral >> shift) & 0xff;
+
+                case 0xa6:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 middle chip select\n", cpu_get_pc());
+                    }
+                    return (i186_state.mem.middle >> shift) & 0xff;
+
+                case 0xa8:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 middle P chip select\n", cpu_get_pc());
+                    }
+                    return (i186_state.mem.middle_size >> shift) & 0xff;
+
+                case 0xc0:
+                case 0xd0:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d lower source address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].source >> shift) & 0xff;
+
+                case 0xc2:
+                case 0xd2:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d upper source address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].source >> (shift + 16)) & 0xff;
+
+                case 0xc4:
+                case 0xd4:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d lower dest address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].dest >> shift) & 0xff;
+
+                case 0xc6:
+                case 0xd6:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d upper dest address\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].dest >> (shift + 16)) & 0xff;
+
+                case 0xc8:
+                case 0xd8:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d transfer count\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].count >> shift) & 0xff;
+
+                case 0xca:
+                case 0xda:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:read 80186 DMA%d control\n", cpu_get_pc(), (offset - 0xc0) / 0x10);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    return (i186_state.dma[which].control >> shift) & 0xff;
+
                 default:
                     logerror("%05X:read 80186 port %02X\n", cpu_get_pc(), offset);
                     break;
@@ -1264,9 +1327,6 @@ public class leland {
             return 0x00;
         }
     };
-    /*TODO*///	
-/*TODO*///	
-
     /**
      * ***********************************
      *
@@ -1274,22 +1334,20 @@ public class leland {
      *
      ************************************
      */
+    static int/*UINT8*/ u8_even_byte;
     public static WriteHandlerPtr i186_internal_port_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
-            /*TODO*///		static UINT8 even_byte;
-/*TODO*///		int temp, which;
-/*TODO*///	
-/*TODO*///		/* warning: this assumes all port writes here are word-sized */
-/*TODO*///		if (!(offset & 1))
-/*TODO*///		{
-/*TODO*///			even_byte = data;
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///		data = ((data & 0xff) << 8) | even_byte;
-/*TODO*///	
-/*TODO*///		switch (offset & ~1)
-/*TODO*///		{
-/*TODO*///			case 0x22:
+            int temp, which;
+
+            /* warning: this assumes all port writes here are word-sized */
+            if ((offset & 1) == 0) {
+                u8_even_byte = data & 0xFF;
+                return;
+            }
+            data = ((data & 0xff) << 8) | u8_even_byte;
+
+            switch (offset & ~1) {
+                /*TODO*///			case 0x22:
 /*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 EOI = %04X\n", cpu_get_pc(), data);
 /*TODO*///				handle_eoi(0x8000);
 /*TODO*///				update_interrupt_state();
@@ -1302,153 +1360,182 @@ public class leland {
 /*TODO*///			case 0x26:
 /*TODO*///				logerror("%05X:ERROR - write to 80186 interrupt poll status = %04X\n", cpu_get_pc(), data);
 /*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x28:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 interrupt mask = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.timer  = (i186.intr.timer  & ~0x08) | ((data << 3) & 0x08);
-/*TODO*///				i186.intr.dma[0] = (i186.intr.dma[0] & ~0x08) | ((data << 1) & 0x08);
-/*TODO*///				i186.intr.dma[1] = (i186.intr.dma[1] & ~0x08) | ((data << 0) & 0x08);
-/*TODO*///				i186.intr.ext[0] = (i186.intr.ext[0] & ~0x08) | ((data >> 1) & 0x08);
-/*TODO*///				i186.intr.ext[1] = (i186.intr.ext[1] & ~0x08) | ((data >> 2) & 0x08);
-/*TODO*///				i186.intr.ext[2] = (i186.intr.ext[2] & ~0x08) | ((data >> 3) & 0x08);
-/*TODO*///				i186.intr.ext[3] = (i186.intr.ext[3] & ~0x08) | ((data >> 4) & 0x08);
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x2a:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 interrupt priority mask = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.priority_mask = data & 0x0007;
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x2c:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 interrupt in-service = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.in_service = data & 0x00ff;
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x2e:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 interrupt request = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.request = (i186.intr.request & ~0x00c0) | (data & 0x00c0);
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x30:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:WARNING - wrote to 80186 interrupt status = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.status = (i186.intr.status & ~0x8007) | (data & 0x8007);
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x32:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 timer interrupt contol = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.timer = data & 0x000f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x34:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA 0 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.dma[0] = data & 0x000f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x36:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA 1 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.dma[1] = data & 0x000f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x38:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 INT 0 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.ext[0] = data & 0x007f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x3a:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 INT 1 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.ext[1] = data & 0x007f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x3c:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 INT 2 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.ext[2] = data & 0x001f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x3e:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 INT 3 interrupt control = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.intr.ext[3] = data & 0x001f;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x50:
-/*TODO*///			case 0x58:
-/*TODO*///			case 0x60:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 Timer %d count = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				internal_timer_update(which, data, -1, -1, -1);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x52:
-/*TODO*///			case 0x5a:
-/*TODO*///			case 0x62:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 Timer %d max A = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				internal_timer_update(which, -1, data, -1, -1);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x54:
-/*TODO*///			case 0x5c:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 Timer %d max B = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				internal_timer_update(which, -1, -1, data, -1);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x56:
-/*TODO*///			case 0x5e:
-/*TODO*///			case 0x66:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 Timer %d control = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
-/*TODO*///				which = (offset - 0x50) / 8;
-/*TODO*///				internal_timer_update(which, -1, -1, -1, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xa0:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 upper chip select = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.mem.upper = data | 0xc038;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xa2:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 lower chip select = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.mem.lower = (data & 0x3fff) | 0x0038;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xa4:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 peripheral chip select = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.mem.peripheral = data | 0x0038;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xa6:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 middle chip select = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.mem.middle = data | 0x01f8;
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xa8:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 middle P chip select = %04X\n", cpu_get_pc(), data);
-/*TODO*///				i186.mem.middle_size = data | 0x8038;
-/*TODO*///	
-/*TODO*///				temp = (i186.mem.peripheral & 0xffc0) << 4;
-/*TODO*///				if (i186.mem.middle_size & 0x0040)
-/*TODO*///				{
-/*TODO*///					install_mem_read_handler(2, temp, temp + 0x2ff, peripheral_r);
-/*TODO*///					install_mem_write_handler(2, temp, temp + 0x2ff, peripheral_w);
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					temp &= 0xffff;
-/*TODO*///					install_port_read_handler(2, temp, temp + 0x2ff, peripheral_r);
-/*TODO*///					install_port_write_handler(2, temp, temp + 0x2ff, peripheral_w);
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* we need to do this at a time when the I86 context is swapped in */
-/*TODO*///				/* this register is generally set once at startup and never again, so it's a good */
-/*TODO*///				/* time to set it up */
-/*TODO*///				i86_set_irq_callback(int_callback);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xc0:
+
+                case 0x28:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 interrupt mask = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.timer = (char) ((i186_state.intr.timer & ~0x08) | ((data << 3) & 0x08));
+                    i186_state.intr.dma[0] = (char) ((i186_state.intr.dma[0] & ~0x08) | ((data << 1) & 0x08));
+                    i186_state.intr.dma[1] = (char) ((i186_state.intr.dma[1] & ~0x08) | ((data << 0) & 0x08));
+                    i186_state.intr.ext[0] = (char) ((i186_state.intr.ext[0] & ~0x08) | ((data >> 1) & 0x08));
+                    i186_state.intr.ext[1] = (char) ((i186_state.intr.ext[1] & ~0x08) | ((data >> 2) & 0x08));
+                    i186_state.intr.ext[2] = (char) ((i186_state.intr.ext[2] & ~0x08) | ((data >> 3) & 0x08));
+                    i186_state.intr.ext[3] = (char) ((i186_state.intr.ext[3] & ~0x08) | ((data >> 4) & 0x08));
+                    update_interrupt_state();
+                    break;
+
+                case 0x2a:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 interrupt priority mask = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.priority_mask = (char) (data & 0x0007);
+                    update_interrupt_state();
+                    break;
+
+                case 0x2c:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 interrupt in-service = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.in_service = (char) (data & 0x00ff);
+                    update_interrupt_state();
+                    break;
+
+                case 0x2e:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 interrupt request = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.request = (char) ((i186_state.intr.request & ~0x00c0) | (data & 0x00c0));
+                    update_interrupt_state();
+                    break;
+
+                case 0x30:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:WARNING - wrote to 80186 interrupt status = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.status = (char) ((i186_state.intr.status & ~0x8007) | (data & 0x8007));
+                    update_interrupt_state();
+                    break;
+
+                case 0x32:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 timer interrupt contol = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.timer = (char) (data & 0x000f);
+                    break;
+
+                case 0x34:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA 0 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.dma[0] = (char) (data & 0x000f);
+                    break;
+
+                case 0x36:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA 1 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.dma[1] = (char) (data & 0x000f);
+                    break;
+
+                case 0x38:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 INT 0 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.ext[0] = (char) (data & 0x007f);
+                    break;
+
+                case 0x3a:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 INT 1 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.ext[1] = (char) (data & 0x007f);
+                    break;
+
+                case 0x3c:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 INT 2 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.ext[2] = (char) (data & 0x001f);
+                    break;
+
+                case 0x3e:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 INT 3 interrupt control = %04X\n", cpu_get_pc(), data);
+                    }
+                    i186_state.intr.ext[3] = (char) (data & 0x001f);
+                    break;
+
+                case 0x50:
+                case 0x58:
+                case 0x60:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 Timer %d count = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
+                    }
+                    which = (offset - 0x50) / 8;
+                    internal_timer_update(which, data, -1, -1, -1);
+                    break;
+
+                case 0x52:
+                case 0x5a:
+                case 0x62:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 Timer %d max A = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
+                    }
+                    which = (offset - 0x50) / 8;
+                    internal_timer_update(which, -1, data, -1, -1);
+                    break;
+
+                case 0x54:
+                case 0x5c:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 Timer %d max B = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
+                    }
+                    which = (offset - 0x50) / 8;
+                    internal_timer_update(which, -1, -1, data, -1);
+                    break;
+
+                case 0x56:
+                case 0x5e:
+                case 0x66:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 Timer %d control = %04X\n", cpu_get_pc(), (offset - 0x50) / 8, data);
+                    }
+                    which = (offset - 0x50) / 8;
+                    internal_timer_update(which, -1, -1, -1, data);
+                    break;
+
+                case 0xa0:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 upper chip select = %04X\n", cpu_get_pc(), data);
+                    i186_state.mem.upper = (char) (data | 0xc038);
+                    break;
+
+                case 0xa2:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 lower chip select = %04X\n", cpu_get_pc(), data);
+                    i186_state.mem.lower = (char) ((data & 0x3fff) | 0x0038);
+                    break;
+
+                case 0xa4:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 peripheral chip select = %04X\n", cpu_get_pc(), data);
+                    i186_state.mem.peripheral = (char) (data | 0x0038);
+                    break;
+
+                case 0xa6:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 middle chip select = %04X\n", cpu_get_pc(), data);
+                    i186_state.mem.middle = (char) (data | 0x01f8);
+                    break;
+
+                case 0xa8:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 middle P chip select = %04X\n", cpu_get_pc(), data);
+                    i186_state.mem.middle_size = (char) (data | 0x8038);
+
+                    temp = (i186_state.mem.peripheral & 0xffc0) << 4;
+                    if ((i186_state.mem.middle_size & 0x0040) != 0) {
+                        install_mem_read_handler(2, temp, temp + 0x2ff, peripheral_r);
+                        install_mem_write_handler(2, temp, temp + 0x2ff, peripheral_w);
+                    } else {
+                        temp &= 0xffff;
+                        install_port_read_handler(2, temp, temp + 0x2ff, peripheral_r);
+                        install_port_write_handler(2, temp, temp + 0x2ff, peripheral_w);
+                    }
+
+                    /* we need to do this at a time when the I86 context is swapped in */
+ /* this register is generally set once at startup and never again, so it's a good */
+ /* time to set it up */
+                    i86_set_irq_callback(int_callback);
+                    break;
+
+                /*TODO*///			case 0xc0:
 /*TODO*///			case 0xd0:
 /*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d lower source address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
 /*TODO*///				which = (offset - 0xc0) / 0x10;
@@ -1488,177 +1575,167 @@ public class leland {
 /*TODO*///				i186.dma[which].count = data;
 /*TODO*///				break;
 /*TODO*///	
-/*TODO*///			case 0xca:
-/*TODO*///			case 0xda:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d control = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				update_dma_control(which, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xfe:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 relocation register = %04X\n", cpu_get_pc(), data);
-/*TODO*///	
-/*TODO*///				/* we assume here there that this doesn't happen too often */
-/*TODO*///				/* plus, we can't really remove the old memory range, so we also assume that it's */
-/*TODO*///				/* okay to leave us mapped where we were */
-/*TODO*///				temp = (data & 0x0fff) << 8;
-/*TODO*///				if ((data & 0x1000) != 0)
-/*TODO*///				{
-/*TODO*///					install_mem_read_handler(2, temp, temp + 0xff, i186_internal_port_r);
-/*TODO*///					install_mem_write_handler(2, temp, temp + 0xff, i186_internal_port_w);
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					temp &= 0xffff;
-/*TODO*///					install_port_read_handler(2, temp, temp + 0xff, i186_internal_port_r);
-/*TODO*///					install_port_write_handler(2, temp, temp + 0xff, i186_internal_port_w);
-/*TODO*///				}
-/*TODO*///	/*			usrintf_showmessage("Sound CPU reset");*/
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			default:
-/*TODO*///				logerror("%05X:80186 port %02X = %04X\n", cpu_get_pc(), offset, data);
-/*TODO*///				break;
-/*TODO*///		}
+                case 0xca:
+                case 0xda:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d control = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    update_dma_control(which, data);
+                    break;
+
+                case 0xfe:
+                    //if (LOG_PORTS != 0) logerror("%05X:80186 relocation register = %04X\n", cpu_get_pc(), data);
+
+                    /* we assume here there that this doesn't happen too often */
+ /* plus, we can't really remove the old memory range, so we also assume that it's */
+ /* okay to leave us mapped where we were */
+                    temp = (data & 0x0fff) << 8;
+                    if ((data & 0x1000) != 0) {
+                        install_mem_read_handler(2, temp, temp + 0xff, i186_internal_port_r);
+                        install_mem_write_handler(2, temp, temp + 0xff, i186_internal_port_w);
+                    } else {
+                        temp &= 0xffff;
+                        install_port_read_handler(2, temp, temp + 0xff, i186_internal_port_r);
+                        install_port_write_handler(2, temp, temp + 0xff, i186_internal_port_w);
+                    }
+                    /*			usrintf_showmessage("Sound CPU reset");*/
+                    break;
+
+                default:
+                    System.out.println(Integer.toHexString(offset & ~1));
+
+                    throw new UnsupportedOperationException("Unsupported");
+                //logerror("%05X:80186 port %02X = %04X\n", cpu_get_pc(), offset, data);
+                //break;
+            }
         }
     };
 
-    /*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	8254 PIT accesses
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	INLINE void counter_update_count(int which)
-/*TODO*///	{
-/*TODO*///		/* only update if the timer is running */
-/*TODO*///		if (counter[which].timer)
-/*TODO*///		{
-/*TODO*///			/* determine how many 2MHz cycles are remaining */
-/*TODO*///			int count = (int)(timer_timeleft(counter[which].timer) / TIME_IN_HZ(2000000));
-/*TODO*///			counter[which].count = (count < 0) ? 0 : count;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr pit8254_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		struct counter_state *ctr;
-/*TODO*///		int which = offset / 0x80;
-/*TODO*///		int reg = (offset / 2) & 3;
-/*TODO*///	
-/*TODO*///		/* ignore odd offsets */
-/*TODO*///		if ((offset & 1) != 0)
-/*TODO*///			return 0;
-/*TODO*///	
-/*TODO*///		/* switch off the register */
-/*TODO*///		switch (offset & 3)
-/*TODO*///		{
-/*TODO*///			case 0:
-/*TODO*///			case 1:
-/*TODO*///			case 2:
-/*TODO*///				/* warning: assumes LSB/MSB addressing and no latching! */
-/*TODO*///				which = (which * 3) + reg;
-/*TODO*///				ctr = &counter[which];
-/*TODO*///	
-/*TODO*///				/* update the count */
-/*TODO*///				counter_update_count(which);
-/*TODO*///	
-/*TODO*///				/* return the LSB */
-/*TODO*///				if (counter[which].readbyte == 0)
-/*TODO*///				{
-/*TODO*///					counter[which].readbyte = 1;
-/*TODO*///					return counter[which].count & 0xff;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* write the MSB and reset the counter */
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					counter[which].readbyte = 0;
-/*TODO*///					return (counter[which].count >> 8) & 0xff;
-/*TODO*///				}
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///		return 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr pit8254_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		struct counter_state *ctr;
-/*TODO*///		int which = offset / 0x80;
-/*TODO*///		int reg = (offset / 2) & 3;
-/*TODO*///	
-/*TODO*///		/* ignore odd offsets */
-/*TODO*///		if ((offset & 1) != 0)
-/*TODO*///			return;
-/*TODO*///	
-/*TODO*///		/* switch off the register */
-/*TODO*///		switch (reg)
-/*TODO*///		{
-/*TODO*///			case 0:
-/*TODO*///			case 1:
-/*TODO*///			case 2:
-/*TODO*///				/* warning: assumes LSB/MSB addressing and no latching! */
-/*TODO*///				which = (which * 3) + reg;
-/*TODO*///				ctr = &counter[which];
-/*TODO*///	
-/*TODO*///				/* write the LSB */
-/*TODO*///				if (ctr.writebyte == 0)
-/*TODO*///				{
-/*TODO*///					ctr.count = (ctr.count & 0xff00) | (data & 0x00ff);
-/*TODO*///					ctr.writebyte = 1;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* write the MSB and reset the counter */
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					ctr.count = (ctr.count & 0x00ff) | ((data << 8) & 0xff00);
-/*TODO*///					ctr.writebyte = 0;
-/*TODO*///	
-/*TODO*///					/* treat 0 as $10000 */
-/*TODO*///					if (ctr.count == 0) ctr.count = 0x10000;
-/*TODO*///	
-/*TODO*///					/* reset/start the timer */
-/*TODO*///					if (ctr.timer)
-/*TODO*///						timer_reset(ctr.timer, TIME_NEVER);
-/*TODO*///					else
-/*TODO*///						ctr.timer = timer_set(TIME_NEVER, 0, NULL);
-/*TODO*///	
-/*TODO*///					if (LOG_PIT != 0) logerror("PIT counter %d set to %d (%d Hz)\n", which, ctr.count, 4000000 / ctr.count);
-/*TODO*///	
-/*TODO*///					/* set the frequency of the associated DAC */
-/*TODO*///					if (!is_redline)
-/*TODO*///						set_dac_frequency(which, 4000000 / ctr.count);
-/*TODO*///					else
-/*TODO*///					{
-/*TODO*///						if (which < 5)
-/*TODO*///							set_dac_frequency(which, 7000000 / ctr.count);
-/*TODO*///						else if (which == 6)
-/*TODO*///						{
-/*TODO*///							set_dac_frequency(5, 7000000 / ctr.count);
-/*TODO*///							set_dac_frequency(6, 7000000 / ctr.count);
-/*TODO*///							set_dac_frequency(7, 7000000 / ctr.count);
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 3:
-/*TODO*///				/* determine which counter */
-/*TODO*///				if ((data & 0xc0) == 0xc0) break;
-/*TODO*///				which = (which * 3) + (data >> 6);
-/*TODO*///				ctr = &counter[which];
-/*TODO*///	
-/*TODO*///				/* set the mode */
-/*TODO*///				ctr.mode = (data >> 1) & 7;
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+    /**
+     * ***********************************
+     *
+     * 8254 PIT accesses
+     *
+     ************************************
+     */
+    static void counter_update_count(int which) {
+        /* only update if the timer is running */
+        if (counter[which].timer != null) {
+            /* determine how many 2MHz cycles are remaining */
+            int count = (int) (timer_timeleft(counter[which].timer) / TIME_IN_HZ(2000000));
+            counter[which].count = (count < 0) ? 0 : count;
+        }
+    }
+    public static ReadHandlerPtr pit8254_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            counter_state ctr;
+            int which = offset / 0x80;
+            int reg = (offset / 2) & 3;
+
+            /* ignore odd offsets */
+            if ((offset & 1) != 0) {
+                return 0;
+            }
+
+            /* switch off the register */
+            switch (offset & 3) {
+                case 0:
+                case 1:
+                case 2:
+                    /* warning: assumes LSB/MSB addressing and no latching! */
+                    which = (which * 3) + reg;
+                    ctr = counter[which];
+
+                    /* update the count */
+                    counter_update_count(which);
+
+                    /* return the LSB */
+                    if (counter[which].u8_readbyte == 0) {
+                        counter[which].u8_readbyte = 1;
+                        return counter[which].count & 0xff;
+                    } /* write the MSB and reset the counter */ else {
+                        counter[which].u8_readbyte = 0;
+                        return (counter[which].count >> 8) & 0xff;
+                    }
+                //break;
+            }
+            return 0;
+        }
+    };
+    public static WriteHandlerPtr pit8254_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            counter_state ctr;
+            int which = offset / 0x80;
+            int reg = (offset / 2) & 3;
+
+            /* ignore odd offsets */
+            if ((offset & 1) != 0) {
+                return;
+            }
+
+            /* switch off the register */
+            switch (reg) {
+                case 0:
+                case 1:
+                case 2:
+                    /* warning: assumes LSB/MSB addressing and no latching! */
+                    which = (which * 3) + reg;
+                    ctr = counter[which];
+
+                    /* write the LSB */
+                    if (ctr.u8_writebyte == 0) {
+                        ctr.count = (ctr.count & 0xff00) | (data & 0x00ff);
+                        ctr.u8_writebyte = 1;
+                    } /* write the MSB and reset the counter */ else {
+                        ctr.count = (ctr.count & 0x00ff) | ((data << 8) & 0xff00);
+                        ctr.u8_writebyte = 0;
+
+                        /* treat 0 as $10000 */
+                        if (ctr.count == 0) {
+                            ctr.count = 0x10000;
+                        }
+
+                        /* reset/start the timer */
+                        if (ctr.timer != null) {
+                            timer_reset(ctr.timer, TIME_NEVER);
+                        } else {
+                            ctr.timer = timer_set(TIME_NEVER, 0, null);
+                        }
+
+                        if (LOG_PIT != 0) {
+                            logerror("PIT counter %d set to %d (%d Hz)\n", which, ctr.count, 4000000 / ctr.count);
+                        }
+
+                        /* set the frequency of the associated DAC */
+                        if (is_redline == 0) {
+                            set_dac_frequency(which, 4000000 / ctr.count);
+                        } else {
+                            if (which < 5) {
+                                set_dac_frequency(which, 7000000 / ctr.count);
+                            } else if (which == 6) {
+                                set_dac_frequency(5, 7000000 / ctr.count);
+                                set_dac_frequency(6, 7000000 / ctr.count);
+                                set_dac_frequency(7, 7000000 / ctr.count);
+                            }
+                        }
+                    }
+                    break;
+
+                case 3:
+                    /* determine which counter */
+                    if ((data & 0xc0) == 0xc0) {
+                        break;
+                    }
+                    which = (which * 3) + (data >> 6);
+                    ctr = counter[which];
+
+                    /* set the mode */
+                    ctr.u8_mode = (data >> 1) & 7;
+                    break;
+            }
+        }
+    };
+
     /**
      * ***********************************
      *
@@ -1732,51 +1809,49 @@ public class leland {
      *
      ************************************
      */
-    public static timer_callback command_lo_sync
-            = new timer_callback() {
+    public static timer_callback command_lo_sync = new timer_callback() {
         public void handler(int data) {
-            //if (LOG_COMM != 0) logerror("%04X:Write sound command latch lo = %02X\n", cpu_getpreviouspc(), data);
+            if (LOG_COMM != 0) {
+                logerror("%04X:Write sound command latch lo = %02X\n", cpu_getpreviouspc(), data);
+            }
             u8_sound_command[0] = data & 0xFF;
         }
     };
-
     public static WriteHandlerPtr leland_i86_command_lo_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             timer_set(TIME_NOW, data, command_lo_sync);
         }
     };
-
     public static WriteHandlerPtr leland_i86_command_hi_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
-            //if (LOG_COMM != 0) logerror("%04X:Write sound command latch hi = %02X\n", cpu_getpreviouspc(), data);
+            if (LOG_COMM != 0) {
+                logerror("%04X:Write sound command latch hi = %02X\n", cpu_getpreviouspc(), data);
+            }
             u8_sound_command[1] = data & 0xFF;
         }
     };
-
-    /*TODO*///	
-/*TODO*///	public static ReadHandlerPtr main_to_sound_comm_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		if (!(offset & 1))
-/*TODO*///		{
-/*TODO*///			if (LOG_COMM != 0) logerror("%05X:Read sound command latch lo = %02X\n", cpu_get_pc(), sound_command[0]);
-/*TODO*///			return sound_command[0];
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if (LOG_COMM != 0) logerror("%05X:Read sound command latch hi = %02X\n", cpu_get_pc(), sound_command[1]);
-/*TODO*///			return sound_command[1];
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sound response handling
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
+    public static ReadHandlerPtr main_to_sound_comm_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            if ((offset & 1) == 0) {
+                if (LOG_COMM != 0) {
+                    logerror("%05X:Read sound command latch lo = %02X\n", cpu_get_pc(), u8_sound_command[0]);
+                }
+                return u8_sound_command[0];
+            } else {
+                if (LOG_COMM != 0) {
+                    logerror("%05X:Read sound command latch hi = %02X\n", cpu_get_pc(), u8_sound_command[1]);
+                }
+                return u8_sound_command[1];
+            }
+        }
+    };
+    /**
+     * ***********************************
+     *
+     * Sound response handling
+     *
+     ************************************
+     */
     public static timer_callback delayed_response_r = new timer_callback() {
         public void handler(int checkpc) {
             int pc = cpunum_get_reg(0, Z80_PC);
@@ -1789,7 +1864,7 @@ public class leland {
 		   accurate, so after the system has synced up, we go back into the master CPUs
 		   state and put the proper value into the A register. */
             if (pc == checkpc) {
-                //if (LOG_COMM != 0) logerror("(Updated sound response latch to %02X)\n", sound_response);
+                if (LOG_COMM != 0) logerror("(Updated sound response latch to %02X)\n", sound_response);
                 oldaf = (oldaf & 0x00ff) | (sound_response << 8);
                 cpunum_set_reg(0, Z80_AF, oldaf);
             } else {
@@ -1797,10 +1872,11 @@ public class leland {
             }
         }
     };
-
     public static ReadHandlerPtr leland_i86_response_r = new ReadHandlerPtr() {
         public int handler(int offset) {
-            //if (LOG_COMM != 0) logerror("%04X:Read sound response latch = %02X\n", cpu_getpreviouspc(), sound_response);
+            if (LOG_COMM != 0) {
+                logerror("%04X:Read sound response latch = %02X\n", cpu_getpreviouspc(), sound_response);
+            }
 
             /* if sound is disabled, toggle between FF and 00 */
             if (Machine.sample_rate == 0) {
@@ -1812,25 +1888,24 @@ public class leland {
             }
         }
     };
+    public static WriteHandlerPtr sound_to_main_comm_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            if (LOG_COMM != 0) {
+                logerror("%05X:Write sound response latch = %02X\n", cpu_get_pc(), data);
+            }
+            sound_response = data;
+        }
+    };
+
     /*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr sound_to_main_comm_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		if (LOG_COMM != 0) logerror("%05X:Write sound response latch = %02X\n", cpu_get_pc(), data);
-/*TODO*///		sound_response = data;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
 /*TODO*///	 *	Low-level DAC I/O
 /*TODO*///	 *
 /*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static void set_dac_frequency(int which, int frequency)
-/*TODO*///	{
-/*TODO*///		struct dac_state *d = &dac[which];
+    static void set_dac_frequency(int which, int frequency) {
+        /*TODO*///		struct dac_state *d = &dac[which];
 /*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
 /*TODO*///	
 /*TODO*///		/* set the frequency of the associated DAC */
@@ -1853,8 +1928,7 @@ public class leland {
 /*TODO*///		}
 /*TODO*///	
 /*TODO*///		if (LOG_DAC != 0) logerror("DAC %d frequency = %d, step = %08X\n", which, d.frequency, d.step);
-/*TODO*///	}
-/*TODO*///	
+    }
 
     public static WriteHandlerPtr dac_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
@@ -1927,9 +2001,9 @@ public class leland {
         }
     };
 
-    /*TODO*///	public static WriteHandlerPtr dac_10bit_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		static UINT8 even_byte;
+    public static WriteHandlerPtr dac_10bit_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /*TODO*///		static UINT8 even_byte;
 /*TODO*///		struct dac_state *d = &dac[6];
 /*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
 /*TODO*///	
@@ -1961,12 +2035,12 @@ public class leland {
 /*TODO*///			if (++count > d.buftarget)
 /*TODO*///				clock_active &= ~0x40;
 /*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr ataxx_dac_control = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		/* handle common offsets */
+        }
+    };
+
+    public static WriteHandlerPtr ataxx_dac_control = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            /*TODO*///		/* handle common offsets */
 /*TODO*///		switch (offset)
 /*TODO*///		{
 /*TODO*///			case 0x00:
@@ -2027,124 +2101,132 @@ public class leland {
 /*TODO*///			}
 /*TODO*///		}
 /*TODO*///		logerror("%05X:Unexpected peripheral write %d/%02X = %02X\n", cpu_get_pc(), 5, offset, data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Peripheral chip dispatcher
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr peripheral_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		int select = offset / 0x80;
-/*TODO*///		offset &= 0x7f;
-/*TODO*///	
-/*TODO*///		switch (select)
-/*TODO*///		{
-/*TODO*///			case 0:
-/*TODO*///				if ((offset & 1) != 0)
-/*TODO*///					return 0;
-/*TODO*///	
-/*TODO*///				/* we have to return 0 periodically so that they handle interrupts */
-/*TODO*///				if ((++clock_tick & 7) == 0)
-/*TODO*///					return 0;
-/*TODO*///	
-/*TODO*///				/* if we've filled up all the active channels, we can give this CPU a reset */
-/*TODO*///				/* until the next interrupt */
-/*TODO*///				{
-/*TODO*///					UINT8 result;
-/*TODO*///	
-/*TODO*///					if (!is_redline)
-/*TODO*///						result = ((clock_active >> 1) & 0x3e);
-/*TODO*///					else
-/*TODO*///						result = ((clock_active << 1) & 0x7e);
-/*TODO*///	
-/*TODO*///					if (!i186.intr.pending && active_mask && (*active_mask & result) == 0 && ++total_reads > 100)
-/*TODO*///					{
-/*TODO*///						if (LOG_OPTIMIZATION != 0) logerror("Suspended CPU: active_mask = %02X, result = %02X\n", *active_mask, result);
-/*TODO*///						cpu_spinuntil_trigger(CPU_RESUME_TRIGGER);
-/*TODO*///					}
-/*TODO*///					else if (LOG_OPTIMIZATION != 0)
-/*TODO*///					{
-/*TODO*///						if (i186.intr.pending) logerror("(can't suspend - interrupt pending)\n");
-/*TODO*///						else if (active_mask && (*active_mask & result) != 0) logerror("(can't suspend: mask=%02X result=%02X\n", *active_mask, result);
-/*TODO*///					}
-/*TODO*///	
-/*TODO*///					return result;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///			case 1:
-/*TODO*///				return main_to_sound_comm_r(offset);
-/*TODO*///	
-/*TODO*///			case 2:
-/*TODO*///				return pit8254_r(offset);
-/*TODO*///	
-/*TODO*///			case 3:
-/*TODO*///				if (!has_ym2151)
-/*TODO*///					return pit8254_r(offset | 0x80);
-/*TODO*///				else
-/*TODO*///					return (offset & 1) ? 0 : YM2151_status_port_0_r(offset);
-/*TODO*///	
-/*TODO*///			case 4:
-/*TODO*///				if (is_redline != 0)
-/*TODO*///					return pit8254_r(offset | 0x100);
-/*TODO*///				else
-/*TODO*///					logerror("%05X:Unexpected peripheral read %d/%02X\n", cpu_get_pc(), select, offset);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			default:
-/*TODO*///				logerror("%05X:Unexpected peripheral read %d/%02X\n", cpu_get_pc(), select, offset);
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///		return 0xff;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr peripheral_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		int select = offset / 0x80;
-/*TODO*///		offset &= 0x7f;
-/*TODO*///	
-/*TODO*///		switch (select)
-/*TODO*///		{
-/*TODO*///			case 1:
-/*TODO*///				sound_to_main_comm_w(offset, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 2:
-/*TODO*///				pit8254_w(offset, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 3:
-/*TODO*///				if (!has_ym2151)
-/*TODO*///					pit8254_w(offset | 0x80, data);
-/*TODO*///				else if (offset == 0)
-/*TODO*///					YM2151_register_port_0_w(offset, data);
-/*TODO*///				else if (offset == 2)
-/*TODO*///					YM2151_data_port_0_w(offset, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 4:
-/*TODO*///				if (is_redline != 0)
-/*TODO*///					pit8254_w(offset | 0x100, data);
-/*TODO*///				else
-/*TODO*///					dac_10bit_w(offset, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 5:	/* Ataxx/WSF/Indy Heat only */
-/*TODO*///				ataxx_dac_control(offset, data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			default:
-/*TODO*///				logerror("%05X:Unexpected peripheral write %d/%02X = %02X\n", cpu_get_pc(), select, offset, data);
-/*TODO*///				break;
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * Peripheral chip dispatcher
+     *
+     ************************************
+     */
+    public static ReadHandlerPtr peripheral_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            int select = offset / 0x80;
+            offset &= 0x7f;
+
+            switch (select) {
+                case 0:
+                    if ((offset & 1) != 0) {
+                        return 0;
+                    }
+
+                    /* we have to return 0 periodically so that they handle interrupts */
+                    if ((++clock_tick & 7) == 0) {
+                        return 0;
+                    }
+
+                    /* if we've filled up all the active channels, we can give this CPU a reset */
+ /* until the next interrupt */
+                     {
+                        int/*UINT8*/ u8_result;
+
+                        if (is_redline == 0) {
+                            u8_result = ((clock_active >> 1) & 0x3e);
+                        } else {
+                            u8_result = ((clock_active << 1) & 0x7e);
+                        }
+
+                        if (i186_state.intr.u8_pending != 0 && active_mask != null && (active_mask.read() & u8_result) == 0 && ++total_reads > 100) {
+                            if (LOG_OPTIMIZATION != 0) {
+                                logerror("Suspended CPU: active_mask = %02X, result = %02X\n", active_mask.read(), u8_result);
+                            }
+                            cpu_spinuntil_trigger(CPU_RESUME_TRIGGER);
+                        } else if (LOG_OPTIMIZATION != 0) {
+                            if (i186_state.intr.u8_pending != 0) {
+                                logerror("(can't suspend - interrupt pending)\n");
+                            } else if (active_mask != null && (active_mask.read() & u8_result) != 0) {
+                                logerror("(can't suspend: mask=%02X result=%02X\n", active_mask.read(), u8_result);
+                            }
+                        }
+
+                        return u8_result & 0xFF;
+                    }
+
+                case 1:
+                    return main_to_sound_comm_r.handler(offset);
+
+                case 2:
+                    return pit8254_r.handler(offset);
+
+                case 3:
+                    if (has_ym2151 == 0) {
+                        return pit8254_r.handler(offset | 0x80);
+                    } else {
+                        return (offset & 1) != 0 ? 0 : YM2151_status_port_0_r.handler(offset);
+                    }
+
+                case 4:
+                    if (is_redline != 0) {
+                        return pit8254_r.handler(offset | 0x100);
+                    } else {
+                        logerror("%05X:Unexpected peripheral read %d/%02X\n", cpu_get_pc(), select, offset);
+                    }
+                    break;
+
+                default:
+                    logerror("%05X:Unexpected peripheral read %d/%02X\n", cpu_get_pc(), select, offset);
+                    break;
+            }
+            return 0xff;
+        }
+    };
+
+    public static WriteHandlerPtr peripheral_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            int select = offset / 0x80;
+            offset &= 0x7f;
+
+            switch (select) {
+                case 1:
+                    sound_to_main_comm_w.handler(offset, data);
+                    break;
+
+                case 2:
+                    pit8254_w.handler(offset, data);
+                    break;
+
+                case 3:
+                    if (has_ym2151 == 0) {
+                        pit8254_w.handler(offset | 0x80, data);
+                    } else if (offset == 0) {
+                        YM2151_register_port_0_w.handler(offset, data);
+                    } else if (offset == 2) {
+                        YM2151_data_port_0_w.handler(offset, data);
+                    }
+                    break;
+
+                case 4:
+                    if (is_redline != 0) {
+                        pit8254_w.handler(offset | 0x100, data);
+                    } else {
+                        dac_10bit_w.handler(offset, data);
+                    }
+                    break;
+
+                case 5:
+                    /* Ataxx/WSF/Indy Heat only */
+                    ataxx_dac_control.handler(offset, data);
+                    break;
+
+                default:
+                    logerror("%05X:Unexpected peripheral write %d/%02X = %02X\n", cpu_get_pc(), select, offset, data);
+                    break;
+            }
+        }
+    };
+
     /**
      * ***********************************
      *

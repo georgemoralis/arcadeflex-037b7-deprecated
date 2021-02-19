@@ -189,78 +189,18 @@ public class instr86 {
 /*TODO*///	}
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_rotate_shift_Word)(unsigned ModRM, unsigned count)
-/*TODO*///{
-/*TODO*///	unsigned src = GetRMWord(ModRM);
-/*TODO*///	unsigned dst=src;
-/*TODO*///
-/*TODO*///	if (count==0)
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base : cycles.rot_m16_base;
-/*TODO*///	}
-/*TODO*///	else if (count==1)
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_1 : cycles.rot_m16_1;
+    static void i86_rotate_shift_Word(int/*unsigned*/ ModRM, int/*unsigned*/ count) {
+        int src = GetRMWord(ModRM);
+        int dst = src;
+
+        if (count == 0) {
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base : cycles.rot_m16_base;
+        } else if (count == 1) {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_1 : cycles.rot_m16_1;
 /*TODO*///
 /*TODO*///		switch (ModRM & 0x38)
 /*TODO*///		{
-/*TODO*///#if 0
-/*TODO*///		case 0x00:	/* ROL ew,1 */
-/*TODO*///			tmp2 = (tmp << 1) + CF;
-/*TODO*///			SetCFW(tmp2);
-/*TODO*///			I.OverVal = !(!(tmp & 0x4000)) != CF;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///		case 0x08:	/* ROR ew,1 */
-/*TODO*///			I.CarryVal = tmp & 0x01;
-/*TODO*///			tmp2 = (tmp >> 1) + ((unsigned)CF << 15);
-/*TODO*///			I.OverVal = !(!(tmp & 0x8000)) != CF;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///		case 0x10:	/* RCL ew,1 */
-/*TODO*///			tmp2 = (tmp << 1) + CF;
-/*TODO*///			SetCFW(tmp2);
-/*TODO*///			I.OverVal = (tmp ^ (tmp << 1)) & 0x8000;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///		case 0x18:	/* RCR ew,1 */
-/*TODO*///			tmp2 = (tmp >> 1) + ((unsigned)CF << 15);
-/*TODO*///			I.OverVal = !(!(tmp & 0x8000)) != CF;
-/*TODO*///			I.CarryVal = tmp & 0x01;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///		case 0x20:	/* SHL ew,1 */
-/*TODO*///		case 0x30:
-/*TODO*///			tmp <<= 1;
-/*TODO*///
-/*TODO*///            SetCFW(tmp);
-/*TODO*///			SetOFW_Add(tmp,tmp2,tmp2);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			SetSZPF_Word(tmp);
-/*TODO*///
-/*TODO*///			PutbackRMWord(ModRM,tmp);
-/*TODO*///			break;
-/*TODO*///		case 0x28:	/* SHR ew,1 */
-/*TODO*///			I.CarryVal = tmp & 0x01;
-/*TODO*///			I.OverVal = tmp & 0x8000;
-/*TODO*///
-/*TODO*///			tmp2 = tmp >> 1;
-/*TODO*///
-/*TODO*///			SetSZPF_Word(tmp2);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///			case 0x38:	/* SAR ew,1 */
-/*TODO*///			I.CarryVal = tmp & 0x01;
-/*TODO*///			I.OverVal = 0;
-/*TODO*///
-/*TODO*///			tmp2 = (tmp >> 1) | (tmp & 0x8000);
-/*TODO*///
-/*TODO*///			SetSZPF_Word(tmp2);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			PutbackRMWord(ModRM,tmp2);
-/*TODO*///			break;
-/*TODO*///#else
 /*TODO*///		case 0x00:	/* ROL ew,1 */
 /*TODO*///			I.CarryVal = src & 0x8000;
 /*TODO*///			dst=(src<<1)+CF;
@@ -310,16 +250,11 @@ public class instr86 {
 /*TODO*///			I.AuxVal = 1;
 /*TODO*///			SetSZPF_Word(dst);
 /*TODO*///			break;
-/*TODO*///#endif
 /*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m16_bit;
-/*TODO*///
-/*TODO*///		switch (ModRM & 0x38)
-/*TODO*///		{
-/*TODO*///		case 0x00:	/* ROL ew,count */
+        } else {
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m16_bit;
+            switch (ModRM & 0x38) {
+                /*TODO*///		case 0x00:	/* ROL ew,count */
 /*TODO*///			for (; count > 0; count--)
 /*TODO*///			{
 /*TODO*///				I.CarryVal = dst & 0x8000;
@@ -352,15 +287,16 @@ public class instr86 {
 /*TODO*///			}
 /*TODO*///			PutbackRMWord(ModRM,dst);
 /*TODO*///			break;
-/*TODO*///		case 0x20:
-/*TODO*///		case 0x30:	/* SHL ew,count */
-/*TODO*///			dst <<= count;
-/*TODO*///			SetCFW(dst);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			SetSZPF_Word(dst);
-/*TODO*///			PutbackRMWord(ModRM,dst);
-/*TODO*///			break;
-/*TODO*///		case 0x28:	/* SHR ew,count */
+                case 0x20:
+                case 0x30:
+                    /* SHL ew,count */
+                    dst <<= count;
+                    SetCFW(dst);
+                    I.AuxVal = 1;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst);
+                    break;
+                /*TODO*///		case 0x28:	/* SHR ew,count */
 /*TODO*///			dst >>= count-1;
 /*TODO*///			I.CarryVal = dst & 0x1;
 /*TODO*///			dst >>= 1;
@@ -376,12 +312,14 @@ public class instr86 {
 /*TODO*///			I.AuxVal = 1;
 /*TODO*///			PutbackRMWord(ModRM,dst);
 /*TODO*///			break;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///#endif
-/*TODO*///
-/*TODO*///static void PREFIX(rep)(int flagval) 
+                default:
+                    System.out.println("rot unsupported 0x " + (Integer.toHexString((ModRM & 0x38))));
+                    throw new UnsupportedOperationException("unsupported");
+            }
+        }
+    }
+
+    /*TODO*///static void PREFIX(rep)(int flagval) 
 /*TODO*///{ 
 /*TODO*///    /* Handles rep- and repnz- prefixes. flagval is the value of ZF for the 
 /*TODO*///		 loop  to continue for CMPS and SCAS instructions. */ 
@@ -648,16 +586,28 @@ public class instr86 {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*///static void PREFIX86(_add_axd16)(void)    /* Opcode 0x05 */
-/*TODO*///{
-/*TODO*///    DEF_axd16(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri16;
-/*TODO*///	ADDW(dst,src);
-/*TODO*///	I.regs.w[AX]=dst;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*///static void PREFIX86(_push_es)(void)    /* Opcode 0x06 */
+    static InstructionPtr i86_add_axd16 = new InstructionPtr() {
+        public void handler() {
+            //DEF_axd16(dst,src);
+            /*unsigned*/
+            int src = FETCHOP();
+            /*unsigned*/
+            int dst = I.regs.w[AX];
+            src += (FETCH() << 8);
+            i86_ICount[0] -= cycles.alu_ri16;
+            //ADDW(dst,src);
+            /*unsigned*/
+            int res = dst + src;
+            SetCFW(res);
+            SetOFW_Add(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Word(res);
+            dst = res & 0xFFFF;
+            I.regs.SetW(AX, dst);
+        }
+    };
+
+    /*TODO*///static void PREFIX86(_push_es)(void)    /* Opcode 0x06 */
 /*TODO*///{
 /*TODO*///	i86_ICount[0] -= cycles.push_seg;
 /*TODO*///	PUSH(I.sregs[ES]);
@@ -695,15 +645,24 @@ public class instr86 {
 /*TODO*///    RegByte(ModRM)=dst;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_or_r16w)(void)    /* Opcode 0x0b */
-/*TODO*///{
-/*TODO*///    DEF_r16w(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
-/*TODO*///    ORW(dst,src);
-/*TODO*///    RegWord(ModRM)=dst;
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_or_ald8)(void)    /* Opcode 0x0c */
+    static InstructionPtr i86_or_r16w = new InstructionPtr() {
+        public void handler() {
+            //DEF_r16w(dst,src);
+            int ModRM = FETCHOP();
+            /*unsigned*/
+            int dst = RegWord(ModRM);
+            /*unsigned*/
+            int src = GetRMWord(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
+            //ORW(dst,src);
+            dst |= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Word(dst);
+            SetRegWord(ModRM, dst & 0xFFFF);
+        }
+    };
+
+    /*TODO*///static void PREFIX86(_or_ald8)(void)    /* Opcode 0x0c */
 /*TODO*///{
 /*TODO*///    DEF_ald8(dst,src);
 /*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
@@ -898,14 +857,23 @@ public class instr86 {
 /*TODO*///    RegByte(ModRM)=dst;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_and_r16w)(void)    /* Opcode 0x23 */
-/*TODO*///{
-/*TODO*///    DEF_r16w(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
-/*TODO*///	ANDW(dst,src);
-/*TODO*///    RegWord(ModRM)=dst;
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_and_r16w = new InstructionPtr() {
+        public void handler() {
+            //DEF_r16w(dst,src);
+            int ModRM = FETCHOP();
+            /*unsigned*/
+            int dst = RegWord(ModRM);
+            /*unsigned*/
+            int src = GetRMWord(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
+            //ANDW(dst,src);
+            dst &= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Word(dst);
+            SetRegWord(ModRM, dst & 0xFFFF);
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_and_ald8)(void)    /* Opcode 0x24 */
 /*TODO*///{
 /*TODO*///    DEF_ald8(dst,src);
@@ -1043,14 +1011,23 @@ public class instr86 {
 /*TODO*///    PutbackRMWord(ModRM,dst);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_xor_r8b)(void)    /* Opcode 0x32 */
-/*TODO*///{
-/*TODO*///    DEF_r8b(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_rm8;
-/*TODO*///    XORB(dst,src);
-/*TODO*///    RegByte(ModRM)=dst;
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_xor_r8b = new InstructionPtr() /* Opcode 0x32 */ {
+        public void handler() {
+            //DEF_r8b(dst,src);
+            /*unsigned*/
+            int ModRM = FETCHOP();
+            /*unsigned*/
+            int dst = RegByte(ModRM);
+            /*unsigned*/
+            int src = GetRMByte(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_rm8;
+            //XORB(dst,src);
+            dst ^= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Byte(dst);
+            SetRegByte(ModRM, dst & 0xFF);
+        }
+    };
     static InstructionPtr i86_xor_r16w = new InstructionPtr() /* Opcode 0x33 */ {
         public void handler() {
             //DEF_r16w(dst, src);          
@@ -1136,13 +1113,22 @@ public class instr86 {
 /*TODO*///    SUBW(dst,src);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_cmp_ald8)(void)    /* Opcode 0x3c */
-/*TODO*///{
-/*TODO*///    DEF_ald8(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
-/*TODO*///    SUBB(dst,src);
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_cmp_ald8 = new InstructionPtr() {
+        public void handler() {
+            //DEF_ald8(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.b[AL];
+            i86_ICount[0] -= cycles.alu_ri8;
+            //SUBB(dst,src);
+            int res = dst - src;
+            SetCFB(res);
+            SetOFB_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Byte(res);
+            dst = res & 0xFF;
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_cmp_axd16)(void)    /* Opcode 0x3d */
 /*TODO*///{
 /*TODO*///    DEF_axd16(dst,src);
@@ -1847,24 +1833,27 @@ public class instr86 {
             int /*WORD*/ src = GetRMWord(ModRM) & 0xFFFF;
             i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_rr8 : cycles.mov_rm16;
             SetRegWord(ModRM, src);
-
         }
     };
-    /*TODO*///static void PREFIX86(_mov_wsreg)(void)    /* Opcode 0x8c */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_rs : cycles.mov_ms;
-/*TODO*///#ifdef I286
+    static InstructionPtr i86_mov_wsreg = new InstructionPtr() {
+        public void handler() {
+            int ModRM = FETCH();
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_rs : cycles.mov_ms;
+            /*TODO*///#ifdef I286
 /*TODO*///	if (ModRM & 0x20) {	/* HJB 12/13/98 1xx is invalid */
 /*TODO*///		i286_trap2(ILLEGAL_INSTRUCTION);
 /*TODO*///		return;
 /*TODO*///	}
 /*TODO*///#else
-/*TODO*///	if (ModRM & 0x20) return;	/* HJB 12/13/98 1xx is invalid */
-/*TODO*///#endif
-/*TODO*///	PutRMWord(ModRM,I.sregs[(ModRM & 0x38) >> 3]);
-/*TODO*///}
-/*TODO*///
+            if ((ModRM & 0x20) != 0) {
+                return;
+                /* HJB 12/13/98 1xx is invalid */
+            }
+            /*TODO*///#endif
+            PutRMWord(ModRM, I.sregs[(ModRM & 0x38) >> 3]);
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_lea)(void)    /* Opcode 0x8d */
 /*TODO*///{
 /*TODO*///	unsigned ModRM = FETCH;
@@ -1909,11 +1898,10 @@ public class instr86 {
                     break;
                 case 0x10:
                     /* mov ss,ew */
-                    throw new UnsupportedOperationException("unsupported");
-                /*TODO*///		I.sregs[SS] = src;
-/*TODO*///		I.base[SS] = SegBase(SS); /* no interrupt allowed before next instr */
-/*TODO*///		PREFIX(_instruction)[FETCHOP]();
-/*TODO*///		break;
+                    I.sregs[SS] = src;
+                    I.base[SS] = SegBase(SS);/* no interrupt allowed before next instr */
+                    fetchInstruction();//PREFIX(_instruction)[FETCHOP]();
+                    break;
                 case 0x08:
                     /* mov cs,ew */
                     break;
@@ -1998,32 +1986,33 @@ public class instr86 {
 /*TODO*///	I.regs.w[DX] = (I.regs.b[AH] & 0x80) ? 0xffff : 0;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_call_far)(void)
-/*TODO*///{
-/*TODO*///    unsigned tmp, tmp2;
-/*TODO*///	WORD ip;
-/*TODO*///
-/*TODO*///	tmp = FETCH;
-/*TODO*///	tmp += FETCH << 8;
-/*TODO*///
-/*TODO*///	tmp2 = FETCH;
-/*TODO*///	tmp2 += FETCH << 8;
-/*TODO*///
-/*TODO*///	ip = I.pc - I.base[CS];
-/*TODO*///	PUSH(I.sregs[CS]);
-/*TODO*///	PUSH(ip);
-/*TODO*///
+    static InstructionPtr i86_call_far = new InstructionPtr() {
+        public void handler() {
+
+            int tmp, tmp2;
+            int /*WORD*/ ip;
+            tmp = FETCH();
+            tmp += FETCH() << 8;
+
+            tmp2 = FETCH();
+            tmp2 += FETCH() << 8;
+
+            ip = (I.pc - I.base[CS]) & 0xFFFF;
+            PUSH(I.sregs[CS]);
+            PUSH(ip);
+            /*TODO*///
 /*TODO*///#ifdef I286
 /*TODO*///	i286_code_descriptor(tmp2, tmp);
 /*TODO*///#else
-/*TODO*///	I.sregs[CS] = (WORD)tmp2;
-/*TODO*///	I.base[CS] = SegBase(CS);
-/*TODO*///	I.pc = (I.base[CS] + (WORD)tmp) & AMASK;
-/*TODO*///#endif
-/*TODO*///	i86_ICount[0] -= cycles.call_far;
-/*TODO*///	CHANGE_PC(I.pc);
-/*TODO*///}
-/*TODO*///
+            I.sregs[CS] = tmp2 & 0xFFFF;
+            I.base[CS] = SegBase(CS);
+            I.pc = (I.base[CS] + (tmp & 0xFFFF)) & AMASK;
+            /*TODO*///#endif
+            i86_ICount[0] -= cycles.call_far;
+            change_pc20(I.pc);
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_wait)(void)    /* Opcode 0x9b */
 /*TODO*///{
 /*TODO*///	i86_ICount[0] -= cycles.wait;
@@ -2084,42 +2073,38 @@ public class instr86 {
 /*TODO*///	I.regs.b[AL] = GetMemB(DS, addr);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_mov_axdisp)(void)    /* Opcode 0xa1 */
-/*TODO*///{
-/*TODO*///	unsigned addr;
-/*TODO*///
-/*TODO*///	addr = FETCH;
-/*TODO*///	addr += FETCH << 8;
-/*TODO*///	
-/*TODO*///	i86_ICount[0] -= cycles.mov_am16;
-/*TODO*///	I.regs.b[AL] = GetMemB(DS, addr);
-/*TODO*///	I.regs.b[AH] = GetMemB(DS, addr+1);
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_dispal)(void)    /* Opcode 0xa2 */
-/*TODO*///{
-/*TODO*///    unsigned addr;
-/*TODO*///	
-/*TODO*///	addr = FETCH;
-/*TODO*///	addr += FETCH << 8;
-/*TODO*///	
-/*TODO*///	i86_ICount[0] -= cycles.mov_ma8;
-/*TODO*///	PutMemB(DS, addr, I.regs.b[AL]);
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_dispax)(void)    /* Opcode 0xa3 */
-/*TODO*///{
-/*TODO*///	unsigned addr;
-/*TODO*///	
-/*TODO*///	addr = FETCH;
-/*TODO*///	addr += FETCH << 8;
-/*TODO*///
-/*TODO*///	i86_ICount[0] -= cycles.mov_ma16;
-/*TODO*///	PutMemB(DS, addr, I.regs.b[AL]);
-/*TODO*///	PutMemB(DS, addr+1, I.regs.b[AH]);
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_movsb)(void)    /* Opcode 0xa4 */
+    public static InstructionPtr i86_mov_axdisp = new InstructionPtr() /* Opcode 0xa1 */ {
+        public void handler() {
+            /*unsigned*/
+            int addr;
+
+            addr = FETCH();
+            addr += FETCH() << 8;
+            I.regs.SetB(AL, GetMemB(DS, addr));
+            I.regs.SetB(AH, GetMemB(DS, addr + 1));
+        }
+    };
+    static InstructionPtr i86_mov_dispal = new InstructionPtr() {
+        public void handler() {
+            int addr;
+            addr = FETCH();
+            addr += FETCH() << 8;
+            i86_ICount[0] -= cycles.mov_ma8;
+            PutMemB(DS, addr, I.regs.b[AL]);
+        }
+    };
+    static InstructionPtr i86_mov_dispax = new InstructionPtr() {
+        public void handler() {
+            int addr;
+            addr = FETCH();
+            addr += FETCH() << 8;
+            i86_ICount[0] -= cycles.mov_ma16;
+            PutMemB(DS, addr, I.regs.b[AL]);
+            PutMemB(DS, addr + 1, I.regs.b[AH]);
+        }
+    };
+
+    /*TODO*///static void PREFIX86(_movsb)(void)    /* Opcode 0xa4 */
 /*TODO*///{
 /*TODO*///	BYTE tmp = GetMemB(DS,I.regs.w[SI]);
 /*TODO*///	PutMemB(ES,I.regs.w[DI], tmp);
@@ -2186,13 +2171,14 @@ public class instr86 {
 /*TODO*///	i86_ICount[0] -= cycles.stos16;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_lodsb)(void)    /* Opcode 0xac */
-/*TODO*///{
-/*TODO*///	I.regs.b[AL] = GetMemB(DS,I.regs.w[SI]);
-/*TODO*///	I.regs.w[SI] += I.DirVal;
-/*TODO*///	i86_ICount[0] -= cycles.lods8;
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_lodsb = new InstructionPtr() /* Opcode 0xac */ {
+        public void handler() {
+            I.regs.SetB(AL, GetMemB(DS, I.regs.w[SI]));
+            I.regs.SetW(SI, I.regs.w[SI] + I.DirVal);
+            i86_ICount[0] -= cycles.lods8;
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_lodsw)(void)    /* Opcode 0xad */
 /*TODO*///{
 /*TODO*///	I.regs.w[AX] = GetMemW(DS,I.regs.w[SI]);
@@ -2281,35 +2267,34 @@ public class instr86 {
             i86_ICount[0] -= cycles.mov_ri16;
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_mov_dxd16)(void)    /* Opcode 0xba */
-/*TODO*///{
-/*TODO*///	I.regs.b[DL] = FETCH;
-/*TODO*///	I.regs.b[DH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_bxd16)(void)    /* Opcode 0xbb */
-/*TODO*///{
-/*TODO*///	I.regs.b[BL] = FETCH;
-/*TODO*///	I.regs.b[BH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_spd16)(void)    /* Opcode 0xbc */
-/*TODO*///{
-/*TODO*///	I.regs.b[SPL] = FETCH;
-/*TODO*///	I.regs.b[SPH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_bpd16)(void)    /* Opcode 0xbd */
-/*TODO*///{
-/*TODO*///	I.regs.b[BPL] = FETCH;
-/*TODO*///	I.regs.b[BPH] = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.mov_ri16;
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_mov_dxd16 = new InstructionPtr() /* Opcode 0xba */ {
+        public void handler() {
+            I.regs.SetB(DL, FETCH());
+            I.regs.SetB(DH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
+    static InstructionPtr i86_mov_bxd16 = new InstructionPtr() /* Opcode 0xbb */ {
+        public void handler() {
+            I.regs.SetB(BL, FETCH());
+            I.regs.SetB(BH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
+    static InstructionPtr i86_mov_spd16 = new InstructionPtr() /* Opcode 0xbc */ {
+        public void handler() {
+            I.regs.SetB(SPL, FETCH());
+            I.regs.SetB(SPH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
+    static InstructionPtr i86_mov_bpd16 = new InstructionPtr() /* Opcode 0xbd */ {
+        public void handler() {
+            I.regs.SetB(BPL, FETCH());
+            I.regs.SetB(BPH, FETCH());
+            i86_ICount[0] -= cycles.mov_ri16;
+        }
+    };
     static InstructionPtr i86_mov_sid16 = new InstructionPtr() /* Opcode 0xbe */ {
         public void handler() {
             I.regs.SetB(SIL, FETCH());
@@ -2375,21 +2360,22 @@ public class instr86 {
 /*TODO*///	i86_ICount[0] -= cycles.load_ptr;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_mov_bd8)(void)    /* Opcode 0xc6 */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_ri8 : cycles.mov_mi8;
-/*TODO*///	PutImmRMByte(ModRM);
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_mov_wd16)(void)    /* Opcode 0xc7 */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_ri16 : cycles.mov_mi16;
-/*TODO*///	PutImmRMWord(ModRM);
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void PREFIX86(_retf_d16)(void)    /* Opcode 0xca */
+    static InstructionPtr i86_mov_bd8 = new InstructionPtr() {
+        public void handler() {
+            int ModRM = FETCH();
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_ri8 : cycles.mov_mi8;
+            PutImmRMByte(ModRM);
+        }
+    };
+    static InstructionPtr i86_mov_wd16 = new InstructionPtr() {
+        public void handler() {
+            int ModRM = FETCH();
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_ri16 : cycles.mov_mi16;
+            PutImmRMWord(ModRM);
+        }
+    };
+
+    /*TODO*///static void PREFIX86(_retf_d16)(void)    /* Opcode 0xca */
 /*TODO*///{
 /*TODO*///	unsigned count = FETCH;
 /*TODO*///	count += FETCH << 8;
@@ -2412,9 +2398,9 @@ public class instr86 {
 /*TODO*///	CHANGE_PC(I.pc);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_retf)(void)    /* Opcode 0xcb */
-/*TODO*///{
-/*TODO*///#ifdef I286
+    static InstructionPtr i86_retf = new InstructionPtr() {
+        public void handler() {
+            /*TODO*///#ifdef I286
 /*TODO*///	{ 
 /*TODO*///		int tmp, tmp2;
 /*TODO*///		POP(tmp2);
@@ -2422,15 +2408,16 @@ public class instr86 {
 /*TODO*///		i286_code_descriptor(tmp, tmp2);
 /*TODO*///	}
 /*TODO*///#else
-/*TODO*///	POP(I.pc);
-/*TODO*///	POP(I.sregs[CS]);
-/*TODO*///	I.base[CS] = SegBase(CS);
-/*TODO*///	I.pc = (I.pc + I.base[CS]) & AMASK;
-/*TODO*///#endif
-/*TODO*///	i86_ICount[0] -= cycles.ret_far;
-/*TODO*///	CHANGE_PC(I.pc);
-/*TODO*///}
-/*TODO*///
+            I.pc = POP();
+            I.sregs[CS] = POP();
+            I.base[CS] = SegBase(CS);
+            I.pc = (I.pc + I.base[CS]) & AMASK;
+            /*TODO*///#endif
+            i86_ICount[0] -= cycles.ret_far;
+            change_pc20(I.pc);
+        }
+    };
+    /*TODO*///
 /*TODO*///static void PREFIX86(_int3)(void)    /* Opcode 0xcc */
 /*TODO*///{
 /*TODO*///	i86_ICount[0] -= cycles.int3;
@@ -2509,12 +2496,12 @@ public class instr86 {
 /*TODO*///	PREFIX(_rotate_shift_Byte)(FETCHOP,I.regs.b[CL]);
 /*TODO*///}
 /*TODO*///
-/*TODO*///static void PREFIX86(_rotshft_wcl)(void)    /* Opcode 0xd3 */
-/*TODO*///{
-/*TODO*///	PREFIX(_rotate_shift_Word)(FETCHOP,I.regs.b[CL]);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* OB: Opcode works on NEC V-Series but not the Variants              */
+    static InstructionPtr i86_rotshft_wcl = new InstructionPtr() {
+        public void handler() {
+            i86_rotate_shift_Word(FETCHOP(), I.regs.b[CL]);
+        }
+    };
+    /*TODO*////* OB: Opcode works on NEC V-Series but not the Variants              */
 /*TODO*////*     one could specify any byte value as operand but the NECs */
 /*TODO*////*     always substitute 0x0a.              */
 /*TODO*///static void PREFIX86(_aam)(void)    /* Opcode 0xd4 */
@@ -3113,22 +3100,20 @@ public class instr86 {
         }
     };
 
-    /*TODO*///
-/*TODO*///static void PREFIX86(_sti)(void)    /* Opcode 0xfb */
-/*TODO*///{
-/*TODO*///	i86_ICount[0] -= cycles.flag_ops;
-/*TODO*///	SetIF(1);
-/*TODO*///	PREFIX(_instruction)[FETCHOP](); /* no interrupt before next instruction */
-/*TODO*///
-/*TODO*///	/* if an interrupt is pending, signal an interrupt */
-/*TODO*///	if (I.irq_state)
-/*TODO*///#ifdef V20
-/*TODO*///		PREFIX(_interrupt)(-1, 0);
-/*TODO*///#else
-/*TODO*///		PREFIX(_interrupt)(-1);
-/*TODO*///#endif
-/*TODO*///}
-/*TODO*///
+    static InstructionPtr i86_sti = new InstructionPtr() /* Opcode 0xfb */ {
+        public void handler() {
+            i86_ICount[0] -= cycles.flag_ops;
+            SetIF(1);
+            fetchInstruction();//PREFIX(_instruction)[FETCHOP](); /* no interrupt before next instruction */
+
+            /* if an interrupt is pending, signal an interrupt */
+            if (I.irq_state!=0) {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///		PREFIX(_interrupt)(-1);
+            }
+        }
+    };
+
     static InstructionPtr i86_cld = new InstructionPtr() /* Opcode 0xfc */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
@@ -3168,16 +3153,14 @@ public class instr86 {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*///static void PREFIX86(_ffpre)(void)    /* Opcode 0xff */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCHOP;
-/*TODO*///    unsigned tmp;
-/*TODO*///    unsigned tmp1;
-/*TODO*///    WORD ip;
-/*TODO*///
-/*TODO*///    switch(ModRM & 0x38)
-/*TODO*///    {
-/*TODO*///    case 0x00:  /* INC ew */
+    static InstructionPtr i86_ffpre = new InstructionPtr() {
+        public void handler() {
+            int ModRM = FETCHOP();
+            int tmp;
+            int tmp1;
+            int /*WORD*/ ip;
+            switch (ModRM & 0x38) {
+                /*TODO*///    case 0x00:  /* INC ew */
 /*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.incdec_r16 : cycles.incdec_m16;
 /*TODO*///		tmp = GetRMWord(ModRM);
 /*TODO*///		tmp1 = tmp+1;
@@ -3227,13 +3210,14 @@ public class instr86 {
 /*TODO*///		CHANGE_PC(I.pc);
 /*TODO*///		break;
 /*TODO*///
-/*TODO*///    case 0x20:  /* JMP ea */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.jmp_r16 : cycles.jmp_m16;
-/*TODO*///		ip = GetRMWord(ModRM);
-/*TODO*///		I.pc = (I.base[CS] + ip) & AMASK;
-/*TODO*///		CHANGE_PC(I.pc);
-/*TODO*///		break;
-/*TODO*///
+                case 0x20:
+                    /* JMP ea */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.jmp_r16 : cycles.jmp_m16;
+                    ip = GetRMWord(ModRM) & 0xFFFF;
+                    I.pc = (I.base[CS] + ip) & AMASK;
+                    change_pc20(I.pc);
+                    break;
+                /*TODO*///
 /*TODO*///    case 0x28:  /* JMP FAR ea */
 /*TODO*///		i86_ICount[0] -= cycles.jmp_m32;
 /*TODO*///		
@@ -3254,9 +3238,13 @@ public class instr86 {
 /*TODO*///		tmp = GetRMWord(ModRM);
 /*TODO*///		PUSH(tmp);
 /*TODO*///		break;
-/*TODO*///	 }
-/*TODO*///}
-/*TODO*///
+                default:
+                    System.out.println("i_ffpre 0x" + Integer.toHexString(ModRM & 0x38));
+                    throw new UnsupportedOperationException("Unsupported");
+            }
+        }
+    };
+    /*TODO*///
 /*TODO*///
 /*TODO*///static void PREFIX86(_invalid)(void)
 /*TODO*///{

@@ -8,15 +8,17 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.I86H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
 
 public class eaH {
+
     public static /*unsigned*/ int EA;
-    public static /*unsigned*/ int EO; /* HJB 12/13/98 effective offset of the address (before segment is added) */
+    public static /*unsigned*/ int EO;
+    /* HJB 12/13/98 effective offset of the address (before segment is added) */
 
 
     static GetEAPtr EA_000 = new GetEAPtr() {
         public int handler() {
-            i86_ICount[0]-=7; 
-            EO=(I.regs.w[BX]+I.regs.w[SI])&0xFFFF; 
-            EA=DefaultBase(DS)+EO; 
+            i86_ICount[0] -= 7;
+            EO = (I.regs.w[BX] + I.regs.w[SI]) & 0xFFFF;
+            EA = DefaultBase(DS) + EO;
             return EA;
         }
     };
@@ -47,7 +49,7 @@ public class eaH {
     static GetEAPtr EA_004 = new GetEAPtr() {
         public int handler() {
             i86_ICount[0] -= 5;
-            EO = I.regs.w[SI];
+            EO = I.regs.w[SI] & 0xFFFF;
             EA = DefaultBase(DS) + EO;
             return EA;
         }

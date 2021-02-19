@@ -42,6 +42,10 @@ public class modrmH {
         return I.regs.b[Mod_RM.reg.b[ModRM]];
     }
 
+    public static final void SetRegByte(int ModRM, int val) {
+        I.regs.SetB(Mod_RM.reg.b[ModRM], val);
+    }
+
     public static final int GetRMWord(int ModRM) {
         if (ModRM >= 0xc0) {
             return I.regs.w[Mod_RM.RM.w[ModRM]];
@@ -57,7 +61,8 @@ public class modrmH {
             WriteWord(EA, val);
         }
     }
-/*TODO*///
+
+    /*TODO*///
 /*TODO*///#define GetnextRMWord ReadWord(EA+2)
 /*TODO*///
 /*TODO*///#define GetRMWordOffset(offs) \
@@ -75,24 +80,22 @@ public class modrmH {
         }
     }
 
-/*TODO*///#define PutRMWordOffset(offs, val) \
+    /*TODO*///#define PutRMWordOffset(offs, val) \
 /*TODO*///		WriteWord( EA-EO+(UINT16)(EO+offs), val)
 /*TODO*///
 /*TODO*///#define PutRMByteOffset(offs, val) \
 /*TODO*///		WriteByte( EA-EO+(UINT16)(EO+offs), val)
 /*TODO*///
-/*TODO*///#define PutImmRMWord(ModRM) 				\
-/*TODO*///{											\
-/*TODO*///	WORD val;								\
-/*TODO*///	if (ModRM >= 0xc0)						\
-/*TODO*///		FETCHWORD(I.regs.w[Mod_RM.RM.w[ModRM]]) \
-/*TODO*///	else {									\
-/*TODO*///		(*GetEA[ModRM])();					\
-/*TODO*///		FETCHWORD(val)						\
-/*TODO*///		WriteWord( EA , val);				\
-/*TODO*///	}										\
-/*TODO*///}
-/*TODO*///	
+    public static final void PutImmRMWord(int ModRM) {
+        if (ModRM >= 0xc0) {
+            I.regs.SetW(Mod_RM.RM.w[ModRM], FETCHWORD());
+        } else {
+            GetEA[ModRM].handler();
+            int i = FETCHWORD();
+            WriteWord(EA, i);
+        }
+    }
+
     public static final int GetRMByte(int ModRM) {
         if (ModRM >= 0xc0) {
             return I.regs.b[Mod_RM.RM.b[ModRM]];
@@ -100,7 +103,8 @@ public class modrmH {
             return ReadByte(GetEA[ModRM].handler());
         }
     }
-/*TODO*///#define PutRMByte(ModRM,val)				\
+
+    /*TODO*///#define PutRMByte(ModRM,val)				\
 /*TODO*///{											\
 /*TODO*///	if (ModRM >= 0xc0)						\
 /*TODO*///		I.regs.b[Mod_RM.RM.b[ModRM]]=val;	\
@@ -108,16 +112,15 @@ public class modrmH {
 /*TODO*///		WriteByte( (*GetEA[ModRM])() ,val); \
 /*TODO*///}
 /*TODO*///
-/*TODO*///#define PutImmRMByte(ModRM) 				\
-/*TODO*///{											\
-/*TODO*///	if (ModRM >= 0xc0)						\
-/*TODO*///		I.regs.b[Mod_RM.RM.b[ModRM]]=FETCH; \
-/*TODO*///	else {									\
-/*TODO*///		(*GetEA[ModRM])();					\
-/*TODO*///		WriteByte( EA , FETCH );			\
-/*TODO*///	}										\
-/*TODO*///}
-/*TODO*///	
+    public static final void PutImmRMByte(int ModRM) {
+        if (ModRM >= 0xc0) {
+            I.regs.SetB(Mod_RM.RM.b[ModRM], FETCH());
+        } else {
+            GetEA[ModRM].handler();
+            WriteByte(EA, FETCH());
+        }
+    }
+    /*TODO*///	
 /*TODO*///#define PutbackRMByte(ModRM,val)			\
 /*TODO*///{											\
 /*TODO*///	if (ModRM >= 0xc0)						\

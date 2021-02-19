@@ -35,11 +35,24 @@ public class I86H {
         I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x8000;
     }
 
-    /*TODO*///#define SetOFB_Add(x,y,z)	(I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x80)
-/*TODO*///#define SetOFW_Sub(x,y,z)	(I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x8000)
-/*TODO*///#define SetOFB_Sub(x,y,z)	(I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x80)
-/*TODO*///
-/*TODO*///#define SetCFB(x)			(I.CarryVal = (x) & 0x100)
+    public static void SetOFB_Add(int x, int y, int z) {
+        I.OverVal = ((x) ^ (y)) & ((x) ^ (z)) & 0x80;
+
+    }
+
+    public static void SetOFW_Sub(int x, int y, int z) {
+        I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x8000;
+
+    }
+
+    public static void SetOFB_Sub(int x, int y, int z) {
+        I.OverVal = ((z) ^ (y)) & ((z) ^ (x)) & 0x80;
+    }
+
+    public static void SetCFB(int x) {
+        I.CarryVal = (x) & 0x100;
+    }
+
     public static void SetCFW(int x) {
         I.CarryVal = (x) & 0x10000;
     }
@@ -119,12 +132,24 @@ public class I86H {
         return ((seg_prefix != 0 && (Seg == DS || Seg == SS)) ? prefix_base : I.base[Seg]);
     }
 
-    /*TODO*///#define GetMemB(Seg,Off)		(cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK))
-/*TODO*///#define GetMemW(Seg,Off)		((WORD)GetMemB(Seg, Off) + (WORD)(GetMemB(Seg, (Off) + 1) << 8))
-/*TODO*///#define PutMemB(Seg,Off,x)		cpu_writemem20((DefaultBase(Seg) + (Off)) & AMASK, (x))
-/*TODO*///#define PutMemW(Seg,Off,x)		{ PutMemB(Seg, Off, (x) & 0xff); PutMemB(Seg, (Off) + 1, ((x) >> 8) & 0xff); }
-/*TODO*///
-/*TODO*///#define PEEKBYTE(ea) 			(cpu_readmem20((ea) & AMASK))
+    public static int GetMemB(int Seg, int Off) {
+        return (cpu_readmem20((DefaultBase(Seg) + (Off)) & AMASK));
+    }
+
+    public static int GetMemW(int Seg, int Off) {
+        return (GetMemB(Seg, Off) & 0xFFFF) + ((GetMemB(Seg, (Off) + 1) << 8) & 0xFFFF);
+    }
+
+    public static void PutMemB(int Seg, int Off, int x) {
+        cpu_writemem20((DefaultBase(Seg) + (Off)) & AMASK, (x));
+    }
+
+    public static void PutMemW(int Seg, int Off, int x) {
+        PutMemB(Seg, Off, (x) & 0xFF);
+        PutMemB(Seg, (Off) + 1, ((x) >> 8) & 0xFF);
+    }
+
+    /*TODO*///#define PEEKBYTE(ea) 			(cpu_readmem20((ea) & AMASK))
     public static int ReadByte(int ea) {
         return cpu_readmem20((ea) & AMASK);
     }
@@ -133,7 +158,10 @@ public class I86H {
         return (cpu_readmem20((ea) & AMASK) + (cpu_readmem20(((ea) + 1) & AMASK) << 8));
     }
 
-    /*TODO*///#define WriteByte(ea,val)		cpu_writemem20((ea) & AMASK, val);
+    public static void WriteByte(int ea, int val) {
+        cpu_writemem20((ea) & AMASK, val);
+    }
+
     public static void WriteWord(int ea, int val) {
         cpu_writemem20((ea) & AMASK, (val) & 0xff);
         cpu_writemem20(((ea) + 1) & AMASK, ((val) >> 8) & 0xff);
@@ -158,13 +186,26 @@ public class I86H {
         I.pc = (I.pc + 1);
         return i;
     }
+
     /*TODO*///#define PEEKOP(addr)			(cpu_readop(addr)) 
-/*TODO*///#define FETCHWORD(var) 			{ var = cpu_readop_arg(I.pc); var += (cpu_readop_arg(I.pc + 1) << 8); I.pc += 2; }
-/*TODO*///#define CHANGE_PC(addr)			change_pc20(addr)
-/*TODO*///#define PUSH(val)				{ I.regs.w[SP] -= 2; WriteWord(((I.base[SS] + I.regs.w[SP]) & AMASK), val); }
-/*TODO*///#define POP(var)				{ var = ReadWord(((I.base[SS] + I.regs.w[SP]) & AMASK)); I.regs.w[SP] += 2; }
-/*TODO*///
-/*TODO*////************************************************************************/
+    public static final int FETCHWORD() {
+        int var = cpu_readop_arg(I.pc);
+        var += (cpu_readop_arg(I.pc + 1) << 8);
+        I.pc += 2;
+        return var;
+    }
+
+    public static final void PUSH(int val) {
+        I.regs.SetW(SP, (I.regs.w[SP] - 2) & 0xFFFF);
+        WriteWord(((I.base[SS] + I.regs.w[SP]) & AMASK), val);
+    }
+
+    public static final int POP() {
+        int tmp = ReadWord(((I.base[SS] + I.regs.w[SP]) & AMASK));
+        I.regs.SetW(SP, (I.regs.w[SP] + 2) & 0xFFFF);
+        return tmp;
+    }
+    /*TODO*////************************************************************************/
 /*TODO*///
 /*TODO*///#define CompressFlags() (WORD)(CF | (PF << 2) | (AF << 4) | (ZF << 6) \
 /*TODO*///				| (SF << 7) | (I.TF << 8) | (I.IF << 9) \

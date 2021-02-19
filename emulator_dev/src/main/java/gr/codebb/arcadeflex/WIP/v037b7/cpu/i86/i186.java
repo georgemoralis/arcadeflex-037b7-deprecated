@@ -4,16 +4,24 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.i86;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.I86H.FETCHOP;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.I86H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186intfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86time.i186_cycles;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr186.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr86.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
+import gr.codebb.arcadeflex.old.arcadeflex.libc_old.FILE;
+import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.fclose;
+import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.fopen;
+import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.fprintf;
+import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.printf;
 
 public class i186 extends i86 {
+
+    public static FILE i186log = fopen("i186.log", "w");  //for debug purposes
 
     public i186() {
         cpu_num = CPU_I186;
@@ -48,6 +56,10 @@ public class i186 extends i86 {
         super.reset(param);
         cycles = i186_cycles;
     }
+    public static void i86_set_irq_callback(irqcallbacksPtr callback)
+    {
+        I.irq_callback=callback;
+    }
 
     /*TODO*///#include "i186intf.h"
 /*TODO*///
@@ -76,7 +88,9 @@ public class i186 extends i86 {
 
         /* run until we're out */
         while (i86_ICount[0] > 0) {
-            //printf("[%04x:%04x]=%02x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x\n", I.sregs[CS], I.pc, ReadByte(I.pc), I.regs.w[AX],I.regs.w[BX], I.regs.w[CX], I.regs.w[DX]);
+            if (i186log != null) {
+                fprintf(i186log, "[%04x:%04x]=%02x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x\n", I.sregs[CS], I.pc, ReadByte(I.pc), I.regs.w[AX], I.regs.w[BX], I.regs.w[CX], I.regs.w[DX]);
+            }
             seg_prefix = 0;
             I.prevpc = I.pc;
             fetchInstruction();
@@ -97,14 +111,18 @@ public class i186 extends i86 {
 /*TODO*///	case 0x02:    PREFIX86(_add_r8b)(); break;
 /*TODO*///	case 0x03:    PREFIX86(_add_r16w)(); break;
 /*TODO*///	case 0x04:    PREFIX86(_add_ald8)(); break;
-/*TODO*///	case 0x05:    PREFIX86(_add_axd16)(); break;
-/*TODO*///	case 0x06:    PREFIX86(_push_es)(); break;
+            case 0x05:
+                i86_add_axd16.handler();
+                break;
+            /*TODO*///	case 0x06:    PREFIX86(_push_es)(); break;
 /*TODO*///	case 0x07:    PREFIX86(_pop_es)(); break;
 /*TODO*///	case 0x08:    PREFIX86(_or_br8)(); break;
 /*TODO*///	case 0x09:    PREFIX86(_or_wr16)(); break;
 /*TODO*///	case 0x0a:    PREFIX86(_or_r8b)(); break;
-/*TODO*///	case 0x0b:    PREFIX86(_or_r16w)(); break;
-/*TODO*///	case 0x0c:    PREFIX86(_or_ald8)(); break;
+            case 0x0b:
+                i86_or_r16w.handler();
+                break;
+            /*TODO*///	case 0x0c:    PREFIX86(_or_ald8)(); break;
 /*TODO*///	case 0x0d:    PREFIX86(_or_axd16)(); break;
 /*TODO*///	case 0x0e:    PREFIX86(_push_cs)(); break;
 /*TODO*///	case 0x0f:    PREFIX86(_invalid)(); break;
@@ -127,8 +145,10 @@ public class i186 extends i86 {
 /*TODO*///	case 0x20:    PREFIX86(_and_br8)(); break;
 /*TODO*///	case 0x21:    PREFIX86(_and_wr16)(); break;
 /*TODO*///	case 0x22:    PREFIX86(_and_r8b)(); break;
-/*TODO*///	case 0x23:    PREFIX86(_and_r16w)(); break;
-/*TODO*///	case 0x24:    PREFIX86(_and_ald8)(); break;
+            case 0x23:
+                i86_and_r16w.handler();
+                break;
+            /*TODO*///	case 0x24:    PREFIX86(_and_ald8)(); break;
 /*TODO*///	case 0x25:    PREFIX86(_and_axd16)(); break;
 /*TODO*///	case 0x26:    PREFIX86(_es)(); break;
 /*TODO*///	case 0x27:    PREFIX86(_daa)(); break;
@@ -144,7 +164,9 @@ public class i186 extends i86 {
             /*TODO*///	case 0x2f:    PREFIX86(_das)(); break;
 /*TODO*///	case 0x30:    PREFIX86(_xor_br8)(); break;
 /*TODO*///	case 0x31:    PREFIX86(_xor_wr16)(); break;
-/*TODO*///	case 0x32:    PREFIX86(_xor_r8b)(); break;
+            case 0x32:
+                i86_xor_r8b.handler();
+                break;
             case 0x33:
                 i86_xor_r16w.handler();
                 break;
@@ -156,8 +178,10 @@ public class i186 extends i86 {
 /*TODO*///	case 0x39:    PREFIX86(_cmp_wr16)(); break;
 /*TODO*///	case 0x3a:    PREFIX86(_cmp_r8b)(); break;
 /*TODO*///	case 0x3b:    PREFIX86(_cmp_r16w)(); break;
-/*TODO*///	case 0x3c:    PREFIX86(_cmp_ald8)(); break;
-/*TODO*///	case 0x3d:    PREFIX86(_cmp_axd16)(); break;
+            case 0x3c:
+                i86_cmp_ald8.handler();
+                break;
+            /*TODO*///	case 0x3d:    PREFIX86(_cmp_axd16)(); break;
 /*TODO*///	case 0x3e:    PREFIX86(_ds)(); break;
 /*TODO*///	case 0x3f:    PREFIX86(_aas)(); break;
 /*TODO*///	case 0x40:    PREFIX86(_inc_ax)(); break;
@@ -248,8 +272,10 @@ public class i186 extends i86 {
             case 0x8b:
                 i86_mov_r16w.handler();
                 break;
-            /*TODO*///	case 0x8c:    PREFIX86(_mov_wsreg)(); break;
-/*TODO*///	case 0x8d:    PREFIX86(_lea)(); break;
+            case 0x8c:
+                i86_mov_wsreg.handler();
+                break;
+            /*TODO*///	case 0x8d:    PREFIX86(_lea)(); break;
             case 0x8e:
                 i86_mov_sregw.handler();
                 break;
@@ -266,17 +292,25 @@ public class i186 extends i86 {
 /*TODO*///	case 0x97:    PREFIX86(_xchg_axdi)(); break;
 /*TODO*///	case 0x98:    PREFIX86(_cbw)(); break;
 /*TODO*///	case 0x99:    PREFIX86(_cwd)(); break;
-/*TODO*///	case 0x9a:    PREFIX86(_call_far)(); break;
-/*TODO*///	case 0x9b:    PREFIX86(_wait)(); break;
+            case 0x9a:
+                i86_call_far.handler();
+                break;
+            /*TODO*///	case 0x9b:    PREFIX86(_wait)(); break;
 /*TODO*///	case 0x9c:    PREFIX86(_pushf)(); break;
 /*TODO*///	case 0x9d:    PREFIX86(_popf)(); break;
 /*TODO*///	case 0x9e:    PREFIX86(_sahf)(); break;
 /*TODO*///	case 0x9f:    PREFIX86(_lahf)(); break;
 /*TODO*///	case 0xa0:    PREFIX86(_mov_aldisp)(); break;
-/*TODO*///	case 0xa1:    PREFIX86(_mov_axdisp)(); break;
-/*TODO*///	case 0xa2:    PREFIX86(_mov_dispal)(); break;
-/*TODO*///	case 0xa3:    PREFIX86(_mov_dispax)(); break;
-/*TODO*///	case 0xa4:    PREFIX86(_movsb)(); break;
+            case 0xa1:
+                i86_mov_axdisp.handler();
+                break;
+            case 0xa2:
+                i86_mov_dispal.handler();
+                break;
+            case 0xa3:
+                i86_mov_dispax.handler();
+                break;
+            /*TODO*///	case 0xa4:    PREFIX86(_movsb)(); break;
 /*TODO*///	case 0xa5:    PREFIX86(_movsw)(); break;
 /*TODO*///	case 0xa6:    PREFIX86(_cmpsb)(); break;
 /*TODO*///	case 0xa7:    PREFIX86(_cmpsw)(); break;
@@ -284,8 +318,10 @@ public class i186 extends i86 {
 /*TODO*///	case 0xa9:    PREFIX86(_test_axd16)(); break;
 /*TODO*///	case 0xaa:    PREFIX86(_stosb)(); break;
 /*TODO*///	case 0xab:    PREFIX86(_stosw)(); break;
-/*TODO*///	case 0xac:    PREFIX86(_lodsb)(); break;
-/*TODO*///	case 0xad:    PREFIX86(_lodsw)(); break;
+            case 0xac:
+                i86_lodsb.handler();
+                break;
+            /*TODO*///	case 0xad:    PREFIX86(_lodsw)(); break;
 /*TODO*///	case 0xae:    PREFIX86(_scasb)(); break;
 /*TODO*///	case 0xaf:    PREFIX86(_scasw)(); break;
 /*TODO*///	case 0xb0:    PREFIX86(_mov_ald8)(); break;
@@ -302,10 +338,18 @@ public class i186 extends i86 {
             case 0xb9:
                 i86_mov_cxd16.handler();
                 break;
-            /*TODO*///	case 0xba:    PREFIX86(_mov_dxd16)(); break;
-/*TODO*///	case 0xbb:    PREFIX86(_mov_bxd16)(); break;
-/*TODO*///	case 0xbc:    PREFIX86(_mov_spd16)(); break;
-/*TODO*///	case 0xbd:    PREFIX86(_mov_bpd16)(); break;
+            case 0xba:
+                i86_mov_dxd16.handler();
+                break;
+            case 0xbb:
+                i86_mov_bxd16.handler();
+                break;
+            case 0xbc:
+                i86_mov_spd16.handler();
+                break;
+            case 0xbd:
+                i86_mov_bpd16.handler();
+                break;
             case 0xbe:
                 i86_mov_sid16.handler();
                 break;
@@ -318,21 +362,29 @@ public class i186 extends i86 {
 /*TODO*///	case 0xc3:    PREFIX86(_ret)(); break;
 /*TODO*///	case 0xc4:    PREFIX86(_les_dw)(); break;
 /*TODO*///	case 0xc5:    PREFIX86(_lds_dw)(); break;
-/*TODO*///	case 0xc6:    PREFIX86(_mov_bd8)(); break;
-/*TODO*///	case 0xc7:    PREFIX86(_mov_wd16)(); break;
-/*TODO*///		  case 0xc8:    PREFIX186(_enter)(); break;
+            case 0xc6:
+                i86_mov_bd8.handler();
+                break;
+            case 0xc7:
+                i86_mov_wd16.handler();
+                break;
+            /*TODO*///		  case 0xc8:    PREFIX186(_enter)(); break;
 /*TODO*///		  case 0xc9:    PREFIX186(_leave)(); break;
 /*TODO*///	case 0xca:    PREFIX86(_retf_d16)(); break;
-/*TODO*///	case 0xcb:    PREFIX86(_retf)(); break;
-/*TODO*///	case 0xcc:    PREFIX86(_int3)(); break;
+            case 0xcb:
+                i86_retf.handler();
+                break;
+            /*TODO*///	case 0xcc:    PREFIX86(_int3)(); break;
 /*TODO*///	case 0xcd:    PREFIX86(_int)(); break;
 /*TODO*///	case 0xce:    PREFIX86(_into)(); break;
 /*TODO*///	case 0xcf:    PREFIX86(_iret)(); break;
 /*TODO*///		  case 0xd0:    PREFIX86(_rotshft_b)(); break;
 /*TODO*///		  case 0xd1:    PREFIX86(_rotshft_w)(); break;
 /*TODO*///		  case 0xd2:    PREFIX86(_rotshft_bcl)(); break;
-/*TODO*///		  case 0xd3:    PREFIX86(_rotshft_wcl)(); break;
-/*TODO*///	case 0xd4:    PREFIX86(_aam)(); break;
+            case 0xd3:
+                i86_rotshft_wcl.handler();
+                break;
+            /*TODO*///	case 0xd4:    PREFIX86(_aam)(); break;
 /*TODO*///	case 0xd5:    PREFIX86(_aad)(); break;
 /*TODO*///	case 0xd6:    PREFIX86(_invalid)(); break;
 /*TODO*///	case 0xd7:    PREFIX86(_xlat)(); break;
@@ -370,9 +422,13 @@ public class i186 extends i86 {
                 break;
             /*TODO*///	case 0xf0:    PREFIX86(_lock)(); break;
 /*TODO*///	case 0xf1:    PREFIX86(_invalid)(); break;
-/*TODO*///	case 0xf2:    PREFIX186(_repne)(); break;
-/*TODO*///	case 0xf3:    PREFIX186(_repe)(); break;
-/*TODO*///	case 0xf4:    PREFIX86(_hlt)(); break;
+            case 0xf2:
+                i186_repne.handler();
+                break;
+            case 0xf3:
+                i186_repe.handler();
+                break;
+            /*TODO*///	case 0xf4:    PREFIX86(_hlt)(); break;
 /*TODO*///	case 0xf5:    PREFIX86(_cmc)(); break;
             case 0xf6:
                 i86_f6pre.handler();
@@ -383,7 +439,9 @@ public class i186 extends i86 {
             case 0xfa:
                 i86_cli.handler();
                 break;
-            /*TODO*///	case 0xfb:    PREFIX86(_sti)(); break;
+            case 0xfb:
+                i86_sti.handler();
+                break;
             case 0xfc:
                 i86_cld.handler();
                 break;
@@ -391,9 +449,14 @@ public class i186 extends i86 {
                 i86_std.handler();
                 break;
             /*TODO*///	case 0xfe:    PREFIX86(_fepre)(); break;
-/*TODO*///	case 0xff:    PREFIX86(_ffpre)(); break;
+            case 0xff:
+                i86_ffpre.handler();
+                break;
             default:
                 System.out.println("Unsupported 186 instruction 0x " + Integer.toHexString(fetchop));
+                if (i186log != null) {
+                    fclose(i186log);
+                }
                 throw new UnsupportedOperationException("Unsupported");
         }
     }

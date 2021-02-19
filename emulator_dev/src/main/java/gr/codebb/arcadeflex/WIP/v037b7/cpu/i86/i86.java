@@ -291,14 +291,6 @@ public class i86 extends cpu_interface {
 /*TODO*///		PREFIX(_interrupt)(I86_NMI_INT);
 /*TODO*///}
 /*TODO*///
-/*TODO*///void i86_set_irq_line(int irqline, int state)
-/*TODO*///{
-/*TODO*///	I.irq_state = state;
-/*TODO*///
-/*TODO*///	/* if the IF is set, signal an interrupt */
-/*TODO*///	if (state != CLEAR_LINE && I.IF)
-/*TODO*///		PREFIX(_interrupt)(-1);
-/*TODO*///}
 /*TODO*///
 /*TODO*///
 /*TODO*///int i86_execute(int num_cycles)
@@ -435,8 +427,13 @@ public class i86 extends cpu_interface {
     }
 
     @Override
-    public void set_irq_line(int irqline, int linestate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void set_irq_line(int irqline, int state) {
+        I.irq_state = state;
+        /* if the IF is set, signal an interrupt */
+        if (state != CLEAR_LINE && I.IF != 0) {
+            //PREFIX(_interrupt)(-1);
+            throw new UnsupportedOperationException("Unsupported");
+        }
     }
 
     @Override
