@@ -62,11 +62,11 @@ public class mcr {
     static int/*UINT8*/ u8_turbocs_status;
 
     /*TODO*///	extern struct pia6821_interface turbocs_pia_intf;
-/*TODO*///	
-/*TODO*///	/* Sounds Good-specific globals */
-/*TODO*///	static UINT8 soundsgood_sound_cpu;
-/*TODO*///	static UINT8 soundsgood_dac_index;
-/*TODO*///	static UINT8 soundsgood_status;
+
+    /* Sounds Good-specific globals */
+    static int/*UINT8*/ u8_soundsgood_sound_cpu;
+    static int/*UINT8*/ u8_soundsgood_dac_index;
+    static int/*UINT8*/ u8_soundsgood_status;
 /*TODO*///	extern struct pia6821_interface soundsgood_pia_intf;
 /*TODO*///	
 /*TODO*///	/* Squawk n' Talk-specific globals */
@@ -288,17 +288,17 @@ public class mcr {
                 new MemoryWriteAddress(0xc000, 0xc000, ssio_status_w),
                 new MemoryWriteAddress(0xe000, 0xe000, MWA_NOP),
                 new MemoryWriteAddress(-1) /* end of table */};
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Chip Squeak Deluxe communications
-/*TODO*///	 *
-/*TODO*///	 *	MC68000, 1 PIA, 10-bit DAC
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
+    	
+	
+	
+	/*************************************
+	 *
+	 *	Chip Squeak Deluxe communications
+	 *
+	 *	MC68000, 1 PIA, 10-bit DAC
+	 *
+	 *************************************/
+	
 	/********* internal interfaces ***********/
 	public static WriteHandlerPtr csdeluxe_porta_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
@@ -347,31 +347,31 @@ public class mcr {
             1,
             new int[]{100}
     );
-    /*TODO*///	
-/*TODO*///	static DACinterface mcr_dual_dac_interface = new DACinterface
-/*TODO*///	(
-/*TODO*///		2,
-/*TODO*///		new int[] { 75, 75 }
-/*TODO*///	);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* memory interfaces ***********/
-/*TODO*///	static MemoryReadAddress csdeluxe_readmem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryReadAddress( 0x000000, 0x007fff, MRA_ROM ),
-/*TODO*///		new MemoryReadAddress( 0x018000, 0x018007, pia_0_r ),
-/*TODO*///		new MemoryReadAddress( 0x01c000, 0x01cfff, MRA_BANK1 ),
-/*TODO*///		new MemoryReadAddress( -1 )	/* end of table */
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	static MemoryWriteAddress csdeluxe_writemem[] =
-/*TODO*///	{
-/*TODO*///		new MemoryWriteAddress( 0x000000, 0x007fff, MWA_ROM ),
-/*TODO*///		new MemoryWriteAddress( 0x018000, 0x018007, pia_0_w ),
-/*TODO*///		new MemoryWriteAddress( 0x01c000, 0x01cfff, MWA_BANK1 ),
-/*TODO*///		new MemoryWriteAddress( -1 )	/* end of table */
-/*TODO*///	};
-/*TODO*///	
+    	
+	public static DACinterface mcr_dual_dac_interface = new DACinterface
+	(
+		2,
+		new int[] { 75, 75 }
+	);
+	
+	
+	/********* memory interfaces ***********/
+	public static MemoryReadAddress csdeluxe_readmem[] =
+	{
+		new MemoryReadAddress( 0x000000, 0x007fff, MRA_ROM ),
+		new MemoryReadAddress( 0x018000, 0x018007, pia_0_r ),
+		new MemoryReadAddress( 0x01c000, 0x01cfff, MRA_BANK1 ),
+		new MemoryReadAddress( -1 )	/* end of table */
+	};
+	
+	public static MemoryWriteAddress csdeluxe_writemem[] =
+	{
+		new MemoryWriteAddress( 0x000000, 0x007fff, MWA_ROM ),
+		new MemoryWriteAddress( 0x018000, 0x018007, pia_0_w ),
+		new MemoryWriteAddress( 0x01c000, 0x01cfff, MWA_BANK1 ),
+		new MemoryWriteAddress( -1 )	/* end of table */
+	};
+	
 	
 	/********* PIA interfaces ***********/
 	static pia6821_interface csdeluxe_pia_intf = new pia6821_interface
@@ -382,34 +382,35 @@ public class mcr {
 	);
 	
 	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	MCR Sounds Good communications
-/*TODO*///	 *
-/*TODO*///	 *	MC68000, 1 PIA, 10-bit DAC
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	/********* internal interfaces ***********/
-/*TODO*///	public static WriteHandlerPtr soundsgood_porta_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		dacval = (dacval & ~0x3fc) | (data << 2);
-/*TODO*///		DAC_signed_data_16_w(soundsgood_dac_index, dacval << 6);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr soundsgood_portb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		dacval = (dacval & ~0x003) | (data >> 6);
-/*TODO*///		DAC_signed_data_16_w(soundsgood_dac_index, dacval << 6);
-/*TODO*///		soundsgood_status = (data >> 4) & 3;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	static void soundsgood_irq(int state)
-/*TODO*///	{
-/*TODO*///	  	cpu_set_irq_line(soundsgood_sound_cpu, 4, state ? ASSERT_LINE : CLEAR_LINE);
-/*TODO*///	}
-/*TODO*///	
+	
+	/*************************************
+	 *
+	 *	MCR Sounds Good communications
+	 *
+	 *	MC68000, 1 PIA, 10-bit DAC
+	 *
+	 *************************************/
+	
+	/********* internal interfaces ***********/
+	public static WriteHandlerPtr soundsgood_porta_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		dacval = (char)((dacval & ~0x3fc) | (data << 2));
+		DAC_signed_data_16_w.handler(u8_soundsgood_dac_index, dacval << 6);
+	} };
+	
+	public static WriteHandlerPtr soundsgood_portb_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		dacval = (char)((dacval & ~0x003) | (data >> 6));
+		DAC_signed_data_16_w.handler(u8_soundsgood_dac_index, dacval << 6);
+		u8_soundsgood_status = (data >> 4) & 3;
+	} };
+	
+        static irqfuncPtr soundsgood_irq = new irqfuncPtr() {
+            @Override
+            public void handler(int state) {
+	  	cpu_set_irq_line(u8_soundsgood_sound_cpu, 4, state!=0 ? ASSERT_LINE : CLEAR_LINE);
+	}};
+	
 	static timer_callback soundsgood_delayed_data_w = new timer_callback() {
             @Override
             public void handler(int param) {
@@ -425,23 +426,23 @@ public class mcr {
 		timer_set(TIME_NOW, data, soundsgood_delayed_data_w);
 	} };
 	
-/*TODO*///	public static ReadHandlerPtr soundsgood_status_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return soundsgood_status;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	void soundsgood_reset_w(int state)
-/*TODO*///	{
-/*TODO*///		cpu_set_reset_line(soundsgood_sound_cpu, state ? ASSERT_LINE : CLEAR_LINE);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/********* sound interfaces ***********/
-/*TODO*///	static DACinterface turbocs_plus_soundsgood_dac_interface = new DACinterface
-/*TODO*///	(
-/*TODO*///		2,
-/*TODO*///		new int[] { 80, 80 }
-/*TODO*///	);
+	public static ReadHandlerPtr soundsgood_status_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return u8_soundsgood_status;
+	} };
+	
+	static void soundsgood_reset_w(int state)
+	{
+		cpu_set_reset_line(u8_soundsgood_sound_cpu, state!=0 ? ASSERT_LINE : CLEAR_LINE);
+	}
+	
+	
+	/********* sound interfaces ***********/
+	static DACinterface turbocs_plus_soundsgood_dac_interface = new DACinterface
+	(
+		2,
+		new int[] { 80, 80 }
+	);
 	
 	
 	/********* memory interfaces ***********/
@@ -462,18 +463,17 @@ public class mcr {
 	};
 	
 	
-/*TODO*///	/********* PIA interfaces ***********/
-/*TODO*///	/* Note: we map this board to PIA #1. It is only used in Spy Hunter and Spy Hunter 2 */
-/*TODO*///	/* For Spy Hunter 2, we also have a Turbo Chip Squeak in PIA slot 0, so we don't want */
-/*TODO*///	/* to interfere */
-/*TODO*///	struct pia6821_interface soundsgood_pia_intf =
-/*TODO*///	{
-/*TODO*///		/*inputs : A/B,CA/B1,CA/B2 */ 0, 0, 0, 0, 0, 0,
-/*TODO*///		/*outputs: A/B,CA/B2       */ soundsgood_porta_w, soundsgood_portb_w, 0, 0,
-/*TODO*///		/*irqs   : A/B             */ soundsgood_irq, soundsgood_irq
-/*TODO*///	};
-/*TODO*///	
-/*TODO*///	
+	/********* PIA interfaces ***********/
+	/* Note: we map this board to PIA #1. It is only used in Spy Hunter and Spy Hunter 2 */
+	/* For Spy Hunter 2, we also have a Turbo Chip Squeak in PIA slot 0, so we don't want */
+	/* to interfere */
+	static pia6821_interface soundsgood_pia_intf = new pia6821_interface(
+		/*inputs : A/B,CA/B1,CA/B2 */ null, null, null, null, null, null,
+		/*outputs: A/B,CA/B2       */ soundsgood_porta_w, soundsgood_portb_w, null, null,
+		/*irqs   : A/B             */ soundsgood_irq, soundsgood_irq
+        );
+	
+	
 
     /**
      * ***********************************
@@ -523,11 +523,11 @@ public class mcr {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	public static ReadHandlerPtr turbocs_status_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return turbocs_status;
-/*TODO*///	} };
+    	
+	public static ReadHandlerPtr turbocs_status_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return u8_turbocs_status;
+	} };
     static void turbocs_reset_w(int state) {
         cpu_set_reset_line(u8_turbocs_sound_cpu, state != 0 ? ASSERT_LINE : CLEAR_LINE);
     }

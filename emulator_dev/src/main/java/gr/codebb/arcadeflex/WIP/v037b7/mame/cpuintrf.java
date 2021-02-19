@@ -1487,26 +1487,30 @@ public class cpuintrf {
                         irq_line = 0;
                         //LOG(("N7751 IRQ\n"));
                         break;
-                    /*TODO*///#endif
-/*TODO*///#if (HAS_M6800)
-/*TODO*///			case CPU_M6800: 			irq_line = 0; LOG(("M6800 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6801)
-/*TODO*///			case CPU_M6801: 			irq_line = 0; LOG(("M6801 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6802)
-/*TODO*///			case CPU_M6802: 			irq_line = 0; LOG(("M6802 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6803)
-/*TODO*///			case CPU_M6803: 			irq_line = 0; LOG(("M6803 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M6808)
-/*TODO*///			case CPU_M6808: 			irq_line = 0; LOG(("M6808 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_HD63701)
-/*TODO*///			case CPU_HD63701:			irq_line = 0; LOG(("HD63701 IRQ\n")); break;
-/*TODO*///#endif
-
+                    case CPU_M6800:
+                        irq_line = 0;
+                        //LOG(("M6800 IRQ\n"));
+                        break;
+                    case CPU_M6801:
+                        irq_line = 0;
+                        //LOG(("M6801 IRQ\n"));
+                        break;
+                    case CPU_M6802:
+                        irq_line = 0;
+                        //LOG(("M6802 IRQ\n"));
+                        break;
+                    case CPU_M6803:
+                        irq_line = 0;
+                        //LOG(("M6803 IRQ\n"));
+                        break;
+                    case CPU_M6808:
+                        irq_line = 0;
+                        //LOG(("M6808 IRQ\n"));
+                        break;
+                    case CPU_HD63701:
+                        irq_line = 0;
+                        //LOG(("HD63701 IRQ\n"));
+                        break;
                     case CPU_M6805:
                         irq_line = 0;
                         /*LOG(("M6805 IRQ\n"));*/

@@ -120,11 +120,11 @@ public class mcr3 {
 	
 	
 	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Sarge input ports
-/*TODO*///	 *
-/*TODO*///	 *************************************/
+	/*************************************
+	 *
+	 *	Sarge input ports
+	 *
+	 *************************************/
     public static ReadHandlerPtr sarge_port_1_r = new ReadHandlerPtr() {
         public int handler(int offset) {
             return readinputport(1) & ~one_joy_trans[readinputport(6) & 0x0f];

@@ -61,6 +61,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.dotrikun.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sega.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.segar.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skydiver.*;
+
 
 public class driver {
 
@@ -3082,8 +3084,7 @@ public class driver {
         // driver_canyon,	/* no copyright notice [1977] */
         /*TODO*/
         // driver_canbprot,	/* no copyright notice [1977] */
-        /*TODO*/
-        // driver_skydiver,	/* no copyright notice [1977] */
+        driver_skydiver,
         /*TODO*/
         // driver_videopin,	/* no copyright notice [1979] */
 
