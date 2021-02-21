@@ -1,3 +1,7 @@
+21/02/2021
+==========
+-More 6800 opcodes. Skydiver appears to work
+
 20/02/2021
 ==========
 -WIP work on 6800 cpu

@@ -487,7 +487,7 @@ public class m6800 extends cpu_interface {
         return RM(ea);
     }
 
-    public int DIRWORD() {
+    public static int DIRWORD() {
         DIRECT();
         return RM16(ea);
     }
