@@ -205,8 +205,7 @@ public class mcr {
             mcr_cocktail_flip = 0;
 
             /* initialize the sound */
-            System.out.println("uncomment mcr_sound_init()");
-/*TODO*///              mcr_sound_init();
+            mcr_sound_init();
         }
     };
     /*TODO*///	

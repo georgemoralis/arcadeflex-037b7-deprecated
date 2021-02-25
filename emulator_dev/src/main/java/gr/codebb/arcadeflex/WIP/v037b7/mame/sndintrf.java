@@ -37,6 +37,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound.y8950intf;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.ym2413;
 import gr.codebb.arcadeflex.v058.sound.sn76496;
 import gr.codebb.arcadeflex.v058.sound.tms36xx;
+import gr.codebb.arcadeflex.WIP.v037b7.sound._5220intf;
 
 public class sndintrf {
 
@@ -518,31 +519,7 @@ public class sndintrf {
         new namco(),
         new tms36xx(),
         new _5110intf(),
-        new Dummy_snd(),
-        /*TODO*/
-        // #if (HAS_TMS5220)
-        /*TODO*/
-        //    {
-        /*TODO*/
-        //		SOUND_TMS5220,
-        /*TODO*/
-        //		"TMS5220",
-        /*TODO*/
-        //		0,
-        /*TODO*/
-        //		TMS5220_clock,
-        /*TODO*/
-        //		tms5220_sh_start,
-        /*TODO*/
-        //		tms5220_sh_stop,
-        /*TODO*/
-        //		tms5220_sh_update,
-        /*TODO*/
-        //		0
-        /*TODO*/
-        //	},
-        /*TODO*/
-        // #endif
+        new _5220intf(),
         new Dummy_snd(),
         /*TODO*/
         // #if (HAS_VLM5030)

@@ -98,23 +98,19 @@ public class mcrH {
     /*TODO*///	}
     /*TODO*///
     /*TODO*///
-    /*TODO*///
-    /*TODO*////************ Squawk & Talk CPU and sound definitions ***************/
-    /*TODO*///
-    /*TODO*///
-    /*TODO*///#define SOUND_CPU_SQUAWK_N_TALK						\
-    /*TODO*///	{												\
-    /*TODO*///		CPU_M6802 | CPU_AUDIO_CPU,					\
-    /*TODO*///		3580000/4,	/* .8 MHz */					\
-    /*TODO*///		squawkntalk_readmem,squawkntalk_writemem,0,0,\
-    /*TODO*///		ignore_interrupt,1							\
-    /*TODO*///	}
-    /*TODO*///
-    /*TODO*///#define SOUND_SQUAWK_N_TALK							\
-    /*TODO*///	{												\
-    /*TODO*///		SOUND_TMS5220,								\
-    /*TODO*///		&squawkntalk_tms5220_interface				\
-    /*TODO*///	}
-    /*TODO*///    
-
+    
+    /************ Squawk & Talk CPU and sound definitions ***************/
+    
+    
+    public static MachineCPU SOUND_CPU_SQUAWK_N_TALK = new MachineCPU(												
+    		CPU_M6802 | CPU_AUDIO_CPU,					
+    		3580000/4,	/* .8 MHz */					
+    		squawkntalk_readmem,squawkntalk_writemem,null,null,
+    		ignore_interrupt,1							
+    );
+    
+    public static MachineSound SOUND_SQUAWK_N_TALK = new MachineSound(
+            SOUND_TMS5220,
+            squawkntalk_tms5220_interface
+    );
 }

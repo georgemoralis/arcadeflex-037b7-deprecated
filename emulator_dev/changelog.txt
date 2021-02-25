@@ -1,3 +1,8 @@
+25/02/2021
+==========
+-More 6800 opcodes , added 6802 variant
+-Partial sound on dotron in mcr3 driver (TMS5220 doesn't work properly yet)
+
 21/02/2021
 ==========
 -More 6800 opcodes. Skydiver appears to work
