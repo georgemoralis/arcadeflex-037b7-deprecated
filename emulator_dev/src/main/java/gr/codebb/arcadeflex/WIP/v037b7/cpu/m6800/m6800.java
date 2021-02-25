@@ -341,7 +341,7 @@ public class m6800 extends cpu_interface {
     }
 
     public static void WM(int addr, int value) {
-        cpu_writemem16(addr, value);
+        cpu_writemem16(addr, value&0xFF);
     }
 
     public char ROP(int addr) {
@@ -355,7 +355,7 @@ public class m6800 extends cpu_interface {
     static int RM16(int addr) {
         int i = RM(addr + 1 & 0xFFFF);
         i |= RM(addr) << 8;
-        return i;
+        return i &0xFFFF;
     }
 
     static void WM16(int addr, int reg) {
@@ -378,8 +378,8 @@ public class m6800 extends cpu_interface {
     }
 
     public static int IMMWORD() {
-        int reg = (M_RDOP_ARG(m6800.pc) << 8) | M_RDOP_ARG((m6800.pc + 1) & 0xffff);
-        m6800.pc = m6800.pc + 2 & 0xFFFF;
+        int reg = ((M_RDOP_ARG(m6800.pc) << 8) | M_RDOP_ARG((m6800.pc + 1)) & 0xffff);
+        m6800.pc = (m6800.pc) + 2 & 0xFFFF;
         return reg;
     }
 
