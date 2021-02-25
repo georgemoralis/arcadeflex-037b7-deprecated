@@ -130,7 +130,7 @@ public class m6800ops {
 
     public static opcode sba = new opcode() {
         public void handler() {
-             /*UINT16*/
+            /*UINT16*/
             int t;
             t = (m6800.a - m6800.b) & 0xFFFF;
             CLR_NZVC();
@@ -141,7 +141,7 @@ public class m6800ops {
 
     public static opcode cba = new opcode() {
         public void handler() {
-             /*UINT16*/
+            /*UINT16*/
             int t;
             t = (m6800.a - m6800.b) & 0xFFFF;
             CLR_NZVC();
@@ -1345,18 +1345,17 @@ public class m6800ops {
             m6800.a = r & 0xFF;
         }
     };
-    /*TODO*///
-/*TODO*////* $9c CMPX direct -***- */
+    /*RECKECK*/
     public static opcode cmpx_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	DIRWORD(b);
-/*TODO*///	d = X;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(r); SET_V16(d,b.d,r);
+            int/*UINT32*/ r, d;
+            int b;
+            b = DIRWORD();
+            d = m6800.x;
+            r = d - b;
+            CLR_NZV();
+            SET_NZ16(r);
+            SET_V16(d, b, r);
         }
     };
 
@@ -2118,9 +2117,10 @@ public class m6800ops {
 
     public static opcode cmpb_ix = new opcode() {
         public void handler() {
-            /*UINT16*/int t, r;
-            t=IDXBYTE();
-            r = (m6800.b - t)&0xFFFF;
+            /*UINT16*/
+            int t, r;
+            t = IDXBYTE();
+            r = (m6800.b - t) & 0xFFFF;
             CLR_NZVC();
             SET_FLAGS8(m6800.b, t, r);
         }
@@ -2292,11 +2292,11 @@ public class m6800ops {
 
     public static opcode sbcb_ex = new opcode() {
         public void handler() {
-            int t,r;
+            int t, r;
             t = EXTBYTE();
-            r = (m6800.b - t - (m6800.cc & 0x01))&0xFFFF;
+            r = (m6800.b - t - (m6800.cc & 0x01)) & 0xFFFF;
             CLR_NZVC();
-            SET_FLAGS8(m6800.b,t,r);
+            SET_FLAGS8(m6800.b, t, r);
             m6800.b = r & 0xFF;
         }
     };
@@ -2319,7 +2319,7 @@ public class m6800ops {
     public static opcode andb_ex = new opcode() {
         public void handler() {
             int t = EXTBYTE();
-            m6800.b =(m6800.b & t)&0xFF;
+            m6800.b = (m6800.b & t) & 0xFF;
             CLR_NZV();
             SET_NZ8(m6800.b);
         }
@@ -2327,10 +2327,10 @@ public class m6800ops {
 
     public static opcode bitb_ex = new opcode() {
         public void handler() {
-            int t,r;
-            t =EXTBYTE();
-            r = (m6800.b & t)&0xFF;
-            CLR_NZV(); 
+            int t, r;
+            t = EXTBYTE();
+            r = (m6800.b & t) & 0xFF;
+            CLR_NZV();
             SET_NZ8(r);
         }
     };
@@ -2354,8 +2354,8 @@ public class m6800ops {
 
     public static opcode eorb_ex = new opcode() {
         public void handler() {
-             int t=EXTBYTE();
-            m6800.b = (m6800.b ^ t)&0xFF;
+            int t = EXTBYTE();
+            m6800.b = (m6800.b ^ t) & 0xFF;
             CLR_NZV();
             SET_NZ8(m6800.b);
         }
@@ -2374,8 +2374,8 @@ public class m6800ops {
 
     public static opcode orb_ex = new opcode() {
         public void handler() {
-            int t=EXTBYTE();
-            m6800.b = (m6800.b | t)&0xFF;
+            int t = EXTBYTE();
+            m6800.b = (m6800.b | t) & 0xFF;
             CLR_NZV();
             SET_NZ8(m6800.b);
         }
@@ -2383,12 +2383,12 @@ public class m6800ops {
 
     public static opcode addb_ex = new opcode() {
         public void handler() {
-            int  t,r;
-            t=EXTBYTE();
+            int t, r;
+            t = EXTBYTE();
             r = (m6800.b + t) & 0xFFFF;
             CLR_HNZVC();
-            SET_FLAGS8(m6800.b,t,r);
-            SET_H(m6800.b,t,r);
+            SET_FLAGS8(m6800.b, t, r);
+            SET_H(m6800.b, t, r);
             m6800.b = r & 0xFF;
         }
     };
