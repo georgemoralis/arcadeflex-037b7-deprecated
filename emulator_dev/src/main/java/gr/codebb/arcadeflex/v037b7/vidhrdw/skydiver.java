@@ -3,7 +3,7 @@
  * ported to v0.36
  *
  */
-package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
+package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;

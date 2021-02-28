@@ -2,7 +2,7 @@
  * ported to 0.37b7
  * ported to 0.36
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.ignore_interrupt;
@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.GameDriver;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineCPU;
 import gr.codebb.arcadeflex.v037b7.mame.driverH.MachineDriver;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.skydiver.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.skydiver.*;
 
 public class skydiver {
 

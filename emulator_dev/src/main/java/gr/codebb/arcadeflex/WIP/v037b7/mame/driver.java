@@ -61,8 +61,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cosmic.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.dotrikun.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sega.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.segar.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skydiver.*;
-
+import static gr.codebb.arcadeflex.v037b7.drivers.skydiver.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.zaccaria.*;
 
 public class driver {
 
@@ -897,17 +897,17 @@ public class driver {
         driver_sutapper,
         driver_rbtapper,
         driver_timber, /* (c) 1984 */
-        driver_dotron,	/* (c) 1983 */
-        driver_dotrone,	/* (c) 1983 */
+        driver_dotron, /* (c) 1983 */
+        driver_dotrone, /* (c) 1983 */
         driver_destderb,
         driver_destderm,
         driver_sarge,
-        driver_rampage,	/* (c) 1986 */
-        driver_rampage2,	/* (c) 1986 */
-        driver_powerdrv,	/* (c) 1986 */
+        driver_rampage, /* (c) 1986 */
+        driver_rampage2, /* (c) 1986 */
+        driver_powerdrv, /* (c) 1986 */
         driver_maxrpm,
-        driver_spyhunt,	/* (c) 1983 */
-        driver_turbotag,	/* (c) 1985 */
+        driver_spyhunt, /* (c) 1983 */
+        driver_turbotag, /* (c) 1985 */
         driver_crater,
         /* MCR 68000 */
         /*TODO*/
@@ -3084,7 +3084,7 @@ public class driver {
         // driver_canyon,	/* no copyright notice [1977] */
         /*TODO*/
         // driver_canbprot,	/* no copyright notice [1977] */
-        driver_skydiver,
+
         /*TODO*/
         // driver_videopin,	/* no copyright notice [1979] */
 
@@ -3431,15 +3431,6 @@ public class driver {
         // driver_sia2650,
         /*TODO*/
         // driver_tinv2650,
-        /*TODO*/
-        // driver_monymony,	/* (c) 1983 */
-        /*TODO*/
-        // driver_jackrabt,	/* (c) 1984 */
-        /*TODO*/
-        // driver_jackrab2,	/* (c) 1984 */
-        /*TODO*/
-        // driver_jackrabs,	/* (c) 1984 */
-
         /* UPL games */
         driver_mnight, /* (c) 1987 distributed by Kawakus */
         driver_arkarea, /* UPL-87007 (c) [1988?] */
@@ -4751,6 +4742,11 @@ public class driver {
         driver_monsterb,
         driver_spaceod,
         driver_sindbadm,
+        driver_skydiver,
+        driver_monymony,
+        driver_jackrabt,
+        driver_jackrab2,
+        driver_jackrabs,
         /*
      * NOT Working flag
          */

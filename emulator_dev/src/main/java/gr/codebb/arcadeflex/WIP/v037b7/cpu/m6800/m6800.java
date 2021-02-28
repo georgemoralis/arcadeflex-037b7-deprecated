@@ -126,7 +126,7 @@ public class m6800 extends cpu_interface {
         /* InputCapture eddge , b.0=fall,b.1=raise */
 
         public irqcallbacksPtr irq_callback;
-        int extra_cycles;
+        public int extra_cycles;
         /* cycles used for interrupts */
 
         public opcode[] insn;
@@ -1553,12 +1553,71 @@ public class m6800 extends cpu_interface {
 
     @Override
     public Object get_context() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        m6800_Regs regs=new m6800_Regs();
+         regs.ppc = m6800.ppc;
+        regs.pc = m6800.pc;
+        regs.s = m6800.s;
+        regs.x= m6800.x;
+        regs.a=m6800.a;
+        regs.b=m6800.b;
+        regs.cc=m6800.cc;
+        regs.wai_state=m6800.wai_state;
+        regs.nmi_state=m6800.nmi_state;
+        regs.irq_state[0]=m6800.irq_state[0];
+        regs.irq_state[1]=m6800.irq_state[1];
+        regs.ic_eddge=m6800.ic_eddge;
+        regs.irq_callback=m6800.irq_callback;
+        regs.extra_cycles=m6800.extra_cycles;
+        regs.insn=m6800.insn;
+        regs.cycles=m6800.cycles;
+        regs.port1_ddr=m6800.port1_ddr;
+        regs.port2_ddr=m6800.port2_ddr;
+        regs.port1_data=m6800.port1_data;
+        regs.port2_data=m6800.port2_data;
+        regs.tcsr=m6800.tcsr;
+        regs.pending_tcsr=m6800.pending_tcsr;
+        regs.irq2=m6800.irq2;
+        regs.ram_ctrl=m6800.ram_ctrl;
+        regs.counter.SetD(m6800.counter.D);
+        regs.output_compare.SetD(m6800.output_compare.D);
+        regs.input_capture=m6800.input_capture;
+        regs.timer_over.SetD(m6800.timer_over.D);
+        return regs;
     }
 
     @Override
     public void set_context(Object reg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        m6800_Regs Regs = (m6800_Regs)reg;
+        m6800.ppc = Regs.ppc;
+        m6800.pc = Regs.pc;
+        m6800.s = Regs.s;
+        m6800.x= Regs.x;
+        m6800.a=Regs.a;
+        m6800.b=Regs.b;
+        m6800.cc=Regs.cc;
+        m6800.wai_state=Regs.wai_state;
+        m6800.nmi_state=Regs.nmi_state;
+        m6800.irq_state[0]=Regs.irq_state[0];
+        m6800.irq_state[1]=Regs.irq_state[1];
+        m6800.ic_eddge=Regs.ic_eddge;
+        m6800.irq_callback=Regs.irq_callback;
+        m6800.extra_cycles=Regs.extra_cycles;
+        m6800.insn=Regs.insn;
+        m6800.cycles=Regs.cycles;
+        m6800.port1_ddr=Regs.port1_ddr;
+        m6800.port2_ddr=Regs.port2_ddr;
+        m6800.port1_data=Regs.port1_data;
+        m6800.port2_data=Regs.port2_data;
+        m6800.tcsr=Regs.tcsr;
+        m6800.pending_tcsr=Regs.pending_tcsr;
+        m6800.irq2=Regs.irq2;
+        m6800.ram_ctrl=Regs.ram_ctrl;
+        m6800.counter.SetD(Regs.counter.D);
+        m6800.output_compare.SetD(Regs.output_compare.D);
+        m6800.input_capture=Regs.input_capture;
+        m6800.timer_over.SetD(Regs.timer_over.D);
+        CHANGE_PC();
+	CHECK_IRQ_LINES();
     }
 
     @Override
