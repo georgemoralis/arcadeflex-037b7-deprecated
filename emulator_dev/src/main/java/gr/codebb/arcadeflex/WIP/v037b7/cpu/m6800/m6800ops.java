@@ -957,15 +957,15 @@ public class m6800ops {
 /*TODO*///	WM(EAD,t);
         }
     };
-    /*TODO*///
-/*TODO*////* $78 ASL extended ?**** */
+
     public static opcode asl_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT16 t,r;
-/*TODO*///	EXTBYTE(t); r=t<<1;
-/*TODO*///	CLR_NZVC; SET_FLAGS8(t,t,r);
-/*TODO*///	WM(EAD,r);
+            int/*UINT16*/ t, r;
+            t = EXTBYTE();
+            r = (t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            WM(ea, r);
         }
     };
     /*TODO*///
@@ -1241,15 +1241,14 @@ public class m6800ops {
             SET_FLAGS8(m6800.a, t, r);
         }
     };
-    /*TODO*///
-/*TODO*////* $92 SBCA direct ?**** */
     public static opcode sbca_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT16	  t,r;
-/*TODO*///	DIRBYTE(t); r = A-t-(CC&0x01);
-/*TODO*///	CLR_NZVC; SET_FLAGS8(A,t,r);
-/*TODO*///	A = r;
+            int/*UINT16*/ t, r;
+            t = DIRBYTE();
+            r = (m6800.a - t - (m6800.cc & 0x01)) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(m6800.a, t, r);
+            m6800.a = r & 0xFF;
         }
     };
     /*TODO*///
@@ -1381,25 +1380,21 @@ public class m6800ops {
             CHANGE_PC();
         }
     };
-    /*TODO*///
-/*TODO*////* $9e LDS direct -**0- */
+
     public static opcode lds_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	DIRWORD(m6808.s);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
+            m6800.s = DIRWORD();
+            CLR_NZV();
+            SET_NZ16(m6800.s);
         }
     };
-    /*TODO*///
-/*TODO*////* $9f STS direct -**0- */
+
     public static opcode sts_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	DIRECT;
-/*TODO*///	WM16(EAD,&m6808.s);
+            CLR_NZV();
+            SET_NZ16(m6800.s);
+            DIRECT();
+            WM16(ea, m6800.s);
         }
     };
 
@@ -2402,19 +2397,16 @@ public class m6800ops {
 /*TODO*///	SET_NZ16(D);
         }
     };
-    /*TODO*///
-/*TODO*////* $fc ADDX extended -****    NSC8105 only.  Flags are a guess */
+    /*RECHECK*/
     public static opcode addx_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	EXTWORD(b);
-/*TODO*///	d = X;
-/*TODO*///	r = d + b.d;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS16(d,b.d,r);
-/*TODO*///	X = r;
+            int /*UINT32*/ r, d;
+            int b = EXTWORD();
+            d = m6800.x;
+            r = d + b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
+            m6800.x = r & 0xFFFF;
         }
     };
     /*TODO*///

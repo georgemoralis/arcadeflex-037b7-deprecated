@@ -63,6 +63,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.sega.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.segar.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.skydiver.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.zaccaria.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.seicross.*;
 
 public class driver {
 
@@ -274,16 +275,6 @@ public class driver {
         /* "Scramble hardware" (and variations) games */
         /*TODO*/
         // driver_hunchbks,
-
-        /* Nichibutsu games */
-        /*TODO*/
-        // driver_friskyt,	/* (c) 1981 */
-        /*TODO*/
-        // driver_radrad,	/* (c) 1982 Nichibutsu USA */
-        /*TODO*/
-        // driver_seicross,	/* (c) 1984 + Alice */
-        /*TODO*/
-        // driver_sectrzon,	/* (c) 1984 + Alice */
 
         /*TODO*/
         // driver_magmax,	/* (c) 1985 */
@@ -4747,6 +4738,10 @@ public class driver {
         driver_jackrabt,
         driver_jackrab2,
         driver_jackrabs,
+        driver_friskyt,
+        driver_radrad,
+        driver_seicross,
+        driver_sectrzon,
         /*
      * NOT Working flag
          */

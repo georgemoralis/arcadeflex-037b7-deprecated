@@ -1,3 +1,8 @@
+04/03/2021
+==========
+-Added working seicross driver
+-Added nsc8105 cpu core (m6800 variant)
+
 28/02/2021
 ==========
 -Added working skydiver,zaccaria driver
