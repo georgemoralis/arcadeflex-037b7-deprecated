@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.sndhrdw;
+package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.old.sound.streams.*;

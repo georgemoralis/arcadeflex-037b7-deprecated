@@ -2060,25 +2060,23 @@ public class m6800ops {
             m6800.b = r & 0xFF;
         }
     };
-    /*TODO*///
-/*TODO*////* $dc LDD direct -**0- */
+
     public static opcode ldd_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	DIRWORD(m6808.d);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
+            int temp=	DIRWORD();
+            setDreg(temp);
+            CLR_NZV();
+            SET_NZ16(temp);
         }
     };
-    /*TODO*///
-/*TODO*////* $dd STD direct -**0- */
+
     public static opcode std_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	DIRECT;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
-/*TODO*///	WM16(EAD,&m6808.d);
+            DIRECT();
+            CLR_NZV();
+            int temp = getDreg();
+            SET_NZ16(temp);   
+            WM16(ea,temp);
         }
     };
 

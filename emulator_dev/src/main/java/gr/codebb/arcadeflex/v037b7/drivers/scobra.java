@@ -12,7 +12,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixerH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import static gr.codebb.arcadeflex.v037b7.sndhrdw.frogger.*;
-import static gr.codebb.arcadeflex.sndhrdw.scramble.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.scramble.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;

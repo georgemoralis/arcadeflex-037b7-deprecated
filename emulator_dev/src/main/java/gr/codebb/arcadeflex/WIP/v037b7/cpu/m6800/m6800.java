@@ -512,12 +512,12 @@ public class m6800 extends cpu_interface {
         return RM16(ea);
     }
 
-    int getDreg()//compose dreg
+    static int getDreg()//compose dreg
     {
-        return m6800.a << 8 | m6800.b;
+        return (m6800.a << 8 | m6800.b)&0xFFFF;
     }
 
-    void setDreg(int reg) //write to dreg
+    static void setDreg(int reg) //write to dreg
     {
         m6800.a = reg >> 8 & 0xFF;
         m6800.b = reg & 0xFF;
