@@ -65,6 +65,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.skydiver.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.zaccaria.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.seicross.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.m62.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
 
 public class driver {
 
@@ -2585,10 +2586,8 @@ public class driver {
         // driver_yiear,		/* GX407 (c) 1985 */
         /*TODO*/
         // driver_yiear2,	/* GX407 (c) 1985 */
-        /*TODO*/
-        // driver_kicker,	/* GX477 (c) 1985 */
-        /*TODO*/
-        // driver_shaolins,	/* GX477 (c) 1985 */
+        driver_kicker,	/* GX477 (c) 1985 */
+        driver_shaolins,	/* GX477 (c) 1985 */
 
         driver_gberet,
         driver_rushatck,

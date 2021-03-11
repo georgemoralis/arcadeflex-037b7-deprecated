@@ -31,6 +31,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6800;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6802;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.nsc8105;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6803;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809;
 
 public class cpuintrf {
 
@@ -302,7 +303,7 @@ public class cpuintrf {
                 new m68705(),//CPU0(M68705,   m68705,	 1,  0,1.00,M68705_INT_NONE,   M68705_INT_IRQ, -1,			   16,	  0,11,BE,1, 3,16	),
                 new HD63705(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   16,	  0,16,BE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 16,	  0,16,BE,1, 4,16	),
-                new Dummy_cpu(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  16,	  0,16,BE,1, 4,16	),
+                new m6809(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(M68000,   m68000,	 8, -1,1.00,MC68000_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(M68010,   m68010,	 8, -1,1.00,MC68010_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
