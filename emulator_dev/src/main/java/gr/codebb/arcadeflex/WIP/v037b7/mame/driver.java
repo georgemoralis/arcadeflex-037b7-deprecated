@@ -66,6 +66,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.zaccaria.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.seicross.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.m62.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jackal.*;
 
 public class driver {
 
@@ -2605,14 +2606,10 @@ public class driver {
         // driver_dairesya,	/* GX560 (c) 1986 (Japan) */
         /*TODO*/
         // driver_farwest,
-        /*TODO*/
-        // driver_jackal,	/* GX631 (c) 1986 (World) */
-        /*TODO*/
-        // driver_topgunr,	/* GX631 (c) 1986 (US) */
-        /*TODO*/
-        // driver_jackalj,	/* GX631 (c) 1986 (Japan) */
-        /*TODO*/
-        // driver_topgunbl,	/* bootleg */
+        driver_jackal,	/* GX631 (c) 1986 (World) */
+        driver_topgunr,	/* GX631 (c) 1986 (US) */
+        driver_jackalj,	/* GX631 (c) 1986 (Japan) */
+        driver_topgunbl,	/* bootleg */
         /*TODO*/
         // driver_ddribble,	/* GX690 (c) 1986 */
         /*TODO*/
