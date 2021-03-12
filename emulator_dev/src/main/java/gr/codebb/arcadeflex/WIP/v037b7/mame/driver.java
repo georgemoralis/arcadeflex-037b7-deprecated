@@ -68,6 +68,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.m62.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jackal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starwars.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.irobot.*;
 
 public class driver {
 
@@ -3870,8 +3871,7 @@ public class driver {
         // driver_leprechn,	/* (c) 1982 Tong Electronic */
         /*TODO*/
         // driver_potogold,	/* (c) 1982 Tong Electronic */
-        /*TODO*/
-        // driver_irobot,	/* (c) 1983 Atari */
+        driver_irobot,	/* (c) 1983 Atari */
         /*TODO*/
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*/
