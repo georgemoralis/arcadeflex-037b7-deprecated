@@ -38,6 +38,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound.ym2413;
 import gr.codebb.arcadeflex.v058.sound.sn76496;
 import gr.codebb.arcadeflex.v058.sound.tms36xx;
 import gr.codebb.arcadeflex.WIP.v037b7.sound._5220intf;
+import gr.codebb.arcadeflex.WIP.v037b7.sound.pokey;
 
 public class sndintrf {
 
@@ -465,7 +466,7 @@ public class sndintrf {
         new y8950intf(),
         new sn76477(),
         new sn76496(),
-        new Dummy_snd(),
+        new pokey(),
         /*TODO*/
         // #if (HAS_POKEY)
         /*TODO*/

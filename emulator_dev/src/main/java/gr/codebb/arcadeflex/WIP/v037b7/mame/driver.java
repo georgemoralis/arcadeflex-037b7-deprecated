@@ -67,6 +67,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.seicross.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.m62.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jackal.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starwars.*;
 
 public class driver {
 
@@ -3000,12 +3001,9 @@ public class driver {
         // driver_tempest2,	/* (c) 1980 */
         /*TODO*/
         // driver_temptube,	/* hack */
-        /*TODO*/
-        // driver_starwars,	/* (c) 1983 */
-        /*TODO*/
-        // driver_starwar1,	/* (c) 1983 */
-        /*TODO*/
-        // driver_esb,		/* (c) 1985 */
+        driver_starwars,	/* (c) 1983 */
+        driver_starwar1,	/* (c) 1983 */
+        driver_esb,		/* (c) 1985 */
         /*TODO*/
         // driver_mhavoc,	/* (c) 1983 */
         /*TODO*/
