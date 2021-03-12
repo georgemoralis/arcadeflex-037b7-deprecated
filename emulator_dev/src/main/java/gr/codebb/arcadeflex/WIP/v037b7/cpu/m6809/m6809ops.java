@@ -415,19 +415,19 @@ public class m6809ops {
 /*TODO*///#if macintosh
 /*TODO*///#pragma mark ____2x____
 /*TODO*///#endif
-/*TODO*///
-/*TODO*////* $20 BRA relative ----- */
-/*TODO*///INLINE void bra( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	PC += SIGNED(t);
-/*TODO*///    CHANGE_PC;
-/*TODO*///	/* JB 970823 - speed up busy loops */
-/*TODO*///	if( t == 0xfe )
-/*TODO*///		if( m6809_ICount > 0 ) m6809_ICount = 0;
-/*TODO*///}
-/*TODO*///
+    
+    /* $20 BRA relative ----- */
+    public void bra()
+    {
+    	int t;
+    	t=_cpu.IMMBYTE();
+    	_cpu._m6809.pc += _cpu.SIGNED(t);
+        _cpu.CHANGE_PC();
+    	/* JB 970823 - speed up busy loops */
+    	if( t == 0xfe )
+    		if( _cpu.m6809_ICount[0] > 0 ) _cpu.m6809_ICount[0] = 0;
+    }
+    
 /*TODO*////* $21 BRN relative ----- */
 /*TODO*///INLINE void brn( void )
 /*TODO*///{

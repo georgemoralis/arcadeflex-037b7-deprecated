@@ -124,7 +124,7 @@ public class m6809 extends cpu_interface {
 
     @Override
     public void exit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        m6809_exit();
     }
 
     @Override
@@ -578,7 +578,7 @@ public class m6809 extends cpu_interface {
 		if (f)
 		{
 			m6809_ICount[0] -= 1;
-			_m6809.pc = (char) ((_m6809.pc + t) & 0xFFFF);
+			_m6809.pc = (char)(_m6809.pc + t);
 			CHANGE_PC();
 		}
 	}
@@ -777,11 +777,11 @@ public class m6809 extends cpu_interface {
 		CHANGE_PC();
 	}
 	
-/*TODO*///	void m6809_exit(void)
-/*TODO*///	{
-/*TODO*///		/* nothing to do ? */
-/*TODO*///	}
-/*TODO*///	
+	public void m6809_exit()
+	{
+		/* nothing to do ? */
+	}
+	
 /*TODO*///	/* Generate interrupts */
 /*TODO*///	/****************************************************************************
 /*TODO*///	 * Set NMI line state
@@ -968,7 +968,7 @@ public class m6809 extends cpu_interface {
 				_m6809.ireg = ROP(_m6809.pc);
 				_m6809.pc++;
 /*TODO*///	#if BIG_SWITCH
-                                
+                                //System.out.println(_m6809.ireg);
                                 switch( _m6809.ireg )
 				{
 /*TODO*///				case 0x00: neg_di();   m6809_ICount-= 6; break;
@@ -1003,7 +1003,7 @@ public class m6809 extends cpu_interface {
 /*TODO*///				case 0x1d: sex();	   m6809_ICount-= 2; break;
 /*TODO*///				case 0x1e: exg();	   m6809_ICount-= 8; break;
 				case 0x1f: _opcodes.tfr();	   m6809_ICount[0]-= 6; break;
-/*TODO*///				case 0x20: bra();	   m6809_ICount-= 3; break;
+				case 0x20: _opcodes.bra();	   m6809_ICount[0]-= 3; break;
 /*TODO*///				case 0x21: brn();	   m6809_ICount-= 3; break;
 /*TODO*///				case 0x22: bhi();	   m6809_ICount-= 3; break;
 /*TODO*///				case 0x23: bls();	   m6809_ICount-= 3; break;
