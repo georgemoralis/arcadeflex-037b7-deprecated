@@ -69,6 +69,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jackal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starwars.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.irobot.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mpatrol.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.yard.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.travrusa.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.troangel.*;
 
 public class driver {
 
@@ -993,42 +997,23 @@ public class driver {
         /*TODO*/
         // driver_redalert,	/* (c) 1981 + "GDI presents" */
 
-        /*TODO*/
-        // driver_mpatrol,	/* M52 (c) 1982 */
-        /*TODO*/
-        // driver_mpatrolw,	/* M52 (c) 1982 + Williams license */
-        /*TODO*/
-        // driver_mranger,	/* bootleg */
-        /*TODO*/
-        // driver_troangel,	/* (c) 1983 */
-        /*TODO*/
-        // driver_yard,		/* (c) 1983 */
-        /*TODO*/
-        // driver_vsyard,	/* (c) 1983/1984 */
-        /*TODO*/
-        // driver_vsyard2,	/* (c) 1983/1984 */
-        /*TODO*/
-        // driver_travrusa,	/* (c) 1983 */
-        /*TODO*/
-        // driver_motorace,	/* (c) 1983 Williams license */
         /* M62 */
-        driver_kungfum,	/* (c) 1984 */
-        driver_kungfud,	/* (c) 1984 + Data East license */
-        driver_spartanx,	/* (c) 1984 */
-        driver_kungfub,	/* bootleg */
-        driver_kungfub2,	/* bootleg */
-        driver_battroad,	/* (c) 1984 */
-        driver_ldrun,		/* (c) 1984 licensed from Broderbund */
-        driver_ldruna,	/* (c) 1984 licensed from Broderbund */
-        driver_ldrun2,	/* (c) 1984 licensed from Broderbund */
-        driver_ldrun3,	/* (c) 1985 licensed from Broderbund */
-        driver_ldrun4,	/* (c) 1986 licensed from Broderbund */
-        driver_lotlot,	/* (c) 1985 licensed from Tokuma Shoten */
-        driver_kidniki,	/* (c) 1986 + Data East USA license */
-        driver_yanchamr,	/* (c) 1986 (Japan) */
-        driver_spelunkr,	/* (c) 1985 licensed from Broderbund */
-        driver_spelunk2,	/* (c) 1986 licensed from Broderbund */
-
+        driver_kungfum, /* (c) 1984 */
+        driver_kungfud, /* (c) 1984 + Data East license */
+        driver_spartanx, /* (c) 1984 */
+        driver_kungfub, /* bootleg */
+        driver_kungfub2, /* bootleg */
+        driver_battroad, /* (c) 1984 */
+        driver_ldrun, /* (c) 1984 licensed from Broderbund */
+        driver_ldruna, /* (c) 1984 licensed from Broderbund */
+        driver_ldrun2, /* (c) 1984 licensed from Broderbund */
+        driver_ldrun3, /* (c) 1985 licensed from Broderbund */
+        driver_ldrun4, /* (c) 1986 licensed from Broderbund */
+        driver_lotlot, /* (c) 1985 licensed from Tokuma Shoten */
+        driver_kidniki, /* (c) 1986 + Data East USA license */
+        driver_yanchamr, /* (c) 1986 (Japan) */
+        driver_spelunkr, /* (c) 1985 licensed from Broderbund */
+        driver_spelunk2, /* (c) 1986 licensed from Broderbund */
         /* M72 (and derivatives) */
         /*TODO*/
         // driver_rtype,		/* (c) 1987 (Japan) */
@@ -2589,9 +2574,8 @@ public class driver {
         // driver_yiear,		/* GX407 (c) 1985 */
         /*TODO*/
         // driver_yiear2,	/* GX407 (c) 1985 */
-        driver_kicker,	/* GX477 (c) 1985 */
-        driver_shaolins,	/* GX477 (c) 1985 */
-
+        driver_kicker, /* GX477 (c) 1985 */
+        driver_shaolins, /* GX477 (c) 1985 */
         driver_gberet,
         driver_rushatck,
         driver_gberetb,
@@ -2608,10 +2592,10 @@ public class driver {
         // driver_dairesya,	/* GX560 (c) 1986 (Japan) */
         /*TODO*/
         // driver_farwest,
-        driver_jackal,	/* GX631 (c) 1986 (World) */
-        driver_topgunr,	/* GX631 (c) 1986 (US) */
-        driver_jackalj,	/* GX631 (c) 1986 (Japan) */
-        driver_topgunbl,	/* bootleg */
+        driver_jackal, /* GX631 (c) 1986 (World) */
+        driver_topgunr, /* GX631 (c) 1986 (US) */
+        driver_jackalj, /* GX631 (c) 1986 (Japan) */
+        driver_topgunbl, /* bootleg */
         /*TODO*/
         // driver_ddribble,	/* GX690 (c) 1986 */
         /*TODO*/
@@ -3002,9 +2986,9 @@ public class driver {
         // driver_tempest2,	/* (c) 1980 */
         /*TODO*/
         // driver_temptube,	/* hack */
-        driver_starwars,	/* (c) 1983 */
-        driver_starwar1,	/* (c) 1983 */
-        driver_esb,		/* (c) 1985 */
+        driver_starwars, /* (c) 1983 */
+        driver_starwar1, /* (c) 1983 */
+        driver_esb, /* (c) 1985 */
         /*TODO*/
         // driver_mhavoc,	/* (c) 1983 */
         /*TODO*/
@@ -3871,7 +3855,7 @@ public class driver {
         // driver_leprechn,	/* (c) 1982 Tong Electronic */
         /*TODO*/
         // driver_potogold,	/* (c) 1982 Tong Electronic */
-        driver_irobot,	/* (c) 1983 Atari */
+        driver_irobot, /* (c) 1983 Atari */
         /*TODO*/
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*/
@@ -4721,6 +4705,15 @@ public class driver {
         driver_radrad,
         driver_seicross,
         driver_sectrzon,
+        driver_troangel,
+        driver_mpatrol,
+        driver_mpatrolw,
+        driver_mranger,
+        driver_yard,
+        driver_vsyard,
+        driver_vsyard2,
+        driver_travrusa,
+        driver_motorace,
         /*
      * NOT Working flag
          */
