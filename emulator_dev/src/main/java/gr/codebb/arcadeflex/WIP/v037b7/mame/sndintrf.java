@@ -39,6 +39,7 @@ import gr.codebb.arcadeflex.v058.sound.sn76496;
 import gr.codebb.arcadeflex.v058.sound.tms36xx;
 import gr.codebb.arcadeflex.WIP.v037b7.sound._5220intf;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.pokey;
+import gr.codebb.arcadeflex.v058.sound.vlm5030;
 
 public class sndintrf {
 
@@ -255,12 +256,6 @@ public class sndintrf {
     /*TODO*/
     // #endif
     /*TODO*/
-    // #if (HAS_VLM5030)
-    /*TODO*/
-    // int VLM5030_clock(const struct MachineSound *msound) { return ((struct
-    // VLM5030interface*)msound->sound_interface)->baseclock; }
-    /*TODO*/
-    // #endif
     /*TODO*/
     // #if (HAS_TMS5220)
     /*TODO*/
@@ -521,31 +516,7 @@ public class sndintrf {
         new tms36xx(),
         new _5110intf(),
         new _5220intf(),
-        new Dummy_snd(),
-        /*TODO*/
-        // #if (HAS_VLM5030)
-        /*TODO*/
-        //    {
-        /*TODO*/
-        //		SOUND_VLM5030,
-        /*TODO*/
-        //		"VLM5030",
-        /*TODO*/
-        //		0,
-        /*TODO*/
-        //		VLM5030_clock,
-        /*TODO*/
-        //		VLM5030_sh_start,
-        /*TODO*/
-        //		VLM5030_sh_stop,
-        /*TODO*/
-        //		VLM5030_sh_update,
-        /*TODO*/
-        //		0
-        /*TODO*/
-        //	},
-        /*TODO*/
-        // #endif
+        new vlm5030(),
         new adpcm(),
         new okim6295(),
         new MSM5205(),

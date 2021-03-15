@@ -73,6 +73,18 @@ import static gr.codebb.arcadeflex.v037b7.drivers.mpatrol.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.yard.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.travrusa.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.troangel.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.circusc.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddrible.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mikie.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.sbasketb.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.citycon.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.finalizr.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ironhors.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mappy.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.phozon.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sonson.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.superpac.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
 
 public class driver {
 
@@ -351,33 +363,6 @@ public class driver {
         /*TODO*/
         // driver_warpwar2,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
 
-        /* the following ones all have a custom I/O chip */
-        /*TODO*/
-        // driver_superpac,	/* (c) 1982 */
-        /*TODO*/
-        // driver_superpcm,	/* (c) 1982 Midway */
-        /*TODO*/
-        // driver_pacnpal,	/* (c) 1983 */
-        /*TODO*/
-        // driver_pacnpal2,	/* (c) 1983 */
-        /*TODO*/
-        // driver_pacnchmp,	/* (c) 1983 */
-        /*TODO*/
-        // driver_phozon,	/* (c) 1983 */
-        /*TODO*/
-        // driver_mappy,		/* (c) 1983 */
-        /*TODO*/
-        // driver_mappyjp,	/* (c) 1983 */
-        /*TODO*/
-        // driver_digdug2,	/* (c) 1985 */
-        /*TODO*/
-        // driver_digdug2a,	/* (c) 1985 */
-        /*TODO*/
-        // driver_todruaga,	/* (c) 1984 */
-        /*TODO*/
-        // driver_todruagb,	/* (c) 1984 */
-        /*TODO*/
-        // driver_motos,		/* (c) 1985 */
         /*TODO*/
         // driver_grobda,	/* (c) 1984 */
         /*TODO*/
@@ -1548,7 +1533,7 @@ public class driver {
         /* A comprehensive list of Capcom games with board info can be found here:      */
         /* http://www.emugaming.com/strider/capcom_list.shtml                           */
         /*TODO*/
-        // driver_sonson,	/*  7/1984 (c) 1984 */
+        driver_sonson,
         /*TODO*/
         // driver_gng,		/*  9/1985 (c) 1985 */
         /*TODO*/
@@ -2542,38 +2527,20 @@ public class driver {
         // driver_rocnrope,	/* GX364 (c) 1983 */
         /*TODO*/
         // driver_rocnropk,	/* GX364 (c) 1983 + Kosuka */
-        /*TODO*/
-        // driver_circusc,	/* GX380 (c) 1984 */
-        /*TODO*/
-        // driver_circusc2,	/* GX380 (c) 1984 */
-        /*TODO*/
-        // driver_circuscc,	/* GX380 (c) 1984 + Centuri license */
-        /*TODO*/
-        // driver_circusce,	/* GX380 (c) 1984 + Centuri license */
-        /*TODO*/
-        // driver_tp84,		/* GX388 (c) 1984 */
+
+        //driver_tp84,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_tp84a,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_hyperspt,	/* GX330 (c) 1984 + Centuri */
         /*TODO*/
         // driver_hpolym84,	/* GX330 (c) 1984 */
-        /*TODO*/
-        // driver_sbasketb,	/* GX405 (c) 1984 */
-        /*TODO*/
-        // driver_mikie,		/* GX469 (c) 1984 */
-        /*TODO*/
-        // driver_mikiej,	/* GX469 (c) 1984 */
-        /*TODO*/
-        // driver_mikiehs,	/* GX469 (c) 1984 */
+
         /*TODO*/
         // driver_roadf,		/* GX461 (c) 1984 */
         /*TODO*/
         // driver_roadf2,	/* GX461 (c) 1984 */
-        /*TODO*/
-        // driver_yiear,		/* GX407 (c) 1985 */
-        /*TODO*/
-        // driver_yiear2,	/* GX407 (c) 1985 */
+
         driver_kicker, /* GX477 (c) 1985 */
         driver_shaolins, /* GX477 (c) 1985 */
         driver_gberet,
@@ -2582,22 +2549,15 @@ public class driver {
         driver_mrgoemon,
         /*TODO*/
         // driver_jailbrek,	/* GX507 (c) 1986 */
-        /*TODO*/
-        // driver_finalizr,	/* GX523 (c) 1985 */
-        /*TODO*/
-        // driver_finalizb,	/* bootleg */
-        /*TODO*/
-        // driver_ironhors,	/* GX560 (c) 1986 */
-        /*TODO*/
-        // driver_dairesya,	/* GX560 (c) 1986 (Japan) */
-        /*TODO*/
-        // driver_farwest,
+
+        driver_ironhors,
+        driver_dairesya,
+        driver_farwest,
         driver_jackal, /* GX631 (c) 1986 (World) */
         driver_topgunr, /* GX631 (c) 1986 (US) */
         driver_jackalj, /* GX631 (c) 1986 (Japan) */
         driver_topgunbl, /* bootleg */
-        /*TODO*/
-        // driver_ddribble,	/* GX690 (c) 1986 */
+        driver_ddribble,
         /*TODO*/
         // driver_contra,	/* GX633 (c) 1987 */
         /*TODO*/
@@ -3595,12 +3555,7 @@ public class driver {
         // driver_formatz,	/* (c) 1984 Jaleco */
         /*TODO*/
         // driver_aeroboto,	/* (c) 1984 Williams */
-        /*TODO*/
-        // driver_citycon,	/* (c) 1985 Jaleco */
-        /*TODO*/
-        // driver_citycona,	/* (c) 1985 Jaleco */
-        /*TODO*/
-        // driver_cruisin,	/* (c) 1985 Jaleco/Kitkorp */
+
         /*TODO*/
         // driver_pinbo,		/* (c) 1984 Jaleco */
         /*TODO*/
@@ -4714,6 +4669,34 @@ public class driver {
         driver_vsyard2,
         driver_travrusa,
         driver_motorace,
+        driver_circusc,
+        driver_circusc2,
+        driver_circuscc,
+        driver_circusce,
+        driver_mikie,
+        driver_mikiej,
+        driver_mikiehs,
+        driver_sbasketb,
+        driver_citycon,
+        driver_citycona,
+        driver_cruisin,
+        driver_finalizr,
+        driver_finalizb,
+        driver_mappy,
+        driver_mappyjp,
+        driver_digdug2,
+        driver_digdug2a,
+        driver_todruaga,
+        driver_todruagb,
+        driver_motos,
+        driver_phozon,
+        driver_superpac,
+        driver_superpcm,
+        driver_pacnpal,
+        driver_pacnpal2,
+        driver_pacnchmp,
+        driver_yiear,
+        driver_yiear2,
         /*
      * NOT Working flag
          */
