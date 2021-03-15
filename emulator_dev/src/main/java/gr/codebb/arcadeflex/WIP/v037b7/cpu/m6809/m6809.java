@@ -757,8 +757,8 @@ public class m6809 extends cpu_interface {
         /*int i = RM(addr + 1 & 0xFFFF);
         i |= RM(addr) << 8;
         return i;*/
-        int temp = RM(addr & 0xffff) << 8;
-        temp = temp | RM((addr & 0xffff) + 1);
+        int temp = RM(addr) << 8;
+        temp = temp | RM((addr +1) &0xFFFF);
         return (char)temp;
     }
     /*TODO*///

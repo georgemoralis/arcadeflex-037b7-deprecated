@@ -17,7 +17,7 @@ public class m6809ops {
     
     int getDreg()//compose dreg
     {
-         return _cpu._m6809.a << 8 | _cpu._m6809.b; 
+         return (_cpu._m6809.a << 8 | _cpu._m6809.b)&0xFFFF;
     }
     
     void setDreg(int reg) //write to dreg
@@ -798,6 +798,7 @@ public class m6809ops {
     /*TODO*////* $113F SWI3 absolute indirect ----- */
     public void swi3()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	CC |= CC_E; 			/* HJB 980225: save entire state */
     /*TODO*///	_cpu.PUSHWORD(pPC);
     /*TODO*///	_cpu.PUSHWORD(pU);
@@ -1395,6 +1396,7 @@ public class m6809ops {
     /*TODO*////* $87 STA immediate -**0- */
     public void sta_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ8(A);
     /*TODO*///	IMM8;
@@ -1509,6 +1511,7 @@ public class m6809ops {
     /*TODO*////* $8F STX (STY) immediate -**0- */
     public void stx_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ16(X);
     /*TODO*///	IMM16;
@@ -1519,6 +1522,7 @@ public class m6809ops {
     /*TODO*////* $108F STY immediate -**0- */
     public void sty_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ16(Y);
     /*TODO*///	IMM16;
@@ -2266,7 +2270,7 @@ public class m6809ops {
     	r = _cpu._m6809.b - t & 0xFFFF;
     	_cpu.CLR_NZVC();
     	_cpu.SET_FLAGS8(_cpu._m6809.b,t,r);
-    	_cpu._m6809.b = (char)(r& 0xFF);;
+    	_cpu._m6809.b = (char)(r& 0xFF);
          if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d subb_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
 
     }
@@ -2338,6 +2342,7 @@ public class m6809ops {
     /*TODO*////* $c7 STB immediate -**0- */
     public void stb_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ8(B);
     /*TODO*///	IMM8;
@@ -2401,6 +2406,7 @@ public class m6809ops {
     /*TODO*////* $cD STD immediate -**0- */
     public void std_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ16(D);
     /*TODO*///    IMM16;
@@ -2428,6 +2434,7 @@ public class m6809ops {
     /*TODO*////* $cF STU (STS) immediate -**0- */
     public void stu_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ16(U);
     /*TODO*///    IMM16;
@@ -2438,6 +2445,7 @@ public class m6809ops {
     /*TODO*////* $10cF STS immediate -**0- */
     public void sts_im()
     {
+        throw new UnsupportedOperationException("Unsupported");
     /*TODO*///	_cpu.CLR_NZV;
     /*TODO*///	_cpu.SET_NZ16(S);
     /*TODO*///    IMM16;
