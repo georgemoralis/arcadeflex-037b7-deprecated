@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */ 
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_FIRQ;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
@@ -23,7 +23,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intf.YM2203_write_port_
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203interface;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.ddrible.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.ddrible.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.rand;
 import static gr.codebb.arcadeflex.old.mame.common.coin_counter_w;

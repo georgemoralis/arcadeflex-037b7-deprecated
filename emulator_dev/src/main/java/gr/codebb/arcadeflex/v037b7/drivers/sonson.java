@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_FIRQ;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
@@ -20,7 +20,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.AY8910interface;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.sonson.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.sonson.*;
 
 public class sonson {
 

@@ -74,7 +74,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.yard.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.travrusa.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.troangel.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.circusc.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddrible.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ddrible.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mikie.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sbasketb.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.citycon.*;
@@ -82,9 +82,10 @@ import static gr.codebb.arcadeflex.v037b7.drivers.finalizr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ironhors.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mappy.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.phozon.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sonson.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.superpac.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rocnrope.*;
 
 public class driver {
 
@@ -1533,7 +1534,6 @@ public class driver {
         /* A comprehensive list of Capcom games with board info can be found here:      */
         /* http://www.emugaming.com/strider/capcom_list.shtml                           */
         /*TODO*/
-        driver_sonson,
         /*TODO*/
         // driver_gng,		/*  9/1985 (c) 1985 */
         /*TODO*/
@@ -2523,11 +2523,8 @@ public class driver {
         // driver_hyprolym,	/* GX361 (c) 1983 */
         /*TODO*/
         // driver_hyprolyb,	/* bootleg */
-        /*TODO*/
-        // driver_rocnrope,	/* GX364 (c) 1983 */
-        /*TODO*/
-        // driver_rocnropk,	/* GX364 (c) 1983 + Kosuka */
-
+        driver_rocnrope, /* GX364 (c) 1983 */
+        driver_rocnropk, /* GX364 (c) 1983 + Kosuka */
         //driver_tp84,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_tp84a,		/* GX388 (c) 1984 */
@@ -2557,7 +2554,6 @@ public class driver {
         driver_topgunr, /* GX631 (c) 1986 (US) */
         driver_jackalj, /* GX631 (c) 1986 (Japan) */
         driver_topgunbl, /* bootleg */
-        driver_ddribble,
         /*TODO*/
         // driver_contra,	/* GX633 (c) 1987 */
         /*TODO*/
@@ -4697,6 +4693,8 @@ public class driver {
         driver_pacnchmp,
         driver_yiear,
         driver_yiear2,
+        driver_ddribble,
+        driver_sonson,
         /*
      * NOT Working flag
          */

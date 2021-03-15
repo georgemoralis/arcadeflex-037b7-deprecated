@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
+package gr.codebb.arcadeflex.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
@@ -14,7 +14,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapC.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapH.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddrible.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ddrible.*;
 
 public class ddrible {
 
