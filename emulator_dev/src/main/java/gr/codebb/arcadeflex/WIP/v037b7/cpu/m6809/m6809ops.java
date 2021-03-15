@@ -187,11 +187,11 @@ public class m6809ops {
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d sync :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
  
     }
-   /* $16 LBRA relative ----- */
-    public void lbra()
-    {
+
+    public void lbra()//checked
+    {      
        _cpu.ea=_cpu.IMMWORD();
-       _cpu._m6809.pc = (char)((_cpu._m6809.pc + _cpu.ea) & 0xFFFF);
+       _cpu._m6809.pc = (char)((_cpu._m6809.pc + _cpu.ea));
        _cpu.CHANGE_PC();
     
     	if ( _cpu.ea == 0xfffd )  /* EHC 980508 speed up busy loop */
@@ -201,11 +201,11 @@ public class m6809ops {
   
     }
     /* $17 LBSR relative ----- */
-    public void lbsr()
+    public void lbsr()//checked
     {
     	_cpu.ea=_cpu.IMMWORD();
     	_cpu.PUSHWORD(_cpu._m6809.pc);
-    	_cpu._m6809.pc=(char)((_cpu._m6809.pc + _cpu.ea) &0xFFFF);
+    	_cpu._m6809.pc=(char)((_cpu._m6809.pc + _cpu.ea));
     	_cpu.CHANGE_PC();
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d lbsr :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
   
@@ -366,8 +366,8 @@ public class m6809ops {
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d tfr :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
  
     }
-    /* $20 BRA relative ----- */
-    public void bra()
+
+    public void bra()//checked
     {
         int t;
         t=_cpu.IMMBYTE();
@@ -378,16 +378,15 @@ public class m6809ops {
     		if( _cpu.m6809_ICount[0] > 0 ) _cpu.m6809_ICount[0] = 0;
          //if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d bra :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
     }
-    /* $21 BRN relative ----- */
-    public void brn()
+
+    public void brn()//checked
     {
         int t=	_cpu.IMMBYTE();
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d brn :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
 
     }
 
-    /* $1021 LBRN relative ----- */
-    public void lbrn()
+    public void lbrn()//checked
     {
        _cpu.ea=_cpu.IMMWORD();
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d lbrn :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
@@ -2949,8 +2948,8 @@ public class m6809ops {
         if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d orb_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
 
     }
-    /* $fB ADDB extended ***** */
-    public void addb_ex()
+
+    public void addb_ex()//checked
     {
         int  t,r;
     	t=_cpu.EXTBYTE();
@@ -2998,16 +2997,16 @@ public class m6809ops {
     	_cpu.SET_NZ16(_cpu._m6809.s);
 	_cpu._m6809.int_state |= M6809_LDS;
     }
-    /* $fF STU (STS) extended -**0- */
-    public void stu_ex()
+
+    public void stu_ex()//checked
     {
     	_cpu.CLR_NZV();
    	_cpu.SET_NZ16(_cpu._m6809.u);
     	_cpu.EXTENDED();
     	_cpu.WM16(_cpu.ea,_cpu._m6809.u);
     }
-    /* $10fF STS extended -**0- */
-    public void sts_ex()
+
+    public void sts_ex()//checked
     {
     	_cpu.CLR_NZV();
     	_cpu.SET_NZ16(_cpu._m6809.s);

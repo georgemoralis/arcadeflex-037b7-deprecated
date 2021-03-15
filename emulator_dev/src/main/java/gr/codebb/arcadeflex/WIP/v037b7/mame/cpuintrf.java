@@ -32,6 +32,8 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6802;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.nsc8105;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6803;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_FIRQ;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_IRQ;
 
 public class cpuintrf {
 
@@ -1537,16 +1539,22 @@ public class cpuintrf {
 /*TODO*///				}
 /*TODO*///				break;
 /*TODO*///#endif
-/*TODO*///#if (HAS_M6809)
-/*TODO*///			case CPU_M6809:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case M6809_INT_IRQ: 	irq_line = 0; LOG(("M6809 IRQ\n")); break;
-/*TODO*///				case M6809_INT_FIRQ:	irq_line = 1; LOG(("M6809 FIRQ\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("M6809 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
-/*TODO*///#endif
+                    case CPU_M6809:
+                        switch (num) {
+                            case M6809_INT_IRQ:
+                                irq_line = 0;
+                                //LOG(("M6809 IRQ\n"));
+                                break;
+                            case M6809_INT_FIRQ:
+                                irq_line = 1;
+                                //LOG(("M6809 FIRQ\n"));
+                                break;
+                            default:
+                                irq_line = 0;
+                                //LOG(("M6809 unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_KONAMI)
 /*TODO*///				case CPU_KONAMI:
 /*TODO*///				switch (num)
