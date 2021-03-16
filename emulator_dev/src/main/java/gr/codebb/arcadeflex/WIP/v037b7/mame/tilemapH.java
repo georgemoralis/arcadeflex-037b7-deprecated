@@ -49,8 +49,8 @@ public class tilemapH {
 	tile_priority value to specify the part to draw.
      */
 
- /*TODO*///public static final int TILEMAP_BITMASK_TRANSPARENT (0)
-/*TODO*///public static final int TILEMAP_BITMASK_OPAQUE ((UINT8 *)~0)
+    public static final int TILEMAP_BITMASK_TRANSPARENT = (0);
+    public static final int TILEMAP_BITMASK_OPAQUE = (~0);
     public static class cached_tile_info {
 
         public UBytePtr pen_data;

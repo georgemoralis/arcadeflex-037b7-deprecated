@@ -30,9 +30,9 @@ public class drawgfx {
     public static final int WL0 = 0;
     public static final int WL1 = 1;
 
-    /*TODO*///
-/*TODO*///
-/*TODO*///UINT8 gfx_drawmode_table[256];
+
+
+    public static int[] gfx_drawmode_table=new int[256];
 /*TODO*///plot_pixel_proc plot_pixel;
 /*TODO*///read_pixel_proc read_pixel;
 /*TODO*///plot_box_proc plot_box;

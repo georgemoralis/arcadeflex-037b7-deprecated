@@ -88,6 +88,8 @@ import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rocnrope.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.battlane.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos1.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacland.*;
 
 public class driver {
 
@@ -402,14 +404,10 @@ public class driver {
         /*TODO*/
         // driver_poleps2c,	/* bootleg */
         /* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
-        /*TODO*/
-        // driver_pacland,	/* (c) 1984 */
-        /*TODO*/
-        // driver_pacland2,	/* (c) 1984 */
-        /*TODO*/
-        // driver_pacland3,	/* (c) 1984 */
-        /*TODO*/
-        // driver_paclandm,	/* (c) 1984 Midway */
+        driver_pacland,	/* (c) 1984 */
+        driver_pacland2,	/* (c) 1984 */
+        driver_pacland3,	/* (c) 1984 */
+        driver_paclandm,	/* (c) 1984 Midway */
         /*TODO*/
         // driver_drgnbstr,	/* (c) 1984 */
         /*TODO*/
@@ -438,8 +436,7 @@ public class driver {
         // driver_wndrmomo,	/* (c) 1987 */
 
         /* Namco System 1 games */
-        /*TODO*/
-        // driver_shadowld,	/* (c) 1987 */
+        driver_shadowld,	/* (c) 1987 */
         /*TODO*/
         // driver_youkaidk,	/* (c) 1987 (Japan new version) */
         /*TODO*/
@@ -452,12 +449,10 @@ public class driver {
         // driver_blazer,	/* (c) 1987 (Japan) */
         /*TODO*/
         // driver_quester,	/* (c) 1987 (Japan) */
-        /*TODO*/
-        // driver_pacmania,	/* (c) 1987 */
+        driver_pacmania,	/* (c) 1987 */
         /*TODO*/
         // driver_pacmanij,	/* (c) 1987 (Japan) */
-        /*TODO*/
-        // driver_galaga88,	/* (c) 1987 */
+        driver_galaga88,	/* (c) 1987 */
         /*TODO*/
         // driver_galag88b,	/* (c) 1987 */
         /*TODO*/

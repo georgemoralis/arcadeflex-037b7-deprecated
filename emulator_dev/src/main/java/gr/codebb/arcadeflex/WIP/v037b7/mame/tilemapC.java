@@ -1101,10 +1101,11 @@ public class tilemapC {
         int/*UINT32*/ flags = tilemap.cached_tile_info[cache_ptr].u32_flags;
 
         if ((type & TILEMAP_BITMASK) != 0) {
-            throw new UnsupportedOperationException();
-            /*TODO*///		tilemap->foreground->data_row[row][col] =
-/*TODO*///			draw_bitmask( tilemap->foreground->bitmask,col, row,
-/*TODO*///				tile_width, tile_height,tile_info.mask_data, flags );
+            //throw new UnsupportedOperationException();
+            System.out.println("draw_bitmask not implemented!!!!");
+/*TODO*///            		tilemap.foreground.data_row[row].write(col,
+/*TODO*///			draw_bitmask( tilemap.foreground.bitmask,col, row,
+/*TODO*///				tile_width, tile_height,tile_info.mask_data, flags ));
         } else if ((type & TILEMAP_SPLIT) != 0) {
 
             int/*UINT32*/ pen_mask = (transparent_pen < 0) ? 0 : (1 << transparent_pen);

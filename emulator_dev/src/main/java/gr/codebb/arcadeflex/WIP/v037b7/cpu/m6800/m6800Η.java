@@ -185,9 +185,9 @@ public class m6800Η {
 /*TODO*///
 /*TODO*///#define M6803_DDR1	0x00
 /*TODO*///#define M6803_DDR2	0x01
-/*TODO*///
-/*TODO*///#define M6803_PORT1 0x100
-/*TODO*///#define M6803_PORT2 0x101
+
+    public static final int M6803_PORT1 = 0x100;
+    public static final int M6803_PORT2 = 0x101;
 /*TODO*///READ_HANDLER( m6803_internal_registers_r );
 /*TODO*///WRITE_HANDLER( m6803_internal_registers_w );
 /*TODO*///#endif
@@ -279,10 +279,10 @@ public class m6800Η {
 /*TODO*///
 /*TODO*///#define HD63701_DDR1 M6803_DDR1
 /*TODO*///#define HD63701_DDR2 M6803_DDR2
-/*TODO*///
-/*TODO*///#define HD63701_PORT1 M6803_PORT1
-/*TODO*///#define HD63701_PORT2 M6803_PORT2
-/*TODO*///
+
+    public static final int HD63701_PORT1 = M6803_PORT1;
+    public static final int HD63701_PORT2 = M6803_PORT2;
+
 /*TODO*///READ_HANDLER( hd63701_internal_registers_r );
 /*TODO*///WRITE_HANDLER( hd63701_internal_registers_w );
 /*TODO*///
