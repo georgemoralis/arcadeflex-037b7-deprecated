@@ -45,14 +45,12 @@ public class m6800ops {
         }
     };
     
-    /* $05 ASLD inherent ?**** */
     public static opcode asld = new opcode() {
         public void handler() {
-            //throw new UnsupportedOperationException("Unsupported");
             int r;
             int t;
             t = getDreg();
-            r = t << 1;
+            r = (t << 1)&0xFFFF;
             CLR_NZVC();
             SET_FLAGS16(t, t, r);
             setDreg(r);
@@ -879,31 +877,29 @@ public class m6800ops {
     /* $71 AIM --**0- */ /* HD63701YO only */
     public static opcode aim_di = new opcode() {
         public void handler() {
-            //throw new UnsupportedOperationException("Unsupported");
             int t, r;
             t=IMMBYTE();
             r=DIRBYTE();
-            r &= t;
+            r = (r & t)&0xFF;
             CLR_NZV();
             SET_NZ8(r);
             WM(ea, r);
         }
     };
     
-/*TODO*////* $72 OIM --**0- */ /* HD63701YO only */
+    /* $72 OIM --**0- */ /* HD63701YO only */
     public static opcode oim_di = new opcode() {
         public void handler() {
-            //throw new UnsupportedOperationException("Unsupported");
             int t, r;
             t=IMMBYTE();
             r=DIRBYTE();
-            r |= t;
+            r = (r | t)&0xFF;
             CLR_NZV();
             SET_NZ8(r);
             WM(ea, r);
         }
     };
-    /*TODO*///
+
     public static opcode com_ex = new opcode() {
         public void handler() {
             int t = EXTBYTE();
@@ -1589,30 +1585,24 @@ public class m6800ops {
 /*TODO*///	WM16(EAD,&m6808.s);
         }
     };
-    /*TODO*///
-/*TODO*///#if macintosh
-/*TODO*///#pragma mark ____Bx____
-/*TODO*///#endif
-/*TODO*///
-/*TODO*////* $b0 SUBA extended ?**** */
+
     public static opcode suba_ex = new opcode() {
-        public void handler() {
-            //throw new UnsupportedOperationException("Unsupported");
+        public void handler() {     
             int	  t,r;
             t=EXTBYTE(); 
-            r = m6800.a-t;
+            r = (m6800.a-t)&0xFFFF;
             CLR_NZVC(); SET_FLAGS8(m6800.a,t,r);
-            m6800.a = r;
+            m6800.a = r & 0xFF;
         }
     };
     
-    /* $b1 CMPA extended ?**** */
     public static opcode cmpa_ex = new opcode() {
         public void handler() {
-           // throw new UnsupportedOperationException("Unsupported");
            int	  t,r;
-           t=EXTBYTE(); r = m6800.a-t;
-           CLR_NZVC(); SET_FLAGS8(m6800.a,t,r);
+           t=EXTBYTE(); 
+           r = (m6800.a-t)&0xFFFF;
+           CLR_NZVC(); 
+           SET_FLAGS8(m6800.a,t,r);
         }
     };
     /*TODO*///
