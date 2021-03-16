@@ -87,6 +87,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.superpac.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rocnrope.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddragon.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.battlane.*;
 
 public class driver {
 
@@ -3297,20 +3298,15 @@ public class driver {
         // driver_xsleenab,	/* bootleg */
         /*TODO*/
         // driver_solarwar,	/* TA-0019 (c) 1986 Taito + Memetron license */
-        /*TODO*/
-        // driver_battlane,	/* TA-???? (c) 1986 + Taito license */
-        /*TODO*/
-        // driver_battlan2,	/* TA-???? (c) 1986 + Taito license */
-        /*TODO*/
-        // driver_battlan3,	/* TA-???? (c) 1986 + Taito license */
-        driver_ddragon,	/* TA-0021 (c) 1987 */
-        driver_ddragonu,	/* TA-0021 (c) 1987 Taito America */
-        driver_ddragonb,	/* bootleg */
+
+        driver_ddragon, /* TA-0021 (c) 1987 */
+        driver_ddragonu, /* TA-0021 (c) 1987 Taito America */
+        driver_ddragonb, /* bootleg */
         /* TA-0022 Super Dodge Ball */
         /* TA-0023 China Gate */
         /* TA-0024 WWF Superstars */
         /* TA-0025 Champ V'Ball */
-        driver_ddragon2,	/* TA-0026 (c) 1988 */
+        driver_ddragon2, /* TA-0026 (c) 1988 */
         /*TODO*/
         // driver_ctribe,	/* TA-0028 (c) 1990 (US) */
         /*TODO*/
@@ -4692,6 +4688,9 @@ public class driver {
         driver_yiear2,
         driver_ddribble,
         driver_sonson,
+        driver_battlane,
+        driver_battlan2,
+        driver_battlan3,
         /*
      * NOT Working flag
          */
