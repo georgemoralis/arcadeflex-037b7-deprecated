@@ -38,6 +38,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309H.HD6309_INT_FIRQ;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309H.HD6309_INT_IRQ;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.hd63701;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502;
 
 public class cpuintrf {
 
@@ -283,7 +284,7 @@ public class cpuintrf {
                 new z80(),//CPU1(Z80,	   z80, 	 1,255,1.00,Z80_IGNORE_INT,    Z80_IRQ_INT,    Z80_NMI_INT,    16,	  0,16,LE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(8080,	   i8080,	 4,255,1.00,I8080_NONE, 	   I8080_INTR,	   I8080_TRAP,	   16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(8085A,    i8085,	 4,255,1.00,I8085_NONE, 	   I8085_INTR,	   I8085_TRAP,	   16,	  0,16,LE,1, 3,16	),
-                new Dummy_cpu(),//CPU0(M6502,    m6502,	 1,  0,1.00,M6502_INT_NONE,    M6502_INT_IRQ,  M6502_INT_NMI,  16,	  0,16,LE,1, 3,16	),
+                new m6502(),//CPU0(M6502,    m6502,	 1,  0,1.00,M6502_INT_NONE,    M6502_INT_IRQ,  M6502_INT_NMI,  16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(M65C02,   m65c02,	 1,  0,1.00,M65C02_INT_NONE,   M65C02_INT_IRQ, M65C02_INT_NMI, 16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(M6510,    m6510,	 1,  0,1.00,M6510_INT_NONE,    M6510_INT_IRQ,  M6510_INT_NMI,  16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(N2A03,    n2a03,	 1,  0,1.00,N2A03_INT_NONE,    N2A03_INT_IRQ,  N2A03_INT_NMI,  16,	  0,16,LE,1, 3,16	),
@@ -1418,11 +1419,12 @@ public class cpuintrf {
 /*TODO*///				}
 /*TODO*///				break;
 /*TODO*///#endif
-/*TODO*///#if (HAS_M6502)
-/*TODO*///			case CPU_M6502: 			irq_line = 0; LOG(("M6502 IRQ\n")); break;
-/*TODO*///#endif
-/*TODO*///#if (HAS_M65C02)
-/*TODO*///			case CPU_M65C02:			irq_line = 0; LOG(("M65C02 IRQ\n")); break;
+                    case CPU_M6502:
+                        irq_line = 0;
+                        //LOG(("M6502 IRQ\n"));
+                        break;
+
+                    /*TODO*///			case CPU_M65C02:			irq_line = 0; LOG(("M65C02 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M65SC02)
 /*TODO*///			case CPU_M65SC02:			irq_line = 0; LOG(("M65SC02 IRQ\n")); break;
@@ -1462,7 +1464,6 @@ public class cpuintrf {
 /*TODO*///				}
 /*TODO*///				break;
 /*TODO*///#endif
-
                     case CPU_I86:
                         irq_line = 0;
                         //LOG(("I86 IRQ\n"));
@@ -1534,23 +1535,22 @@ public class cpuintrf {
                         /*LOG(("HD68705 IRQ\n"));*/
                         break;
                     /*TODO*///#if (HAS_HD6309)
-			case CPU_HD6309:
-				switch (num)
-				{
-				case HD6309_INT_IRQ:	
-                                    irq_line = 0; 
-                                    //LOG(("M6309 IRQ\n")); 
-                                    break;
-				case HD6309_INT_FIRQ:	
-                                    irq_line = 1; 
-                                    //LOG(("M6309 FIRQ\n")); 
-                                    break;
-				default:				
-                                    irq_line = 0; 
-                                    //LOG(("M6309 unknown\n"));
-				}
-				break;
-/*TODO*///#endif
+                    case CPU_HD6309:
+                        switch (num) {
+                            case HD6309_INT_IRQ:
+                                irq_line = 0;
+                                //LOG(("M6309 IRQ\n")); 
+                                break;
+                            case HD6309_INT_FIRQ:
+                                irq_line = 1;
+                                //LOG(("M6309 FIRQ\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("M6309 unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
                     case CPU_M6809:
                         switch (num) {
                             case M6809_INT_IRQ:
@@ -1563,7 +1563,7 @@ public class cpuintrf {
                                 break;
                             default:
                                 irq_line = 0;
-                                //LOG(("M6809 unknown\n"));
+                            //LOG(("M6809 unknown\n"));
                         }
                         break;
                     /*TODO*///#endif

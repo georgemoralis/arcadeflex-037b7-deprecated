@@ -100,6 +100,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mystston.*;
 
 public class driver {
 
@@ -3222,7 +3223,7 @@ public class driver {
         /*TODO*/
         // driver_ssozumo,	/* TA-0008 (c) 1984 */
         /*TODO*/
-        // driver_mystston,	/* TA-0010 (c) 1984 */
+        driver_mystston,	/* TA-0010 (c) 1984 */
         /* TA-0011 Dog Fight (Data East) / Batten O'hara no Sucha-Raka Kuuchuu Sen 1985 */
         /*TODO*/
         // driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
