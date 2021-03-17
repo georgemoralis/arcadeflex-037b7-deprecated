@@ -100,6 +100,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mystston.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gng.*;
 
 public class driver {
 
@@ -1528,19 +1530,13 @@ public class driver {
         /* http://www.emugaming.com/strider/capcom_list.shtml                           */
         /*TODO*/
         /*TODO*/
-        // driver_gng,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_gnga,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_gngt,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimur,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimuc,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimug,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
+        driver_gng,		/*  9/1985 (c) 1985 */
+        driver_gnga,		/*  9/1985 (c) 1985 */
+        driver_gngt,		/*  9/1985 (c) 1985 */
+        driver_makaimur,	/*  9/1985 (c) 1985 */
+        driver_makaimuc,	/*  9/1985 (c) 1985 */
+        driver_makaimug,	/*  9/1985 (c) 1985 */
+        driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
         /*TODO*/
         // driver_srumbler,	/*  9/1986 (c) 1986 */
         /*TODO*/
@@ -3222,7 +3218,7 @@ public class driver {
         /*TODO*/
         // driver_ssozumo,	/* TA-0008 (c) 1984 */
         /*TODO*/
-        // driver_mystston,	/* TA-0010 (c) 1984 */
+         driver_mystston,	/* TA-0010 (c) 1984 */
         /* TA-0011 Dog Fight (Data East) / Batten O'hara no Sucha-Raka Kuuchuu Sen 1985 */
         /*TODO*/
         // driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
