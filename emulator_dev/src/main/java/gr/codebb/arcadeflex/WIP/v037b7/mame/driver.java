@@ -98,6 +98,9 @@ import static gr.codebb.arcadeflex.v037b7.drivers.junofrst.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.megazone.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.trackfld.*;
+
 
 public class driver {
 
@@ -2485,28 +2488,19 @@ public class driver {
         // driver_ginkun,	/* (c) 1995 Tecmo */
 
         driver_pandoras,
-        /*TODO*/
-        // driver_trackfld,	/* GX361 (c) 1983 */
-        /*TODO*/
-        // driver_trackflc,	/* GX361 (c) 1983 + Centuri license */
-        /*TODO*/
-        // driver_hyprolym,	/* GX361 (c) 1983 */
-        /*TODO*/
-        // driver_hyprolyb,	/* bootleg */
+        driver_trackfld,	
+        driver_trackflc,	
+        driver_hyprolym,	
+        driver_hyprolyb,	
         driver_rocnrope, /* GX364 (c) 1983 */
         driver_rocnropk, /* GX364 (c) 1983 + Kosuka */
         //driver_tp84,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_tp84a,		/* GX388 (c) 1984 */
-        /*TODO*/
-        // driver_hyperspt,	/* GX330 (c) 1984 + Centuri */
-        /*TODO*/
-        // driver_hpolym84,	/* GX330 (c) 1984 */
-
-        /*TODO*/
-        // driver_roadf,		/* GX461 (c) 1984 */
-        /*TODO*/
-        // driver_roadf2,	/* GX461 (c) 1984 */
+        driver_hyperspt,	
+        driver_hpolym84,	
+        driver_roadf,		
+        driver_roadf2,
 
         driver_kicker, /* GX477 (c) 1985 */
         driver_shaolins, /* GX477 (c) 1985 */
