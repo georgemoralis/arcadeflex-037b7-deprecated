@@ -315,12 +315,16 @@ public class namco extends snd_interface {
         /* get stream channels */
         if (intf.stereo != 0) {
 //            throw new UnsupportedOperationException("Namco stereo unsupported ");
+            System.out.println("Namco stereo sound!");
+            
             /*TODO*///		int vol[2];
             /*TODO*///
             /*TODO*///		vol[0] = MIXER(intf->volume,MIXER_PAN_LEFT);
             /*TODO*///		vol[1] = MIXER(intf->volume,MIXER_PAN_RIGHT);
             /*TODO*///		stream = stream_init_multi(2, stereo_names, vol, intf->samplerate, 0, namco_update_stereo);
         } else {
+            System.out.println("Namco mono sound!");
+            
             stream = stream_init(mono_name, intf.volume, intf.samplerate, 0, namco_update_mono);
         }
         /* allocate a pair of buffers to mix into - 1 second's worth should be more than enough */
@@ -334,7 +338,7 @@ public class namco extends snd_interface {
         last_channel = num_voices;
 
         if (intf.region == -1) {
-            sound_prom = namco_wavedata;
+            sound_prom = new UBytePtr(namco_wavedata);
             samples_per_byte = 2;/* first 4 high bits, then low 4 bits */
 
         } else {
@@ -524,6 +528,7 @@ public class namco extends snd_interface {
         public void handler(int offset, int data) {
             /* update the streams */
             stream_update(stream, 0);
+            System.out.println("Escribo "+data);
 
             namco_wavedata.write(offset, data);
         }

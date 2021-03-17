@@ -100,6 +100,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gng.*;
 
 public class driver {
 
@@ -1526,21 +1527,14 @@ public class driver {
         /* their web site. The list is sorted by production date.                       */
         /* A comprehensive list of Capcom games with board info can be found here:      */
         /* http://www.emugaming.com/strider/capcom_list.shtml                           */
-        /*TODO*/
-        /*TODO*/
-        // driver_gng,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_gnga,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_gngt,		/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimur,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimuc,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_makaimug,	/*  9/1985 (c) 1985 */
-        /*TODO*/
-        // driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
+        
+        driver_gng,		/*  9/1985 (c) 1985 */
+        driver_gnga,		/*  9/1985 (c) 1985 */
+        driver_gngt,		/*  9/1985 (c) 1985 */
+        driver_makaimur,	/*  9/1985 (c) 1985 */
+        driver_makaimuc,	/*  9/1985 (c) 1985 */
+        driver_makaimug,	/*  9/1985 (c) 1985 */
+        driver_diamond,	/* (c) 1989 KH Video (NOT A CAPCOM GAME but runs on GnG hardware) */
         /*TODO*/
         // driver_srumbler,	/*  9/1986 (c) 1986 */
         /*TODO*/
