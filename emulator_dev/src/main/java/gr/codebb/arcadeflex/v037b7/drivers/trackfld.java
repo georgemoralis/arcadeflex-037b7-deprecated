@@ -3,7 +3,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.konami.konami1_decode;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.flip_screen_w;
@@ -20,15 +20,15 @@ import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.soundlatch_r;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.soundlatch_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.hyprolyb_ADPCM_data_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.hyprolyb_adpcm_interface;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.hyprolyb_speech_r;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.konami_dac_interface;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.konami_sh_irqtrigger_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.konami_sn76496_interface;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.trackfld_sh_timer_r;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.trackfld_sound_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.trackfld.trackfld_speech_r;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.hyprolyb_ADPCM_data_w;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.hyprolyb_adpcm_interface;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.hyprolyb_speech_r;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.konami_dac_interface;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.konami_sh_irqtrigger_w;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.konami_sn76496_interface;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.trackfld_sh_timer_r;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.trackfld_sound_w;
+import static gr.codebb.arcadeflex.v037b7.sndhrdw.trackfld.trackfld_speech_r;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.dac.DAC_0_data_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.colorram;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.colorram_w;
@@ -38,12 +38,12 @@ import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.spriteram_size;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram_size;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_scroll;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_scroll2;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_vh_convert_color_prom;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_vh_screenrefresh;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_vh_start;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.trackfld.trackfld_vh_stop;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_scroll;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_scroll2;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_vh_convert_color_prom;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_vh_screenrefresh;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_vh_start;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.trackfld.trackfld_vh_stop;
 import static gr.codebb.arcadeflex.common.libc.cstring.strcmp;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.osd_fread;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.osd_fwrite;

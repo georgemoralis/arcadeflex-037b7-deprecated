@@ -79,13 +79,13 @@ import static gr.codebb.arcadeflex.v037b7.drivers.mikie.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sbasketb.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.citycon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.finalizr.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ironhors.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ironhors.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.mappy.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.phozon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.superpac.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rocnrope.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.rocnrope.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.battlane.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos1.*;
@@ -99,8 +99,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.megazone.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.trackfld.*;
-
+import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
 
 public class driver {
 
@@ -2488,29 +2487,19 @@ public class driver {
         // driver_ginkun,	/* (c) 1995 Tecmo */
 
         driver_pandoras,
-        driver_trackfld,	
-        driver_trackflc,	
-        driver_hyprolym,	
-        driver_hyprolyb,	
-        driver_rocnrope, /* GX364 (c) 1983 */
-        driver_rocnropk, /* GX364 (c) 1983 + Kosuka */
         //driver_tp84,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_tp84a,		/* GX388 (c) 1984 */
-        driver_hyperspt,	
-        driver_hpolym84,	
-        driver_roadf,		
+        driver_hyperspt,
+        driver_hpolym84,
+        driver_roadf,
         driver_roadf2,
-
         driver_kicker, /* GX477 (c) 1985 */
         driver_shaolins, /* GX477 (c) 1985 */
         driver_gberet,
         driver_rushatck,
         driver_gberetb,
         driver_mrgoemon,
-        driver_ironhors,
-        driver_dairesya,
-        driver_farwest,
         driver_jackal, /* GX631 (c) 1986 (World) */
         driver_topgunr, /* GX631 (c) 1986 (US) */
         driver_jackalj, /* GX631 (c) 1986 (Japan) */
@@ -4667,6 +4656,14 @@ public class driver {
         driver_megaznik,
         driver_tutankhm,
         driver_tutankst,
+        driver_rocnrope,
+        driver_rocnropk,
+        driver_ironhors,
+        driver_dairesya,
+        driver_trackfld,
+        driver_trackflc,
+        driver_hyprolym,
+        driver_hyprolyb,
         /*
      * NOT Working flag
          */
@@ -4685,6 +4682,7 @@ public class driver {
         driver_tokio,
         driver_lkageb,
         driver_astrob1,
+        driver_farwest,
         /*
         NOT WORKING IN MAME EITHER
          */

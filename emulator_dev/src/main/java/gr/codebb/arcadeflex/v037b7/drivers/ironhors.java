@@ -3,7 +3,7 @@
  * ported to v0.36
  * 
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_FIRQ;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
@@ -27,7 +27,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203_VOL;
 import gr.codebb.arcadeflex.WIP.v037b7.sound._2203intfH.YM2203interface;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.ironhors.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.ironhors.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 
 public class ironhors {
