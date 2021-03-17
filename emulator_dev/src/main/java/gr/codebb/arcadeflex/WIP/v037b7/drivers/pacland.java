@@ -62,7 +62,7 @@ public class pacland
 {
 	
 	
-	static UBytePtr sharedram1=new UBytePtr();
+	public static UBytePtr sharedram1 = new UBytePtr();
 	
 	
 	
