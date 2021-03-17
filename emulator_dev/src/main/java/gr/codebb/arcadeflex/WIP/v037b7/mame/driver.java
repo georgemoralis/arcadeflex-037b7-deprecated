@@ -90,6 +90,14 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.battlane.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos1.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacland.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.brkthru.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.gaplus.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.grobda.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.jailbrek.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.junofrst.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.megazone.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 
 public class driver {
 
@@ -368,20 +376,6 @@ public class driver {
         /*TODO*/
         // driver_warpwar2,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
 
-        /*TODO*/
-        // driver_grobda,	/* (c) 1984 */
-        /*TODO*/
-        // driver_grobda2,	/* (c) 1984 */
-        /*TODO*/
-        // driver_grobda3,	/* (c) 1984 */
-        /*TODO*/
-        // driver_gaplus,	/* (c) 1984 */
-        /*TODO*/
-        // driver_gaplusa,	/* (c) 1984 */
-        /*TODO*/
-        // driver_galaga3,	/* (c) 1984 */
-        /*TODO*/
-        // driver_galaga3a,	/* (c) 1984 */
         /* Libble Rabble board (first Japanese game using a 68000) */
         /*TODO*/
         /// *TODO*///TESTDRIVER( liblrabl,	/* (c) 1983 */
@@ -404,10 +398,10 @@ public class driver {
         /*TODO*/
         // driver_poleps2c,	/* bootleg */
         /* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
-        driver_pacland,	/* (c) 1984 */
-        driver_pacland2,	/* (c) 1984 */
-        driver_pacland3,	/* (c) 1984 */
-        driver_paclandm,	/* (c) 1984 Midway */
+        driver_pacland, /* (c) 1984 */
+        driver_pacland2, /* (c) 1984 */
+        driver_pacland3, /* (c) 1984 */
+        driver_paclandm, /* (c) 1984 Midway */
         /*TODO*/
         // driver_drgnbstr,	/* (c) 1984 */
         /*TODO*/
@@ -436,7 +430,7 @@ public class driver {
         // driver_wndrmomo,	/* (c) 1987 */
 
         /* Namco System 1 games */
-        driver_shadowld,	/* (c) 1987 */
+        driver_shadowld, /* (c) 1987 */
         /*TODO*/
         // driver_youkaidk,	/* (c) 1987 (Japan new version) */
         /*TODO*/
@@ -449,10 +443,10 @@ public class driver {
         // driver_blazer,	/* (c) 1987 (Japan) */
         /*TODO*/
         // driver_quester,	/* (c) 1987 (Japan) */
-        driver_pacmania,	/* (c) 1987 */
+        driver_pacmania, /* (c) 1987 */
         /*TODO*/
         // driver_pacmanij,	/* (c) 1987 (Japan) */
-        driver_galaga88,	/* (c) 1987 */
+        driver_galaga88, /* (c) 1987 */
         /*TODO*/
         // driver_galag88b,	/* (c) 1987 */
         /*TODO*/
@@ -2274,12 +2268,7 @@ public class driver {
         // driver_firetrap,	/* (c) 1986 */
         /*TODO*/
         // driver_firetpbl,	/* bootleg */
-        /*TODO*/
-        // driver_brkthru,	/* (c) 1986 Data East USA (US) */
-        /*TODO*/
-        // driver_brkthruj,	/* (c) 1986 Data East Corporation (Japan) */
-        /*TODO*/
-        // driver_darwin,	/* (c) 1986 Data East Corporation (Japan) */
+
         /*TODO*/
         // driver_shootout,	/* (c) 1985 Data East USA (US) */
         /*TODO*/
@@ -2495,23 +2484,7 @@ public class driver {
         /*TODO*/
         // driver_ginkun,	/* (c) 1995 Tecmo */
 
-        /* Konami bitmap games */
-        /*TODO*/
-        // driver_tutankhm,	/* GX350 (c) 1982 Konami */
-        /*TODO*/
-        // driver_tutankst,	/* GX350 (c) 1982 Stern */
-        /*TODO*/
-        // driver_junofrst,	/* GX310 (c) 1983 Konami */
-        /*TODO*/
-        // driver_junofstg,	/* GX310 (c) 1983 Konami + Gottlieb license */
-
-        /* Konami games */
-        /*TODO*/
-        // driver_megazone,	/* GX319 (c) 1983 */
-        /*TODO*/
-        // driver_megaznik,	/* GX319 (c) 1983 + Interlogic / Kosuka */
-        /*TODO*/
-        // driver_pandoras,	/* GX328 (c) 1984 + Interlogic */
+        driver_pandoras,
         /*TODO*/
         // driver_trackfld,	/* GX361 (c) 1983 */
         /*TODO*/
@@ -2541,9 +2514,6 @@ public class driver {
         driver_rushatck,
         driver_gberetb,
         driver_mrgoemon,
-        /*TODO*/
-        // driver_jailbrek,	/* GX507 (c) 1986 */
-
         driver_ironhors,
         driver_dairesya,
         driver_farwest,
@@ -4686,6 +4656,23 @@ public class driver {
         driver_battlane,
         driver_battlan2,
         driver_battlan3,
+        driver_brkthru,
+        driver_brkthruj,
+        driver_darwin,
+        driver_gaplus,
+        driver_gaplusa,
+        driver_galaga3,
+        driver_galaga3a,
+        driver_grobda,
+        driver_grobda2,
+        driver_grobda3,
+        driver_jailbrek,
+        driver_junofrst,
+        driver_junofstg,
+        driver_megazone,
+        driver_megaznik,
+        driver_tutankhm,
+        driver_tutankst,
         /*
      * NOT Working flag
          */
