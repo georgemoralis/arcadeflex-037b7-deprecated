@@ -105,6 +105,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gng.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gottlieb.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.combatsc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.capbowl.*;
 
 public class driver {
 
@@ -1910,14 +1911,10 @@ public class driver {
         // TESTDRIVER( doapp,		/*  Dead Or Alive ++ (JAPAN) */
 
         /* Incredible Technologies games */
-        /*TODO*/
-        // driver_capbowl,	/* (c) 1988 Incredible Technologies */
-        /*TODO*/
-        // driver_capbowl2,	/* (c) 1988 Incredible Technologies */
-        /*TODO*/
-        // driver_clbowl,	/* (c) 1989 Incredible Technologies */
-        /*TODO*/
-        // driver_bowlrama,	/* (c) 1991 P & P Marketing */
+        driver_capbowl,	/* (c) 1988 Incredible Technologies */
+        driver_capbowl2,	/* (c) 1988 Incredible Technologies */
+        driver_clbowl,	/* (c) 1989 Incredible Technologies */
+        driver_bowlrama,	/* (c) 1991 P & P Marketing */
         /*
     The Incredible Technologies game list
     http://www.itsgames.com/it/CorporateProfile/corporateprofile_main.htm
