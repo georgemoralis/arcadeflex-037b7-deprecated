@@ -466,7 +466,7 @@ public class _6821pia {
                         p.ddr_a = (char) (data & 0xFF);
 
                         /* send it to the output function */
-                        if (p.intf.out_a_func != null && p.ddr_a != 0) {
+                        if (p.intf != null && p.intf.out_a_func != null && p.ddr_a != 0) {
                             p.intf.out_a_func.handler(0, p.out_a & p.ddr_a);
                         }
                     }
@@ -486,7 +486,7 @@ public class _6821pia {
                     p.out_b = (char) (data & 0xFF);/* & p.ddr_b */ /* NS990130 - don't mask now, DDR could change later */
 
  /* send it to the output function */
-                    if (p.intf.out_b_func != null && p.ddr_b != 0) {
+                    if (p.intf!=null && p.intf.out_b_func != null && p.ddr_b != 0) {
                         p.intf.out_b_func.handler(0, p.out_b & p.ddr_b);
                         /* NS990130 */
                     }

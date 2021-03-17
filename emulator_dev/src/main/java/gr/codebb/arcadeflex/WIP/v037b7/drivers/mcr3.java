@@ -1195,7 +1195,7 @@ public class mcr3 {
                         mcr_interrupt, 1,
                         null, 0, mcr_daisy_chain
                 )
-            /*TODO*///                ,SOUND_CPU_TURBO_CHIP_SQUEAK
+                ,SOUND_CPU_TURBO_CHIP_SQUEAK
             },
             30, DEFAULT_REAL_30HZ_VBLANK_DURATION,
             1,
@@ -1212,10 +1212,10 @@ public class mcr3 {
             mcr3_vh_screenrefresh,
             /* sound hardware */
             SOUND_SUPPORTS_STEREO, 0, 0, 0,
-            /*TODO*///            new MachineSound[]{
-            /*TODO*///                SOUND_TURBO_CHIP_SQUEAK
-            /*TODO*///            },
-            null,
+            new MachineSound[]{
+                SOUND_TURBO_CHIP_SQUEAK
+            },
+            
             mcr3_nvram_handler
     );
 
@@ -1231,7 +1231,7 @@ public class mcr3 {
                         mcr_interrupt, 1,
                         null, 0, mcr_daisy_chain
                 )
-            /*TODO*///                ,SOUND_CPU_TURBO_CHIP_SQUEAK
+            ,SOUND_CPU_TURBO_CHIP_SQUEAK
             },
             30, DEFAULT_REAL_30HZ_VBLANK_DURATION,
             1,
@@ -1248,10 +1248,10 @@ public class mcr3 {
             mcrmono_vh_screenrefresh,
             /* sound hardware */
             SOUND_SUPPORTS_STEREO, 0, 0, 0,
-            /*TODO*///            new MachineSound[]{
-            /*TODO*///                SOUND_TURBO_CHIP_SQUEAK
-            /*TODO*///            },
-            null,
+            new MachineSound[]{
+                SOUND_TURBO_CHIP_SQUEAK
+            },
+            
             null
     );
 

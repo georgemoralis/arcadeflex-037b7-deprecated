@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6800Η.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_IRQ_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821pia.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.mcrH.*;
@@ -91,17 +92,17 @@ public class mcr {
         }
 
         /* Turbo Chip Squeak */
- /*TODO*///        if ((mcr_sound_config & MCR_TURBO_CHIP_SQUEAK) != 0) {
-        /*TODO*///            pia_unconfig();
-        /*TODO*///            pia_config(0, PIA_ALTERNATE_ORDERING, turbocs_pia_intf);
-        /*TODO*///            u8_turbocs_dac_index = dac_index++;
-        /*TODO*///            u8_turbocs_sound_cpu = sound_cpu++;
-        /*TODO*///            turbocs_reset_w(1);
-        /*TODO*///            turbocs_reset_w(0);
-        /*TODO*///            /* reset any PIAs */
-        /*TODO*///            pia_reset();
-        /*TODO*///        }
-        /*TODO*///	
+         if ((mcr_sound_config & MCR_TURBO_CHIP_SQUEAK) != 0) {
+                    pia_unconfig();
+                    pia_config(0, PIA_ALTERNATE_ORDERING, turbocs_pia_intf);
+                    u8_turbocs_dac_index = dac_index++;
+                    u8_turbocs_sound_cpu = sound_cpu++;
+                    turbocs_reset_w(1);
+                    turbocs_reset_w(0);
+                    /* reset any PIAs */
+                    pia_reset();
+                }
+        	
         /* Chip Squeak Deluxe */
         if ((mcr_sound_config & MCR_CHIP_SQUEAK_DELUXE) != 0) {
             pia_config(0, PIA_ALTERNATE_ORDERING | PIA_16BIT_AUTO, csdeluxe_pia_intf);
@@ -500,11 +501,12 @@ public class mcr {
         }
     };
 
-    /*TODO*///   public static irqfuncPtr turbocs_irq = new irqfuncPtr() {
-/*TODO*///        public void handler(int state) {
-/*TODO*///            cpu_set_irq_line(u8_turbocs_sound_cpu, M6809_IRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
-/*TODO*///        }
-/*TODO*///    };
+       public static irqfuncPtr turbocs_irq = new irqfuncPtr() {
+        public void handler(int state) {
+            cpu_set_irq_line(u8_turbocs_sound_cpu, M6809_IRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
+        }
+    };
+       
     public static timer_callback turbocs_delayed_data_w = new timer_callback() {
         public void handler(int param) {
             pia_0_portb_w.handler(0, (param >> 1) & 0x0f);
@@ -553,14 +555,14 @@ public class mcr {
     /**
      * ******* PIA interfaces **********
      */
-    /*TODO*///    static pia6821_interface turbocs_pia_intf = new pia6821_interface(
-/*TODO*///            /*inputs : A/B,CA/B1,CA/B2 */null, null, null, null, null, null,
-/*TODO*///            /*outputs: A/B,CA/B2       */ turbocs_porta_w, turbocs_portb_w, null, null,
-/*TODO*///            /*irqs   : A/B             */ turbocs_irq, turbocs_irq
-/*TODO*///    );
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
+        static pia6821_interface turbocs_pia_intf = new pia6821_interface(
+            /*inputs : A/B,CA/B1,CA/B2 */null, null, null, null, null, null,
+            /*outputs: A/B,CA/B2       */ turbocs_porta_w, turbocs_portb_w, null, null,
+            /*irqs   : A/B             */ turbocs_irq, turbocs_irq
+    );
+    	
+	
+	
     /**
      * ***********************************
      *
