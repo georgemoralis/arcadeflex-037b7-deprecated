@@ -103,6 +103,8 @@ import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mystston.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gng.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gottlieb.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.combatsc.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
 
 public class driver {
 
@@ -2498,16 +2500,11 @@ public class driver {
         // driver_contrajb,	/* bootleg */
         /*TODO*/
         // driver_gryzor,	/* GX633 (c) 1987 */
-        /*TODO*/
-        // driver_combasc,	/* GX611 (c) 1988 */
-        /*TODO*/
-        // driver_combasct,	/* GX611 (c) 1987 */
-        /*TODO*/
-        // driver_combascj,	/* GX611 (c) 1987 (Japan) */
-        /*TODO*/
-        // driver_bootcamp,	/* GX611 (c) 1987 */
-        /*TODO*/
-        // driver_combascb,	/* bootleg */
+        driver_combasc,	/* GX611 (c) 1988 */
+        driver_combasct,	/* GX611 (c) 1987 */
+        driver_combascj,	/* GX611 (c) 1987 (Japan) */
+        driver_bootcamp,	/* GX611 (c) 1987 */
+        driver_combascb,	/* bootleg */
         /*TODO*/
         // driver_rockrage,	/* GX620 (c) 1986 (World?) */
         /*TODO*/
@@ -2972,8 +2969,7 @@ public class driver {
         // driver_cloak,		/* (c) 1983 */
         /*TODO*/
         // driver_cloud9,	/* (c) 1983 */
-        /*TODO*/
-        // driver_jedi,		/* (c) 1984 */
+        driver_jedi,		/* (c) 1984 */
 
         /* Atari System 1 games */
         /*TODO*/
