@@ -220,10 +220,10 @@ public class balsente {
     public static final int POLY17_ADD = 0x18000;
 
     static void poly17_init() {
-        /*UINT32*/
-        int i, x = 0;
-        UBytePtr p;
-        UBytePtr r;
+        long i, x = 0;
+        UBytePtr p = new UBytePtr(), r = new UBytePtr();
+        int _p = 0;
+        int _r = 0;
 
         /* free stale memory */
         if (poly17 != null) {
@@ -240,8 +240,8 @@ public class balsente {
         /* generate the polynomial */
         for (i = 0; i < POLY17_SIZE; i++) {
             /* store new values */
-            p.writeinc(x & 1);
-            r.writeinc(x >> 3);
+            p.write(_p++, (int) (x & 1));
+            r.write(_r++, (int) (x >> 3));
 
             /* calculate next bit */
             x = ((x << POLY17_SHL) + (x >> POLY17_SHR) + POLY17_ADD) & POLY17_SIZE;
@@ -2457,7 +2457,7 @@ public class balsente {
 
         UBytePtr temp = new UBytePtr(0x20000);
         if (temp != null) {
-            UBytePtr rom = memory_region(REGION_CPU1);
+            UBytePtr rom = new UBytePtr(memory_region(REGION_CPU1));
             int/*UINT32*/ base;
 
             for (base = 0x10000; base < memory_region_length(REGION_CPU1); base += 0x30000) {
@@ -2597,8 +2597,8 @@ public class balsente {
     };
     public static InitDriverPtr init_triviag2 = new InitDriverPtr() {
         public void handler() {
-            memcpy(memory_region(REGION_CPU1), 0x20000, memory_region(REGION_CPU1), 0x28000, 0x4000);
-            memcpy(memory_region(REGION_CPU1), 0x24000, memory_region(REGION_CPU1), 0x28000, 0x4000);
+            memcpy(new UBytePtr(memory_region(REGION_CPU1)), 0x20000, new UBytePtr(memory_region(REGION_CPU1)), 0x28000, 0x4000);
+            memcpy(new UBytePtr(memory_region(REGION_CPU1)), 0x24000, new UBytePtr(memory_region(REGION_CPU1)), 0x28000, 0x4000);
             expand_roms(EXPAND_NONE);
             u8_balsente_shooter = 0;
             /* noanalog */
