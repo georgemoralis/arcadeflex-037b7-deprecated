@@ -107,6 +107,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.combatsc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.capbowl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.balsente.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.asteroid.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.atetris.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bogeyman.*;
 
 public class driver {
 
@@ -2812,16 +2815,11 @@ public class driver {
         // driver_showdown,	/* (c) 1988 */
 
         /* Atari vector games */
-        /*TODO*/
-        // driver_asteroid,	/* (c) 1979 */
-        /*TODO*/
-        // driver_asteroi1,	/* no copyright notice */
-        /*TODO*/
-        // driver_asteroib,	/* bootleg */
-        /*TODO*/
-        // driver_astdelux,	/* (c) 1980 */
-        /*TODO*/
-        // driver_astdelu1,	/* (c) 1980 */
+        driver_asteroid,	/* (c) 1979 */
+        driver_asteroi1,	/* no copyright notice */
+        driver_asteroib,	/* bootleg */
+        driver_astdelux,	/* (c) 1980 */
+        driver_astdelu1,	/* (c) 1980 */
         /*TODO*/
         // driver_bwidow,	/* (c) 1982 */
         /*TODO*/
@@ -2832,10 +2830,8 @@ public class driver {
         // driver_gravitar,	/* (c) 1982 */
         /*TODO*/
         // driver_gravitr2,	/* (c) 1982 */
-        /*TODO*/
-        // driver_llander,	/* no copyright notice */
-        /*TODO*/
-        // driver_llander1,	/* no copyright notice */
+        driver_llander,	/* no copyright notice */
+        driver_llander1,	/* no copyright notice */
         /*TODO*/
         // driver_redbaron,	/* (c) 1980 */
         /*TODO*/
@@ -2997,16 +2993,11 @@ public class driver {
         // driver_gaunt2,	/* (c) 1986 */
         /*TODO*/
         // driver_vindctr2,	/* (c) 1988 */
-        /*TODO*/
-        // driver_atetris,	/* (c) 1988 */
-        /*TODO*/
-        // driver_atetrisa,	/* (c) 1988 */
-        /*TODO*/
-        // driver_atetrisb,	/* bootleg */
-        /*TODO*/
-        // driver_atetcktl,	/* (c) 1989 */
-        /*TODO*/
-        // driver_atetckt2,	/* (c) 1989 */
+        driver_atetris,	/* (c) 1988 */
+        driver_atetrisa,	/* (c) 1988 */
+        driver_atetrisb,	/* bootleg */
+        driver_atetcktl,	/* (c) 1989 */
+        driver_atetckt2,	/* (c) 1989 */
         /*TODO*/
         // driver_toobin,	/* (c) 1988 */
         /*TODO*/
@@ -3179,8 +3170,7 @@ public class driver {
         /*TODO*/
          driver_mystston,	/* TA-0010 (c) 1984 */
         /* TA-0011 Dog Fight (Data East) / Batten O'hara no Sucha-Raka Kuuchuu Sen 1985 */
-        /*TODO*/
-        // driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
+        driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
         /*TODO*/
         // driver_matmania,	/* TA-0015 (c) 1985 + Taito America license */
         /*TODO*/
