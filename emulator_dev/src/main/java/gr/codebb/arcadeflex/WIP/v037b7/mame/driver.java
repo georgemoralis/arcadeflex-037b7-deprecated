@@ -113,6 +113,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bogeyman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.btime.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bwidow.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bzone.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ccastles.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.centiped.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exprraid.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gameplan.*;
 
 public class driver {
 
@@ -2240,12 +2244,9 @@ public class driver {
         // driver_sidepctj,	/* (c) 1986 Data East Corporation */
         /*TODO*/
         // driver_sidepctb,	/* bootleg */
-        /*TODO*/
-        // driver_exprraid,	/* (c) 1986 Data East USA (US) */
-        /*TODO*/
-        // driver_wexpress,	/* (c) 1986 Data East Corporation (World?) */
-        /*TODO*/
-        // driver_wexpresb,	/* bootleg */
+        driver_exprraid,	/* (c) 1986 Data East USA (US) */
+        driver_wexpress,	/* (c) 1986 Data East Corporation (World?) */
+        driver_wexpresb,	/* bootleg */
         /*TODO*/
         // driver_pcktgal,	/* (c) 1987 Data East Corporation (Japan) */
         /*TODO*/
@@ -2890,14 +2891,10 @@ public class driver {
         /* Atari "Centipede hardware" games */
         /*TODO*/
         // driver_warlord,	/* (c) 1980 */
-        /*TODO*/
-        // driver_centiped,	/* (c) 1980 */
-        /*TODO*/
-        // driver_centipd2,	/* (c) 1980 */
-        /*TODO*/
-        // driver_centipdb,	/* bootleg */
-        /*TODO*/
-        // driver_centipb2,	/* bootleg */
+        driver_centiped,	/* (c) 1980 */
+        driver_centipd2,	/* (c) 1980 */
+        driver_centipdb,	/* bootleg */
+        driver_centipb2,	/* bootleg */
         /*TODO*/
         // driver_milliped,	/* (c) 1982 */
         /*TODO*/
@@ -2918,10 +2915,8 @@ public class driver {
         // driver_liberatr,	/* (c) 1982 */
         /*TODO*/
         // TESTDRIVER( liberat2,
-        /*TODO*/
-        // driver_ccastles,	/* (c) 1983 */
-        /*TODO*/
-        // driver_ccastle2,	/* (c) 1983 */
+        driver_ccastles,	/* (c) 1983 */
+        driver_ccastle2,	/* (c) 1983 */
         /*TODO*/
         // driver_cloak,		/* (c) 1983 */
         /*TODO*/
@@ -3200,14 +3195,10 @@ public class driver {
         // driver_ddrago3b,	/* bootleg */
         /* TA-0031 WWF Wrestlefest */
         /* GamePlan games */
-        /*TODO*/
-        // driver_megatack,	/* (c) 1980 Centuri */
-        /*TODO*/
-        // driver_killcom,	/* (c) 1980 Centuri */
-        /*TODO*/
-        // driver_challeng,	/* (c) 1981 Centuri */
-        /*TODO*/
-        // driver_kaos,		/* (c) 1981 */
+        driver_megatack,	/* (c) 1980 Centuri */
+        driver_killcom,	/* (c) 1980 Centuri */
+        driver_challeng,	/* (c) 1981 Centuri */
+        driver_kaos,		/* (c) 1981 */
 
         /* Zaccaria games */
         /*TODO*/
