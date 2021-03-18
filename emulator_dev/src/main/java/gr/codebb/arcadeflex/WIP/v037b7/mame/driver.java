@@ -125,6 +125,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.berzerk.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warlord.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.zac2650.*;
 
 public class driver {
 
@@ -3176,10 +3177,8 @@ public class driver {
         driver_kaos,		/* (c) 1981 */
 
         /* Zaccaria games */
-        /*TODO*/
-        // driver_sia2650,
-        /*TODO*/
-        // driver_tinv2650,
+        driver_sia2650,
+        driver_tinv2650,
         /* UPL games */
         driver_mnight, /* (c) 1987 distributed by Kawakus */
         driver_arkarea, /* UPL-87007 (c) [1988?] */
