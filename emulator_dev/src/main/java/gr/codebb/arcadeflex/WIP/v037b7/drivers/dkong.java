@@ -5,6 +5,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8039H.*;
+import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.hunchbks_mirror_r;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.hunchbks_mirror_w;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
@@ -29,6 +30,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.dkong.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650.*;
 
 public class dkong {
 
@@ -228,7 +230,7 @@ public class dkong {
 
     public static ReadHandlerPtr herbiedk_iack_r = new ReadHandlerPtr() {
         public int handler(int offset) {
-/*TODO*///            s2650_set_sense(1);
+            s2650_set_sense(1);
             return 0;
         }
     };
@@ -282,14 +284,14 @@ public class dkong {
 
     public static ReadHandlerPtr hunchbkd_port0_r = new ReadHandlerPtr() {
         public int handler(int offset) {
-/*TODO*///            logerror("port 0 : pc = %4x\n", s2650_get_pc());
+            logerror("port 0 : pc = %4x\n", s2650_get_pc());
 
-/*TODO*///            switch (s2650_get_pc()) {
-/*TODO*///                case 0x00e9:
-/*TODO*///                    return 0xff;
-/*TODO*///                case 0x0114:
-/*TODO*///                    return 0xfb;
-/*TODO*///            }
+            switch (s2650_get_pc()) {
+                case 0x00e9:
+                    return 0xff;
+                case 0x0114:
+                    return 0xfb;
+            }
             return 0;
         }
     };
@@ -302,11 +304,11 @@ public class dkong {
 
     public static ReadHandlerPtr herbiedk_port1_r = new ReadHandlerPtr() {
         public int handler(int offset) {
-/*TODO*///            switch (s2650_get_pc()) {
-/*TODO*///                case 0x002b:
-/*TODO*///                case 0x09dc:
-/*TODO*///                    return 0x0;
-/*TODO*///            }
+            switch (s2650_get_pc()) {
+                case 0x002b:
+                case 0x09dc:
+                    return 0x0;
+            }
 
             return 1;
         }
@@ -956,7 +958,7 @@ public class dkong {
 
     public static InterruptPtr herbiedk_interrupt = new InterruptPtr() {
         public int handler() {
-/*TODO*///            s2650_set_sense(0);
+            s2650_set_sense(0);
             return ignore_interrupt.handler();
         }
     };

@@ -39,6 +39,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309H.HD6309_INT_FIRQ
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309H.HD6309_INT_IRQ;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.hd63701;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650;
 
 public class cpuintrf {
 
@@ -317,7 +318,7 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M68EC020, m68ec020, 8, -1,1.00,MC68EC020_INT_NONE,-1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(M68020,   m68020,	 8, -1,1.00,MC68020_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(T11,	   t11, 	 4,  0,1.00,T11_INT_NONE,	   -1,			   -1,			   16lew, 0,16,LE,2, 6,16LEW),
-                new Dummy_cpu(),//CPU0(S2650,    s2650,	 2,  0,1.00,S2650_INT_NONE,    -1,			   -1,			   16,	  0,15,LE,1, 3,16	),
+                new s2650(),//CPU0(S2650,    s2650,	 2,  0,1.00,S2650_INT_NONE,    -1,			   -1,			   16,	  0,15,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU2(TMS34010, tms34010, 2,  0,1.00,TMS34010_INT_NONE, TMS34010_INT1,  -1,			   29,	  3,29,LE,2,10,29	),
                 new Dummy_cpu(),//CPU0(TMS9980,  tms9980a, 1,  0,1.00,TMS9980A_NONE,	   -1,			   -1,			   16,	  0,16,BE,1, 6,16	),
                 new Dummy_cpu(),//CPU3(TMS320C10,tms320c10,2,  0,1.00,TMS320C10_INT_NONE,-1,			   -1,			   16,	 -1,16,BE,2, 4,16	),
@@ -1658,7 +1659,10 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_S2650)
-/*TODO*///			case CPU_S2650: 			irq_line = 0; LOG(("S2650 IRQ\n")); break;
+			case CPU_S2650: 			
+                            irq_line = 0; 
+                            //LOG(("S2650 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_F8)
 /*TODO*///			case CPU_F8:				irq_line = 0; LOG(("F8 INTR\n")); break;

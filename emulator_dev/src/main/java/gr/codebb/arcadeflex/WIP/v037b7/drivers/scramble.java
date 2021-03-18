@@ -4,6 +4,7 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dkong.driver_hunchbkd;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.amidar.*;
@@ -2114,5 +2115,5 @@ public class scramble {
     public static GameDriver driver_devilfsh = new GameDriver("1982", "devilfsh", "scramble.java", rom_devilfsh, null, machine_driver_devilfsh, input_ports_devilfsh, init_mars, ROT90, "Artic", "Devil Fish");
     public static GameDriver driver_newsin7 = new GameDriver("1983", "newsin7", "scramble.java", rom_newsin7, null, machine_driver_newsin7, input_ports_newsin7, init_mars, ROT90, "ATW USA, Inc.", "New Sinbad 7", GAME_IMPERFECT_COLORS);
     public static GameDriver driver_hotshock = new GameDriver("1982", "hotshock", "scramble.java", rom_hotshock, null, machine_driver_hotshock, input_ports_hotshock, init_hotshock, ROT90, "E.G. Felaco", "Hot Shocker");
-    /*TODO*///    public static GameDriver driver_hunchbks = new GameDriver("1983", "hunchbks", "scramble.java", rom_hunchbks, driver_hunchbkd, machine_driver_hunchbks, input_ports_hunchbks, null, ROT90, "Century", "Hunchback (Scramble hardware)");
+    public static GameDriver driver_hunchbks = new GameDriver("1983", "hunchbks", "scramble.java", rom_hunchbks, driver_hunchbkd, machine_driver_hunchbks, input_ports_hunchbks, null, ROT90, "Century", "Hunchback (Scramble hardware)");
 }

@@ -124,6 +124,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mhavoc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.berzerk.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warlord.*;
 
 public class driver {
 
@@ -333,8 +334,7 @@ public class driver {
         driver_dakkochn, /* 836-6483? (S2) */
         driver_ufosensi, /* 834-6659 (S2) */
         /* "Scramble hardware" (and variations) games */
-        /*TODO*/
-        // driver_hunchbks,
+        driver_hunchbks,
 
         /*TODO*/
         // driver_magmax,	/* (c) 1985 */
@@ -2875,8 +2875,7 @@ public class driver {
         // driver_videopin,	/* no copyright notice [1979] */
 
         /* Atari "Centipede hardware" games */
-        /*TODO*/
-        // driver_warlord,	/* (c) 1980 */
+        driver_warlord,	/* (c) 1980 */
         driver_centiped,	/* (c) 1980 */
         driver_centipd2,	/* (c) 1980 */
         driver_centipdb,	/* bootleg */
