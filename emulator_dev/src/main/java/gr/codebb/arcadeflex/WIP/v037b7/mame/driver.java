@@ -123,6 +123,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tempest.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mhavoc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.berzerk.*;
 
 public class driver {
 
@@ -4043,9 +4044,9 @@ public class driver {
         /*RELEASE*///driver_spaceinv,
         /*RELEASE*///driver_cop01,
         /*RELEASE*///driver_cop01a,
-        /*RELEASE*///driver_berzerk,
-        /*RELEASE*///driver_berzerk1,
-        /*RELEASE*///driver_frenzy,
+        driver_berzerk,
+        driver_berzerk1,
+        driver_frenzy,
         /*RELEASE*///driver_joyfulr,
         /*RELEASE*///driver_mnchmobl,
         /*RELEASE*///driver_airbustr,
