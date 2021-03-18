@@ -117,6 +117,12 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ccastles.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.centiped.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exprraid.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gameplan.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.matmania.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.renegade.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tempest.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mhavoc.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.missile.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
 
 public class driver {
 
@@ -2741,32 +2747,19 @@ public class driver {
     1997.11 Rushing Heroes (GX?. Not released in Japan)
          */
         /* Exidy games */
-        /*TODO*/
-        // driver_sidetrac,	/* (c) 1979 */
-        /*TODO*/
-        // driver_targ,		/* (c) 1980 */
-        /*TODO*/
-        // driver_spectar,	/* (c) 1980 */
-        /*TODO*/
-        // driver_spectar1,	/* (c) 1980 */
-        /*TODO*/
-        // driver_venture,	/* (c) 1981 */
-        /*TODO*/
-        // driver_venture2,	/* (c) 1981 */
-        /*TODO*/
-        // driver_venture4,	/* (c) 1981 */
-        /*TODO*/
-        // driver_mtrap,		/* (c) 1981 */
-        /*TODO*/
-        // driver_mtrap3,	/* (c) 1981 */
-        /*TODO*/
-        // driver_mtrap4,	/* (c) 1981 */
-        /*TODO*/
-        // driver_pepper2,	/* (c) 1982 */
-        /*TODO*/
-        // driver_hardhat,	/* (c) 1982 */
-        /*TODO*/
-        // driver_fax,		/* (c) 1983 */
+        driver_sidetrac,	/* (c) 1979 */
+        driver_targ,		/* (c) 1980 */
+        driver_spectar,	/* (c) 1980 */
+        driver_spectar1,	/* (c) 1980 */
+        driver_venture,	/* (c) 1981 */
+        driver_venture2,	/* (c) 1981 */
+        driver_venture4,	/* (c) 1981 */
+        driver_mtrap,		/* (c) 1981 */
+        driver_mtrap3,	/* (c) 1981 */
+        driver_mtrap4,	/* (c) 1981 */
+        driver_pepper2,	/* (c) 1982 */
+        driver_hardhat,	/* (c) 1982 */
+        driver_fax,		/* (c) 1983 */
         /*TODO*/
         // driver_circus,	/* no copyright notice [1977?] */
         /*TODO*/
@@ -2823,25 +2816,17 @@ public class driver {
         driver_llander1,	/* no copyright notice */
         driver_redbaron,	/* (c) 1980 */
         driver_spacduel,	/* (c) 1980 */
-        /*TODO*/
-        // driver_tempest,	/* (c) 1980 */
-        /*TODO*/
-        // driver_tempest1,	/* (c) 1980 */
-        /*TODO*/
-        // driver_tempest2,	/* (c) 1980 */
-        /*TODO*/
-        // driver_temptube,	/* hack */
+        driver_tempest,	/* (c) 1980 */
+        driver_tempest1,	/* (c) 1980 */
+        driver_tempest2,	/* (c) 1980 */
+        driver_temptube,	/* hack */
         driver_starwars, /* (c) 1983 */
         driver_starwar1, /* (c) 1983 */
         driver_esb, /* (c) 1985 */
-        /*TODO*/
-        // driver_mhavoc,	/* (c) 1983 */
-        /*TODO*/
-        // driver_mhavoc2,	/* (c) 1983 */
-        /*TODO*/
-        // driver_mhavocp,	/* (c) 1983 */
-        /*TODO*/
-        // driver_mhavocrv,	/* hack */
+        driver_mhavoc,	/* (c) 1983 */
+        driver_mhavoc2,	/* (c) 1983 */
+        driver_mhavocp,	/* (c) 1983 */
+        driver_mhavocrv,	/* hack */
         /*TODO*/
         // driver_quantum,	/* (c) 1982 */	/* made by Gencomp */
         /*TODO*/
@@ -2901,12 +2886,9 @@ public class driver {
         // driver_qwakprot,	/* (c) 1982 */
 
         /* Atari "Missile Command hardware" games */
-        /*TODO*/
-        // driver_missile,	/* (c) 1980 */
-        /*TODO*/
-        // driver_missile2,	/* (c) 1980 */
-        /*TODO*/
-        // driver_suprmatk,	/* (c) 1980 + (c) 1981 Gencomp */
+        driver_missile,	/* (c) 1980 */
+        driver_missile2,	/* (c) 1980 */
+        driver_suprmatk,	/* (c) 1980 + (c) 1981 Gencomp */
 
         /* misc Atari games */
         /*TODO*/
@@ -3152,20 +3134,13 @@ public class driver {
          driver_mystston,	/* TA-0010 (c) 1984 */
         /* TA-0011 Dog Fight (Data East) / Batten O'hara no Sucha-Raka Kuuchuu Sen 1985 */
         driver_bogeyman,	/* X-0204-0 (Data East part number) (c) [1985?] */
-        /*TODO*/
-        // driver_matmania,	/* TA-0015 (c) 1985 + Taito America license */
-        /*TODO*/
-        // driver_excthour,	/* TA-0015 (c) 1985 + Taito license */
-        /*TODO*/
-        // driver_maniach,	/* TA-0017 (c) 1986 + Taito America license */
-        /*TODO*/
-        // driver_maniach2,	/* TA-0017 (c) 1986 + Taito America license */
-        /*TODO*/
-        // driver_renegade,	/* TA-0018 (c) 1986 + Taito America license */
-        /*TODO*/
-        // driver_kuniokun,	/* TA-0018 (c) 1986 */
-        /*TODO*/
-        // driver_kuniokub,	/* bootleg */
+        driver_matmania,	/* TA-0015 (c) 1985 + Taito America license */
+        driver_excthour,	/* TA-0015 (c) 1985 + Taito license */
+        driver_maniach,	/* TA-0017 (c) 1986 + Taito America license */
+        driver_maniach2,	/* TA-0017 (c) 1986 + Taito America license */
+        driver_renegade,	/* TA-0018 (c) 1986 + Taito America license */
+        driver_kuniokun,	/* TA-0018 (c) 1986 */
+        driver_kuniokub,	/* bootleg */
         /*TODO*/
         // driver_xsleena,	/* TA-0019 (c) 1986 */
         /*TODO*/
