@@ -41,6 +41,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound._5220intf;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.pokey;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.upd7759;
 import gr.codebb.arcadeflex.v058.sound.vlm5030;
+import gr.codebb.arcadeflex.v037b7.sound.cem3394;
 
 public class sndintrf {
 
@@ -697,7 +698,7 @@ public class sndintrf {
         //	},
         /*TODO*/
         // #endif
-        new Dummy_snd(),
+        new cem3394(),
         /*TODO*/
         // #if (HAS_CEM3394)
         /*TODO*/

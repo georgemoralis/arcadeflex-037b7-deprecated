@@ -106,6 +106,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gottlieb.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.combatsc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.capbowl.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.balsente.*;
 
 public class driver {
 
@@ -921,52 +922,29 @@ public class driver {
     Six Flags (?)
          */
         /* Bally / Sente games */
-        /*TODO*/
-        // driver_sentetst,
-        /*TODO*/
-        // driver_cshift,	/* (c) 1984 */
-        /*TODO*/
-        // driver_gghost,	/* (c) 1984 */
-        /*TODO*/
-        // driver_hattrick,	/* (c) 1984 */
-        /*TODO*/
-        // driver_otwalls,	/* (c) 1984 */
-        /*TODO*/
-        // driver_snakepit,	/* (c) 1984 */
-        /*TODO*/
-        // driver_snakjack,	/* (c) 1984 */
-        /*TODO*/
-        // driver_stocker,	/* (c) 1984 */
-        /*TODO*/
-        // driver_triviag1,	/* (c) 1984 */
-        /*TODO*/
-        // driver_triviag2,	/* (c) 1984 */
-        /*TODO*/
-        // driver_triviasp,	/* (c) 1984 */
-        /*TODO*/
-        // driver_triviayp,	/* (c) 1984 */
-        /*TODO*/
-        // driver_triviabb,	/* (c) 1984 */
-        /*TODO*/
-        // driver_gimeabrk,	/* (c) 1985 */
-        /*TODO*/
-        // driver_minigolf,	/* (c) 1985 */
-        /*TODO*/
-        // driver_minigol2,	/* (c) 1985 */
-        /*TODO*/
-        // driver_toggle,	/* (c) 1985 */
-        /*TODO*/
-        // driver_nametune,	/* (c) 1986 */
-        /*TODO*/
-        // driver_nstocker,	/* (c) 1986 */
-        /*TODO*/
-        // driver_sfootbal,	/* (c) 1986 */
-        /*TODO*/
-        // driver_spiker,	/* (c) 1986 */
-        /*TODO*/
-        // driver_rescraid,	/* (c) 1987 */
-        /*TODO*/
-        // driver_rescrdsa,	/* (c) 1987 */
+        driver_sentetst,
+        driver_cshift,	/* (c) 1984 */
+        driver_gghost,	/* (c) 1984 */
+        driver_hattrick,	/* (c) 1984 */
+        driver_otwalls,	/* (c) 1984 */
+        driver_snakepit,	/* (c) 1984 */
+        driver_snakjack,	/* (c) 1984 */
+        driver_stocker,	/* (c) 1984 */
+        driver_triviag1,	/* (c) 1984 */
+        driver_triviag2,	/* (c) 1984 */
+        driver_triviasp,	/* (c) 1984 */
+        driver_triviayp,	/* (c) 1984 */
+        driver_triviabb,	/* (c) 1984 */
+        driver_gimeabrk,	/* (c) 1985 */
+        driver_minigolf,	/* (c) 1985 */
+        driver_minigol2,	/* (c) 1985 */
+        driver_toggle,	/* (c) 1985 */
+        driver_nametune,	/* (c) 1986 */
+        driver_nstocker,	/* (c) 1986 */
+        driver_sfootbal,	/* (c) 1986 */
+        driver_spiker,	/* (c) 1986 */
+        driver_rescraid,	/* (c) 1987 */
+        driver_rescrdsa,	/* (c) 1987 */
 
         /* Irem games */
         /* trivia: IREM means "International Rental Electronics Machines" */
