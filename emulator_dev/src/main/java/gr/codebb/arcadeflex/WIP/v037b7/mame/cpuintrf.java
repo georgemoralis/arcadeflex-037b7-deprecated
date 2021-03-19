@@ -40,6 +40,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.hd6309.hd6309H.HD6309_INT_IRQ;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.hd63701;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.h6280.h6280;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.h6280.h6280H.*;
 
 public class cpuintrf {
 
@@ -290,7 +292,7 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M6510,    m6510,	 1,  0,1.00,M6510_INT_NONE,    M6510_INT_IRQ,  M6510_INT_NMI,  16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(N2A03,    n2a03,	 1,  0,1.00,N2A03_INT_NONE,    N2A03_INT_IRQ,  N2A03_INT_NMI,  16,	  0,16,LE,1, 3,16	),
                 new Dummy_cpu(),
-                new Dummy_cpu(),//CPU0(H6280,    h6280,	 3,  0,1.00,H6280_INT_NONE,    -1,			   H6280_INT_NMI,  21,	  0,21,LE,1, 3,21	),
+                new h6280(),//CPU0(H6280,    h6280,	 3,  0,1.00,H6280_INT_NONE,    -1,			   H6280_INT_NMI,  21,	  0,21,LE,1, 3,21	),
                 new i86(),//CPU0(I86,	   i86, 	 1,  0,1.00,I86_INT_NONE,	   -1000,		   I86_NMI_INT,    20,	  0,20,LE,1, 5,20	),
                 new i186(),//CPU0(I186,	   i186,	 1,  0,1.00,I186_INT_NONE,	   -1000,		   I186_NMI_INT,   20,	  0,20,LE,1, 5,20	),
                 new Dummy_cpu(),//CPU0(V20,	   v20, 	 1,  0,1.00,NEC_INT_NONE,	   -1000,		   NEC_NMI_INT,    20,	  0,20,LE,1, 5,20	),
@@ -1455,15 +1457,26 @@ public class cpuintrf {
 /*TODO*///			case CPU_M4510: 			irq_line = 0; LOG(("M4510 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_H6280)
-/*TODO*///			case CPU_H6280:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case H6280_INT_IRQ1:	irq_line = 0; LOG(("H6280 INT 1\n")); break;
-/*TODO*///				case H6280_INT_IRQ2:	irq_line = 1; LOG(("H6280 INT 2\n")); break;
-/*TODO*///				case H6280_INT_TIMER:	irq_line = 2; LOG(("H6280 TIMER INT\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("H6280 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_H6280:
+				switch (num)
+				{
+				case H6280_INT_IRQ1:	
+                                    irq_line = 0; 
+                                    //LOG(("H6280 INT 1\n")); 
+                                    break;
+				case H6280_INT_IRQ2:	
+                                    irq_line = 1; 
+                                    //LOG(("H6280 INT 2\n")); 
+                                    break;
+				case H6280_INT_TIMER:	
+                                    irq_line = 2; 
+                                    //LOG(("H6280 TIMER INT\n")); 
+                                    break;
+				default:				
+                                    irq_line = 0; 
+                                    //LOG(("H6280 unknown\n"));
+				}
+				break;
 /*TODO*///#endif
                     case CPU_I86:
                         irq_line = 0;

@@ -18,7 +18,7 @@ along with Arcadeflex.  If not, see <http://www.gnu.org/licenses/>.
  * ported to v0.37b7
  * 
  */
-package cpu.s2650;
+package gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650;
 
 public class s2650H {
 

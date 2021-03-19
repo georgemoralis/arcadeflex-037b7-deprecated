@@ -126,6 +126,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.berzerk.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warlord.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.zac2650.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lazercmd.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meadows.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
 
 public class driver {
 
@@ -879,14 +882,10 @@ public class driver {
         // driver_spaceint,	/* [1980] Shoei */
 
         /* Meadows S2650 games */
-        /*TODO*/
-        // driver_lazercmd,	/* [1976?] */
-        /*TODO*/
-        // driver_deadeye,	/* [1978?] */
-        /*TODO*/
-        // driver_gypsyjug,	/* [1978?] */
-        /*TODO*/
-        // driver_medlanes,	/* [1977?] */
+        driver_lazercmd,	/* [1976?] */
+        driver_deadeye,	/* [1978?] */
+        driver_gypsyjug,	/* [1978?] */
+        driver_medlanes,	/* [1977?] */
 
         /* Midway "Astrocade" games */
         driver_spacezap, /* (c) 1980 */
@@ -2269,14 +2268,10 @@ public class driver {
         // driver_battlera,	/* (c) 1988 Data East Corporation (World) */
         /*TODO*/
         // driver_bldwolf,	/* (c) 1988 Data East USA (US) */
-        /*TODO*/
-        // driver_actfancr,	/* (c) 1989 Data East Corporation (World) */
-        /*TODO*/
-        // driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
-        /*TODO*/
-        // driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
-        /*TODO*/
-        // driver_triothep,	/* (c) 1989 Data East Corporation (Japan) */
+        driver_actfancr,	/* (c) 1989 Data East Corporation (World) */
+        driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
+        driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
+        driver_triothep,	/* (c) 1989 Data East Corporation (Japan) */
 
         /* Data East 8-bit games */
         /*TODO*/

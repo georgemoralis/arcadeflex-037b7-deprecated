@@ -20,8 +20,8 @@ along with Arcadeflex.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650;
 
-import static cpu.s2650.s2650H.*;
-import static cpu.s2650.s2650cpuH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650cpuH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
