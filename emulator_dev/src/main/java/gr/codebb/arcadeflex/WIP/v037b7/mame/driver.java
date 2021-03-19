@@ -129,6 +129,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.zac2650.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lazercmd.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meadows.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.battlera.*;
 
 public class driver {
 
@@ -2264,10 +2265,8 @@ public class driver {
         // driver_spool3,	/* (c) 1989 Data East Corporation (World?) */
         /*TODO*/
         // driver_spool3i,	/* (c) 1990 Data East Corporation + I-Vics license */
-        /*TODO*/
-        // driver_battlera,	/* (c) 1988 Data East Corporation (World) */
-        /*TODO*/
-        // driver_bldwolf,	/* (c) 1988 Data East USA (US) */
+        driver_battlera,	/* (c) 1988 Data East Corporation (World) */
+        driver_bldwolf,	/* (c) 1988 Data East USA (US) */
         driver_actfancr,	/* (c) 1989 Data East Corporation (World) */
         driver_actfanc1,	/* (c) 1989 Data East Corporation (World) */
         driver_actfancj,	/* (c) 1989 Data East Corporation (Japan) */
