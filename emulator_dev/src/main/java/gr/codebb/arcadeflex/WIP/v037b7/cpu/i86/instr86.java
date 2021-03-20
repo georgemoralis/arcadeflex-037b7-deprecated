@@ -5,10 +5,13 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.i86;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.I86H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.eaH.EO;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.eaH.GetEA;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.BOOL;
+import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
 public class instr86 {
 
@@ -56,22 +59,16 @@ public class instr86 {
 /*TODO*///#endif
 /*TODO*///
 /*TODO*///#ifndef I186
-/*TODO*///static void PREFIX86(_rotate_shift_Byte)(unsigned ModRM, unsigned count)
-/*TODO*///{
-/*TODO*///	unsigned src = (unsigned)GetRMByte(ModRM);
-/*TODO*///	unsigned dst=src;
-/*TODO*///
-/*TODO*///	if (count==0)
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base : cycles.rot_m8_base;
-/*TODO*///	}
-/*TODO*///	else if (count==1)
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_1 : cycles.rot_m8_1;
-/*TODO*///
-/*TODO*///		switch (ModRM & 0x38)
-/*TODO*///		{
-/*TODO*///		case 0x00:	/* ROL eb,1 */
+    public static void i86_rotate_shift_Byte(int ModRM, int count) {
+        int src = /*(unsigned)*/ GetRMByte(ModRM);
+        int dst = src;
+        if (count == 0) {
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base : cycles.rot_m8_base;
+        } else if (count == 1) {
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_1 : cycles.rot_m8_1;
+
+            switch (ModRM & 0x38) {
+                /*TODO*///		case 0x00:	/* ROL eb,1 */
 /*TODO*///			I.CarryVal = src & 0x80;
 /*TODO*///			dst=(src<<1)+CF;
 /*TODO*///			PutbackRMByte(ModRM,dst);
@@ -95,24 +92,28 @@ public class instr86 {
 /*TODO*///			I.CarryVal = src & 0x01;
 /*TODO*///			I.OverVal = (src^dst)&0x80;
 /*TODO*///			break;
-/*TODO*///		case 0x20:	/* SHL eb,1 */
-/*TODO*///		case 0x30:
-/*TODO*///			dst = src << 1;
-/*TODO*///			PutbackRMByte(ModRM,dst);
-/*TODO*///			SetCFB(dst);
-/*TODO*///			I.OverVal = (src^dst)&0x80;
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			SetSZPF_Byte(dst);
-/*TODO*///			break;
-/*TODO*///		case 0x28:	/* SHR eb,1 */
-/*TODO*///			dst = src >> 1;
-/*TODO*///			PutbackRMByte(ModRM,dst);
-/*TODO*///			I.CarryVal = src & 0x01;
-/*TODO*///			I.OverVal = src & 0x80;
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			SetSZPF_Byte(dst);
-/*TODO*///			break;
-/*TODO*///		case 0x38:	/* SAR eb,1 */
+                case 0x20:
+                case 0x30: {
+                    dst = src << 1;
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    SetCFB(dst);
+                    I.OverVal = (src ^ dst) & 0x80;
+                    I.AuxVal = 1;
+                    SetSZPF_Byte(dst);
+                }
+                break;
+                case 0x28: {
+                    /* SHR eb,1 */
+
+                    dst = src >>> 1; //unsigned shift????
+                    PutbackRMByte(ModRM, dst & 0xff);//unsigned??
+                    I.CarryVal = src & 0x01;
+                    I.OverVal = src & 0x80;
+                    I.AuxVal = 1;
+                    SetSZPF_Byte(dst);
+                }
+                break;
+                /*TODO*///		case 0x38:	/* SAR eb,1 */
 /*TODO*///			dst = ((INT8)src) >> 1;
 /*TODO*///			PutbackRMByte(ModRM,dst);
 /*TODO*///			I.CarryVal = src & 0x01;
@@ -120,15 +121,15 @@ public class instr86 {
 /*TODO*///			I.AuxVal = 1;
 /*TODO*///			SetSZPF_Byte(dst);
 /*TODO*///			break;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m8_bit;
-/*TODO*///
-/*TODO*///		switch (ModRM & 0x38)
-/*TODO*///		{
-/*TODO*///		case 0x00:	/* ROL eb,count */
+                default:
+                    System.out.println("rot1 unsupported 0x " + (Integer.toHexString((ModRM & 0x38))));
+                    throw new UnsupportedOperationException("unsupported");
+            }
+        } else {
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m8_bit;
+
+            switch (ModRM & 0x38) {
+                /*TODO*///		case 0x00:	/* ROL eb,count */
 /*TODO*///			for (; count > 0; count--)
 /*TODO*///			{
 /*TODO*///				I.CarryVal = dst & 0x80;
@@ -169,15 +170,16 @@ public class instr86 {
 /*TODO*///			SetSZPF_Byte(dst);
 /*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
 /*TODO*///			break;
-/*TODO*///		case 0x28:	/* SHR eb,count */
-/*TODO*///			dst >>= count-1;
-/*TODO*///			I.CarryVal = dst & 0x1;
-/*TODO*///			dst >>= 1;
-/*TODO*///			SetSZPF_Byte(dst);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
-/*TODO*///		case 0x38:	/* SAR eb,count */
+                case 0x28: {
+                    dst >>>= count - 1;//unsigned shift?
+                    I.CarryVal = dst & 0x1;//unsigned shift?
+                    dst >>>= 1;//unsigned shift?
+                    SetSZPF_Byte(dst);
+                    I.AuxVal = 1;
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                }
+                break;
+                /*TODO*///		case 0x38:	/* SAR eb,count */
 /*TODO*///			dst = ((INT8)dst) >> (count-1);
 /*TODO*///			I.CarryVal = dst & 0x1;
 /*TODO*///			dst = ((INT8)((BYTE)dst)) >> 1;
@@ -185,10 +187,13 @@ public class instr86 {
 /*TODO*///			I.AuxVal = 1;
 /*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
 /*TODO*///			break;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+                default:
+                    System.out.println("rot unsupported 0x " + (Integer.toHexString((ModRM & 0x38))));
+                    throw new UnsupportedOperationException("unsupported");
+            }
+        }
+    }
+
     static void i86_rotate_shift_Word(int/*unsigned*/ ModRM, int/*unsigned*/ count) {
         int src = GetRMWord(ModRM);
         int dst = src;
@@ -233,15 +238,16 @@ public class instr86 {
                     SetSZPF_Word(dst);
                 }
                 break;
-                /*TODO*///		case 0x28:	/* SHR ew,1 */
-/*TODO*///			dst = src >> 1;
-/*TODO*///			PutbackRMWord(ModRM,dst);
-/*TODO*///			I.CarryVal = src & 0x01;
-/*TODO*///			I.OverVal = src & 0x8000;
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			SetSZPF_Word(dst);
-/*TODO*///			break;
-/*TODO*///		case 0x38:	/* SAR ew,1 */
+                case 0x28: {
+                    dst = src >>> 1;
+                    PutbackRMWord(ModRM, dst);
+                    I.CarryVal = src & 0x01;
+                    I.OverVal = src & 0x8000;
+                    I.AuxVal = 1;
+                    SetSZPF_Word(dst);
+                }
+                break;
+                /*TODO*///		case 0x38:	/* SAR ew,1 */
 /*TODO*///			dst = ((INT16)src) >> 1;
 /*TODO*///			PutbackRMWord(ModRM,dst);
 /*TODO*///			I.CarryVal = src & 0x01;
@@ -440,38 +446,54 @@ public class instr86 {
                 }
                 I.regs.SetW(CX, count);
                 break;
-/*TODO*///	case 0xa6:  /* REP(N)E CMPSB */ 
-/*TODO*///		i86_ICount[0] -= cycles.rep_cmps8_base;
-/*TODO*///		for (I.ZeroVal = !flagval; (ZF == flagval) && (count > 0); count--) 
-/*TODO*///		{
-/*TODO*///			unsigned dst, src;
-/*TODO*///			
-/*TODO*///			if (i86_ICount[0] <= 0) { I.pc = I.prevpc; break; }
-/*TODO*///			dst = GetMemB(ES, I.regs.w[DI]);
-/*TODO*///			src = GetMemB(DS, I.regs.w[SI]);
-/*TODO*///		    SUBB(src,dst); /* opposite of the usual convention */
-/*TODO*///			I.regs.w[DI] += I.DirVal;
-/*TODO*///			I.regs.w[SI] += I.DirVal;
-/*TODO*///			i86_ICount[0] -= cycles.rep_cmps8_count;
-/*TODO*///		}
-/*TODO*///		I.regs.w[CX]=count; 
-/*TODO*///		break; 
-/*TODO*///	case 0xa7:  /* REP(N)E CMPSW */ 
-/*TODO*///		i86_ICount[0] -= cycles.rep_cmps16_base;
-/*TODO*///		for (I.ZeroVal = !flagval; (ZF == flagval) && (count > 0); count--) 
-/*TODO*///		{
-/*TODO*///			unsigned dst, src;
-/*TODO*///			
-/*TODO*///			if (i86_ICount[0] <= 0) { I.pc = I.prevpc; break; }
-/*TODO*///			dst = GetMemB(ES, I.regs.w[DI]);
-/*TODO*///			src = GetMemB(DS, I.regs.w[SI]);
-/*TODO*///		    SUBB(src,dst); /* opposite of the usual convention */
-/*TODO*///			I.regs.w[DI] += 2 * I.DirVal;
-/*TODO*///			I.regs.w[SI] += 2 * I.DirVal;
-/*TODO*///			i86_ICount[0] -= cycles.rep_cmps16_count;
-/*TODO*///		}
-/*TODO*///		I.regs.w[CX]=count; 
-/*TODO*///		break; 
+            case 0xa6:
+                /* REP(N)E CMPSB */
+                i86_ICount[0] -= cycles.rep_cmps8_base;
+                for (I.ZeroVal = NOT(flagval); (ZF() == flagval) && (count > 0); count--) {
+                    int/*unsigned*/ dst, src;
+
+                    if (i86_ICount[0] <= 0) {
+                        I.pc = I.prevpc;
+                        break;
+                    }
+                    dst = GetMemB(ES, I.regs.w[DI]);
+                    src = GetMemB(DS, I.regs.w[SI]);
+                    //SUBB(src,dst); /* opposite of the usual convention */
+                    int res = src - dst;
+                    SetCFB(res);
+                    SetOFB_Sub(res, dst, src);
+                    SetAF(res, dst, src);
+                    SetSZPF_Byte(res);
+                    I.regs.SetW(DI, I.regs.w[DI] + I.DirVal);
+                    I.regs.SetW(SI, I.regs.w[SI] + I.DirVal);
+                    i86_ICount[0] -= cycles.rep_cmps8_count;
+                }
+                I.regs.SetW(CX, count);
+                break;
+            case 0xa7:
+                /* REP(N)E CMPSW */
+                i86_ICount[0] -= cycles.rep_cmps16_base;
+                for (I.ZeroVal = NOT(flagval); (ZF() == flagval) && (count > 0); count--) {
+                    int/*unsigned*/ dst, src;
+
+                    if (i86_ICount[0] <= 0) {
+                        I.pc = I.prevpc;
+                        break;
+                    }
+                    dst = GetMemB(ES, I.regs.w[DI]);
+                    src = GetMemB(DS, I.regs.w[SI]);
+                    //SUBB(src,dst); /* opposite of the usual convention */
+                    int res = src - dst;
+                    SetCFB(res);
+                    SetOFB_Sub(res, dst, src);
+                    SetAF(res, dst, src);
+                    SetSZPF_Byte(res);
+                    I.regs.SetW(DI, I.regs.w[DI] + 2 * I.DirVal);
+                    I.regs.SetW(SI, I.regs.w[SI] + 2 * I.DirVal);
+                    i86_ICount[0] -= cycles.rep_cmps16_count;
+                }
+                I.regs.SetW(CX, count);
+                break;
             case 0xaa:
                 /* REP STOSB */
                 i86_ICount[0] -= cycles.rep_stos8_base;
@@ -504,7 +526,7 @@ public class instr86 {
                 }
                 I.regs.SetW(CX, count);
                 break;
-/*TODO*///	case 0xac:  /* REP LODSB */ 
+            /*TODO*///	case 0xac:  /* REP LODSB */ 
 /*TODO*///		i86_ICount[0] -= cycles.rep_lods8_base;
 /*TODO*///		for (; count > 0; count--) 
 /*TODO*///		{
@@ -643,20 +665,21 @@ public class instr86 {
 
     static InstructionPtr i86_add_ald8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_ald8(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.b[AL];
+            i86_ICount[0] -= cycles.alu_ri8;
+            //ADDB(dst,src);
+            int res = dst + src;
+            SetCFB(res);
+            SetOFB_Add(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Byte(res);
+            dst = res & 0xFF;
+            I.regs.SetB(AL, dst);
         }
     };
-    /*TODO*///
-/*TODO*///
-/*TODO*///static void PREFIX86(_add_ald8)(void)    /* Opcode 0x04 */
-/*TODO*///{
-/*TODO*///    DEF_ald8(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
-/*TODO*///    ADDB(dst,src);
-/*TODO*///	I.regs.b[AL]=dst;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
+
     static InstructionPtr i86_add_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -704,17 +727,19 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_or_br8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_br8(dst, src);
+            int ModRM = FETCHOP();
+            int src = RegByte(ModRM);
+            int dst = GetRMByte(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_mr8;
+            //ORB(dst, src);
+            dst |= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Byte(dst);
+            PutbackRMByte(ModRM, dst & 0xFF);
         }
     };
-    /*TODO*///static void PREFIX86(_or_br8)(void)    /* Opcode 0x08 */
-/*TODO*///{
-/*TODO*///    DEF_br8(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_mr8;
-/*TODO*///	ORB(dst,src);
-/*TODO*///    PutbackRMByte(ModRM,dst);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_or_wr16 = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1085,31 +1110,35 @@ public class instr86 {
 
     static InstructionPtr i86_and_ald8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_ald8(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.b[AL];
+            i86_ICount[0] -= cycles.alu_ri8;
+            //ANDB(dst, src);
+            dst &= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Byte(dst);
+            I.regs.SetB(AL, dst & 0xFF);
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_and_ald8)(void)    /* Opcode 0x24 */
-/*TODO*///{
-/*TODO*///    DEF_ald8(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
-/*TODO*///    ANDB(dst,src);
-/*TODO*///	I.regs.b[AL] = dst;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_and_axd16 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_axd16(dst, src);
+            /*unsigned*/
+            int src = FETCHOP();
+            /*unsigned*/
+            int dst = I.regs.w[AX];
+            src += (FETCH() << 8);
+            i86_ICount[0] -= cycles.alu_ri16;
+            //ANDW(dst, src);
+            dst &= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Word(dst);
+            I.regs.SetW(AX, dst);
         }
     };
-    /*TODO*///static void PREFIX86(_and_axd16)(void)    /* Opcode 0x25 */
-/*TODO*///{
-/*TODO*///    DEF_axd16(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri16;
-/*TODO*///    ANDW(dst,src);
-/*TODO*///	I.regs.w[AX]=dst;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_es = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1150,17 +1179,22 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_sub_br8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_br8(dst,src);
+            int ModRM = FETCHOP();
+            int src = RegByte(ModRM);
+            int dst = GetRMByte(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_mr8;
+            //SUBB(dst,src);
+            int res = dst - src;
+            SetCFB(res);
+            SetOFB_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Byte(res);
+            dst = res & 0xFF;
+            PutbackRMByte(ModRM, dst);
         }
     };
-    /*TODO*///static void PREFIX86(_sub_br8)(void)    /* Opcode 0x28 */
-/*TODO*///{
-/*TODO*///    DEF_br8(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_mr8;
-/*TODO*///    SUBB(dst,src);
-/*TODO*///    PutbackRMByte(ModRM,dst);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_sub_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst, src);
@@ -1223,30 +1257,39 @@ public class instr86 {
 
     static InstructionPtr i86_sub_ald8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_ald8(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.b[AL];
+            i86_ICount[0] -= cycles.alu_ri8;
+            //SUBB(dst,src);
+            int res = dst - src;
+            SetCFB(res);
+            SetOFB_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Byte(res);
+            dst = res & 0xFF;
+            I.regs.SetB(AL, dst);
         }
     };
-    /*TODO*///static void PREFIX86(_sub_ald8)(void)    /* Opcode 0x2c */
-/*TODO*///{
-/*TODO*///    DEF_ald8(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
-/*TODO*///    SUBB(dst,src);
-/*TODO*///	I.regs.b[AL] = dst;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_sub_axd16 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_axd16(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.w[AX];
+            src += (FETCH() << 8);
+            i86_ICount[0] -= cycles.alu_ri16;
+            //SUBW(dst,src);
+            int res = dst - src;
+            SetCFW(res);
+            SetOFW_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Word(res);
+            dst = res & 0xFFFF;
+            I.regs.SetW(AX, dst);
         }
     };
-    /*TODO*///static void PREFIX86(_sub_axd16)(void)    /* Opcode 0x2d */
-/*TODO*///{
-/*TODO*///	DEF_axd16(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri16;
-/*TODO*///    SUBW(dst,src);
-/*TODO*///	I.regs.w[AX]=dst;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_cs = new InstructionPtr() /* Opcode 0x2e */ {
         public void handler() {
             seg_prefix = 1;
@@ -1405,28 +1448,37 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_cmp_br8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_br8(dst,src);
+            int ModRM = FETCHOP();
+            int src = RegByte(ModRM);
+            int dst = GetRMByte(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_rm8;
+            //SUBB(dst,src);
+            int res = dst - src;
+            SetCFB(res);
+            SetOFB_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Byte(res);
+            dst = res & 0xFF;
         }
     };
-    /*TODO*///static void PREFIX86(_cmp_br8)(void)    /* Opcode 0x38 */
-/*TODO*///{
-/*TODO*///    DEF_br8(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr8 : cycles.alu_rm8;
-/*TODO*///    SUBB(dst,src);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_cmp_wr16 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_wr16(dst,src);
+            int ModRM = FETCHOP();
+            int src = RegWord(ModRM);
+            int dst = GetRMWord(ModRM);
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
+            //SUBW(dst,src);
+            int res = dst - src;
+            SetCFW(res);
+            SetOFW_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Word(res);
         }
     };
-    /*TODO*///static void PREFIX86(_cmp_wr16)(void)    /* Opcode 0x39 */
-/*TODO*///{
-/*TODO*///	DEF_wr16(dst,src);
-/*TODO*///	i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_rr16 : cycles.alu_rm16;
-/*TODO*///    SUBW(dst,src);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_cmp_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1481,17 +1533,21 @@ public class instr86 {
 
     static InstructionPtr i86_cmp_axd16 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_axd16(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.w[AX];
+            src += (FETCH() << 8);
+            i86_ICount[0] -= cycles.alu_ri16;
+            //SUBW(dst,src);
+            int res = dst - src;
+            SetCFW(res);
+            SetOFW_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Word(res);
+            dst = res & 0xFFFF;
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_cmp_axd16)(void)    /* Opcode 0x3d */
-/*TODO*///{
-/*TODO*///    DEF_axd16(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri16;
-/*TODO*///    SUBW(dst,src);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_ds = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1750,20 +1806,18 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_jno = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int tmp = (int) ((byte) FETCH());
+            if (OF() == 0) {
+                I.pc = (I.pc + tmp) & AMASK;//I.pc += tmp;
+                i86_ICount[0] -= cycles.jcc_t;
+                /* ASG - can probably assume this is safe
+		CHANGE_PC(I.pc);*/
+            } else {
+                i86_ICount[0] -= cycles.jcc_nt;
+            }
         }
     };
-    /*TODO*///static void PREFIX86(_jno)(void)    /* Opcode 0x71 */
-/*TODO*///{
-/*TODO*///	int tmp = (int)((INT8)FETCH);
-/*TODO*///	if (!OF) {
-/*TODO*///		I.pc += tmp;
-/*TODO*///		i86_ICount[0] -= cycles.jcc_t;
-/*TODO*////* ASG - can probably assume this is safe
-/*TODO*///		CHANGE_PC(I.pc);*/
-/*TODO*///	} else i86_ICount[0] -= cycles.jcc_nt;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_jb = new InstructionPtr() /* Opcode 0x72 */ {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -2001,11 +2055,18 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
                 }
                 break;
-                /*TODO*///    case 0x28:  /* SUB eb,d8 */
-/*TODO*///        SUBB(dst,src);
-/*TODO*///        PutbackRMByte(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
-/*TODO*///		break;
+                case 0x28: /* SUB eb,d8 */ {
+                    //SUBB(dst,src);
+                    int res = dst - src;
+                    SetCFB(res);
+                    SetOFB_Sub(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Byte(res);
+                    dst = res & 0xFF;
+                    PutbackRMByte(ModRM, dst);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
+                }
+                break;
                 case 0x30: /* XOR eb,d8 */ {
                     //XORB(dst,src);
                     dst ^= src;
@@ -2053,8 +2114,16 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
                 }
                 break;
-                /*TODO*///    case 0x08:  /* OR ew,d16 */
-/*TODO*///        ORW(dst,src);
+                case 0x08: /* OR ew,d16 */ {
+                    //ORW(dst,src);
+                    dst |= src;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
+                }
+                break;
+                /*TODO*///        ORW(dst,src);
 /*TODO*///        PutbackRMWord(ModRM,dst);
 /*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
 /*TODO*///		break;
@@ -2197,13 +2266,20 @@ public class instr86 {
 /*TODO*///        PutbackRMWord(ModRM,dst);
 /*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
 /*TODO*///		break;
-/*TODO*///    case 0x10:  /* ADC ew,d16 */
-/*TODO*///        src+=CF;
-/*TODO*///		ADDW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
-/*TODO*///		break;
-/*TODO*///	case 0x18:	/* SBB ew,d16 */
+                case 0x10: /* ADC ew,d16 */ {
+                    src += CF();
+                    //ADDW(dst,src);
+                    int res = dst + src;
+                    SetCFW(res);
+                    SetOFW_Add(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Word(res);
+                    dst = res & 0xFFFF;
+                    PutbackRMWord(ModRM, dst);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
+                }
+                break;
+                /*TODO*///	case 0x18:	/* SBB ew,d16 */
 /*TODO*///		src+=CF;
 /*TODO*///        SUBW(dst,src);
 /*TODO*///        PutbackRMWord(ModRM,dst);
@@ -2355,18 +2431,13 @@ public class instr86 {
 
     static InstructionPtr i86_lea = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int ModRM = FETCH();
+            i86_ICount[0] -= cycles.lea;
+            (GetEA[ModRM]).handler();
+            SetRegWord(ModRM, EO & 0xFFFF);
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_lea)(void)    /* Opcode 0x8d */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	i86_ICount[0] -= cycles.lea;
-/*TODO*///	(void)(*GetEA[ModRM])();
-/*TODO*///	RegWord(ModRM)=EO;	/* HJB 12/13/98 effective offset (no segment part) */
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_mov_sregw = new InstructionPtr() /* Opcode 0x8e */ {
         public void handler() {
             int /*unsigned*/ ModRM = FETCH();
@@ -2421,6 +2492,7 @@ public class instr86 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
+
     /*TODO*///
 /*TODO*///static void PREFIX86(_popw)(void)    /* Opcode 0x8f */
 /*TODO*///{
@@ -2432,16 +2504,15 @@ public class instr86 {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
-/*TODO*///#define XchgAXReg(Reg) 				\
-/*TODO*///{ 									\
-/*TODO*///    WORD tmp; 						\
-/*TODO*///	tmp = I.regs.w[Reg]; 			\
-/*TODO*///	I.regs.w[Reg] = I.regs.w[AX]; 	\
-/*TODO*///	I.regs.w[AX] = tmp; 			\
-/*TODO*///	i86_ICount[0] -= cycles.xchg_ar16; 	\
-/*TODO*///}
-/*TODO*///
-/*TODO*///
+    public static void XchgAXReg(int Reg) {
+        /*WORD*/
+        int tmp;
+        tmp = I.regs.w[Reg];
+        I.regs.SetW(Reg, I.regs.w[AX]);
+        I.regs.SetW(AX, tmp & 0xFFFF);
+        i86_ICount[0] -= cycles.xchg_ar16;
+    }
+
     static InstructionPtr i86_nop = new InstructionPtr() /* Opcode 0x90 */ {
         public void handler() {
             /* this is XchgAXReg(AX); */
@@ -2451,97 +2522,60 @@ public class instr86 {
 
     static InstructionPtr i86_xchg_axcx = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(CX);
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_xchg_axcx)(void)    /* Opcode 0x91 */
-/*TODO*///{
-/*TODO*///	XchgAXReg(CX);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axdx = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(DX);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axdx)(void)    /* Opcode 0x92 */
-/*TODO*///{
-/*TODO*///    XchgAXReg(DX);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axbx = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(BX);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axbx)(void)    /* Opcode 0x93 */
-/*TODO*///{
-/*TODO*///	XchgAXReg(BX);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axsp = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(SP);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axsp)(void)    /* Opcode 0x94 */
-/*TODO*///{
-/*TODO*///	XchgAXReg(SP);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axbp = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(BP);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axbp)(void)    /* Opcode 0x95 */
-/*TODO*///{
-/*TODO*///    XchgAXReg(BP);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axsi = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(SI);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axsi)(void)    /* Opcode 0x96 */
-/*TODO*///{
-/*TODO*///	XchgAXReg(SI);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_xchg_axdi = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            XchgAXReg(DI);
         }
     };
-    /*TODO*///static void PREFIX86(_xchg_axdi)(void)    /* Opcode 0x97 */
-/*TODO*///{
-/*TODO*///	XchgAXReg(DI);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_cbw = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_ICount[0] -= cycles.cbw;
+            I.regs.SetB(AH, (I.regs.b[AL] & 0x80) != 0 ? 0xff : 0);
         }
     };
-    /*TODO*///static void PREFIX86(_cbw)(void)    /* Opcode 0x98 */
-/*TODO*///{
-/*TODO*///	i86_ICount[0] -= cycles.cbw;
-/*TODO*///	I.regs.b[AH] = (I.regs.b[AL] & 0x80) ? 0xff : 0;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_cwd = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_ICount[0] -= cycles.cwd;
+            I.regs.SetW(DX, (I.regs.b[AH] & 0x80) != 0 ? 0xffff : 0);
         }
     };
-    /*TODO*///static void PREFIX86(_cwd)(void)    /* Opcode 0x99 */
-/*TODO*///{
-/*TODO*///	i86_ICount[0] -= cycles.cwd;
-/*TODO*///	I.regs.w[DX] = (I.regs.b[AH] & 0x80) ? 0xffff : 0;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_call_far = new InstructionPtr() {
         public void handler() {
 
@@ -2681,18 +2715,14 @@ public class instr86 {
 
     static InstructionPtr i86_movsb = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int/*BYTE*/ tmp = GetMemB(DS, I.regs.w[SI]) & 0xFF;
+            PutMemB(ES, I.regs.w[DI], tmp);
+            I.regs.SetW(DI, I.regs.w[DI] + I.DirVal);
+            I.regs.SetW(SI, I.regs.w[SI] + I.DirVal);
+            i86_ICount[0] -= cycles.movs8;
         }
     };
-    /*TODO*///static void PREFIX86(_movsb)(void)    /* Opcode 0xa4 */
-/*TODO*///{
-/*TODO*///	BYTE tmp = GetMemB(DS,I.regs.w[SI]);
-/*TODO*///	PutMemB(ES,I.regs.w[DI], tmp);
-/*TODO*///	I.regs.w[DI] += I.DirVal;
-/*TODO*///	I.regs.w[SI] += I.DirVal;
-/*TODO*///	i86_ICount[0] -= cycles.movs8;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_movsw = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -2739,40 +2769,39 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_test_ald8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_ald8(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.b[AL];
+            i86_ICount[0] -= cycles.alu_ri8;
+            //ANDB(dst,src);
+            dst &= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Byte(dst);
         }
     };
-    /*TODO*///static void PREFIX86(_test_ald8)(void)    /* Opcode 0xa8 */
-/*TODO*///{
-/*TODO*///    DEF_ald8(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri8;
-/*TODO*///    ANDB(dst,src);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_test_axd16 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            //DEF_axd16(dst,src);
+            int src = FETCHOP();
+            int dst = I.regs.w[AX];
+            src += (FETCH() << 8);
+            i86_ICount[0] -= cycles.alu_ri16;
+            //ANDW(dst,src);
+            dst &= src;
+            I.CarryVal = I.OverVal = I.AuxVal = 0;
+            SetSZPF_Word(dst);
         }
     };
-    /*TODO*///static void PREFIX86(_test_axd16)(void)    /* Opcode 0xa9 */
-/*TODO*///{
-/*TODO*///    DEF_axd16(dst,src);
-/*TODO*///	i86_ICount[0] -= cycles.alu_ri16;
-/*TODO*///    ANDW(dst,src);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_stosb = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            PutMemB(ES, I.regs.w[DI], I.regs.b[AL]);
+            I.regs.SetW(DI, I.regs.w[DI] + I.DirVal);
+            i86_ICount[0] -= cycles.stos8;
         }
     };
-    /*TODO*///static void PREFIX86(_stosb)(void)    /* Opcode 0xaa */
-/*TODO*///{
-/*TODO*///	PutMemB(ES,I.regs.w[DI],I.regs.b[AL]);
-/*TODO*///	I.regs.w[DI] += I.DirVal;
-/*TODO*///	i86_ICount[0] -= cycles.stos8;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_stosw = new InstructionPtr() /* Opcode 0xab */ {
         public void handler() {
             PutMemB(ES, I.regs.w[DI], I.regs.b[AL]);
@@ -2791,17 +2820,12 @@ public class instr86 {
 
     static InstructionPtr i86_lodsw = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            I.regs.SetW(AX, GetMemW(DS, I.regs.w[SI]));
+            I.regs.SetW(SI, I.regs.w[SI] + 2 * I.DirVal);
+            i86_ICount[0] -= cycles.lods16;
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_lodsw)(void)    /* Opcode 0xad */
-/*TODO*///{
-/*TODO*///	I.regs.w[AX] = GetMemW(DS,I.regs.w[SI]);
-/*TODO*///	I.regs.w[SI] += 2 * I.DirVal;
-/*TODO*///	i86_ICount[0] -= cycles.lods16;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_scasb = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -2818,18 +2842,20 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_scasw = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int/*unsigned*/ src = GetMemW(ES, I.regs.w[DI]);
+            int/*unsigned*/ dst = I.regs.w[AX];
+            // SUBW(dst,src);
+            int/*unsigned*/ res = dst - src;
+            SetCFW(res);
+            SetOFW_Sub(res, src, dst);
+            SetAF(res, src, dst);
+            SetSZPF_Word(res);
+            dst = res & 0xFFFF;
+            I.regs.SetW(DI, I.regs.w[DI] + 2 * I.DirVal);
+            i86_ICount[0] -= cycles.scas16;
         }
     };
-    /*TODO*///static void PREFIX86(_scasw)(void)    /* Opcode 0xaf */
-/*TODO*///{
-/*TODO*///	unsigned src = GetMemW(ES, I.regs.w[DI]);
-/*TODO*///	unsigned dst = I.regs.w[AX];
-/*TODO*///    SUBW(dst,src);
-/*TODO*///	I.regs.w[DI] += 2 * I.DirVal;
-/*TODO*///	i86_ICount[0] -= cycles.scas16;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_mov_ald8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(AL, FETCH());
@@ -3150,16 +3176,10 @@ public class instr86 {
 
     static InstructionPtr i86_rotshft_b = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_rotate_shift_Byte(FETCHOP(), 1);
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_rotshft_b)(void)    /* Opcode 0xd0 */
-/*TODO*///{
-/*TODO*///	PREFIX(_rotate_shift_Byte)(FETCHOP,1);
-/*TODO*///}
-/*TODO*///
-/*TODO*///
+
     static InstructionPtr i86_rotshft_w = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Word(FETCHOP(), 1);
@@ -3168,16 +3188,10 @@ public class instr86 {
 
     static InstructionPtr i86_rotshft_bcl = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_rotate_shift_Byte(FETCHOP(), I.regs.b[CL]);
         }
     };
-    /*TODO*///
-/*TODO*///
-/*TODO*///static void PREFIX86(_rotshft_bcl)(void)    /* Opcode 0xd2 */
-/*TODO*///{
-/*TODO*///	PREFIX(_rotate_shift_Byte)(FETCHOP,I.regs.b[CL]);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_rotshft_wcl = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Word(FETCHOP(), I.regs.b[CL]);
@@ -3255,17 +3269,12 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_xlat = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int dest = I.regs.w[BX] + I.regs.b[AL];
+            i86_ICount[0] -= cycles.xlat;
+            I.regs.SetB(AL, GetMemB(DS, dest) & 0xFF);
         }
     };
-    /*TODO*///static void PREFIX86(_xlat)(void)    /* Opcode 0xd7 */
-/*TODO*///{
-/*TODO*///	unsigned dest = I.regs.w[BX]+I.regs.b[AL];
-/*TODO*///
-/*TODO*///	i86_ICount[0] -= cycles.xlat;
-/*TODO*///	I.regs.b[AL] = GetMemB(DS, dest);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_escape = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3325,7 +3334,7 @@ public class instr86 {
             I.regs.SetW(CX, tmp);
             if (tmp != 0) {
                 i86_ICount[0] -= cycles.loop_t;
-                I.pc += disp;
+                I.pc = (I.pc + disp) & AMASK;//I.pc += disp;
                 /* ASG - can probably assume this is safe
 		CHANGE_PC(I.pc);*/
             } else {
@@ -3336,23 +3345,19 @@ public class instr86 {
 
     static InstructionPtr i86_jcxz = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int disp = (int) ((byte) FETCH());
+
+            if (I.regs.w[CX] == 0) {
+                i86_ICount[0] -= cycles.jcxz_t;
+                I.pc = (I.pc + disp) & AMASK;//I.pc += disp;
+                /* ASG - can probably assume this is safe
+		CHANGE_PC(I.pc);*/
+            } else {
+                i86_ICount[0] -= cycles.jcxz_nt;
+            }
         }
     };
-    /*TODO*///
-/*TODO*///static void PREFIX86(_jcxz)(void)    /* Opcode 0xe3 */
-/*TODO*///{
-/*TODO*///	int disp = (int)((INT8)FETCH);
-/*TODO*///
-/*TODO*///	if (I.regs.w[CX] == 0) {
-/*TODO*///		i86_ICount[0] -= cycles.jcxz_t;
-/*TODO*///		I.pc += disp;
-/*TODO*////* ASG - can probably assume this is safe
-/*TODO*///		CHANGE_PC(I.pc);*/
-/*TODO*///	} else 
-/*TODO*///		i86_ICount[0] -= cycles.jcxz_nt;
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_inal = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3578,12 +3583,11 @@ public class instr86 {
                     I.CarryVal = I.OverVal = I.AuxVal = 0;
                     SetSZPF_Byte(tmp);
                     break;
-                /*TODO*///
-/*TODO*///    case 0x10:  /* NOT Eb */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r8 : cycles.negnot_m8;
-/*TODO*///		PutbackRMByte(ModRM,~tmp);
-/*TODO*///		break;
-/*TODO*///
+                case 0x10:
+                    /* NOT Eb */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r8 : cycles.negnot_m8;
+                    PutbackRMByte(ModRM, (~tmp) & 0xFF);
+                    break;
                 case 0x18: /* NEG Eb */ {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r8 : cycles.negnot_m8;
                     tmp2 = 0;
@@ -3706,18 +3710,18 @@ public class instr86 {
             int tmp2;
 
             switch (ModRM & 0x38) {
-                /*TODO*///    case 0x00:  /* TEST Ew, data16 */
-/*TODO*///    case 0x08:  /* ??? */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16_ro;
-/*TODO*///		tmp2 = FETCH;
-/*TODO*///		tmp2 += FETCH << 8;
-/*TODO*///
-/*TODO*///		tmp &= tmp2;
-/*TODO*///
-/*TODO*///		I.CarryVal = I.OverVal = I.AuxVal = 0;
-/*TODO*///		SetSZPF_Word(tmp);
-/*TODO*///		break;
-/*TODO*///
+                case 0x00:
+                /* TEST Ew, data16 */
+                case 0x08: /* ??? */ {
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16_ro;
+                    tmp2 = FETCH();
+                    tmp2 += FETCH() << 8;
+                    tmp &= tmp2;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(tmp);
+                }
+                break;
+                /*TODO*///
 /*TODO*///    case 0x10:  /* NOT Ew */
 /*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r16 : cycles.negnot_m16;
 /*TODO*///		tmp = ~tmp;
@@ -3737,25 +3741,26 @@ public class instr86 {
                     PutbackRMWord(ModRM, tmp2);
                 }
                 break;
-                /*TODO*///    case 0x20:  /* MUL AX, Ew */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mul_r16 : cycles.mul_m16;
-/*TODO*///		{
-/*TODO*///			UINT32 result;
-/*TODO*///			tmp2 = I.regs.w[AX];
-/*TODO*///
-/*TODO*///			SetSF((INT16)tmp2);
-/*TODO*///			SetPF(tmp2);
-/*TODO*///
-/*TODO*///			result = (UINT32)tmp2*tmp;
-/*TODO*///			I.regs.w[AX]=(WORD)result;
-/*TODO*///            result >>= 16;
-/*TODO*///			I.regs.w[DX]=result;
-/*TODO*///
-/*TODO*///			SetZF(I.regs.w[AX] | I.regs.w[DX]);
-/*TODO*///			I.CarryVal = I.OverVal = (I.regs.w[DX] != 0);
-/*TODO*///		}
-/*TODO*///		break;
-/*TODO*///
+                case 0x20:
+                    /* MUL AX, Ew */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mul_r16 : cycles.mul_m16;
+                     {
+                        int/*UINT32*/ result;
+                        tmp2 = I.regs.w[AX];
+
+                        SetSF((tmp2 & 0xFFFF));
+                        SetPF(tmp2);
+
+                        result = /*(UINT32)*/ tmp2 * tmp;
+                        I.regs.SetW(AX, result & 0xFFFF);
+                        result >>>= 16;
+                        I.regs.SetW(DX, result & 0xFFFF);
+
+                        SetZF(I.regs.w[AX] | I.regs.w[DX]);
+                        I.CarryVal = I.OverVal = (I.regs.w[DX] != 0) ? 1 : 0;
+                    }
+                    break;
+                /*TODO*///
 /*TODO*///    case 0x28:  /* IMUL AX, Ew */
 /*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.imul_r16 : cycles.imul_m16;
 /*TODO*///		{
@@ -3918,19 +3923,18 @@ public class instr86 {
             int tmp1;
             int /*WORD*/ ip;
             switch (ModRM & 0x38) {
-                case 0x00:
+                case 0x00: {
                     /* INC ew */
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.incdec_r16 : cycles.incdec_m16;
                     tmp = GetRMWord(ModRM);
                     tmp1 = tmp + 1;
-
                     SetOFW_Add(tmp1, tmp, 1);
                     SetAF(tmp1, tmp, 1);
                     SetSZPF_Word(tmp1);
-
                     PutbackRMWord(ModRM, tmp1 & 0xFFFF);
-                    break;
-                case 0x08:
+                }
+                break;
+                case 0x08: {
                     /* DEC ew */
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.incdec_r16 : cycles.incdec_m16;
                     tmp = GetRMWord(ModRM);
@@ -3940,17 +3944,20 @@ public class instr86 {
                     SetAF(tmp1, tmp, 1);
                     SetSZPF_Word(tmp1);
                     PutbackRMWord(ModRM, tmp1 & 0xFFFF);
-                    break;
+                }
+                break;
 
-                /*TODO*///    case 0x10:  /* CALL ew */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.call_r16 : cycles.call_m16;
-/*TODO*///		tmp = GetRMWord(ModRM);
-/*TODO*///		ip = I.pc - I.base[CS];
-/*TODO*///		PUSH(ip);
-/*TODO*///		I.pc = (I.base[CS] + (WORD)tmp) & AMASK;
-/*TODO*///		CHANGE_PC(I.pc);
-/*TODO*///		break;
-/*TODO*///
+                case 0x10: {
+                    /* CALL ew */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.call_r16 : cycles.call_m16;
+                    tmp = GetRMWord(ModRM);
+                    ip = (I.pc - I.base[CS]) & 0xFFFF;
+                    PUSH(ip);
+                    I.pc = (I.base[CS] + (tmp & 0xFFFF)) & AMASK;
+                    change_pc20(I.pc);
+                }
+                break;
+                /*TODO*///
 /*TODO*///	case 0x18:  /* CALL FAR ea */
 /*TODO*///		i86_ICount[0] -= cycles.call_m32;
 /*TODO*///		tmp = I.sregs[CS];	/* HJB 12/13/98 need to skip displacements of EA */

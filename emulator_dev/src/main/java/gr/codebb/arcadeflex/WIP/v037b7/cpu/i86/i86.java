@@ -15,7 +15,9 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86time.i86_timing;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr86.i86_interrupt;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.Mod_RM;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.table86H.i86_instruction;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_readmem20;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_setOPbase20;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writemem20;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
 public class i86 extends cpu_interface {
@@ -517,12 +519,12 @@ public class i86 extends cpu_interface {
 
     @Override
     public int memory_read(int offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return cpu_readmem20((offset) & AMASK);
     }
 
     @Override
     public void memory_write(int offset, int data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cpu_writemem20((offset) & AMASK, data);
     }
 
     @Override

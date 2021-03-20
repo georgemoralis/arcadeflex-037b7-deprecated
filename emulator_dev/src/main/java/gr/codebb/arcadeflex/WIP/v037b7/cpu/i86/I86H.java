@@ -62,10 +62,18 @@ public class I86H {
         I.AuxVal = ((x) ^ ((y) ^ (z))) & 0x10;
     }
 
-    /*TODO*///#define SetSF(x)			(I.SignVal = (x))
-/*TODO*///#define SetZF(x)			(I.ZeroVal = (x))
-/*TODO*///#define SetPF(x)			(I.ParityVal = (x))
-/*TODO*///
+    public static void SetSF(int x) {
+        I.SignVal = (x);
+    }
+
+    public static void SetZF(int x) {
+        I.ZeroVal = (x);
+    }
+
+    public static void SetPF(int x) {
+        I.ParityVal = (x);
+    }
+
     public static void SetSZPF_Byte(int x) {
         I.SignVal = (byte) (x);
         I.ZeroVal = (byte) (x);
