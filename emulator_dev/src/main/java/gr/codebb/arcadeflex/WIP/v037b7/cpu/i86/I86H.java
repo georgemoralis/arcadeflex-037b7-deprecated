@@ -11,6 +11,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writemem20;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writeport;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.BOOL;
+import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
 public class I86H {
 
@@ -205,22 +206,22 @@ public class I86H {
         I.regs.SetW(SP, (I.regs.w[SP] + 2) & 0xFFFF);
         return tmp;
     }
-    /*TODO*////************************************************************************/
-/*TODO*///
-/*TODO*///#define CompressFlags() (WORD)(CF | (PF << 2) | (AF << 4) | (ZF << 6) \
-/*TODO*///				| (SF << 7) | (I.TF << 8) | (I.IF << 9) \
-/*TODO*///				| (DF << 10) | (OF << 11))
-/*TODO*///
-/*TODO*///#define ExpandFlags(f) \
-/*TODO*///{ \
-/*TODO*///	  I.CarryVal = (f) & 1; \
-/*TODO*///	  I.ParityVal = !((f) & 4); \
-/*TODO*///	  I.AuxVal = (f) & 16; \
-/*TODO*///	  I.ZeroVal = !((f) & 64); \
-/*TODO*///	  I.SignVal = ((f) & 128) ? -1 : 0; \
-/*TODO*///	  I.TF = ((f) & 256) >> 8; \
-/*TODO*///	  I.IF = ((f) & 512) >> 9; \
-/*TODO*///	  I.DirVal = ((f) & 1024) ? -1 : 1; \
-/*TODO*///	  I.OverVal = (f) & 2048; \
-/*TODO*///}    
+
+    public static int CompressFlags() {
+        return ((CF() | (PF() << 2) | (AF() << 4) | (ZF() << 6)
+                | (SF() << 7) | (I.TF << 8) | (I.IF << 9)
+                | (DF() << 10) | (OF() << 11)) & 0xFFFF);
+    }
+
+    public static void ExpandFlags(int f) {
+        I.CarryVal = (f) & 1;
+        I.ParityVal = NOT((f) & 4);
+        I.AuxVal = (f) & 16;
+        I.ZeroVal = NOT((f) & 64);
+        I.SignVal = ((f) & 128) != 0 ? -1 : 0;
+        I.TF = ((f) & 256) >> 8;
+        I.IF = ((f) & 512) >> 9;
+        I.DirVal = ((f) & 1024) != 0 ? -1 : 1;
+        I.OverVal = (f) & 2048;
+    }
 }

@@ -10,8 +10,11 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86time.i86_cycles;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86time.i86_timing;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr86.i86_interrupt;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.Mod_RM;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.table86H.i86_instruction;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_setOPbase20;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
@@ -280,53 +283,6 @@ public class i86 extends cpu_interface {
 /*TODO*///	}
 /*TODO*///}
 /*TODO*///
-/*TODO*///void i86_set_nmi_line(int state)
-/*TODO*///{
-/*TODO*///	if (I.nmi_state == state)
-/*TODO*///		return;
-/*TODO*///	I.nmi_state = state;
-/*TODO*///
-/*TODO*///	/* on a rising edge, signal the NMI */
-/*TODO*///	if (state != CLEAR_LINE)
-/*TODO*///		PREFIX(_interrupt)(I86_NMI_INT);
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*///
-/*TODO*///int i86_execute(int num_cycles)
-/*TODO*///{
-/*TODO*///	/* copy over the cycle counts if they're not correct */
-/*TODO*///	if (cycles.id != 8086)
-/*TODO*///		cycles = i86_cycles;
-/*TODO*///
-/*TODO*///	/* adjust for any interrupts that came in */
-/*TODO*///	i86_ICount = num_cycles;
-/*TODO*///	i86_ICount -= I.extra_cycles;
-/*TODO*///	I.extra_cycles = 0;
-/*TODO*///
-/*TODO*///	/* run until we're out */
-/*TODO*///	while (i86_ICount > 0)
-/*TODO*///	{
-/*TODO*/////#define VERBOSE_DEBUG
-/*TODO*///#ifdef VERBOSE_DEBUG
-/*TODO*///		logerror("[%04x:%04x]=%02x\tF:%04x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x %d%d%d%d%d%d%d%d%d\n",
-/*TODO*///				I.sregs[CS], I.pc - I.base[CS], ReadByte(I.pc), I.flags, I.regs.w[AX], I.regs.w[BX], I.regs.w[CX], I.regs.w[DX], I.AuxVal ? 1 : 0, I.OverVal ? 1 : 0,
-/*TODO*///				I.SignVal ? 1 : 0, I.ZeroVal ? 1 : 0, I.CarryVal ? 1 : 0, I.ParityVal ? 1 : 0, I.TF, I.IF, I.DirVal < 0 ? 1 : 0);
-/*TODO*///#endif
-/*TODO*///		CALL_MAME_DEBUG;
-/*TODO*///
-/*TODO*///		seg_prefix = FALSE;
-/*TODO*///		I.prevpc = I.pc;
-/*TODO*///		TABLE86;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* adjust for any interrupts that came in */
-/*TODO*///	i86_ICount -= I.extra_cycles;
-/*TODO*///	I.extra_cycles = 0;
-/*TODO*///
-/*TODO*///	return num_cycles - i86_ICount;
-/*TODO*///}
-/*TODO*///
     @Override
     public void reset(Object param) {
         /*unsigned*/ int i, j, c;
@@ -359,6 +315,7 @@ public class i86 extends cpu_interface {
             Mod_RM.RM.w[i] = (i & 7);
             Mod_RM.RM.b[i] = reg_name[i & 7];
         }
+        cycles = i86_cycles;
     }
 
     @Override
@@ -367,8 +324,35 @@ public class i86 extends cpu_interface {
     }
 
     @Override
-    public int execute(int cycles) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int execute(int num_cycles) {
+        if (cycles.id != 8086) {
+            cycles = i86_cycles;
+        }
+
+        /* adjust for any interrupts that came in */
+        i86_ICount[0] = num_cycles;
+        i86_ICount[0] -= I.extra_cycles;
+        I.extra_cycles = 0;
+
+        /* run until we're out */
+        while (i86_ICount[0] > 0) {
+//#define VERBOSE_DEBUG
+/*#ifdef VERBOSE_DEBUG
+		logerror("[%04x:%04x]=%02x\tF:%04x\tAX=%04x\tBX=%04x\tCX=%04x\tDX=%04x %d%d%d%d%d%d%d%d%d\n",
+				I.sregs[CS], I.pc - I.base[CS], ReadByte(I.pc), I.flags, I.regs.w[AX], I.regs.w[BX], I.regs.w[CX], I.regs.w[DX], I.AuxVal ? 1 : 0, I.OverVal ? 1 : 0,
+				I.SignVal ? 1 : 0, I.ZeroVal ? 1 : 0, I.CarryVal ? 1 : 0, I.ParityVal ? 1 : 0, I.TF, I.IF, I.DirVal < 0 ? 1 : 0);
+#endif*/
+
+            seg_prefix = 0;
+            I.prevpc = I.pc;
+            i86_instruction[FETCHOP()].handler();
+        }
+
+        /* adjust for any interrupts that came in */
+        i86_ICount[0] -= I.extra_cycles;
+        I.extra_cycles = 0;
+
+        return num_cycles - i86_ICount[0];
     }
 
     @Override
@@ -422,8 +406,16 @@ public class i86 extends cpu_interface {
     }
 
     @Override
-    public void set_nmi_line(int linestate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void set_nmi_line(int state) {
+        if (I.nmi_state == state) {
+            return;
+        }
+        I.nmi_state = state;
+
+        /* on a rising edge, signal the NMI */
+        if (state != CLEAR_LINE) {
+            i86_interrupt(I86_NMI_INT);
+        }
     }
 
     @Override

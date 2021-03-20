@@ -56,9 +56,9 @@ public class i186 extends i86 {
         super.reset(param);
         cycles = i186_cycles;
     }
-    public static void i86_set_irq_callback(irqcallbacksPtr callback)
-    {
-        I.irq_callback=callback;
+
+    public static void i86_set_irq_callback(irqcallbacksPtr callback) {
+        I.irq_callback = callback;
     }
 
     /*TODO*///#include "i186intf.h"
@@ -106,11 +106,19 @@ public class i186 extends i86 {
     public static void fetchInstruction() {
         int fetchop = FETCHOP();
         switch (fetchop) {
-            /*TODO*///	case 0x00:    PREFIX86(_add_br8)(); break;
-/*TODO*///	case 0x01:    PREFIX86(_add_wr16)(); break;
-/*TODO*///	case 0x02:    PREFIX86(_add_r8b)(); break;
-/*TODO*///	case 0x03:    PREFIX86(_add_r16w)(); break;
-/*TODO*///	case 0x04:    PREFIX86(_add_ald8)(); break;
+            case 0x00:
+                i86_add_br8.handler();
+                break;
+            case 0x01:
+                i86_add_wr16.handler();
+                break;
+            case 0x02:
+                i86_add_r8b.handler();
+                break;
+            case 0x03:
+                i86_add_r16w.handler();
+                break;
+            /*TODO*///	case 0x04:    PREFIX86(_add_ald8)(); break;
             case 0x05:
                 i86_add_axd16.handler();
                 break;
@@ -118,7 +126,9 @@ public class i186 extends i86 {
 /*TODO*///	case 0x07:    PREFIX86(_pop_es)(); break;
 /*TODO*///	case 0x08:    PREFIX86(_or_br8)(); break;
 /*TODO*///	case 0x09:    PREFIX86(_or_wr16)(); break;
-/*TODO*///	case 0x0a:    PREFIX86(_or_r8b)(); break;
+            case 0x0a:
+                i86_or_r8b.handler();
+                break;
             case 0x0b:
                 i86_or_r16w.handler();
                 break;
@@ -153,10 +163,16 @@ public class i186 extends i86 {
 /*TODO*///	case 0x26:    PREFIX86(_es)(); break;
 /*TODO*///	case 0x27:    PREFIX86(_daa)(); break;
 /*TODO*///	case 0x28:    PREFIX86(_sub_br8)(); break;
-/*TODO*///	case 0x29:    PREFIX86(_sub_wr16)(); break;
-/*TODO*///	case 0x2a:    PREFIX86(_sub_r8b)(); break;
-/*TODO*///	case 0x2b:    PREFIX86(_sub_r16w)(); break;
-/*TODO*///	case 0x2c:    PREFIX86(_sub_ald8)(); break;
+            case 0x29:
+                i86_sub_wr16.handler();
+                break;
+            case 0x2a:
+                i86_sub_r8b.handler();
+                break;
+            case 0x2b:
+                i86_sub_r16w.handler();
+                break;
+            /*TODO*///	case 0x2c:    PREFIX86(_sub_ald8)(); break;
 /*TODO*///	case 0x2d:    PREFIX86(_sub_axd16)(); break;
             case 0x2e:
                 i86_cs.handler();
@@ -176,47 +192,115 @@ public class i186 extends i86 {
 /*TODO*///	case 0x37:    PREFIX86(_aaa)(); break;
 /*TODO*///	case 0x38:    PREFIX86(_cmp_br8)(); break;
 /*TODO*///	case 0x39:    PREFIX86(_cmp_wr16)(); break;
-/*TODO*///	case 0x3a:    PREFIX86(_cmp_r8b)(); break;
-/*TODO*///	case 0x3b:    PREFIX86(_cmp_r16w)(); break;
+            case 0x3a:
+                i86_cmp_r8b.handler();
+                break;
+            case 0x3b:
+                i86_cmp_r16w.handler();
+                break;
             case 0x3c:
                 i86_cmp_ald8.handler();
                 break;
             /*TODO*///	case 0x3d:    PREFIX86(_cmp_axd16)(); break;
 /*TODO*///	case 0x3e:    PREFIX86(_ds)(); break;
 /*TODO*///	case 0x3f:    PREFIX86(_aas)(); break;
-/*TODO*///	case 0x40:    PREFIX86(_inc_ax)(); break;
-/*TODO*///	case 0x41:    PREFIX86(_inc_cx)(); break;
-/*TODO*///	case 0x42:    PREFIX86(_inc_dx)(); break;
-/*TODO*///	case 0x43:    PREFIX86(_inc_bx)(); break;
-/*TODO*///	case 0x44:    PREFIX86(_inc_sp)(); break;
-/*TODO*///	case 0x45:    PREFIX86(_inc_bp)(); break;
-/*TODO*///	case 0x46:    PREFIX86(_inc_si)(); break;
-/*TODO*///	case 0x47:    PREFIX86(_inc_di)(); break;
-/*TODO*///	case 0x48:    PREFIX86(_dec_ax)(); break;
-/*TODO*///	case 0x49:    PREFIX86(_dec_cx)(); break;
-/*TODO*///	case 0x4a:    PREFIX86(_dec_dx)(); break;
-/*TODO*///	case 0x4b:    PREFIX86(_dec_bx)(); break;
-/*TODO*///	case 0x4c:    PREFIX86(_dec_sp)(); break;
-/*TODO*///	case 0x4d:    PREFIX86(_dec_bp)(); break;
-/*TODO*///	case 0x4e:    PREFIX86(_dec_si)(); break;
-/*TODO*///	case 0x4f:    PREFIX86(_dec_di)(); break;
-/*TODO*///	case 0x50:    PREFIX86(_push_ax)(); break;
-/*TODO*///	case 0x51:    PREFIX86(_push_cx)(); break;
-/*TODO*///	case 0x52:    PREFIX86(_push_dx)(); break;
-/*TODO*///	case 0x53:    PREFIX86(_push_bx)(); break;
-/*TODO*///	case 0x54:    PREFIX86(_push_sp)(); break;
-/*TODO*///	case 0x55:    PREFIX86(_push_bp)(); break;
-/*TODO*///	case 0x56:    PREFIX86(_push_si)(); break;
-/*TODO*///	case 0x57:    PREFIX86(_push_di)(); break;
-/*TODO*///	case 0x58:    PREFIX86(_pop_ax)(); break;
-/*TODO*///	case 0x59:    PREFIX86(_pop_cx)(); break;
-/*TODO*///	case 0x5a:    PREFIX86(_pop_dx)(); break;
-/*TODO*///	case 0x5b:    PREFIX86(_pop_bx)(); break;
-/*TODO*///	case 0x5c:    PREFIX86(_pop_sp)(); break;
-/*TODO*///	case 0x5d:    PREFIX86(_pop_bp)(); break;
-/*TODO*///	case 0x5e:    PREFIX86(_pop_si)(); break;
-/*TODO*///	case 0x5f:    PREFIX86(_pop_di)(); break;
-/*TODO*///		  case 0x60:    PREFIX186(_pusha)(); break;
+            case 0x40:
+                i86_inc_ax.handler();
+                break;
+            case 0x41:
+                i86_inc_cx.handler();
+                break;
+            case 0x42:
+                i86_inc_dx.handler();
+                break;
+            case 0x43:
+                i86_inc_bx.handler();
+                break;
+            case 0x44:
+                i86_inc_sp.handler();
+                break;
+            case 0x45:
+                i86_inc_bp.handler();
+                break;
+            case 0x46:
+                i86_inc_si.handler();
+                break;
+            case 0x47:
+                i86_inc_di.handler();
+                break;
+            case 0x48:
+                i86_dec_ax.handler();
+                break;
+            case 0x49:
+                i86_dec_cx.handler();
+                break;
+            case 0x4a:
+                i86_dec_dx.handler();
+                break;
+            case 0x4b:
+                i86_dec_bx.handler();
+                break;
+            case 0x4c:
+                i86_dec_sp.handler();
+                break;
+            case 0x4d:
+                i86_dec_bp.handler();
+                break;
+            case 0x4e:
+                i86_dec_si.handler();
+                break;
+            case 0x4f:
+                i86_dec_di.handler();
+                break;
+            case 0x50:
+                i86_push_ax.handler();
+                break;
+            case 0x51:
+                i86_push_cx.handler();
+                break;
+            case 0x52:
+                i86_push_dx.handler();
+                break;
+            case 0x53:
+                i86_push_bx.handler();
+                break;
+            case 0x54:
+                i86_push_sp.handler();
+                break;
+            case 0x55:
+                i86_push_bp.handler();
+                break;
+            case 0x56:
+                i86_push_si.handler();
+                break;
+            case 0x57:
+                i86_push_di.handler();
+                break;
+            case 0x58:
+                i86_pop_ax.handler();
+                break;
+            case 0x59:
+                i86_pop_cx.handler();
+                break;
+            case 0x5a:
+                i86_pop_dx.handler();
+                break;
+            case 0x5b:
+                i86_pop_bx.handler();
+                break;
+            case 0x5c:
+                i86_pop_sp.handler();
+                break;
+            case 0x5d:
+                i86_pop_bp.handler();
+                break;
+            case 0x5e:
+                i86_pop_si.handler();
+                break;
+            case 0x5f:
+                i86_pop_di.handler();
+                break;
+            /*TODO*///		  case 0x60:    PREFIX186(_pusha)(); break;
 /*TODO*///		  case 0x61:    PREFIX186(_popa)(); break;
 /*TODO*///		  case 0x62:    PREFIX186(_bound)(); break;
 /*TODO*///	case 0x63:    PREFIX86(_invalid)(); break;
@@ -234,25 +318,51 @@ public class i186 extends i86 {
 /*TODO*///		  case 0x6f:    PREFIX186(_outsw)(); break;
 /*TODO*///	case 0x70:    PREFIX86(_jo)(); break;
 /*TODO*///	case 0x71:    PREFIX86(_jno)(); break;
-/*TODO*///	case 0x72:    PREFIX86(_jb)(); break;
-/*TODO*///	case 0x73:    PREFIX86(_jnb)(); break;
+            case 0x72:
+                i86_jb.handler();
+                break;
+            case 0x73:
+                i86_jnb.handler();
+                break;
             case 0x74:
                 i86_jz.handler();
                 break;
             case 0x75:
                 i86_jnz.handler();
                 break;
-            /*TODO*///	case 0x76:    PREFIX86(_jbe)(); break;
-/*TODO*///	case 0x77:    PREFIX86(_jnbe)(); break;
-/*TODO*///	case 0x78:    PREFIX86(_js)(); break;
-/*TODO*///	case 0x79:    PREFIX86(_jns)(); break;
-/*TODO*///	case 0x7a:    PREFIX86(_jp)(); break;
-/*TODO*///	case 0x7b:    PREFIX86(_jnp)(); break;
-/*TODO*///	case 0x7c:    PREFIX86(_jl)(); break;
-/*TODO*///	case 0x7d:    PREFIX86(_jnl)(); break;
-/*TODO*///	case 0x7e:    PREFIX86(_jle)(); break;
-/*TODO*///	case 0x7f:    PREFIX86(_jnle)(); break;
-/*TODO*///	case 0x80:    PREFIX86(_80pre)(); break;
+            case 0x76:
+                i86_jbe.handler();
+                break;
+            case 0x77:
+                i86_jnbe.handler();
+                break;
+            case 0x78:
+                i86_js.handler();
+                break;
+            case 0x79:
+                i86_jns.handler();
+                break;
+            case 0x7a:
+                i86_jp.handler();
+                break;
+            case 0x7b:
+                i86_jnp.handler();
+                break;
+            case 0x7c:
+                i86_jl.handler();
+                break;
+            case 0x7d:
+                i86_jnl.handler();
+                break;
+            case 0x7e:
+                i86_jle.handler();
+                break;
+            case 0x7f:
+                i86_jnle.handler();
+                break;
+            case 0x80:
+                i86_80pre.handler();
+                break;
             case 0x81:
                 i86_81pre.handler();
                 break;
@@ -260,15 +370,27 @@ public class i186 extends i86 {
             case 0x83:
                 i86_83pre.handler();
                 break;
-            /*TODO*///	case 0x84:    PREFIX86(_test_br8)(); break;
-/*TODO*///	case 0x85:    PREFIX86(_test_wr16)(); break;
-/*TODO*///	case 0x86:    PREFIX86(_xchg_br8)(); break;
-/*TODO*///	case 0x87:    PREFIX86(_xchg_wr16)(); break;
-/*TODO*///	case 0x88:    PREFIX86(_mov_br8)(); break;
+            case 0x84:
+                i86_test_br8.handler();
+                break;
+            case 0x85:
+                i86_test_wr16.handler();
+                break;
+            case 0x86:
+                i86_xchg_br8.handler();
+                break;
+            case 0x87:
+                i86_xchg_wr16.handler();
+                break;
+            case 0x88:
+                i86_mov_br8.handler();
+                break;
             case 0x89:
                 i86_mov_wr16.handler();
                 break;
-            /*TODO*///	case 0x8a:    PREFIX86(_mov_r8b)(); break;
+            case 0x8a:
+                i86_mov_r8b.handler();
+                break;
             case 0x8b:
                 i86_mov_r16w.handler();
                 break;
@@ -300,7 +422,9 @@ public class i186 extends i86 {
 /*TODO*///	case 0x9d:    PREFIX86(_popf)(); break;
 /*TODO*///	case 0x9e:    PREFIX86(_sahf)(); break;
 /*TODO*///	case 0x9f:    PREFIX86(_lahf)(); break;
-/*TODO*///	case 0xa0:    PREFIX86(_mov_aldisp)(); break;
+            case 0xa0:
+                i86_mov_aldisp.handler();
+                break;
             case 0xa1:
                 i86_mov_axdisp.handler();
                 break;
@@ -317,21 +441,39 @@ public class i186 extends i86 {
 /*TODO*///	case 0xa8:    PREFIX86(_test_ald8)(); break;
 /*TODO*///	case 0xa9:    PREFIX86(_test_axd16)(); break;
 /*TODO*///	case 0xaa:    PREFIX86(_stosb)(); break;
-/*TODO*///	case 0xab:    PREFIX86(_stosw)(); break;
+            case 0xab:
+                i86_stosw.handler();
+                break;
             case 0xac:
                 i86_lodsb.handler();
                 break;
             /*TODO*///	case 0xad:    PREFIX86(_lodsw)(); break;
 /*TODO*///	case 0xae:    PREFIX86(_scasb)(); break;
 /*TODO*///	case 0xaf:    PREFIX86(_scasw)(); break;
-/*TODO*///	case 0xb0:    PREFIX86(_mov_ald8)(); break;
-/*TODO*///	case 0xb1:    PREFIX86(_mov_cld8)(); break;
-/*TODO*///	case 0xb2:    PREFIX86(_mov_dld8)(); break;
-/*TODO*///	case 0xb3:    PREFIX86(_mov_bld8)(); break;
-/*TODO*///	case 0xb4:    PREFIX86(_mov_ahd8)(); break;
-/*TODO*///	case 0xb5:    PREFIX86(_mov_chd8)(); break;
-/*TODO*///	case 0xb6:    PREFIX86(_mov_dhd8)(); break;
-/*TODO*///	case 0xb7:    PREFIX86(_mov_bhd8)(); break;
+            case 0xb0:
+                i86_mov_ald8.handler();
+                break;
+            case 0xb1:
+                i86_mov_cld8.handler();
+                break;
+            case 0xb2:
+                i86_mov_dld8.handler();
+                break;
+            case 0xb3:
+                i86_mov_bld8.handler();
+                break;
+            case 0xb4:
+                i86_mov_ahd8.handler();
+                break;
+            case 0xb5:
+                i86_mov_chd8.handler();
+                break;
+            case 0xb6:
+                i86_mov_dhd8.handler();
+                break;
+            case 0xb7:
+                i86_mov_bhd8.handler();
+                break;
             case 0xb8:
                 i86_mov_axd16.handler();
                 break;
@@ -359,8 +501,10 @@ public class i186 extends i86 {
             /*TODO*///		  case 0xc0:    PREFIX186(_rotshft_bd8)(); break;
 /*TODO*///		  case 0xc1:    PREFIX186(_rotshft_wd8)(); break;
 /*TODO*///	case 0xc2:    PREFIX86(_ret_d16)(); break;
-/*TODO*///	case 0xc3:    PREFIX86(_ret)(); break;
-/*TODO*///	case 0xc4:    PREFIX86(_les_dw)(); break;
+            case 0xc3:
+                i86_ret.handler();
+                break;
+            /*TODO*///	case 0xc4:    PREFIX86(_les_dw)(); break;
 /*TODO*///	case 0xc5:    PREFIX86(_lds_dw)(); break;
             case 0xc6:
                 i86_mov_bd8.handler();
@@ -377,10 +521,14 @@ public class i186 extends i86 {
             /*TODO*///	case 0xcc:    PREFIX86(_int3)(); break;
 /*TODO*///	case 0xcd:    PREFIX86(_int)(); break;
 /*TODO*///	case 0xce:    PREFIX86(_into)(); break;
-/*TODO*///	case 0xcf:    PREFIX86(_iret)(); break;
-/*TODO*///		  case 0xd0:    PREFIX86(_rotshft_b)(); break;
-/*TODO*///		  case 0xd1:    PREFIX86(_rotshft_w)(); break;
-/*TODO*///		  case 0xd2:    PREFIX86(_rotshft_bcl)(); break;
+            case 0xcf:
+                i86_iret.handler();
+                break;
+            /*TODO*///		  case 0xd0:    PREFIX86(_rotshft_b)(); break;
+            case 0xd1:
+                i86_rotshft_w.handler();
+                break;
+            /*TODO*///		  case 0xd2:    PREFIX86(_rotshft_bcl)(); break;
             case 0xd3:
                 i86_rotshft_wcl.handler();
                 break;
@@ -406,8 +554,12 @@ public class i186 extends i86 {
 /*TODO*///	case 0xe5:    PREFIX86(_inax)(); break;
 /*TODO*///	case 0xe6:    PREFIX86(_outal)(); break;
 /*TODO*///	case 0xe7:    PREFIX86(_outax)(); break;
-/*TODO*///	case 0xe8:    PREFIX86(_call_d16)(); break;
-/*TODO*///	case 0xe9:    PREFIX86(_jmp_d16)(); break;
+            case 0xe8:
+                i86_call_d16.handler();
+                break;
+            case 0xe9:
+                i86_jmp_d16.handler();
+                break;
             case 0xea:
                 i86_jmp_far.handler();
                 break;
@@ -433,8 +585,10 @@ public class i186 extends i86 {
             case 0xf6:
                 i86_f6pre.handler();
                 break;
-            /*TODO*///	case 0xf7:    PREFIX86(_f7pre)(); break;
-/*TODO*///	case 0xf8:    PREFIX86(_clc)(); break;
+            case 0xf7:
+                i86_f7pre.handler();
+                break;
+            /*TODO*///	case 0xf8:    PREFIX86(_clc)(); break;
 /*TODO*///	case 0xf9:    PREFIX86(_stc)(); break;
             case 0xfa:
                 i86_cli.handler();
@@ -448,7 +602,9 @@ public class i186 extends i86 {
             case 0xfd:
                 i86_std.handler();
                 break;
-            /*TODO*///	case 0xfe:    PREFIX86(_fepre)(); break;
+            case 0xfe:
+                i86_fepre.handler();
+                break;
             case 0xff:
                 i86_ffpre.handler();
                 break;

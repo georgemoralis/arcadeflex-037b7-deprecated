@@ -281,21 +281,24 @@ public class instr186 {
 /*TODO*///		I.regs.w[CX]=count; 
 /*TODO*///		break; 
 /*TODO*///#endif 
-/*TODO*///	case 0xa4:  /* REP MOVSB */ 
-/*TODO*///		i86_ICount[0] -= cycles.rep_movs8_base;
-/*TODO*///		for (; count > 0; count--) 
-/*TODO*///		{
-/*TODO*///			BYTE tmp;
-/*TODO*///			
-/*TODO*///			if (i86_ICount[0] <= 0) { I.pc = I.prevpc; break; }
-/*TODO*///			tmp = GetMemB(DS,I.regs.w[SI]);
-/*TODO*///			PutMemB(ES,I.regs.w[DI], tmp);
-/*TODO*///			I.regs.w[DI] += I.DirVal;
-/*TODO*///			I.regs.w[SI] += I.DirVal;
-/*TODO*///			i86_ICount[0] -= cycles.rep_movs8_count;
-/*TODO*///		}
-/*TODO*///		I.regs.w[CX]=count; 
-/*TODO*///		break; 
+            case 0xa4:
+                /* REP MOVSB */
+                i86_ICount[0] -= cycles.rep_movs8_base;
+                for (; count > 0; count--) {
+                    int/*BYTE*/ tmp;
+
+                    if (i86_ICount[0] <= 0) {
+                        I.pc = I.prevpc;
+                        break;
+                    }
+                    tmp = GetMemB(DS, I.regs.w[SI]) & 0xFF;
+                    PutMemB(ES, I.regs.w[DI], tmp);
+                    I.regs.SetW(DI, I.regs.w[DI] + I.DirVal);
+                    I.regs.SetW(SI, I.regs.w[SI] + I.DirVal);
+                    i86_ICount[0] -= cycles.rep_movs8_count;
+                }
+                I.regs.SetW(CX, count);
+                break;
             case 0xa5:
                 /* REP MOVSW */
                 i86_ICount[0] -= cycles.rep_movs16_base;
@@ -349,17 +352,20 @@ public class instr186 {
 /*TODO*///		}
 /*TODO*///		I.regs.w[CX]=count; 
 /*TODO*///		break; 
-/*TODO*///	case 0xaa:  /* REP STOSB */ 
-/*TODO*///		i86_ICount[0] -= cycles.rep_stos8_base;
-/*TODO*///		for (; count > 0; count--) 
-/*TODO*///		{
-/*TODO*///			if (i86_ICount[0] <= 0) { I.pc = I.prevpc; break; }
-/*TODO*///			PutMemB(ES,I.regs.w[DI],I.regs.b[AL]);
-/*TODO*///			I.regs.w[DI] += I.DirVal;
-/*TODO*///			i86_ICount[0] -= cycles.rep_stos8_count;
-/*TODO*///		}
-/*TODO*///		I.regs.w[CX]=count; 
-/*TODO*///		break; 
+            case 0xaa:
+                /* REP STOSB */
+                i86_ICount[0] -= cycles.rep_stos8_base;
+                for (; count > 0; count--) {
+                    if (i86_ICount[0] <= 0) {
+                        I.pc = I.prevpc;
+                        break;
+                    }
+                    PutMemB(ES, I.regs.w[DI], I.regs.b[AL]);
+                    I.regs.SetW(DI, I.regs.w[DI] + I.DirVal);
+                    i86_ICount[0] -= cycles.rep_stos8_count;
+                }
+                I.regs.SetW(CX, count);
+                break;
             case 0xab:
                 /* REP STOSW */
                 i86_ICount[0] -= cycles.rep_stos16_base;
