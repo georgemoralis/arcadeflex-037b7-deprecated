@@ -2,19 +2,17 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.machine.missile.*;
+import static gr.codebb.arcadeflex.v037b7.machine.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.pokeyH.POKEYinterface;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.missile.*;
-import static gr.codebb.arcadeflex.old.mame.input.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.missile.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;

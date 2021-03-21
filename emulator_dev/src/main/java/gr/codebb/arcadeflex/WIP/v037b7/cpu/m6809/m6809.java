@@ -1554,7 +1554,7 @@ public class m6809 extends cpu_interface {
             case 0x96: ea = _m6809.x + (byte)_m6809.a & 0xFFFF;						ea=RM16(ea);	m6809_ICount[0]-=4;   break;
         /*TODO*///	case 0x97: EA=0;																   break; /*   ILLEGAL*/
             case 0x98: ea=IMMBYTE(); 	ea=_m6809.x+(byte)ea & 0xFFFF;	ea=RM16(ea);	m6809_ICount[0]-=4;   break;
-        /*TODO*///	case 0x99: IMMWORD(ea); 	EA+=X;				EAD=RM16(EAD);	m6809_ICount[0]-=7;   break;
+        	case 0x99: ea=IMMWORD(); ea = (ea + _m6809.x)&0xFFFF;			ea=RM16(ea);	m6809_ICount[0]-=7;   break;
         /*TODO*///	case 0x9a: EA=0;																   break; /*   ILLEGAL*/
             case 0x9b: ea=_m6809.x+_opcodes.getDreg();								ea=RM16(ea);	m6809_ICount[0]-=7;   break;
         /*TODO*///	case 0x9c: IMMBYTE(EA); 	EA=PC+SIGNED(EA);	EAD=RM16(EAD);	m6809_ICount[0]-=4;   break;

@@ -86,7 +86,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.sonson.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.superpac.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.yiear.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.rocnrope.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ddragon.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ddragon.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.battlane.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos1.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pacland.*;
@@ -108,12 +108,12 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.capbowl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.balsente.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.asteroid.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.atetris.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.atetris.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bogeyman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.btime.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bwidow.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bzone.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ccastles.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ccastles.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.centiped.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exprraid.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gameplan.*;
@@ -121,7 +121,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.matmania.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.renegade.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tempest.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mhavoc.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.missile.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warlord.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.zac2650.*;
@@ -2874,9 +2874,6 @@ public class driver {
         // driver_qwakprot,	/* (c) 1982 */
 
         /* Atari "Missile Command hardware" games */
-        driver_missile, /* (c) 1980 */
-        driver_missile2, /* (c) 1980 */
-        driver_suprmatk, /* (c) 1980 + (c) 1981 Gencomp */
         /* misc Atari games */
         /*TODO*/
         // driver_foodf,		/* (c) 1982 */	/* made by Gencomp */
@@ -2884,8 +2881,7 @@ public class driver {
         // driver_liberatr,	/* (c) 1982 */
         /*TODO*/
         // TESTDRIVER( liberat2,
-        driver_ccastles, /* (c) 1983 */
-        driver_ccastle2, /* (c) 1983 */
+
         /*TODO*/
         // driver_cloak,		/* (c) 1983 */
         /*TODO*/
@@ -2942,11 +2938,7 @@ public class driver {
         // driver_gaunt2,	/* (c) 1986 */
         /*TODO*/
         // driver_vindctr2,	/* (c) 1988 */
-        driver_atetris, /* (c) 1988 */
-        driver_atetrisa, /* (c) 1988 */
-        driver_atetrisb, /* bootleg */
-        driver_atetcktl, /* (c) 1989 */
-        driver_atetckt2, /* (c) 1989 */
+
         /*TODO*/
         // driver_toobin,	/* (c) 1988 */
         /*TODO*/
@@ -3124,14 +3116,6 @@ public class driver {
         /*TODO*/
         // driver_solarwar,	/* TA-0019 (c) 1986 Taito + Memetron license */
 
-        driver_ddragon, /* TA-0021 (c) 1987 */
-        driver_ddragonu, /* TA-0021 (c) 1987 Taito America */
-        driver_ddragonb, /* bootleg */
-        /* TA-0022 Super Dodge Ball */
-        /* TA-0023 China Gate */
-        /* TA-0024 WWF Superstars */
-        /* TA-0025 Champ V'Ball */
-        driver_ddragon2, /* TA-0026 (c) 1988 */
         /*TODO*/
         // driver_ctribe,	/* TA-0028 (c) 1990 (US) */
         /*TODO*/
@@ -4543,6 +4527,20 @@ public class driver {
         driver_renegade,
         driver_kuniokun,
         driver_kuniokub,
+        driver_ddragon,
+        driver_ddragonu,
+        driver_ddragonb,
+        driver_ddragon2,
+        driver_atetris,
+        driver_atetrisa,
+        driver_atetrisb,
+        driver_atetcktl,
+        driver_atetckt2,
+        driver_ccastles,
+        driver_ccastle2,
+        driver_missile,
+        driver_missile2,
+        driver_suprmatk,
         /*
      * NOT Working flag
          */

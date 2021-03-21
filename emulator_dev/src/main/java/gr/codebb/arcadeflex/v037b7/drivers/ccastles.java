@@ -2,36 +2,25 @@
  * ported to 0.37b7
  * ported to v0.36
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.flip_screen_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.btime.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
-import static gr.codebb.arcadeflex.old.mame.common.memory_region_length;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.pokey.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.pokeyH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.ccastles.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.ccastles.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
-import static gr.codebb.arcadeflex.common.libc.cstdlib.rand;
 import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.*;
 

@@ -2,35 +2,24 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
-import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;
-import static gr.codebb.arcadeflex.old.mame.common.memory_region_length;
-import static gr.codebb.arcadeflex.v056.mame.timer.*;
-import static gr.codebb.arcadeflex.v056.mame.timerH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.pokey.*;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.pokeyH.POKEYinterface;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.atetris.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.atetris.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
-import static gr.codebb.arcadeflex.common.libc.cstdlib.rand;
-import static gr.codebb.arcadeflex.old.sound.mixer.*;
-import static gr.codebb.arcadeflex.old.sound.mixerH.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;

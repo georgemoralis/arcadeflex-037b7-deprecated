@@ -11,7 +11,7 @@ Driver by Carlos A. Lozano, Rob Rosenbrock, Phil Stroffolino, Ernesto Corvi
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */ 
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6800Η.M6800_INT_NMI;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.*;
@@ -19,7 +19,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.cpu.z80.z80H.Z80_NMI_INT;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.ddragon.*;        
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.ddragon.*;        
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region;

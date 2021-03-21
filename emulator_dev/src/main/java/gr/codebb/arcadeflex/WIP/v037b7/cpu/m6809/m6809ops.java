@@ -2957,15 +2957,14 @@ public class m6809ops {
         //if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d ldb_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
     }
 
-    /*TODO*///
-    /*TODO*////* is this a legal instruction? */
-    /*TODO*////* $c7 STB immediate -**0- */
+    /* is this a legal instruction? */
+ /* $c7 STB immediate -**0- */
     public void stb_im() {
-        throw new UnsupportedOperationException("Unsupported");
-        /*TODO*///	_cpu.CLR_NZV;
-        /*TODO*///	_cpu.SET_NZ8(B);
-        /*TODO*///	IMM8;
-        /*TODO*///	WM(EAD,B);
+        _cpu.CLR_NZV();
+        _cpu.SET_NZ8(_cpu._m6809.b);
+        _cpu.ea = _cpu._m6809.pc & 0xFFFF;
+        _cpu._m6809.pc = (char) ((_cpu._m6809.pc + 1) & 0xFFFF);
+        _cpu.WM(_cpu.ea, _cpu._m6809.b);
     }
 
     /* $c8 EORB immediate -**0- */
@@ -3028,15 +3027,15 @@ public class m6809ops {
         //if(_cpu.m6809log!=null) fprintf(_cpu.m6809log,"M6809#%d ldd_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(),(int)_cpu._m6809.pc,(int)_cpu._m6809.ppc,(int)_cpu._m6809.a,(int)_cpu._m6809.b,getDreg(),(int)_cpu._m6809.dp,(int)_cpu._m6809.u,(int)_cpu._m6809.s,(int)_cpu._m6809.x,(int)_cpu._m6809.y,(int)_cpu._m6809.cc,_cpu.ea);
     }
 
-    /*TODO*///
-    /*TODO*////* is this a legal instruction? */
-    /*TODO*////* $cD STD immediate -**0- */
+    /* is this a legal instruction? */
+ /* $cD STD immediate -**0- */
     public void std_im() {
-        throw new UnsupportedOperationException("Unsupported");
-        /*TODO*///	_cpu.CLR_NZV;
-        /*TODO*///	_cpu.SET_NZ16(D);
-        /*TODO*///    IMM16;
-        /*TODO*///	WM16(EAD,&pD);
+        _cpu.CLR_NZV();
+        int tmp = getDreg();
+        _cpu.SET_NZ16(tmp);
+        _cpu.ea = _cpu._m6809.pc & 0xFFFF;
+        _cpu._m6809.pc = (char) ((_cpu._m6809.pc + 2) & 0xFFFF);
+        _cpu.WM16(_cpu.ea, tmp);
     }
 
     /* $cE LDU (LDS) immediate -**0- */
