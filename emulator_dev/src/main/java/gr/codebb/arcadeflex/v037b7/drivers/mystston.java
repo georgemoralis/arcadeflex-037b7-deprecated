@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGIONFLAG_DISPOSE;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_CPU1;
@@ -63,15 +63,15 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.AY8910_write_port_1_w
 import gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.AY8910interface;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.spriteram;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.spriteram_size;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_2000_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_bgvideoram;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_bgvideoram_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_fgvideoram;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_fgvideoram_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_scroll_w;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_vh_convert_color_prom;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_vh_screenrefresh;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.mystston.mystston_vh_start;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_2000_w;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_bgvideoram;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_bgvideoram_w;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_fgvideoram;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_fgvideoram_w;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_scroll_w;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_vh_convert_color_prom;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_vh_screenrefresh;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.mystston.mystston_vh_start;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.InputPortPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.InterruptPtr;
 import gr.codebb.arcadeflex.v037b7.common.fucPtr.ReadHandlerPtr;

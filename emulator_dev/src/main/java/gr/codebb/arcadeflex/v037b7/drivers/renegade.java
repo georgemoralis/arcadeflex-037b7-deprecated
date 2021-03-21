@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_FIRQ_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_IRQ;
@@ -19,7 +19,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound._3812intfH.YM3526interface;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.adpcm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.adpcmH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.renegade.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.renegade.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;

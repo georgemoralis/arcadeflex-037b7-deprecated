@@ -3,7 +3,7 @@
  * ported to v0.36
  * 
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
@@ -14,7 +14,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.bogeyman.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.bogeyman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
