@@ -65,7 +65,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.skydiver.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.zaccaria.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.seicross.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.m62.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shaolins.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.shaolins.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jackal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starwars.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.irobot.*;
@@ -107,11 +107,11 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.combatsc.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.jedi.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.capbowl.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.balsente.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.asteroid.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.asteroid.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.atetris.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bogeyman.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.btime.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bwidow.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.bwidow.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bzone.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.ccastles.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.centiped.*;
@@ -2447,8 +2447,7 @@ public class driver {
         driver_hpolym84,
         driver_roadf,
         driver_roadf2,
-        driver_kicker, /* GX477 (c) 1985 */
-        driver_shaolins, /* GX477 (c) 1985 */
+        
         driver_gberet,
         driver_rushatck,
         driver_gberetb,
@@ -2791,20 +2790,9 @@ public class driver {
         // driver_showdown,	/* (c) 1988 */
 
         /* Atari vector games */
-        driver_asteroid, /* (c) 1979 */
-        driver_asteroi1, /* no copyright notice */
-        driver_asteroib, /* bootleg */
-        driver_astdelux, /* (c) 1980 */
-        driver_astdelu1, /* (c) 1980 */
-        driver_bwidow, /* (c) 1982 */
         driver_bzone, /* (c) 1980 */
         driver_bzone2, /* (c) 1980 */
-        driver_gravitar, /* (c) 1982 */
-        driver_gravitr2, /* (c) 1982 */
-        driver_llander, /* no copyright notice */
-        driver_llander1, /* no copyright notice */
         driver_redbaron, /* (c) 1980 */
-        driver_spacduel, /* (c) 1980 */
         driver_tempest, /* (c) 1980 */
         driver_tempest1, /* (c) 1980 */
         driver_tempest2, /* (c) 1980 */
@@ -4541,6 +4529,19 @@ public class driver {
         driver_missile,
         driver_missile2,
         driver_suprmatk,
+        driver_asteroid,
+        driver_asteroi1,
+        driver_asteroib,
+        driver_astdelux,
+        driver_astdelu1,
+        driver_llander,
+        driver_llander1,
+        driver_bwidow,
+        driver_gravitar,
+        driver_gravitr2,
+        driver_spacduel,
+        driver_kicker,
+        driver_shaolins, 
         /*
      * NOT Working flag
          */

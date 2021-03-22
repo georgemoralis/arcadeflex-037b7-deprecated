@@ -1,34 +1,18 @@
-/***************************************************************************
-
-Shaolin's Road
-
-driver by Allard Van Der Bas
-
-***************************************************************************/
-
 /*
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */ 
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.shaolins.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.shaolins.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
-import static gr.codebb.arcadeflex.old.mame.common.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.old.mame.inputH.KEYCODE_F1;
-import static gr.codebb.arcadeflex.old.mame.inputH.KEYCODE_F2;
-import static gr.codebb.arcadeflex.old.sound.mixerH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;

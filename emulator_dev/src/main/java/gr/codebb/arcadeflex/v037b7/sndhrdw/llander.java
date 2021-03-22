@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
+package gr.codebb.arcadeflex.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
@@ -10,7 +10,6 @@ import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.old.sound.mixer.*;
-import static gr.codebb.arcadeflex.old.sound.streams.*;
 
 public class llander {
 
