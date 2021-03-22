@@ -935,22 +935,22 @@ public class memory {
     }
 
     /*TODO*///
-/*TODO*///
-/*TODO*///
-/*TODO*////***************************************************************************
-/*TODO*///
-/*TODO*///  Perform a memory read. This function is called by the CPU emulation.
-/*TODO*///
-/*TODO*///***************************************************************************/
-/*TODO*///
-/*TODO*////* use these constants to define which type of memory handler to build */
-/*TODO*///#define TYPE_8BIT					0		/* 8-bit aligned */
-/*TODO*///#define TYPE_16BIT_BE				1		/* 16-bit aligned, big-endian */
-/*TODO*///#define TYPE_16BIT_LE				2		/* 16-bit aligned, little-endian */
-/*TODO*///
-/*TODO*///#define CAN_BE_MISALIGNED			0		/* word/dwords can be read on non-16-bit boundaries */
-/*TODO*///#define ALWAYS_ALIGNED				1		/* word/dwords are always read on 16-bit boundaries */
-/*TODO*///
+
+
+    /***************************************************************************
+
+      Perform a memory read. This function is called by the CPU emulation.
+
+    ***************************************************************************/
+
+    /* use these constants to define which type of memory handler to build */
+    public static final int TYPE_8BIT		= 0;		/* 8-bit aligned */
+    public static final int TYPE_16BIT_BE	= 1;		/* 16-bit aligned, big-endian */
+    public static final int TYPE_16BIT_LE	= 2;		/* 16-bit aligned, little-endian */
+
+    public static final int CAN_BE_MISALIGNED	= 0;		/* word/dwords can be read on non-16-bit boundaries */
+    public static final int ALWAYS_ALIGNED	= 1;		/* word/dwords are always read on 16-bit boundaries */
+    
 /*TODO*////* stupid workarounds so that we can generate an address mask that works even for 32 bits */
 /*TODO*///#define ADDRESS_TOPBIT(abits)		(1UL << (ABITS1_##abits + ABITS2_##abits + ABITS_MIN_##abits - 1))
 /*TODO*///#define ADDRESS_MASK(abits) 		(ADDRESS_TOPBIT(abits) | (ADDRESS_TOPBIT(abits) - 1))
@@ -1212,7 +1212,108 @@ public class memory {
     /*TODO*///READBYTE(cpu_readmem21,    TYPE_8BIT,	  21)
     /*TODO*///
     /*TODO*///READBYTE(cpu_readmem16bew, TYPE_16BIT_BE, 16BEW)
+    /*TODO*///#define READBYTE(name,type,abits)														\
+    public static int cpu_readmem16bew(int address) 															
+    {																						
+    	char u8_hw;																			
+    																						
+    	/* first-level lookup */															
+    	u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
+    																						
+    	/* for compatibility with setbankhandler, 8-bit systems must call handlers */		
+    	/* for banked memory reads/writes */												
+    	if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM)												
+    		return cpu_bankbase[HT_RAM].read(address);
+    	else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) 									
+    	{																					
+    		if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
+    			return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
+    		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 												
+    			return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
+    	}																					
+    																						
+    	/* second-level lookup */															
+    	if (u8_hw >= MH_HARDMAX)																
+    	{																					
+    		u8_hw -= MH_HARDMAX;																
+    		u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+    																						
+    		/* for compatibility with setbankhandler, 8-bit systems must call handlers */	
+    		/* for banked memory reads/writes */											
+    		if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM)											
+    			return cpu_bankbase[HT_RAM].read(address);
+    		else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) 								
+    		{																				
+    			if (TYPE_16BIT_BE == TYPE_16BIT_BE)													
+    				return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
+    			else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 											
+    				return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
+    		}																				
+    	}																					
+    																						
+    	/* fall back to handler */															
+    	if (TYPE_16BIT_BE == TYPE_8BIT)																
+    		return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+    	else																				
+    	{																					
+    		int shift = (address & 1) << 3; 												
+    		int data = (memoryreadhandler[u8_hw]).handler((address & ~1) - memoryreadoffset[u8_hw]); 	
+    		if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
+    			return (data >> (shift ^ 8)) & 0xff;										
+    		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 												
+    			return (data >> shift) & 0xff;												
+    	}
+        
+        return 0;
+    }
+    
     /*TODO*///READWORD(cpu_readmem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
+    /*TODO*///#define READWORD(name,type,abits,align) 												\
+    public static int cpu_readmem16bew_word(int address)														
+    {																						
+            char u8_hw;
+                                                                                                                                                                                    
+            /* only supports 16-bit memory systems */											
+            if (TYPE_16BIT_BE == TYPE_8BIT)																
+                    printf("Unsupported type for READWORD macro!n");                               
+                                                                                                                                                                                    
+            /* handle aligned case first */ 													
+            if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1)==0)
+            {																					
+                    /* first-level lookup */														
+                    u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];		
+                    
+                    if (u8_hw <= HT_BANKMAX)															
+                            return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);		
+                                                                                                                                                                                    
+                    /* second-level lookup */														
+                    if (u8_hw >= MH_HARDMAX)															
+                    {																				
+                            u8_hw -= MH_HARDMAX;															
+                            u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];	
+                            if (u8_hw <= HT_BANKMAX)														
+                                    return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);	
+                    }																				
+                                                                                                                                                                                    
+                    /* fall back to handler */														
+                    return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+            }																					
+                                                                                                                                                                                    
+            /* unaligned case */																
+            else if (TYPE_16BIT_BE == TYPE_16BIT_BE) 													
+            {																					
+                    int data = cpu_readmem16bew(address) << 8;													
+                    return data | (cpu_readmem16bew(address + 1) & 0xff);										
+            }																					
+            else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 													
+            {																					
+                    int data = cpu_readmem16bew(address) & 0xff;												
+                    return data | (cpu_readmem16bew(address + 1) << 8); 										
+            }				
+            
+            return 0;
+    }
+
     /*TODO*///
     /*TODO*///READBYTE(cpu_readmem16lew, TYPE_16BIT_LE, 16LEW)
     /*TODO*///READWORD(cpu_readmem16lew, TYPE_16BIT_LE, 16LEW, ALWAYS_ALIGNED)

@@ -28,13 +28,12 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000tbl.*;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_readmem20;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_setOPbase20;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.cpu_writemem20;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 
 public class z8000  extends cpu_interface {
@@ -63,7 +62,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public void reset(Object param) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        z8000_reset(param);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public Object get_context() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return z8000_get_context();
     }
 
     @Override
@@ -104,7 +103,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public int get_pc() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return z8000_get_pc();
     }
 
     @Override
@@ -143,8 +142,8 @@ public class z8000  extends cpu_interface {
     }
 
     @Override
-    public void set_irq_callback(cpuintrfH.irqcallbacksPtr callback) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void set_irq_callback(irqcallbacksPtr callback) {
+        z8000_set_irq_callback(callback);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public void set_op_base(int pc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cpu_setOPbase16.handler(pc);
     }
 /*TODO*///	
 /*TODO*///	#define VERBOSE 0
@@ -240,7 +239,7 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    z8000_reg_file regs;/* registers */
             int nmi_state;		/* NMI line state */
             int[] irq_state = new int[2];	/* IRQ line states (NVI, VI) */
-/*TODO*///	    int (*irq_callback)(int irqline);
+	    irqcallbacksPtr irq_callback;
 	};
 	
 
@@ -357,13 +356,13 @@ public class z8000  extends cpu_interface {
 /*TODO*///	{
 /*TODO*///		return cpu_readmem16bew(addr);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	INLINE UINT16 RDMEM_W(UINT16 addr)
-/*TODO*///	{
-/*TODO*///		addr &= ~1;
-/*TODO*///		return cpu_readmem16bew_word(addr);
-/*TODO*///	}
-/*TODO*///	
+	
+	public int RDMEM_W(int addr)
+	{
+		addr &= ~1;
+		return cpu_readmem16bew_word(addr);
+	}
+	
 /*TODO*///	INLINE UINT32 RDMEM_L(UINT16 addr)
 /*TODO*///	{
 /*TODO*///		UINT32 result;
@@ -614,17 +613,18 @@ public class z8000  extends cpu_interface {
 /*TODO*///	        LOG(("Z8K#%d VI [$%04x/$%04x] fcw $%04x, pc $%04x\n", cpu_getactivecpu(), IRQ_VEC, VEC00 + VEC00 + 2 * (IRQ_REQ & 0xff), FCW, PC ));
 /*TODO*///	    }
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void z8000_reset(void *param)
-/*TODO*///	{
-/*TODO*///	    z8000_init();
-/*TODO*///		memset(&Z, 0, sizeof(z8000_Regs));
-/*TODO*///		FCW = RDMEM_W( 2 ); /* get reset FCW */
-/*TODO*///		PC	= RDMEM_W( 4 ); /* get reset PC  */
-/*TODO*///		change_pc16bew(PC);
-/*TODO*///	}
-/*TODO*///	
+	
+	
+	public void z8000_reset(Object param)
+	{
+	    z8000_init();
+/*TODO*///            memset(&Z, 0, sizeof(z8000_Regs));
+            //Z = new z8000_Regs();
+            Z.fcw = RDMEM_W( 2 ); /* get reset FCW */
+            Z.pc = RDMEM_W( 4 ); /* get reset PC  */
+            change_pc16bew(Z.pc);
+	}
+	
 /*TODO*///	void z8000_exit(void)
 /*TODO*///	{
 /*TODO*///		z8000_deinit();
@@ -666,13 +666,14 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    return cycles - z8000_ICount;
 /*TODO*///	
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	unsigned z8000_get_context(void *dst)
-/*TODO*///	{
+	
+	public Object z8000_get_context()
+	{
 /*TODO*///		if (dst != 0)
 /*TODO*///			*(z8000_Regs*)dst = Z;
 /*TODO*///	    return sizeof(z8000_Regs);
-/*TODO*///	}
+            return Z;
+	}
 	
 	public void z8000_set_context(Object src)
 	{
@@ -683,11 +684,11 @@ public class z8000  extends cpu_interface {
 		}
 	}
 	
-/*TODO*///	unsigned z8000_get_pc(void)
-/*TODO*///	{
-/*TODO*///	    return PC;
-/*TODO*///	}
-/*TODO*///	
+	public int z8000_get_pc()
+	{
+	    return Z.pc;
+	}
+	
 /*TODO*///	void z8000_set_pc(unsigned val)
 /*TODO*///	{
 /*TODO*///		PC = val;
@@ -834,11 +835,11 @@ public class z8000  extends cpu_interface {
 /*TODO*///			}
 /*TODO*///		}
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	void z8000_set_irq_callback(int (*callback)(int irqline))
-/*TODO*///	{
-/*TODO*///		Z.irq_callback = callback;
-/*TODO*///	}
+	
+	public void z8000_set_irq_callback(irqcallbacksPtr callback)
+	{
+		Z.irq_callback = callback;
+	}
 	
 	/****************************************************************************
 	 * Return a formatted string for a register
