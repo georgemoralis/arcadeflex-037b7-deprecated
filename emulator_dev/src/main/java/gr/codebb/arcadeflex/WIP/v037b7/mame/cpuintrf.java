@@ -42,6 +42,9 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.h6280.h6280;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.h6280.h6280H.*;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000H.*;
+
 
 public class cpuintrf {
 
@@ -321,13 +324,28 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M68020,   m68020,	 8, -1,1.00,MC68020_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(T11,	   t11, 	 4,  0,1.00,T11_INT_NONE,	   -1,			   -1,			   16lew, 0,16,LE,2, 6,16LEW),
                 new s2650(),//CPU0(S2650,    s2650,	 2,  0,1.00,S2650_INT_NONE,    -1,			   -1,			   16,	  0,15,LE,1, 3,16	),
+                new Dummy_cpu(),//CPU4(F8,	   f8,		 1,  0,1.00,F8_INT_NONE,	   F8_INT_INTR,    -1,			   16,	  0,16,LE,1, 3,16	),
+                new Dummy_cpu(),//CPU0(CP1600,   cp1600,   0,  0,1.00,CP1600_INT_NONE,   -1,             -1,             16,    0,16,LE,1, 3,16   ),
                 new Dummy_cpu(),//CPU2(TMS34010, tms34010, 2,  0,1.00,TMS34010_INT_NONE, TMS34010_INT1,  -1,			   29,	  3,29,LE,2,10,29	),
+                new Dummy_cpu(),//CPU0(TMS9900,  tms9900,  1,  0,1.00,TMS9900_NONE,	   -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
+                new Dummy_cpu(),//CPU0(TMS9940,  tms9940,  1,  0,1.00,TMS9940_NONE,	   -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
                 new Dummy_cpu(),//CPU0(TMS9980,  tms9980a, 1,  0,1.00,TMS9980A_NONE,	   -1,			   -1,			   16,	  0,16,BE,1, 6,16	),
+                new Dummy_cpu(),//CPU0(TMS9985,  tms9985,  1,  0,1.00,TMS9985_NONE,	   -1,			   -1,			   16,	  0,16,BE,1, 6,16	),
+                new Dummy_cpu(),//CPU0(TMS9989,  tms9989,  1,  0,1.00,TMS9989_NONE,	   -1,			   -1,			   16,	  0,16,BE,1, 6,16	),
+                new Dummy_cpu(),//CPU0(TMS9995,  tms9995,  1,  0,1.00,TMS9995_NONE,	   -1,			   -1,			   16,	  0,16,BE,1, 6,16	),
+                new Dummy_cpu(),//CPU0(TMS99105A,tms99105a,1,  0,1.00,TMS99105A_NONE,    -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
+                //new Dummy_cpu(),//CPU0(TMS99110A,tms99110a,1,  0,1.00,TMS99110A_NONE,    -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
+                new z8000(),//CPU0(Z8000,    z8000,	 2,  0,1.00,Z8000_INT_NONE,    Z8000_NVI,	   Z8000_NMI,	   16bew, 0,16,BE,2, 6,16BEW),
                 new Dummy_cpu(),//CPU3(TMS320C10,tms320c10,2,  0,1.00,TMS320C10_INT_NONE,-1,			   -1,			   16,	 -1,16,BE,2, 4,16	),
                 new Dummy_cpu(),//CPU3(CCPU,	   ccpu,	 2,  0,1.00,0,				   -1,			   -1,			   16,	  0,15,LE,1, 3,16	),
+                new Dummy_cpu(),//CPU0(PDP1,	   pdp1,	 0,  0,1.00,0,				   -1,			   -1,			   16,	  0,18,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU3(ADSP2100, adsp2100, 4,  0,1.00,ADSP2100_INT_NONE, -1,			   -1,			   16lew,-1,14,LE,2, 4,16LEW),
                 new Dummy_cpu(),//CPU3(ADSP2105, adsp2105, 4,  0,1.00,ADSP2105_INT_NONE, -1,			   -1,			   16lew,-1,14,LE,2, 4,16LEW),
                 new Dummy_cpu(),//CPU0(PSX,	   mips,	 8, -1,1.00,MIPS_INT_NONE,	   MIPS_INT_NONE,  MIPS_INT_NONE,  32lew, 0,32,LE,4, 4,32LEW),
+                new Dummy_cpu(),//CPU0(SC61860,  sc61860,  1,  0,1.00,-1, 			   -1,			   -1,			   16,	  0,16,BE,1, 4,16	),
+                new Dummy_cpu(),//CPU0(ARM,	   arm, 	 2,  0,1.00,ARM_INT_NONE,	   ARM_FIRQ,	   ARM_IRQ, 	   26lew, 0,26,LE,4, 4,26LEW),
+                new Dummy_cpu(),//CPU0(G65C816,  g65816,	 1,  0,1.00,G65816_INT_NONE,   G65816_INT_IRQ, G65816_INT_NMI, 24,	  0,24,BE,1, 3,24	),
+                new Dummy_cpu(),//CPU0(SPC700,   spc700,	 0,  0,1.00,0,				   -1,			   -1,			   16,	  0,16,LE,1, 3,16	),
             };
 
     public static void cpu_init() {
@@ -1724,14 +1742,22 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_Z8000)
-/*TODO*///			case CPU_Z8000:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case Z8000_NVI: 		irq_line = 0; LOG(("Z8000 NVI\n")); break;
-/*TODO*///				case Z8000_VI:			irq_line = 1; LOG(("Z8000 VI\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("Z8000 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_Z8000:
+                            switch (num)
+                            {
+				case Z8000_NVI: 		
+                                    irq_line = 0; 
+                                    //LOG(("Z8000 NVI\n")); 
+                                    break;
+				case Z8000_VI:			
+                                    irq_line = 1; 
+                                    //LOG(("Z8000 VI\n")); 
+                                    break;
+				default:				
+                                    irq_line = 0; 
+                                    //LOG(("Z8000 unknown\n"));
+                            }
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_TMS320C10)
 /*TODO*///			case CPU_TMS320C10:

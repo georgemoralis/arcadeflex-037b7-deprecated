@@ -105,16 +105,28 @@ public class driverH {
     public static final int CPU_M68020 = 35;
     public static final int CPU_T11 = 36;
     public static final int CPU_S2650 = 37;
-    public static final int CPU_TMS34010 = 38;
-    public static final int CPU_TMS9980 = 39;
-    public static final int CPU_Z8000 = 40;
-    public static final int CPU_TMS320C10 = 41;
-    public static final int CPU_CCPU = 42;
-    public static final int CPU_ADSP2100 = 43;
-    public static final int CPU_ADSP2105 = 44;
-    public static final int CPU_PSX = 45;
-
-    public static final int CPU_COUNT = 46;
+    public static final int CPU_F8 = 38;
+    public static final int CPU_TMS34010 = 39;
+    public static final int CPU_TMS9900 = 40;
+    public static final int CPU_TMS9940 = 41;
+    public static final int CPU_TMS9980 = 42;
+    public static final int CPU_TMS9985 = 43;
+    public static final int CPU_TMS9989 = 44;
+    public static final int CPU_TMS9995 = 45;
+    public static final int CPU_TMS99105A = 46;
+    public static final int CPU_TMS99110A = 47;
+    public static final int CPU_Z8000 = 48;
+    public static final int CPU_TMS320C10 = 49;
+    public static final int CPU_CCPU = 50;
+    public static final int CPU_PDP1 = 51;
+    public static final int CPU_ADSP2100 = 52;
+    public static final int CPU_ADSP2105 = 53;
+    public static final int CPU_PSX = 54;
+    public static final int CPU_SC61860 = 55;
+    public static final int CPU_ARM = 56;
+    public static final int CPU_G65C816 = 57;
+    public static final int CPU_SPC700 = 58;
+    public static final int CPU_COUNT = 59;
 
     /* set this if the CPU is used as a slave for audio. It will not be emulated if */
  /* sound is disabled, therefore speeding up a lot the emulation. */
