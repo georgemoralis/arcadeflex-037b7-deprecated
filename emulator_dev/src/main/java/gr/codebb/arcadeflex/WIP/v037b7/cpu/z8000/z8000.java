@@ -78,7 +78,8 @@ public class z8000  extends cpu_interface {
 
     @Override
     public Object init_context() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object reg = new z8000_Regs();
+        return reg;
     }
 
     @Override
@@ -88,7 +89,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public void set_context(Object reg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        z8000_set_context(reg);
     }
 
     @Override
@@ -163,7 +164,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public String cpu_info(Object context, int regnum) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return z8000_info(context, regnum);
     }
 
     @Override
@@ -224,29 +225,29 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    UINT32  L[8];  /* RR0,RR2,RR4..RR14 */
 /*TODO*///	    UINT64  Q[4];  /* RQ0,RQ4,..RQ12 */
 /*TODO*///	}   z8000_reg_file;
-/*TODO*///	
-/*TODO*///	typedef struct {
-/*TODO*///	    UINT16  op[4];      /* opcodes/data of current instruction */
-/*TODO*///		UINT16	ppc;		/* previous program counter */
-/*TODO*///	    UINT16  pc;         /* program counter */
-/*TODO*///	    UINT16  psap;       /* program status pointer */
-/*TODO*///	    UINT16  fcw;        /* flags and control word */
-/*TODO*///	    UINT16  refresh;    /* refresh timer/counter */
-/*TODO*///	    UINT16  nsp;        /* system stack pointer */
-/*TODO*///	    UINT16  irq_req;    /* CPU is halted, interrupt or trap request */
-/*TODO*///	    UINT16  irq_srv;    /* serviced interrupt request */
-/*TODO*///	    UINT16  irq_vec;    /* interrupt vector */
+	
+	public static class z8000_Regs {
+	    int[]  op = new int[4];      /* opcodes/data of current instruction */
+            int	ppc;		/* previous program counter */
+	    int  pc;         /* program counter */
+	    int  psap;       /* program status pointer */
+	    int  fcw;        /* flags and control word */
+	    int  refresh;    /* refresh timer/counter */
+	    int  nsp;        /* system stack pointer */
+	    int  irq_req;    /* CPU is halted, interrupt or trap request */
+	    int  irq_srv;    /* serviced interrupt request */
+	    int  irq_vec;    /* interrupt vector */
 /*TODO*///	    z8000_reg_file regs;/* registers */
-/*TODO*///		int nmi_state;		/* NMI line state */
-/*TODO*///		int irq_state[2];	/* IRQ line states (NVI, VI) */
+            int nmi_state;		/* NMI line state */
+            int[] irq_state = new int[2];	/* IRQ line states (NVI, VI) */
 /*TODO*///	    int (*irq_callback)(int irqline);
-/*TODO*///	}   z8000_Regs;
-/*TODO*///	
+	};
+	
 
-/*TODO*///	
-/*TODO*///	/* current CPU context */
-/*TODO*///	static z8000_Regs Z;
-/*TODO*///	
+	
+	/* current CPU context */
+	public /*static*/ z8000_Regs Z;
+	
 /*TODO*///	/* zero, sign and parity flags for logical byte operations */
 /*TODO*///	static UINT8 z8000_zsp[256];
 /*TODO*///	
@@ -672,16 +673,16 @@ public class z8000  extends cpu_interface {
 /*TODO*///			*(z8000_Regs*)dst = Z;
 /*TODO*///	    return sizeof(z8000_Regs);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	void z8000_set_context(void *src)
-/*TODO*///	{
-/*TODO*///		if (src != 0)
-/*TODO*///		{
-/*TODO*///			Z = *(z8000_Regs*)src;
-/*TODO*///			change_pc16bew(PC);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
+	
+	public void z8000_set_context(Object src)
+	{
+		if (src != null)
+		{
+			Z = (z8000_Regs)src;
+			change_pc16bew(Z.pc);
+		}
+	}
+	
 /*TODO*///	unsigned z8000_get_pc(void)
 /*TODO*///	{
 /*TODO*///	    return PC;
@@ -838,29 +839,29 @@ public class z8000  extends cpu_interface {
 /*TODO*///	{
 /*TODO*///		Z.irq_callback = callback;
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	/****************************************************************************
-/*TODO*///	 * Return a formatted string for a register
-/*TODO*///	 ****************************************************************************/
-/*TODO*///	const char *z8000_info(void *context, int regnum)
-/*TODO*///	{
+	
+	/****************************************************************************
+	 * Return a formatted string for a register
+	 ****************************************************************************/
+	public String z8000_info(Object context, int regnum)
+	{
 /*TODO*///		static char buffer[32][47+1];
 /*TODO*///		static int which = 0;
-/*TODO*///		z8000_Regs *r = (z8000_Regs *)context;
-/*TODO*///	
+		z8000_Regs r = (z8000_Regs)context;
+
 /*TODO*///		which = ++which % 32;
 /*TODO*///	    buffer[which][0] = '\0';
-/*TODO*///		if( !context )
-/*TODO*///			r = &Z;
-/*TODO*///	
-/*TODO*///	    switch( regnum )
-/*TODO*///		{
-/*TODO*///			case CPU_INFO_NAME: return "Z8002";
-/*TODO*///			case CPU_INFO_FAMILY: return "Zilog Z8000";
-/*TODO*///			case CPU_INFO_VERSION: return "1.1";
-/*TODO*///			case CPU_INFO_FILE: return __FILE__;
-/*TODO*///			case CPU_INFO_CREDITS: return "Copyright (C) 1998,1999 Juergen Buchmueller, all rights reserved.";
-/*TODO*///	
+		if( context == null )
+			r = Z;
+	
+	    switch( regnum )
+		{
+			case CPU_INFO_NAME: return "Z8002";
+			case CPU_INFO_FAMILY: return "Zilog Z8000";
+			case CPU_INFO_VERSION: return "1.1";
+			case CPU_INFO_FILE: return "z8000.java";
+			case CPU_INFO_CREDITS: return "Copyright (C) 1998,1999 Juergen Buchmueller, all rights reserved.";
+	
 /*TODO*///			case CPU_INFO_REG_LAYOUT: return (const char*)z8000_reg_layout;
 /*TODO*///			case CPU_INFO_WIN_LAYOUT: return (const char*)z8000_win_layout;
 /*TODO*///	
@@ -915,11 +916,13 @@ public class z8000  extends cpu_interface {
 /*TODO*///			case CPU_INFO_REG+Z8000_NMI_STATE: sprintf(buffer[which], "NMI:%X", r.nmi_state); break;
 /*TODO*///			case CPU_INFO_REG+Z8000_NVI_STATE: sprintf(buffer[which], "NVI:%X", r.irq_state[0]); break;
 /*TODO*///			case CPU_INFO_REG+Z8000_VI_STATE: sprintf(buffer[which], "VI :%X", r.irq_state[1]); break;
-/*TODO*///	    }
-/*TODO*///		return buffer[which];
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
+
+                        }
+        /*TODO*///	return buffer[which];
+        throw new UnsupportedOperationException("Not supported yet.");
+	}
+	
+	
 /*TODO*///	unsigned z8000_dasm(char *buffer, unsigned pc)
 /*TODO*///	{
 /*TODO*///	#ifdef MAME_DEBUG

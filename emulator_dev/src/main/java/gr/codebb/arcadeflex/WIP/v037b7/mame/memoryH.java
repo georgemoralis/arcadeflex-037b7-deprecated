@@ -343,8 +343,8 @@ public class memoryH {
 /*TODO*///#define ABITS_MIN_16LEW 1			/* minimum memory block is 2 bytes */
 /*TODO*////* 16 bits address (big endian word access) */
 /*TODO*///#define ABITS1_16BEW	12
-/*TODO*///#define ABITS2_16BEW	3
-/*TODO*///#define ABITS_MIN_16BEW 1			/* minimum memory block is 2 bytes */
+    public static final int ABITS2_16BEW = 3;
+    public static final int ABITS_MIN_16BEW = 1;			/* minimum memory block is 2 bytes */
     /* 20 bits address */
     public static final int ABITS1_20 = 12;
     public static final int ABITS2_20 = 8;
@@ -454,7 +454,9 @@ public class memoryH {
         change_pc_generic(pc, ABITS2_16, ABITS_MIN_16, 0, cpu_setOPbase16);
     }
 
-    /*TODO*///#define change_pc16bew(pc)	 change_pc_generic(pc, ABITS2_16BEW, ABITS_MIN_16BEW, 0, cpu_setOPbase16bew)
+    public static void change_pc16bew(int pc) {
+        change_pc_generic(pc, ABITS2_16BEW, ABITS_MIN_16BEW, 0, cpu_setOPbase16bew);
+    }
 /*TODO*///#define change_pc16lew(pc)	 change_pc_generic(pc, ABITS2_16LEW, ABITS_MIN_16LEW, 0, cpu_setOPbase16lew)
     public static void change_pc20(int pc) {
         change_pc_generic(pc, ABITS2_20, ABITS_MIN_20, 0, cpu_setOPbase20);

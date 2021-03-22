@@ -1694,6 +1694,43 @@ public class memory {
     };
 
     /*TODO*///SETOPBASE(cpu_setOPbase16bew, 16BEW, 0)
+    //#define SETOPBASE(name,abits,shift) 													
+    public static setopbase cpu_setOPbase16bew = new setopbase() {
+        public void handler(int pc) {																
+            char u8_hw;																			
+
+            //not shift neccesary pc = (UINT32)pc >> 0;															
+
+            /* allow overrides */																
+            if (OPbasefunc != null) 																	
+            {																					
+                    pc = OPbasefunc.handler(pc);															
+                    if (pc == -1)																	
+                            return; 																	
+            }																					
+
+            /* perform the lookup */															
+            u8_hw = u8_cur_mrhard[/*(UINT32)*/pc >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];				
+            if (u8_hw >= MH_HARDMAX)																
+            {																					
+                    u8_hw -= MH_HARDMAX;																
+                    u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/pc >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))]; 
+            }
+            
+            u8_ophw = (char) (u8_hw & 0xFF);
+
+            /* RAM or banked memory */
+            if (u8_hw <= HT_BANKMAX) {
+                SET_OP_RAMROM(new UBytePtr(cpu_bankbase[u8_hw], -memoryreadoffset[u8_hw]));
+                return;
+            }
+            
+            /* do not support on callback memory region */										
+            logerror("CPU #%d PC %04x: warning - op-code execute on mapped i/o\n",              
+                                    cpu_getactivecpu(),cpu_get_pc());										
+        }
+    };
+    
 /*TODO*///SETOPBASE(cpu_setOPbase16lew, 16LEW, 0)
 /*TODO*///SETOPBASE(cpu_setOPbase24,	  24,	 0)
 /*TODO*///SETOPBASE(cpu_setOPbase24bew, 24BEW, 0)
