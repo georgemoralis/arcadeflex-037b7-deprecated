@@ -131,7 +131,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.battlera.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.punchout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.playch10.*;
-
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidepckt.*;
 
 public class driver {
 
@@ -2184,12 +2184,9 @@ public class driver {
         // driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
         /*TODO*/
         // driver_shootoub,	/* bootleg */
-        /*TODO*/
-        // driver_sidepckt,	/* (c) 1986 Data East Corporation */
-        /*TODO*/
-        // driver_sidepctj,	/* (c) 1986 Data East Corporation */
-        /*TODO*/
-        // driver_sidepctb,	/* bootleg */
+        driver_sidepckt,	/* (c) 1986 Data East Corporation */
+        driver_sidepctj,	/* (c) 1986 Data East Corporation */
+        driver_sidepctb,	/* bootleg */
         driver_exprraid, /* (c) 1986 Data East USA (US) */
         driver_wexpress, /* (c) 1986 Data East Corporation (World?) */
         driver_wexpresb, /* bootleg */
