@@ -625,6 +625,7 @@ public class z8000  extends cpu_interface {
 	
 	public void z8000_reset(Object param)
 	{
+            System.out.println("z8000_reset");
 	    z8000_init();
 /*TODO*///            memset(&Z, 0, sizeof(z8000_Regs));
             //Z = new z8000_Regs();
@@ -640,6 +641,7 @@ public class z8000  extends cpu_interface {
 	
 	public int z8000_execute(int cycles)
 	{
+            System.out.println("z8000_execute");
 	    z8000_ICount[0] = cycles;
 	
 	    do

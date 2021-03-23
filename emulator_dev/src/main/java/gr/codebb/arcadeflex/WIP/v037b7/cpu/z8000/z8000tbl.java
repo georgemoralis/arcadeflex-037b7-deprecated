@@ -548,7 +548,7 @@ public class z8000tbl {
 
     public static void z8000_init()
     {
-        //System.out.println("z8000_init not implemented!!!!");
+        System.out.println("z8000_init");
         int i;
     	Z8000_init init;
     
@@ -583,9 +583,14 @@ public class z8000tbl {
     
         /* now decompose the initialization table */
         int _init=0;
+        int _longo = table.length;
         
-    	for (init = table[_init]; init.size != 0; _init++)
+    	//for (init = table[_init]; init.size != 0; _init++)
+        for (_init = 0; _init < _longo; _init++)
     	{
+                init = table[_init];
+                
+                if (init.size != 0)
     		for (i = init.beg; i <= init.end; i += init.step)
     		{
     			if (z8000_exec[i].opcode != zinvalid)
@@ -597,6 +602,7 @@ public class z8000tbl {
     			z8000_exec[i].dasm	 = init.dasm;
     		}
     	}
+        System.out.println("END z8000_init");
     }
 /*TODO*///
 /*TODO*///void z8000_deinit(void)
