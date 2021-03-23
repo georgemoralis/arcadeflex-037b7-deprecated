@@ -27,7 +27,6 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 
-
 public class s2650 extends cpu_interface {
 
     static int[] s2650_ICount = new int[1];
@@ -1986,12 +1985,12 @@ public class s2650 extends cpu_interface {
 
     @Override
     public int memory_read(int offset) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return cpu_readmem16(offset);
     }
 
     @Override
     public void memory_write(int offset, int data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        cpu_writemem16(offset, data);
     }
 
     /**

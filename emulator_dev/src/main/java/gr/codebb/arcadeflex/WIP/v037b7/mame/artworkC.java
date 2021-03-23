@@ -1,10 +1,17 @@
 /*
  * ported to 0.37b7 
-*/
+ */
 package gr.codebb.arcadeflex.WIP.v037b7.mame;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_alloc;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_free;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
+import static gr.codebb.arcadeflex.common.libc.cstring.memset;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_SWAP_XY;
+import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
+import static gr.codebb.arcadeflex.old.mame.drawgfx.fillbitmap;
 
 public class artworkC {
 
@@ -195,88 +202,79 @@ public class artworkC {
 /*TODO*///			plot_pixel(dest_alpha, sx + x, sy + y, alpha);
 /*TODO*///		}
 /*TODO*///}
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  allocate_artwork_mem
-/*TODO*///
-/*TODO*///  Allocates memory for all the bitmaps.
-/*TODO*/// *********************************************************************/
-/*TODO*///static void allocate_artwork_mem (int width, int height, struct artwork_info **a)
-/*TODO*///{
-/*TODO*///	if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///	{
-/*TODO*///		int temp;
-/*TODO*///
-/*TODO*///		temp = height;
-/*TODO*///		height = width;
-/*TODO*///		width = temp;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	*a = (struct artwork_info *)malloc(sizeof(struct artwork_info));
-/*TODO*///	if (*a == 0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	(*a)->transparency = NULL;
-/*TODO*///	(*a)->orig_palette = NULL;
-/*TODO*///	(*a)->pTable = NULL;
-/*TODO*///	(*a)->brightness = NULL;
-/*TODO*///
-/*TODO*///	if (((*a)->orig_artwork = bitmap_alloc(width, height)) == 0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///	fillbitmap((*a)->orig_artwork,0,0);
-/*TODO*///
-/*TODO*///	if (((*a)->alpha = bitmap_alloc(width, height)) == 0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///	fillbitmap((*a)->alpha,0,0);
-/*TODO*///
-/*TODO*///	if (((*a)->artwork = bitmap_alloc(width,height)) == 0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (((*a)->artwork1 = bitmap_alloc(width,height)) == 0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (((*a)->pTable = (UINT8*)malloc(256*256))==0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory.\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (((*a)->brightness = (UINT8*)malloc(256*256))==0)
-/*TODO*///	{
-/*TODO*///		logerror("Not enough memory.\n");
-/*TODO*///		artwork_free(a);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///	memset ((*a)->brightness, 0, 256*256);
-/*TODO*///
+    /**
+     * *******************************************************************
+     * allocate_artwork_mem
+     *
+     * Allocates memory for all the bitmaps.
+     * *******************************************************************
+     */
+    static void allocate_artwork_mem(int width, int height, artwork_info a) {
+        if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+            int temp;
+
+            temp = height;
+            height = width;
+            width = temp;
+        }
+        a = new artwork_info();
+        if (a == null) {
+            logerror("Not enough memory for artwork!\n");
+            return;
+        }
+        a.u8_transparency = null;
+        a.u8_orig_palette = null;
+        a.u8_pTable = null;
+        a.u8_brightness = null;
+
+        if ((a.orig_artwork = bitmap_alloc(width, height)) == null) {
+            logerror("Not enough memory for artwork!\n");
+            artwork_free(a);
+            return;
+        }
+        fillbitmap(a.orig_artwork, 0, null);
+
+        if ((a.alpha = bitmap_alloc(width, height)) == null) {
+            logerror("Not enough memory for artwork!\n");
+            artwork_free(a);
+            return;
+        }
+        fillbitmap(a.alpha, 0, null);
+
+        if ((a.artwork = bitmap_alloc(width, height)) == null) {
+            logerror("Not enough memory for artwork!\n");
+            artwork_free(a);
+            return;
+        }
+
+        if ((a.artwork1 = bitmap_alloc(width, height)) == null) {
+            logerror("Not enough memory for artwork!\n");
+            artwork_free(a);
+            return;
+        }
+
+        if ((a.u8_pTable = new char[256 * 256]) == null) {
+            logerror("Not enough memory.\n");
+            artwork_free(a);
+            return;
+        }
+
+        if ((a.u8_brightness = new char[256 * 256]) == null) {
+            logerror("Not enough memory.\n");
+            artwork_free(a);
+            return;
+        }
+        memset(a.u8_brightness, 0, 256 * 256);
+        /*TODO*///
 /*TODO*///	if (((*a)->rgb = (UINT64*)malloc(width*height*sizeof(UINT64)))==0)
 /*TODO*///	{
 /*TODO*///		logerror("Not enough memory.\n");
 /*TODO*///		artwork_free(a);
 /*TODO*///		return;
 /*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    }
+
+    /*TODO*///
 /*TODO*////*********************************************************************
 /*TODO*///  create_disk
 /*TODO*///
@@ -999,9 +997,8 @@ public class artworkC {
 /*TODO*///  Don't forget to clean up when you're done with the backdrop!!!
 /*TODO*/// *********************************************************************/
 /*TODO*///
-/*TODO*///void artwork_free(struct artwork_info **a)
-/*TODO*///{
-/*TODO*///	if (*a)
+    public static void artwork_free(artwork_info a) {
+        /*TODO*///	if (*a)
 /*TODO*///	{
 /*TODO*///		if ((*a)->artwork)
 /*TODO*///			bitmap_free((*a)->artwork);
@@ -1025,15 +1022,21 @@ public class artworkC {
 /*TODO*///
 /*TODO*///		*a = NULL;
 /*TODO*///	}
-/*TODO*///}
-/*TODO*///
-    public static void artwork_kill() {
-        /*TODO*///	if (artwork_backdrop || artwork_overlay)
-/*TODO*///		bitmap_free(artwork_real_scrbitmap);
-/*TODO*///
-/*TODO*///	if (artwork_backdrop) artwork_free(&artwork_backdrop);
-/*TODO*///	if (artwork_overlay) artwork_free(&artwork_overlay);
     }
+
+    public static void artwork_kill() {
+        if (artwork_backdrop != null || artwork_overlay != null) {
+            bitmap_free(artwork_real_scrbitmap);
+        }
+
+        if (artwork_backdrop != null) {
+            artwork_free(artwork_backdrop);
+        }
+        if (artwork_overlay != null) {
+            artwork_free(artwork_overlay);
+        }
+    }
+
     /*TODO*///
 /*TODO*////*********************************************************************
 /*TODO*///  overlay_set_palette
@@ -1224,98 +1227,91 @@ public class artworkC {
 /*TODO*///		ae++;
 /*TODO*///	}
 /*TODO*///}
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  overlay_create
-/*TODO*///
-/*TODO*///  This works similar to artwork_load but generates artwork from
-/*TODO*///  an array of artwork_element. This is useful for very simple artwork
-/*TODO*///  like the overlay in the Space invaders series of games.  The overlay
-/*TODO*///  is defined to be the same size as the screen.
-/*TODO*///  The end of the array is marked by an entry with negative coordinates.
-/*TODO*///  Boxes and disks are supported. Disks are marked max_y == -1,
-/*TODO*///  min_x == x coord. of center, min_y == y coord. of center, max_x == radius.
-/*TODO*///  If there are transparent and opaque overlay elements, the opaque ones
-/*TODO*///  have to be at the end of the list to stay compatible with the PNG
-/*TODO*///  artwork.
-/*TODO*/// *********************************************************************/
-/*TODO*///void overlay_create(const struct artwork_element *ae, unsigned int start_pen, unsigned int max_pens)
-/*TODO*///{
-/*TODO*///	struct osd_bitmap *disk, *disk_alpha, *box, *box_alpha;
-/*TODO*///	int pen, transparent_pen = -1, disk_type, white_pen;
-/*TODO*///	int width, height;
-/*TODO*///
-/*TODO*///	allocate_artwork_mem(Machine->scrbitmap->width, Machine->scrbitmap->height, &artwork_overlay);
-/*TODO*///
-/*TODO*///	if (artwork_overlay==NULL)
-/*TODO*///		return;
-/*TODO*///
-/*TODO*///	/* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
-/*TODO*///	   the same way as before */
-/*TODO*///
-/*TODO*///	width = Machine->scrbitmap->width;
-/*TODO*///	height = Machine->scrbitmap->height;
-/*TODO*///
-/*TODO*///	if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///	{
-/*TODO*///		int temp;
-/*TODO*///
-/*TODO*///		temp = height;
-/*TODO*///		height = width;
-/*TODO*///		width = temp;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == 0)
-/*TODO*///	{
-/*TODO*///		artwork_kill();
-/*TODO*///		logerror("Not enough memory for artwork!\n");
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	artwork_overlay->start_pen = start_pen;
-/*TODO*///
-/*TODO*///	if (Machine->scrbitmap->depth == 8)
-/*TODO*///	{
-/*TODO*///		if ((artwork_overlay->orig_palette = (UINT8 *)malloc(256*3)) == NULL)
-/*TODO*///		{
-/*TODO*///			logerror("Not enough memory for overlay!\n");
-/*TODO*///			artwork_kill();
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if ((artwork_overlay->transparency = (UINT8 *)malloc(256)) == NULL)
-/*TODO*///		{
-/*TODO*///			logerror("Not enough memory for overlay!\n");
-/*TODO*///			artwork_kill();
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		transparent_pen = 255;
-/*TODO*///		/* init with transparent white */
-/*TODO*///		memset (artwork_overlay->orig_palette, 255, 3);
-/*TODO*///		artwork_overlay->transparency[0]=0;
-/*TODO*///		artwork_overlay->num_pens_used = 1;
-/*TODO*///		artwork_overlay->num_pens_trans = 1;
-/*TODO*///		white_pen = 0;
-/*TODO*///		fillbitmap (artwork_overlay->orig_artwork, 0, 0);
-/*TODO*///		fillbitmap (artwork_overlay->alpha, 0, 0);
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		if ((artwork_overlay->orig_palette = create_15bit_palette()) == 0)
+    /**
+     * *******************************************************************
+     * overlay_create
+     *
+     * This works similar to artwork_load but generates artwork from an array of
+     * artwork_element. This is useful for very simple artwork like the overlay
+     * in the Space invaders series of games. The overlay is defined to be the
+     * same size as the screen. The end of the array is marked by an entry with
+     * negative coordinates. Boxes and disks are supported. Disks are marked
+     * max_y == -1, min_x == x coord. of center, min_y == y coord. of center,
+     * max_x == radius. If there are transparent and opaque overlay elements,
+     * the opaque ones have to be at the end of the list to stay compatible with
+     * the PNG artwork.
+     * *******************************************************************
+     */
+    public static void overlay_create(artwork_element[] ae, /*unsigned*/ int start_pen, /*unsigned*/ int max_pens) {
+        osd_bitmap disk, disk_alpha, box, box_alpha;
+        int pen, transparent_pen = -1, disk_type, white_pen;
+        int width, height;
+
+        allocate_artwork_mem(Machine.scrbitmap.width, Machine.scrbitmap.height, artwork_overlay);
+
+        if (artwork_overlay == null) {
+            return;
+        }
+
+        /* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
+	   the same way as before */
+        width = Machine.scrbitmap.width;
+        height = Machine.scrbitmap.height;
+
+        if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+            int temp;
+
+            temp = height;
+            height = width;
+            width = temp;
+        }
+
+        if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == null) {
+            artwork_kill();
+            logerror("Not enough memory for artwork!\n");
+            return;
+        }
+
+        artwork_overlay.start_pen = start_pen;
+
+        if (Machine.scrbitmap.depth == 8) {
+            if ((artwork_overlay.u8_orig_palette = new char[256 * 3]) == null) {
+                logerror("Not enough memory for overlay!\n");
+                artwork_kill();
+                return;
+            }
+
+            if ((artwork_overlay.u8_transparency = new char[256]) == null) {
+                logerror("Not enough memory for overlay!\n");
+                artwork_kill();
+                return;
+            }
+
+            transparent_pen = 255;
+            /* init with transparent white */
+            memset(artwork_overlay.u8_orig_palette, 255, 3);
+            artwork_overlay.u8_transparency[0] = 0;
+            artwork_overlay.num_pens_used = 1;
+            artwork_overlay.num_pens_trans = 1;
+            white_pen = 0;
+            fillbitmap(artwork_overlay.orig_artwork, 0, null);
+            fillbitmap(artwork_overlay.alpha, 0, null);
+        } else {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if ((artwork_overlay.orig_palette = create_15bit_palette()) == 0)
 /*TODO*///		{
 /*TODO*///			logerror("Unable to allocate memory for artwork\n");
 /*TODO*///			artwork_kill();
 /*TODO*///			return;
 /*TODO*///		}
-/*TODO*///		artwork_overlay->num_pens_used = 32768;
+/*TODO*///		artwork_overlay.num_pens_used = 32768;
 /*TODO*///		transparent_pen = 0xffff;
 /*TODO*///		white_pen = 0x7fff;
-/*TODO*///		fillbitmap (artwork_overlay->orig_artwork, white_pen, 0);
-/*TODO*///		fillbitmap (artwork_overlay->alpha, 0, 0);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	while (ae->box.min_x >= 0)
+/*TODO*///		fillbitmap (artwork_overlay.orig_artwork, white_pen, 0);
+/*TODO*///		fillbitmap (artwork_overlay.alpha, 0, 0);
+        }
+        /*TODO*///
+/*TODO*///	while (ae.box.min_x >= 0)
 /*TODO*///	{
 /*TODO*///		int alpha = ae->alpha;
 /*TODO*///
@@ -1417,9 +1413,9 @@ public class artworkC {
 /*TODO*///
 /*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
 /*TODO*///		overlay_remap();
-/*TODO*///}
-/*TODO*///
-/*TODO*///int artwork_get_size_info(const char *file_name, struct artwork_size_info *a)
+    }
+
+    /*TODO*///int artwork_get_size_info(const char *file_name, struct artwork_size_info *a)
 /*TODO*///{
 /*TODO*///	void *fp;
 /*TODO*///	struct png_info p;

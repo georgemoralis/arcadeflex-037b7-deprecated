@@ -20,6 +20,8 @@ along with Arcadeflex.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkC.overlay_create;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.artworkH.artwork_element;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
@@ -40,17 +42,13 @@ public class zac2650 {
     public static int CollisionBackground;
     public static int CollisionSprite;
 
-    /*TODO*///	#define WHITE           0xff,0xff,0xff
-/*TODO*///	#define GREEN 			0x20,0xff,0x20
-/*TODO*///	#define PURPLE			0xff,0x20,0xff
-    /*TODO*///	static const struct artwork_element tinv2650_overlay[]=
-/*TODO*///	{
-/*TODO*///		{{	 0, 255,   0, 255}, WHITE,  0xff},
-/*TODO*///		{{  16,  71,   0, 255}, GREEN,  0xff},
-/*TODO*///		{{   0,  15,  48, 133}, GREEN,  0xff},
-/*TODO*///		{{ 192, 208,   0, 255}, PURPLE, 0xff},
-/*TODO*///		{{  -1,  -1,  -1,  -1}, 0,0,0,0}
-/*TODO*///	};
+    static artwork_element tinv2650_overlay[] = new artwork_element[]{
+        new artwork_element(new rectangle(0, 255, 0, 255), 0xff, 0xff, 0xff, 0xff),
+        new artwork_element(new rectangle(16, 71, 0, 255), 0x20, 0xff, 0x20, 0xff),
+        new artwork_element(new rectangle(0, 15, 48, 133), 0x20, 0xff, 0x20, 0xff),
+        new artwork_element(new rectangle(192, 208, 0, 255), 0xff, 0x20, 0xff, 0xff),
+        new artwork_element(new rectangle(-1, -1, -1, -1), 0, 0, 0, 0)
+    };
     /**
      * ***********************************************************
      */
@@ -170,7 +168,7 @@ public class zac2650 {
 
     public static VhStartPtr tinvader_vh_start = new VhStartPtr() {
         public int handler() {
-            /*TODO*///		overlay_create(tinv2650_overlay, 1, 4);
+            overlay_create(tinv2650_overlay, 1, 4);
 
             generic_vh_start.handler();
 
