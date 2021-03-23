@@ -129,6 +129,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lazercmd.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meadows.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.battlera.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.punchout.*;
 
 public class driver {
 
@@ -619,14 +620,10 @@ public class driver {
         driver_popeye2,
         driver_popeyef,
         driver_popeyebl, /* bootleg */
-        /*TODO*/
-        // driver_punchout,	/* (c) 1984 */
-        /*TODO*/
-        // driver_spnchout,	/* (c) 1984 */
-        /*TODO*/
-        // driver_spnchotj,	/* (c) 1984 (Japan) */
-        /*TODO*/
-        // driver_armwrest,	/* (c) 1985 */
+        driver_punchout,	/* (c) 1984 */
+        driver_spnchout,	/* (c) 1984 */
+        driver_spnchotj,	/* (c) 1984 (Japan) */
+        driver_armwrest,	/* (c) 1985 */
 
         /* Nintendo Playchoice 10 games */
         /*TODO*/
