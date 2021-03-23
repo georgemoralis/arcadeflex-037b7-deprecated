@@ -28,6 +28,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000tbl.*;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
@@ -35,10 +36,13 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
+import static gr.codebb.arcadeflex.old.mame.memoryH.cpu_readop16;
 
 public class z8000  extends cpu_interface {
     
     public static int[] z8000_ICount = new int[1];
+    
+    //private z8000ops _opcodes = null;
     
     public z8000() {
         cpu_num = CPU_Z8000;
@@ -56,7 +60,9 @@ public class z8000  extends cpu_interface {
         abits1 = ABITS1_16;
         abits2 = ABITS2_16;
         abitsmin = ABITS_MIN_16;
-        icount = z8000_ICount;       
+        icount = z8000_ICount;
+        
+        //_opcodes = new z8000ops(this);
     }
 
 
@@ -72,7 +78,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public int execute(int cycles) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return z8000_execute(cycles);
     }
 
     @Override
@@ -214,10 +220,10 @@ public class z8000  extends cpu_interface {
 /*TODO*///		27,14,53, 8,	/* memory #2 window (right, lower middle) */
 /*TODO*///		 0,23,80, 1,	/* command line window (bottom rows) */
 /*TODO*///	};
-/*TODO*///	
-/*TODO*///	/* opcode execution table */
-/*TODO*///	Z8000_exec *z8000_exec = NULL;
-/*TODO*///	
+
+	/* opcode execution table */
+	public static Z8000_exec[] z8000_exec = null;
+
 /*TODO*///	typedef union {
 /*TODO*///	    UINT8   B[16]; /* RL0,RH0,RL1,RH1...RL7,RH7 */
 /*TODO*///	    UINT16  W[16]; /* R0,R1,R2...R15 */
@@ -245,11 +251,11 @@ public class z8000  extends cpu_interface {
 
 	
 	/* current CPU context */
-	public /*static*/ z8000_Regs Z;
+	public static z8000_Regs Z;
 	
-/*TODO*///	/* zero, sign and parity flags for logical byte operations */
-/*TODO*///	static UINT8 z8000_zsp[256];
-/*TODO*///	
+	/* zero, sign and parity flags for logical byte operations */
+	public static int[] z8000_zsp=new int[256];
+
 /*TODO*///	/* conversion table for Z8000 DAB opcode */
 /*TODO*///	
 /*TODO*///	/**************************************************************************
@@ -344,14 +350,14 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    &Z.regs.Q[ 1],&Z.regs.Q[ 1],&Z.regs.Q[ 1],&Z.regs.Q[ 1],
 /*TODO*///	    &Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],
 /*TODO*///	    &Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3]};
-/*TODO*///	
-/*TODO*///	INLINE UINT16 RDOP(void)
-/*TODO*///	{
-/*TODO*///		UINT16 res = cpu_readop16(PC);
-/*TODO*///	    PC += 2;
-/*TODO*///	    return res;
-/*TODO*///	}
-/*TODO*///	
+	
+	public int RDOP()
+	{
+            int res = cpu_readop16(Z.pc);
+	    Z.pc += 2;
+	    return res;
+	}
+	
 /*TODO*///	INLINE UINT8 RDMEM_B(UINT16 addr)
 /*TODO*///	{
 /*TODO*///		return cpu_readmem16bew(addr);
@@ -515,10 +521,12 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    /* set interrupt request flag, reset HALT flag */
 /*TODO*///	    IRQ_REQ = type & ~Z8000_HALT;
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	INLINE void Interrupt(void)
-/*TODO*///	{
+	
+	
+	public void Interrupt()
+	{
+            
+                System.out.println("INTERRUPT method not implemented!!!!");
 /*TODO*///	    UINT16 fcw = FCW;
 /*TODO*///	
 /*TODO*///	    if ((IRQ_REQ & Z8000_NVI) != 0)
@@ -612,7 +620,7 @@ public class z8000  extends cpu_interface {
 /*TODO*///	        CHANGE_FCW(fcw);
 /*TODO*///	        LOG(("Z8K#%d VI [$%04x/$%04x] fcw $%04x, pc $%04x\n", cpu_getactivecpu(), IRQ_VEC, VEC00 + VEC00 + 2 * (IRQ_REQ & 0xff), FCW, PC ));
 /*TODO*///	    }
-/*TODO*///	}
+	}
 	
 	
 	public void z8000_reset(Object param)
@@ -629,43 +637,43 @@ public class z8000  extends cpu_interface {
 /*TODO*///	{
 /*TODO*///		z8000_deinit();
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	int z8000_execute(int cycles)
-/*TODO*///	{
-/*TODO*///	    z8000_ICount = cycles;
-/*TODO*///	
-/*TODO*///	    do
-/*TODO*///	    {
-/*TODO*///	        /* any interrupt request pending? */
-/*TODO*///	        if (IRQ_REQ != 0)
-/*TODO*///				Interrupt();
-/*TODO*///	
+	
+	public int z8000_execute(int cycles)
+	{
+	    z8000_ICount[0] = cycles;
+	
+	    do
+	    {
+	        /* any interrupt request pending? */
+	        if (IRQ_REQ(Z) != 0)
+				Interrupt();
+	
 /*TODO*///			CALL_MAME_DEBUG;
-/*TODO*///	
-/*TODO*///			if ((IRQ_REQ & Z8000_HALT) != 0)
-/*TODO*///	        {
-/*TODO*///	            z8000_ICount = 0;
-/*TODO*///	        }
-/*TODO*///	        else
-/*TODO*///	        {
-/*TODO*///	            Z8000_exec *exec;
-/*TODO*///	            Z.op[0] = RDOP();
-/*TODO*///	            exec = &z8000_exec[Z.op[0]];
-/*TODO*///	
-/*TODO*///	            if (exec.size > 1)
-/*TODO*///	                Z.op[1] = RDOP();
-/*TODO*///	            if (exec.size > 2)
-/*TODO*///	                Z.op[2] = RDOP();
-/*TODO*///	
-/*TODO*///	            z8000_ICount -= exec.cycles;
-/*TODO*///	            (*exec.opcode)();
-/*TODO*///	
-/*TODO*///	        }
-/*TODO*///	    } while (z8000_ICount > 0);
-/*TODO*///	
-/*TODO*///	    return cycles - z8000_ICount;
-/*TODO*///	
-/*TODO*///	}
+	
+			if ((IRQ_REQ(Z) & Z8000_HALT) != 0)
+	        {
+	            z8000_ICount[0] = 0;
+	        }
+	        else
+	        {
+	            Z8000_exec exec;
+	            Z.op[0] = RDOP();
+	            exec = z8000_exec[Z.op[0]];
+	
+	            if (exec.size > 1)
+	                Z.op[1] = RDOP();
+	            if (exec.size > 2)
+	                Z.op[2] = RDOP();
+	
+	            z8000_ICount[0] -= exec.cycles;
+	            (exec.opcode).handler();
+	
+	        }
+	    } while (z8000_ICount[0] > 0);
+	
+	    return cycles - z8000_ICount[0];
+	
+	}
 	
 	public Object z8000_get_context()
 	{
