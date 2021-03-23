@@ -1470,7 +1470,10 @@ public class cpuintrf {
 /*TODO*///			case CPU_M8502: 			irq_line = 0; LOG(("M8502 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_N2A03)
-/*TODO*///			case CPU_N2A03: 			irq_line = 0; LOG(("N2A03 IRQ\n")); break;
+			case CPU_N2A03: 			
+                            irq_line = 0; 
+                            //LOG(("N2A03 IRQ\n")); 
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_M4510)
 /*TODO*///			case CPU_M4510: 			irq_line = 0; LOG(("M4510 IRQ\n")); break;
