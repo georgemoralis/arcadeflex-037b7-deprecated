@@ -412,20 +412,13 @@ public class driver {
         // driver_toypop,	/* (c) 1986 */
         /* Z8000 games */
         driver_polepos, /* (c) 1982  */
-        /*TODO*/
-        // driver_poleposa,	/* (c) 1982 + Atari license */
-        /*TODO*/
-        // driver_polepos1,	/* (c) 1982 Atari */
-        /*TODO*/
-        // driver_topracer,	/* bootleg */
-        /*TODO*/
-        // driver_polepos2,	/* (c) 1983 */
-        /*TODO*/
-        // driver_poleps2a,	/* (c) 1983 + Atari license */
-        /*TODO*/
-        // driver_poleps2b,	/* bootleg */
-        /*TODO*/
-        // driver_poleps2c,	/* bootleg */
+        driver_poleposa,	/* (c) 1982 + Atari license */
+        driver_polepos1,	/* (c) 1982 Atari */
+        driver_topracer,	/* bootleg */
+        driver_polepos2,	/* (c) 1983 */
+        driver_poleps2a,	/* (c) 1983 + Atari license */
+        driver_poleps2b,	/* bootleg */
+        driver_poleps2c,	/* bootleg */
         /* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
         driver_pacland, /* (c) 1984 */
         driver_pacland2, /* (c) 1984 */
