@@ -608,16 +608,12 @@ public class driver {
         driver_dkngjrjp,
         driver_dkjrjp,
         driver_dkjrbl,
-        /*TODO*/
-        // driver_dkong3,	/* (c) 1983 Nintendo of America */
-        /*TODO*/
-        // driver_dkong3j,	/* (c) 1983 Nintendo */
+        driver_dkong3,	/* (c) 1983 Nintendo of America */
+        driver_dkong3j,	/* (c) 1983 Nintendo */
 
-        /*TODO*/
-        // driver_hunchbkd,	/* (c) 1983 Century */
-        /*TODO*/
-        // driver_herbiedk,	/* (c) 1984 CVS */
-        /*TODO*/
+        driver_hunchbkd,	/* (c) 1983 Century */
+        driver_herbiedk,	/* (c) 1984 CVS */
+        
         /// *TODO*///TESTDRIVER( herocast,
         driver_popeye,
         driver_popeye2,

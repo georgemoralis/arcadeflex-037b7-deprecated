@@ -43,6 +43,7 @@ import gr.codebb.arcadeflex.WIP.v037b7.sound.upd7759;
 import gr.codebb.arcadeflex.v058.sound.vlm5030;
 import gr.codebb.arcadeflex.v037b7.sound.cem3394;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.hc55516;
+import gr.codebb.arcadeflex.WIP.v037b7.sound.nes_apu;
 
 public class sndintrf {
 
@@ -489,7 +490,7 @@ public class sndintrf {
         //	},
         /*TODO*/
         // #endif
-        new Dummy_snd(),
+        new nes_apu(),
         /*TODO*/
         // #if (HAS_NES)
         /*TODO*/

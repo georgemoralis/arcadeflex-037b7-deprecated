@@ -3719,7 +3719,7 @@ public class m6809ops {
 
     /* $10xx opcodes */
     public void pref10() {
-        int ireg2 = _cpu.ROP(_cpu._m6809.pc) & 0xFF;
+        int ireg2 = _cpu.ROP(_cpu._m6809.pc);
         _cpu._m6809.pc = (char) (_cpu._m6809.pc + 1);
         switch (ireg2) {
             case 0x21:

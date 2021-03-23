@@ -16,6 +16,8 @@ import static gr.codebb.arcadeflex.old.mame.common.memory_region;
 import static gr.codebb.arcadeflex.old.mame.common.memory_region_length;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.fillbitmap;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.GAME_REQUIRES_16BIT;
+import static gr.codebb.arcadeflex.old.mame.usrintrf.usrintf_showmessage;
 
 public class namcos1
 {
@@ -473,6 +475,7 @@ public class namcos1
 	
 	static void draw_sprites(osd_bitmap bitmap,int priority)
 	{
+            System.out.println("draw_sprites");
 		int offs;
 		UBytePtr namcos1_spriteram = new UBytePtr(namcos1_controlram, 0x0800);
 	
@@ -498,8 +501,8 @@ public class namcos1
 			color = namcos1_spriteram.read(offs + 6)>>1;
 	
 /*TODO*///	#if 1
-/*TODO*///			if (color == 0x7f && (Machine.gamedrv.flags & GAME_REQUIRES_16BIT)==0)
-/*TODO*///				usrintf_showmessage("This driver requires GAME_REQUIRES_16BIT flag");
+			if (color == 0x7f && (Machine.gamedrv.flags & GAME_REQUIRES_16BIT)==0)
+				usrintf_showmessage("This driver requires GAME_REQUIRES_16BIT flag");
 /*TODO*///	#endif
 	
 			/* sx */

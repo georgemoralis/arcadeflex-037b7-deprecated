@@ -1,5 +1,6 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.z8000_Regs;
 
 public class z8000cpuH {
@@ -74,19 +75,19 @@ public class z8000cpuH {
 /*TODO*///#define F_H 	0x0004				/* half carry flag (byte arithmetic only) */
 /*TODO*///#define F_1 	0x0002				/* unused */
 /*TODO*///#define F_0 	0x0001				/* unused */
-/*TODO*///
-/*TODO*////* opcode word numbers in Z.op[] array */
-/*TODO*///#define OP0 	0
-/*TODO*///#define OP1     1
-/*TODO*///#define OP2     2
-/*TODO*///
+
+    /* opcode word numbers in Z.op[] array */
+    public static final int OP0     = 0;
+    public static final int OP1     = 1;
+    public static final int OP2     = 2;
+
 /*TODO*////* nibble shift factors for an opcode word */
 /*TODO*////* left to right: 0x1340 . NIB0=1, NIB1=3, NIB2=4, NIB3=0 */
 /*TODO*///#define NIB0    12
 /*TODO*///#define NIB1	8
 /*TODO*///#define NIB2	4
-/*TODO*///#define NIB3	0
-/*TODO*///
+    public static final int NIB3	= 0;
+
 /*TODO*////* sign bit masks for byte, word and long */
 /*TODO*///#define S08 0x80
 /*TODO*///#define S16 0x8000
@@ -154,8 +155,8 @@ public class z8000cpuH {
 /*TODO*////* s is a nibble shift factor	  */
 /*TODO*///#define GET_BIT(o)      UINT16 bit = 1 << (Z.op[o] & 15)
 /*TODO*///#define GET_CCC(o,s)	UINT8 cc = (Z.op[o] >> (s)) & 15
-/*TODO*///
-/*TODO*///#define GET_DST(o,s)	UINT8 dst = (Z.op[o] >> (s)) & 15
+
+    public static int GET_DST(int o, int s){	return /*UINT8 dst =*/ ((Z.op[o] >> (s)) & 15) & 0xf; }
 /*TODO*///#define GET_SRC(o,s)	UINT8 src = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_IDX(o,s)	UINT8 idx = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_CNT(o,s)	INT8 cnt = (Z.op[o] >> (s)) & 15
@@ -168,7 +169,7 @@ public class z8000cpuH {
 /*TODO*///
 /*TODO*///#define GET_IMM8(o) 	UINT8 imm8 = (UINT8)Z.op[o]
 /*TODO*///
-/*TODO*///#define GET_IMM16(o)	UINT16 imm16 = Z.op[o]
+    public static int GET_IMM16(int o){	return /*UINT16 imm16 =*/ (Z.op[o])&0xff; }
 /*TODO*///#define GET_IMM32		UINT32 imm32 = Z.op[2] + (Z.op[1] << 16)
 /*TODO*///#define GET_DSP7		UINT8 dsp7 = Z.op[0] & 127
 /*TODO*///#define GET_DSP8		INT8 dsp8 = (INT8)Z.op[0]

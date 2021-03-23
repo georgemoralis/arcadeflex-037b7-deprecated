@@ -5,6 +5,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8039H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502H.N2A03_DEFAULTCLOCK;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.hunchbks_mirror_r;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scramble.hunchbks_mirror_w;
@@ -31,6 +32,7 @@ import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.sndhrdw.dkong.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.s2650.s2650.*;
+import gr.codebb.arcadeflex.WIP.v037b7.sound.nes_apuH.NESinterface;
 
 public class dkong {
 
@@ -1045,56 +1047,56 @@ public class dkong {
             }
     );
 
-/*TODO*///    static NESinterface nes_interface = new NESinterface(
-/*TODO*///            2,
-/*TODO*///            new int[]{REGION_CPU2, REGION_CPU3},
-/*TODO*///            new int[]{50, 50}
-/*TODO*///    );
+    static NESinterface nes_interface = new NESinterface(
+            2,
+            new int[]{REGION_CPU2, REGION_CPU3},
+            new int[]{50, 50}
+    );
 
-/*TODO*///    static MachineDriver machine_driver_dkong3 = new MachineDriver(
-/*TODO*///            /* basic machine hardware */
-/*TODO*///            new MachineCPU[]{
-/*TODO*///                new MachineCPU(
-/*TODO*///                        CPU_Z80,
-/*TODO*///                        8000000 / 2, /* 4 MHz */
-/*TODO*///                        dkong3_readmem, dkong3_writemem, null, dkong3_writeport,
-/*TODO*///                        nmi_interrupt, 1
-/*TODO*///                ),
-/*TODO*///                new MachineCPU(
-/*TODO*///                        CPU_N2A03 | CPU_AUDIO_CPU,
-/*TODO*///                        (int) N2A03_DEFAULTCLOCK,
-/*TODO*///                        dkong3_sound1_readmem, dkong3_sound1_writemem, null, null,
-/*TODO*///                        nmi_interrupt, 1
-/*TODO*///                ),
-/*TODO*///                new MachineCPU(
-/*TODO*///                        CPU_N2A03 | CPU_AUDIO_CPU,
-/*TODO*///                        (int) N2A03_DEFAULTCLOCK,
-/*TODO*///                        dkong3_sound2_readmem, dkong3_sound2_writemem, null, null,
-/*TODO*///                        nmi_interrupt, 1
-/*TODO*///                )
-/*TODO*///            },
-/*TODO*///            60, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
-/*TODO*///            1, /* 1 CPU slice per frame - interleaving is forced when a sound command is written */
-/*TODO*///            null,
+    static MachineDriver machine_driver_dkong3 = new MachineDriver(
+            /* basic machine hardware */
+            new MachineCPU[]{
+                new MachineCPU(
+                        CPU_Z80,
+                        8000000 / 2, /* 4 MHz */
+                        dkong3_readmem, dkong3_writemem, null, dkong3_writeport,
+                        nmi_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_N2A03 | CPU_AUDIO_CPU,
+                        (int) N2A03_DEFAULTCLOCK,
+                        dkong3_sound1_readmem, dkong3_sound1_writemem, null, null,
+                        nmi_interrupt, 1
+                ),
+                new MachineCPU(
+                        CPU_N2A03 | CPU_AUDIO_CPU,
+                        (int) N2A03_DEFAULTCLOCK,
+                        dkong3_sound2_readmem, dkong3_sound2_writemem, null, null,
+                        nmi_interrupt, 1
+                )
+            },
+            60, DEFAULT_60HZ_VBLANK_DURATION, /* frames per second, vblank duration */
+            1, /* 1 CPU slice per frame - interleaving is forced when a sound command is written */
+            null,
             /* video hardware */
-/*TODO*///            32 * 8, 32 * 8, new rectangle(0 * 8, 32 * 8 - 1, 2 * 8, 30 * 8 - 1),
-/*TODO*///            dkong3_gfxdecodeinfo,
-/*TODO*///            256, 64 * 4,
-/*TODO*///            dkong3_vh_convert_color_prom,
-/*TODO*///            VIDEO_TYPE_RASTER,
-/*TODO*///            null,
-/*TODO*///            dkong_vh_start,
-/*TODO*///            generic_vh_stop,
-/*TODO*///            dkong_vh_screenrefresh,
+            32 * 8, 32 * 8, new rectangle(0 * 8, 32 * 8 - 1, 2 * 8, 30 * 8 - 1),
+            dkong3_gfxdecodeinfo,
+            256, 64 * 4,
+            dkong3_vh_convert_color_prom,
+            VIDEO_TYPE_RASTER,
+            null,
+            dkong_vh_start,
+            generic_vh_stop,
+            dkong_vh_screenrefresh,
             /* sound hardware */
-/*TODO*///            0, 0, 0, 0,
-/*TODO*///            new MachineSound[]{
-/*TODO*///                new MachineSound(
-/*TODO*///                        SOUND_NES,
-/*TODO*///                        nes_interface
-/*TODO*///                )
-/*TODO*///            }
-/*TODO*///    );
+            0, 0, 0, 0,
+            new MachineSound[]{
+                new MachineSound(
+                        SOUND_NES,
+                        nes_interface
+                )
+            }
+    );
 
     /**
      * *************************************************************************
@@ -1560,8 +1562,8 @@ public class dkong {
     public static GameDriver driver_dkngjrjp = new GameDriver("1982", "dkngjrjp", "dkong.java", rom_dkngjrjp, driver_dkongjr, machine_driver_dkongjr, input_ports_dkong, null, ROT90, "bootleg?", "Donkey Kong Jr. (Original Japanese)");
     public static GameDriver driver_dkjrjp = new GameDriver("1982", "dkjrjp", "dkong.java", rom_dkjrjp, driver_dkongjr, machine_driver_dkongjr, input_ports_dkong, null, ROT90, "Nintendo", "Donkey Kong Junior (Japan)");
     public static GameDriver driver_dkjrbl = new GameDriver("1982", "dkjrbl", "dkong.java", rom_dkjrbl, driver_dkongjr, machine_driver_dkongjr, input_ports_dkong, null, ROT90, "Nintendo of America", "Donkey Kong Junior (bootleg?)");
-/*TODO*///    public static GameDriver driver_dkong3 = new GameDriver("1983", "dkong3", "dkong.java", rom_dkong3, null, machine_driver_dkong3, input_ports_dkong3, null, ROT90, "Nintendo of America", "Donkey Kong 3 (US)");
-/*TODO*///    public static GameDriver driver_dkong3j = new GameDriver("1983", "dkong3j", "dkong.java", rom_dkong3j, driver_dkong3, machine_driver_dkong3, input_ports_dkong3, null, ROT90, "Nintendo", "Donkey Kong 3 (Japan)");
+    public static GameDriver driver_dkong3 = new GameDriver("1983", "dkong3", "dkong.java", rom_dkong3, null, machine_driver_dkong3, input_ports_dkong3, null, ROT90, "Nintendo of America", "Donkey Kong 3 (US)");
+    public static GameDriver driver_dkong3j = new GameDriver("1983", "dkong3j", "dkong.java", rom_dkong3j, driver_dkong3, machine_driver_dkong3, input_ports_dkong3, null, ROT90, "Nintendo", "Donkey Kong 3 (Japan)");
 
     public static GameDriver driver_hunchbkd = new GameDriver("1983", "hunchbkd", "dkong.java", rom_hunchbkd, null, machine_driver_hunchbkd, input_ports_hunchbdk, null, ROT90, "Century", "Hunchback (Donkey Kong conversion)", GAME_WRONG_COLORS);
     public static GameDriver driver_herbiedk = new GameDriver("1984", "herbiedk", "dkong.java", rom_herbiedk, null, machine_driver_herbiedk, input_ports_herbiedk, null, ROT90, "CVS", "Herbie at the Olympics (DK conversion)", GAME_WRONG_COLORS);

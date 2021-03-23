@@ -23,6 +23,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.*;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.OpcodePtr;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 
@@ -2095,8 +2096,8 @@ public class z8000ops {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
+/*TODO*///	            dst = GET_DST(OP0,NIB3);
+/*TODO*///	    	GET_IMM16(OP1);
     /*TODO*///	RW(dst) = imm16;
         }
      };
