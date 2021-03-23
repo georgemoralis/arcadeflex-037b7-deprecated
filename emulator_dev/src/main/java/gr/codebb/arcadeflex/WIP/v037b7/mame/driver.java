@@ -130,6 +130,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meadows.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.battlera.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.punchout.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.playch10.*;
+
 
 public class driver {
 
@@ -626,94 +628,50 @@ public class driver {
         driver_armwrest,	/* (c) 1985 */
 
         /* Nintendo Playchoice 10 games */
-        /*TODO*/
-        // driver_pc_tenis,	/* (c) 1983 Nintendo */
-        /*TODO*/
-        // driver_pc_bball,	/* (c) 1984 Nintendo of America */
-        /*TODO*/
-        // driver_pc_bfght,	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_ebike,	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_golf	)	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_kngfu,	/* (c) 1984 Irem (Nintendo license) */
-        /*TODO*/
-        // driver_pc_1942,	/* (c) 1985 Capcom */
-        /*TODO*/
-        // driver_pc_smb,	/* (c) 1985 Nintendo */
-        /*TODO*/
-        // driver_pc_vball,	/* (c) 1986 Nintendo */
-        /*TODO*/
-        // driver_pc_duckh,	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_hgaly,	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_wgnmn,	/* (c) 1984 Nintendo */
-        /*TODO*/
-        // driver_pc_grdus,	/* (c) 1986 Konami */
-        /*TODO*/
-        // driver_pc_tkfld,	/* (c) 1987 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_pwrst,	/* (c) 1986 Nintendo */
-        /*TODO*/
-        // driver_pc_cvnia,	/* (c) 1987 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_dbldr,	/* (c) 1987 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_rnatk,	/* (c) 1987 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_rygar,	/* (c) 1987 Tecmo (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_cntra,	/* (c) 1988 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_goons,	/* (c) 1986 Konami */
-        /*TODO*/
-        // driver_pc_radrc,	/* (c) 1987 Square */
-        /*TODO*/
-        // driver_pc_miket,	/* (c) 1987 Nintendo */
-        /*TODO*/
-        // driver_pc_rcpam,	/* (c) 1987 Rare */
-        /*TODO*/
-        // driver_pc_ngaid,	/* (c) 1989 Tecmo (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_tmnt,	/* (c) 1989 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_drmro,	/* (c) 1990 Nintendo */
-        /*TODO*/
-        // driver_pc_ynoid,	/* (c) 1990 Capcom USA (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_ddrgn,
-        /*TODO*/
-        // driver_pc_ftqst,	/* (c) 1989 Sunsoft (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_rrngr,	/* (c) Capcom USA (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_gntlt,	/* (c) 1985 Atari/Tengen (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_smb2,	/* (c) 1988 Nintendo */
-        /*TODO*/
-        // driver_pc_smb3,	/* (c) 1988 Nintendo */
-        /*TODO*/
-        // driver_pc_mman3,	/* (c) 1990 Capcom USA (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_radr2,	/* (c) 1990 Square (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_suprc,	/* (c) 1990 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_tmnt2,	/* (c) 1990 Konami (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_wcup,	/* (c) 1990 Technos (Nintendo license) */
-        /*TODO*/
-        // driver_pc_ngai3,	/* (c) 1991 Tecmo (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_pwbld,	/* (c) 1991 Taito (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_rkats,	/* (c) 1991 Atlus (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_cshwk,	/* (c) 1989 Rare (Nintendo of America license) */
-        /*TODO*/
-        // driver_pc_moglf,	/* (c) 1991 Nintendo */
+        driver_pc_tenis,	/* (c) 1983 Nintendo */
+        driver_pc_bball,	/* (c) 1984 Nintendo of America */
+        driver_pc_bfght,	/* (c) 1984 Nintendo */
+        driver_pc_ebike,	/* (c) 1984 Nintendo */
+        driver_pc_golf,	/* (c) 1984 Nintendo */
+        driver_pc_kngfu,	/* (c) 1984 Irem (Nintendo license) */
+        driver_pc_1942,	/* (c) 1985 Capcom */
+        driver_pc_smb,	/* (c) 1985 Nintendo */
+        driver_pc_vball,	/* (c) 1986 Nintendo */
+        driver_pc_duckh,	/* (c) 1984 Nintendo */
+        driver_pc_hgaly,	/* (c) 1984 Nintendo */
+        driver_pc_wgnmn,	/* (c) 1984 Nintendo */
+        driver_pc_grdus,	/* (c) 1986 Konami */
+        driver_pc_tkfld,	/* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_pwrst,	/* (c) 1986 Nintendo */
+        driver_pc_cvnia,	/* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_dbldr,	/* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_rnatk,	/* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_rygar,	/* (c) 1987 Tecmo (Nintendo of America license) */
+        driver_pc_cntra,	/* (c) 1988 Konami (Nintendo of America license) */
+        driver_pc_goons,	/* (c) 1986 Konami */
+        driver_pc_radrc,	/* (c) 1987 Square */
+        driver_pc_miket,	/* (c) 1987 Nintendo */
+        driver_pc_rcpam,	/* (c) 1987 Rare */
+        driver_pc_ngaid,	/* (c) 1989 Tecmo (Nintendo of America license) */
+        driver_pc_tmnt,	/* (c) 1989 Konami (Nintendo of America license) */
+        driver_pc_drmro,	/* (c) 1990 Nintendo */
+        driver_pc_ynoid,	/* (c) 1990 Capcom USA (Nintendo of America license) */
+        driver_pc_ddrgn,
+        driver_pc_ftqst,	/* (c) 1989 Sunsoft (Nintendo of America license) */
+        driver_pc_rrngr,	/* (c) Capcom USA (Nintendo of America license) */
+        driver_pc_gntlt,	/* (c) 1985 Atari/Tengen (Nintendo of America license) */
+        driver_pc_smb2,	/* (c) 1988 Nintendo */
+        driver_pc_smb3,	/* (c) 1988 Nintendo */
+        driver_pc_mman3,	/* (c) 1990 Capcom USA (Nintendo of America license) */
+        driver_pc_radr2,	/* (c) 1990 Square (Nintendo of America license) */
+        driver_pc_suprc,	/* (c) 1990 Konami (Nintendo of America license) */
+        driver_pc_tmnt2,	/* (c) 1990 Konami (Nintendo of America license) */
+        driver_pc_wcup,	/* (c) 1990 Technos (Nintendo license) */
+        driver_pc_ngai3,	/* (c) 1991 Tecmo (Nintendo of America license) */
+        driver_pc_pwbld,	/* (c) 1991 Taito (Nintendo of America license) */
+        driver_pc_rkats,	/* (c) 1991 Atlus (Nintendo of America license) */
+        driver_pc_cshwk,	/* (c) 1989 Rare (Nintendo of America license) */
+        driver_pc_moglf,	/* (c) 1991 Nintendo */
 
         /* Midway 8080 b/w games */
         /*TODO*/
