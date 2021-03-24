@@ -11,17 +11,17 @@ public class artworkH {
     public static class artwork_info {
 
         /* Publically accessible */
-        osd_bitmap artwork;
+        public osd_bitmap artwork;
         osd_bitmap artwork1;
         osd_bitmap alpha;
         osd_bitmap orig_artwork;
         /* needed for palette recalcs */
-        char[] /*UINT8*/ u8_orig_palette;
+        public char[] /*UINT8*/ u8_orig_palette;
         /* needed for restoring the colors after special effects? */
-        int num_pens_used;
+        public int num_pens_used;
         char[] /*UINT8*/ u8_transparency;
         int num_pens_trans;
-        int start_pen;
+        public int start_pen;
         char[] /*UINT8*/ u8_brightness;
         /* brightness of each palette entry */
  /*TODO*///	UINT64 *rgb;
