@@ -136,6 +136,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pcktgal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.videopin.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tankbatt.*;
 
 public class driver {
 
@@ -403,8 +404,7 @@ public class driver {
         // driver_kaitein,	/* [1980] Namco */
         /*TODO*/
         // driver_sos,		/* [1980] Namco */
-        /*TODO*/
-        // driver_tankbatt,	/* (c) 1980 Namco */
+        driver_tankbatt,	/* (c) 1980 Namco */
         /*TODO*/
         // driver_warpwarp,	/* (c) 1981 Namco */
         /*TODO*/
