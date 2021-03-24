@@ -590,7 +590,7 @@ public class m6502 extends cpu_interface {
      * *************************************************************
      */
     public static void WRMEM(int addr, int data) {
-        cpu_writemem16(addr, data & 0xFF);
+        cpu_writemem16(addr & 0xffff, data & 0xFF);
     }
 
     /**

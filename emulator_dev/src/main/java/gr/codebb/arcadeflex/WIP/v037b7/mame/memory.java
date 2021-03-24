@@ -1146,7 +1146,10 @@ public class memory {
         }
 
         /* fall back to handler */
-        return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+        if (memoryreadhandler[u8_hw] != null)
+            return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+        else
+            return 0;
     }
 
     public static int cpu_readmem20(int address) {
@@ -1555,7 +1558,8 @@ public class memory {
         }
 
         /* fall back to handler */
-        (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
+        if (memorywritehandler[u8_hw] != null)
+            (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
     }
 
     public static void cpu_writemem20(int address, int data) {

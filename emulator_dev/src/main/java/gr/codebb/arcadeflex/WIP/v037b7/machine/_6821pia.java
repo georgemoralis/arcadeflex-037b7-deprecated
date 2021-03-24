@@ -169,6 +169,7 @@ public class _6821pia {
         if (which >= MAX_PIA) {
             return;
         }
+        System.out.println("pia_config intf="+intf);
         pia[which].intf = intf;
         pia[which].addr = (char) (addressing & 0xFF);
     }
@@ -274,7 +275,7 @@ public class _6821pia {
                 /* read output register */
                 if (OUTPUT_SELECTED(p.ctl_a)) {
                     /* update the input */
-                    if (p.intf.in_a_func != null) {
+                    if (p.intf!=null && p.intf.in_a_func != null) {
                         p.in_a = (char) (p.intf.in_a_func.handler(0) & 0xFF);
                     }
 
@@ -289,7 +290,7 @@ public class _6821pia {
                     if (C2_OUTPUT(p.ctl_a) && C2_STROBE_MODE(p.ctl_a)) {
                         /* this will cause a transition low; call the output function if we're currently high */
                         if (p.out_ca2 != 0) {
-                            if (p.intf.out_ca2_func != null) {
+                            if (p.intf!=null && p.intf.out_ca2_func != null) {
                                 p.intf.out_ca2_func.handler(0, 0);
                             }
                         }
@@ -297,7 +298,7 @@ public class _6821pia {
 
                         /* if the CA2 strobe is cleared by the E, reset it right away */
                         if (STROBE_E_RESET(p.ctl_a)) {
-                            if (p.intf.out_ca2_func != null) {
+                            if (p.intf!=null && p.intf.out_ca2_func != null) {
                                 p.intf.out_ca2_func.handler(0, 1);
                             }
                             p.out_ca2 = 1;
@@ -343,10 +344,10 @@ public class _6821pia {
             case PIA_CTLA:
 
                 /* Update CA1 & CA2 if callback exists, these in turn may update IRQ's */
-                if (p.intf.in_ca1_func != null) {
+                if (p.intf!=null && p.intf.in_ca1_func != null) {
                     pia_set_input_ca1.handler(which, p.intf.in_ca1_func.handler(0));
                 }
-                if (p.intf.in_ca2_func != null) {
+                if (p.intf!=null && p.intf.in_ca2_func != null) {
                     pia_set_input_ca2.handler(which, p.intf.in_ca2_func.handler(0));
                 }
 
@@ -515,7 +516,7 @@ public class _6821pia {
                         p.ddr_b = (char) (data & 0xFF);
 
                         /* send it to the output function */
-                        if (p.intf.out_b_func != null && p.ddr_b != 0) {
+                        if (p.intf!=null && p.intf.out_b_func != null && p.ddr_b != 0) {
                             p.intf.out_b_func.handler(0, p.out_b & p.ddr_b);
                         }
                     }
@@ -540,7 +541,7 @@ public class _6821pia {
 
                     /* if this creates a transition, call the CA2 output function */
                     if ((p.out_ca2 ^ temp) != 0) {
-                        if (p.intf.out_ca2_func != null) {
+                        if (p.intf!=null && p.intf.out_ca2_func != null) {
                             p.intf.out_ca2_func.handler(0, temp);
                         }
                     }
@@ -574,7 +575,7 @@ public class _6821pia {
 
                     /* if this creates a transition, call the CA2 output function */
                     if ((p.out_cb2 ^ temp) != 0) {
-                        if (p.intf.out_cb2_func != null) {
+                        if (p.intf!=null && p.intf.out_cb2_func != null) {
                             p.intf.out_cb2_func.handler(0, temp);
                         }
                     }

@@ -134,6 +134,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.playch10.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidepckt.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pcktgal.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.videopin.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.*;
 
 public class driver {
 
@@ -2680,10 +2682,8 @@ public class driver {
         // driver_starfire,	/* Exidy [1979?] */
         /*TODO*/
         // driver_fireone,	/* (c) 1979 Exidy */
-        /*TODO*/
-        // driver_victory,	/* (c) 1982 */
-        /*TODO*/
-        // driver_victorba,	/* (c) 1982 */
+        driver_victory,	/* (c) 1982 */
+        driver_victorba,	/* (c) 1982 */
 
         /* Exidy 440 games */
         /*TODO*/
@@ -2767,8 +2767,7 @@ public class driver {
         /*TODO*/
         // driver_canbprot,	/* no copyright notice [1977] */
 
-        /*TODO*/
-        // driver_videopin,	/* no copyright notice [1979] */
+        driver_videopin,	/* no copyright notice [1979] */
 
         /* Atari "Centipede hardware" games */
         driver_warlord, /* (c) 1980 */

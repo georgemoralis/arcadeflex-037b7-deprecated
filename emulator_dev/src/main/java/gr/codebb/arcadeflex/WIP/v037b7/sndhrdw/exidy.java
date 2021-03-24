@@ -5,6 +5,9 @@
 package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502H.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.victory_main_ack_w;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.victory_sound_irq_clear_w;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.victory_sound_response_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821pia.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
@@ -105,12 +108,13 @@ public class exidy {
     );
 
     /* Victory PIA 0 */
- /*TODO*///	static pia6821_interface victory_pia_0_intf = new pia6821_interface
-/*TODO*///	(
-/*TODO*///		/*inputs : A/B,CA/B1,CA/B2 */ null, null, null, null, null, null,
-/*TODO*///		/*outputs: A/B,CA/B2       */ null, victory_sound_response_w, victory_sound_irq_clear_w, victory_main_ack_w,
-/*TODO*///		/*irqs   : A/B             */ null, exidy_irq
-/*TODO*///        );
+ 	static pia6821_interface victory_pia_0_intf = new pia6821_interface
+	(
+		/*inputs : A/B,CA/B1,CA/B2 */ null, null, null, null, null, null,
+		/*outputs: A/B,CA/B2       */ null, victory_sound_response_w, victory_sound_irq_clear_w, victory_main_ack_w,
+		/*irqs   : A/B             */ null, exidy_irq
+        );
+        
     /**
      * ************************************************************************
      * Start/Stop Sound
@@ -289,13 +293,14 @@ public class exidy {
         }
     };
 
-    /*TODO*///	public static ShStartPtr victory_sh_start = new ShStartPtr() { public int handler(MachineSound msound) 
-/*TODO*///	{
-/*TODO*///		/* Init PIA */
-/*TODO*///		pia_config(0, PIA_STANDARD_ORDERING, victory_pia_0_intf);
-/*TODO*///		pia_0_cb1_w.handler(0, 1);
-/*TODO*///		return common_start();
-/*TODO*///	} };
+    	public static ShStartPtr victory_sh_start = new ShStartPtr() { public int handler(MachineSound msound) 
+	{
+		/* Init PIA */
+		pia_config(0, PIA_STANDARD_ORDERING, victory_pia_0_intf);
+		pia_0_cb1_w.handler(0, 1);
+		return common_start();
+	} };
+        
     /**
      * ************************************************************************
      * 6532 RIOT
@@ -321,6 +326,7 @@ public class exidy {
     public static WriteHandlerPtr exidy_shriot_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             offset &= 0x7f;
+            System.out.println("exidy_shriot_w "+offset);
             switch (offset) {
                 case 0:
                     /* port A */
