@@ -11,7 +11,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_SWAP_XY;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
-import static gr.codebb.arcadeflex.old.mame.drawgfx.fillbitmap;
+import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
 
 public class artworkC {
 
@@ -120,88 +120,86 @@ public class artworkC {
 /*TODO*///	return palette;
 /*TODO*///}
 /*TODO*///
-/*TODO*///static int get_new_pen (struct artwork_info *a, int r, int g, int b, int alpha)
-/*TODO*///{
-/*TODO*///	int pen;
-/*TODO*///
-/*TODO*///	/* look if the color is already in the palette */
-/*TODO*///	if (Machine->scrbitmap->depth == 8)
-/*TODO*///	{
-/*TODO*///		pen =0;
-/*TODO*///		while ((pen < a->num_pens_used) &&
-/*TODO*///			   ((r != a->orig_palette[3*pen]) ||
-/*TODO*///				(g != a->orig_palette[3*pen+1]) ||
-/*TODO*///				(b != a->orig_palette[3*pen+2]) ||
-/*TODO*///				((alpha < 255) && (alpha != a->transparency[pen]))))
-/*TODO*///			pen++;
-/*TODO*///
-/*TODO*///		if (pen == a->num_pens_used)
-/*TODO*///		{
-/*TODO*///			a->orig_palette[3*pen]=r;
-/*TODO*///			a->orig_palette[3*pen+1]=g;
-/*TODO*///			a->orig_palette[3*pen+2]=b;
-/*TODO*///			a->num_pens_used++;
-/*TODO*///			if (alpha < 255)
-/*TODO*///			{
-/*TODO*///				a->transparency[pen]=alpha;
-/*TODO*///				a->num_pens_trans++;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///		pen = ((r & 0xf8) << 7) | ((g & 0xf8) << 2) | (b >> 3);
-/*TODO*///
-/*TODO*///	return pen;
-/*TODO*///}
-/*TODO*///
-/*TODO*///static void merge_cmy(struct artwork_info *a, struct osd_bitmap *source, struct osd_bitmap *source_alpha,int sx, int sy)
-/*TODO*///{
-/*TODO*///	int c1, c2, m1, m2, y1, y2, pen1, pen2, max, alpha;
-/*TODO*///	int x, y, w, h;
-/*TODO*///	struct osd_bitmap *dest, *dest_alpha;
-/*TODO*///
-/*TODO*///	dest = a->orig_artwork;
-/*TODO*///	dest_alpha = a->alpha;
-/*TODO*///
-/*TODO*///	if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///	{
-/*TODO*///		w = source->height;
-/*TODO*///		h = source->width;
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		h = source->height;
-/*TODO*///		w = source->width;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	for (y = 0; y < h; y++)
-/*TODO*///		for (x = 0; x < w; x++)
-/*TODO*///		{
-/*TODO*///			pen1 = read_pixel(dest, sx + x, sy + y);
-/*TODO*///
-/*TODO*///			c1 = 0xff - a->orig_palette[3*pen1];
-/*TODO*///			m1 = 0xff - a->orig_palette[3*pen1+1];
-/*TODO*///			y1 = 0xff - a->orig_palette[3*pen1+2];
-/*TODO*///
-/*TODO*///			pen2 = read_pixel(source, x, y);
-/*TODO*///			c2 = 0xff - a->orig_palette[3*pen2] + c1;
-/*TODO*///			m2 = 0xff - a->orig_palette[3*pen2+1] + m1;
-/*TODO*///			y2 = 0xff - a->orig_palette[3*pen2+2] + y1;
-/*TODO*///
-/*TODO*///			max = MAX(c2, MAX(m2, y2));
-/*TODO*///			if (max > 0xff)
-/*TODO*///			{
-/*TODO*///				c2 = (c2 * 0xf8) / max;
-/*TODO*///				m2 = (m2 * 0xf8) / max;
-/*TODO*///				y2 = (y2 * 0xf8) / max;
-/*TODO*///			}
-/*TODO*///
-/*TODO*///			alpha = MIN (0xff, read_pixel(source_alpha, x, y)
-/*TODO*///						 + read_pixel(dest_alpha, sx + x, sy + y));
-/*TODO*///			plot_pixel(dest, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
-/*TODO*///			plot_pixel(dest_alpha, sx + x, sy + y, alpha);
-/*TODO*///		}
-/*TODO*///}
+    static int get_new_pen(artwork_info a, int r, int g, int b, int alpha) {
+        int pen;
+
+        /* look if the color is already in the palette */
+        if (Machine.scrbitmap.depth == 8) {
+            pen = 0;
+            while ((pen < a.num_pens_used)
+                    && ((r != a.u8_orig_palette[3 * pen])
+                    || (g != a.u8_orig_palette[3 * pen + 1])
+                    || (b != a.u8_orig_palette[3 * pen + 2])
+                    || ((alpha < 255) && (alpha != a.u8_transparency[pen])))) {
+                pen++;
+            }
+
+            if (pen == a.num_pens_used) {
+                a.u8_orig_palette[3 * pen] = (char) (r & 0xFF);
+                a.u8_orig_palette[3 * pen + 1] = (char) (g & 0xFF);
+                a.u8_orig_palette[3 * pen + 2] = (char) (b & 0xFF);
+                a.num_pens_used++;
+                if (alpha < 255) {
+                    a.u8_transparency[pen] = (char) (alpha & 0xFF);
+                    a.num_pens_trans++;
+                }
+            }
+        } else {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		pen = ((r & 0xf8) << 7) | ((g & 0xf8) << 2) | (b >> 3);
+        }
+
+        return pen;
+    }
+
+    static void merge_cmy(artwork_info a, osd_bitmap source, osd_bitmap source_alpha, int sx, int sy) {
+        	int c1, c2, m1, m2, y1, y2, pen1, pen2, max, alpha;
+	int x, y, w, h;
+	osd_bitmap dest, dest_alpha;
+
+	dest = a.orig_artwork;
+	dest_alpha = a.alpha;
+
+	if ((Machine.orientation & ORIENTATION_SWAP_XY)!=0)
+	{
+		w = source.height;
+		h = source.width;
+	}
+	else
+	{
+		h = source.height;
+		w = source.width;
+	}
+
+	for (y = 0; y < h; y++)
+		for (x = 0; x < w; x++)
+		{
+			pen1 = read_pixel.handler(dest, sx + x, sy + y);
+
+			c1 = 0xff - a.u8_orig_palette[3*pen1];
+			m1 = 0xff - a.u8_orig_palette[3*pen1+1];
+			y1 = 0xff - a.u8_orig_palette[3*pen1+2];
+
+			pen2 = read_pixel.handler(source, x, y);
+			c2 = 0xff - a.u8_orig_palette[3*pen2] + c1;
+			m2 = 0xff - a.u8_orig_palette[3*pen2+1] + m1;
+			y2 = 0xff - a.u8_orig_palette[3*pen2+2] + y1;
+
+			max = Math.max(c2, Math.max(m2, y2));
+			if (max > 0xff)
+			{
+				c2 = (c2 * 0xf8) / max;
+				m2 = (m2 * 0xf8) / max;
+				y2 = (y2 * 0xf8) / max;
+			}
+
+			alpha = Math.min(0xff, read_pixel.handler(source_alpha, x, y)
+						 + read_pixel.handler(dest_alpha, sx + x, sy + y));
+			plot_pixel.handler(dest, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
+			plot_pixel.handler(dest_alpha, sx + x, sy + y, alpha);
+		}
+    }
+
     /**
      * *******************************************************************
      * allocate_artwork_mem
@@ -209,7 +207,8 @@ public class artworkC {
      * Allocates memory for all the bitmaps.
      * *******************************************************************
      */
-    static void allocate_artwork_mem(int width, int height, artwork_info a) {
+    static artwork_info allocate_artwork_mem(int width, int height) {
+        artwork_info a;
         if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
             int temp;
 
@@ -220,7 +219,7 @@ public class artworkC {
         a = new artwork_info();
         if (a == null) {
             logerror("Not enough memory for artwork!\n");
-            return;
+            return null;
         }
         a.u8_transparency = null;
         a.u8_orig_palette = null;
@@ -230,39 +229,39 @@ public class artworkC {
         if ((a.orig_artwork = bitmap_alloc(width, height)) == null) {
             logerror("Not enough memory for artwork!\n");
             artwork_free(a);
-            return;
+            return null;
         }
         fillbitmap(a.orig_artwork, 0, null);
 
         if ((a.alpha = bitmap_alloc(width, height)) == null) {
             logerror("Not enough memory for artwork!\n");
             artwork_free(a);
-            return;
+            return null;
         }
         fillbitmap(a.alpha, 0, null);
 
         if ((a.artwork = bitmap_alloc(width, height)) == null) {
             logerror("Not enough memory for artwork!\n");
             artwork_free(a);
-            return;
+            return null;
         }
 
         if ((a.artwork1 = bitmap_alloc(width, height)) == null) {
             logerror("Not enough memory for artwork!\n");
             artwork_free(a);
-            return;
+            return null;
         }
 
         if ((a.u8_pTable = new char[256 * 256]) == null) {
             logerror("Not enough memory.\n");
             artwork_free(a);
-            return;
+            return null;
         }
 
         if ((a.u8_brightness = new char[256 * 256]) == null) {
             logerror("Not enough memory.\n");
             artwork_free(a);
-            return;
+            return null;
         }
         memset(a.u8_brightness, 0, 256 * 256);
         /*TODO*///
@@ -272,6 +271,7 @@ public class artworkC {
 /*TODO*///		artwork_free(a);
 /*TODO*///		return;
 /*TODO*///	}
+        return a;
     }
 
     /*TODO*///
@@ -773,6 +773,7 @@ public class artworkC {
 /*TODO*///}
 /*TODO*///
     public static void artwork_remap() {
+        System.out.println("artwork_remap");
         /*TODO*///	if (artwork_backdrop) backdrop_remap();
 /*TODO*///	if (artwork_overlay) overlay_remap();
     }
@@ -786,6 +787,7 @@ public class artworkC {
 /*TODO*/// *********************************************************************/
 /*TODO*///
     public static void overlay_draw(osd_bitmap dest, osd_bitmap source) {
+        System.out.println("overlay_draw");
         /*TODO*///	int i,j;
 /*TODO*///	int height,width;
 /*TODO*///
@@ -980,6 +982,7 @@ public class artworkC {
 /*TODO*///}
 /*TODO*///
     public static void artwork_draw(osd_bitmap dest, osd_bitmap source, int _bitmap_dirty) {
+        System.out.println("artwork_draw");
         /*TODO*///	if (_bitmap_dirty)
 /*TODO*///	{
 /*TODO*///		artwork_remap();
@@ -1247,9 +1250,10 @@ public class artworkC {
         int pen, transparent_pen = -1, disk_type, white_pen;
         int width, height;
 
-        allocate_artwork_mem(Machine.scrbitmap.width, Machine.scrbitmap.height, artwork_overlay);
+        artwork_overlay = allocate_artwork_mem(Machine.scrbitmap.width, Machine.scrbitmap.height);
 
         if (artwork_overlay == null) {
+            System.out.println("is null");
             return;
         }
 
@@ -1310,23 +1314,20 @@ public class artworkC {
 /*TODO*///		fillbitmap (artwork_overlay.orig_artwork, white_pen, 0);
 /*TODO*///		fillbitmap (artwork_overlay.alpha, 0, 0);
         }
-        /*TODO*///
-/*TODO*///	while (ae.box.min_x >= 0)
-/*TODO*///	{
-/*TODO*///		int alpha = ae->alpha;
-/*TODO*///
-/*TODO*///		if (alpha == OVERLAY_DEFAULT_OPACITY)
-/*TODO*///		{
-/*TODO*///			alpha = 0x18;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		pen = get_new_pen (artwork_overlay, ae->red, ae->green, ae->blue, alpha);
-/*TODO*///		if (ae->box.max_y < 0) /* disk */
-/*TODO*///		{
-/*TODO*///			int r = ae->box.max_x;
-/*TODO*///			disk_type = ae->box.max_y;
-/*TODO*///
-/*TODO*///			switch (disk_type)
+        int ae_ptr = 0;
+        while (ae[ae_ptr].box.min_x >= 0) {
+            int alpha = ae[ae_ptr].alpha;
+
+            if (alpha == OVERLAY_DEFAULT_OPACITY) {
+                alpha = 0x18;
+            }
+
+            pen = get_new_pen(artwork_overlay, ae[ae_ptr].red, ae[ae_ptr].green, ae[ae_ptr].blue, alpha);
+            if (ae[ae_ptr].box.max_y < 0) /* disk */ {
+                int r = ae[ae_ptr].box.max_x;
+                disk_type = ae[ae_ptr].box.max_y;
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///                			switch (disk_type)
 /*TODO*///			{
 /*TODO*///			case -1: /* disk overlay */
 /*TODO*///				if ((disk = create_disk (r, pen, white_pen)) == NULL)
@@ -1339,7 +1340,7 @@ public class artworkC {
 /*TODO*///					artwork_kill();
 /*TODO*///					return;
 /*TODO*///				}
-/*TODO*///				merge_cmy (artwork_overlay, disk, disk_alpha, ae->box.min_x - r, ae->box.min_y - r);
+/*TODO*///				merge_cmy (artwork_overlay, disk, disk_alpha, ae[ae_ptr].box.min_x - r, ae[ae_ptr].box.min_y - r);
 /*TODO*///				bitmap_free(disk_alpha);
 /*TODO*///				bitmap_free(disk);
 /*TODO*///				break;
@@ -1351,8 +1352,8 @@ public class artworkC {
 /*TODO*///					return;
 /*TODO*///				}
 /*TODO*///				copybitmap(artwork_overlay->orig_artwork,disk,0, 0,
-/*TODO*///						   ae->box.min_x - r,
-/*TODO*///						   ae->box.min_y - r,
+/*TODO*///						   ae[ae_ptr].box.min_x - r,
+/*TODO*///						   ae[ae_ptr].box.min_y - r,
 /*TODO*///						   0,TRANSPARENCY_PEN, transparent_pen);
 /*TODO*///				/* alpha */
 /*TODO*///				if ((disk_alpha = create_disk (r, alpha, transparent_pen)) == NULL)
@@ -1361,50 +1362,45 @@ public class artworkC {
 /*TODO*///					return;
 /*TODO*///				}
 /*TODO*///				copybitmap(artwork_overlay->alpha,disk_alpha,0, 0,
-/*TODO*///						   ae->box.min_x - r,
-/*TODO*///						   ae->box.min_y - r,
+/*TODO*///						   ae[ae_ptr].box.min_x - r,
+/*TODO*///						   ae[ae_ptr].box.min_y - r,
 /*TODO*///						   0,TRANSPARENCY_PEN, transparent_pen);
 /*TODO*///				bitmap_free(disk_alpha);
 /*TODO*///				bitmap_free(disk);
 /*TODO*///				break;
 /*TODO*///
 /*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if ((box = bitmap_alloc(ae->box.max_x - ae->box.min_x + 1,
-/*TODO*///										 ae->box.max_y - ae->box.min_y + 1)) == 0)
-/*TODO*///			{
-/*TODO*///				logerror("Not enough memory for artwork!\n");
-/*TODO*///				artwork_kill();
-/*TODO*///				return;
-/*TODO*///			}
-/*TODO*///			if ((box_alpha = bitmap_alloc(ae->box.max_x - ae->box.min_x + 1,
-/*TODO*///										 ae->box.max_y - ae->box.min_y + 1)) == 0)
-/*TODO*///			{
-/*TODO*///				logerror("Not enough memory for artwork!\n");
-/*TODO*///				artwork_kill();
-/*TODO*///				return;
-/*TODO*///			}
-/*TODO*///			fillbitmap (box, pen, 0);
-/*TODO*///			fillbitmap (box_alpha, alpha, 0);
-/*TODO*///			merge_cmy (artwork_overlay, box, box_alpha, ae->box.min_x, ae->box.min_y);
-/*TODO*///			bitmap_free(box);
-/*TODO*///			bitmap_free(box_alpha);
-/*TODO*///		}
-/*TODO*///		ae++;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* Make sure we don't have too many colors */
-/*TODO*///	if (artwork_overlay->num_pens_used > max_pens)
-/*TODO*///	{
-/*TODO*///		logerror("Too many colors in overlay.\n");
-/*TODO*///		logerror("Colors found: %d  Max Allowed: %d\n",
-/*TODO*///				      artwork_overlay->num_pens_used,max_pens);
-/*TODO*///		artwork_kill();
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
+            } else {
+                if ((box = bitmap_alloc(ae[ae_ptr].box.max_x - ae[ae_ptr].box.min_x + 1,
+                        ae[ae_ptr].box.max_y - ae[ae_ptr].box.min_y + 1)) == null) {
+                    logerror("Not enough memory for artwork!\n");
+                    artwork_kill();
+                    return;
+                }
+                if ((box_alpha = bitmap_alloc(ae[ae_ptr].box.max_x - ae[ae_ptr].box.min_x + 1,
+                        ae[ae_ptr].box.max_y - ae[ae_ptr].box.min_y + 1)) == null) {
+                    logerror("Not enough memory for artwork!\n");
+                    artwork_kill();
+                    return;
+                }
+                fillbitmap(box, pen, null);
+                fillbitmap(box_alpha, alpha, null);
+/*TODO*///                merge_cmy(artwork_overlay, box, box_alpha, ae[ae_ptr].box.min_x, ae[ae_ptr].box.min_y);
+                bitmap_free(box);
+                bitmap_free(box_alpha);
+            }
+            ae_ptr++;
+        }
+
+        /* Make sure we don't have too many colors */
+        if (artwork_overlay.num_pens_used > max_pens) {
+            logerror("Too many colors in overlay.\n");
+            logerror("Colors found: %d  Max Allowed: %d\n",
+                    artwork_overlay.num_pens_used, max_pens);
+            artwork_kill();
+            return;
+        }
+        /*TODO*///
 /*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
 /*TODO*///	{
 /*TODO*///		load_palette(artwork_overlay,artwork_overlay->orig_palette);

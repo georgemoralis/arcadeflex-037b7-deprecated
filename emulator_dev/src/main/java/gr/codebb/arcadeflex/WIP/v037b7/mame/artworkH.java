@@ -36,7 +36,6 @@ public class artworkH {
         int/*UINT16*/ alpha;
 
         /* 0x00-0xff or OVERLAY_DEFAULT_OPACITY */
-
         public artwork_element(drawgfxH.rectangle box, int red, int green, int blue, int alpha) {
             this.box = box;
             this.red = red & 0xFF;
@@ -53,7 +52,7 @@ public class artworkH {
 /*TODO*///	struct rectangle screen;   /* location of the screen relative to the artwork */
 /*TODO*///};
 /*TODO*///
-/*TODO*///#define OVERLAY_DEFAULT_OPACITY         0xffff
-/*TODO*///
+    public static final int OVERLAY_DEFAULT_OPACITY = 0xffff;
+    /*TODO*///
 /*TODO*///  
 }
