@@ -1,5 +1,6 @@
 package gr.codebb.arcadeflex.old.arcadeflex;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkC.artwork_real_scrbitmap;
 import static gr.codebb.arcadeflex.common.SubArrays.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
@@ -529,7 +530,7 @@ public class video {
             }
         }
 
-        if (bitmap == Machine.scrbitmap) {
+        if (bitmap == Machine.scrbitmap || bitmap == artwork_real_scrbitmap) {
             osd_mark_dirty(0, 0, bitmap.width - 1, bitmap.height - 1, 1);
             bitmap_dirty = 1;
         }

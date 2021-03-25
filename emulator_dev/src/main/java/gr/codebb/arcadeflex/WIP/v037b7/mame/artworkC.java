@@ -8,10 +8,16 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_alloc;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_free;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.palette_change_color;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.palette_recalc;
+import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_SWAP_XY;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.VIDEO_MODIFIES_PALETTE;
+import static gr.codebb.arcadeflex.old.arcadeflex.video.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.VIDEO_TYPE_VECTOR;
 
 public class artworkC {
 
@@ -23,25 +29,27 @@ public class artworkC {
 
     public static osd_bitmap artwork_real_scrbitmap = null;
 
-    /*TODO*///static void brightness_update (struct artwork_info *a)
-/*TODO*///{
-/*TODO*///	int i;
-/*TODO*///	UINT8 rgb[3];
-/*TODO*///	UINT16 *pens = Machine->pens;
-/*TODO*///
-/*TODO*///	/* Calculate brightness of all colors */
-/*TODO*///	if (Machine->scrbitmap->depth == 8)
-/*TODO*///		i = MIN(256, Machine->drv->total_colors);
-/*TODO*///	else
-/*TODO*///		i = MIN(32768, Machine->drv->total_colors);
-/*TODO*///
-/*TODO*///	while (--i >= 0)
-/*TODO*///	{
-/*TODO*///		osd_get_pen (pens[i], &rgb[0], &rgb[1], &rgb[2]);
-/*TODO*///		a->brightness[pens[i]]=(222*rgb[0]+707*rgb[1]+71*rgb[2])/1000;
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    static void brightness_update(artwork_info a) {
+        int i;
+        char[] r = new char[1];
+        char[] g = new char[1];
+        char[] b = new char[1];
+        char[] pens = Machine.pens;
+
+        /* Calculate brightness of all colors */
+        if (Machine.scrbitmap.depth == 8) {
+            i = Math.min(256, Machine.drv.total_colors);
+        } else {
+            i = Math.min(32768, Machine.drv.total_colors);
+        }
+
+        while (--i >= 0) {
+            osd_get_pen(pens[i], r, g, b);
+            a.u8_brightness[pens[i]] = (char) (((222 * r[0] + 707 * g[0] + 71 * b[0]) / 1000) & 0xFF);
+        }
+    }
+
+    /*TODO*///
 /*TODO*///static void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v )
 /*TODO*///{
 /*TODO*///	float min, max, delta;
@@ -153,51 +161,47 @@ public class artworkC {
     }
 
     static void merge_cmy(artwork_info a, osd_bitmap source, osd_bitmap source_alpha, int sx, int sy) {
-        	int c1, c2, m1, m2, y1, y2, pen1, pen2, max, alpha;
-	int x, y, w, h;
-	osd_bitmap dest, dest_alpha;
+        int c1, c2, m1, m2, y1, y2, pen1, pen2, max, alpha;
+        int x, y, w, h;
+        osd_bitmap dest, dest_alpha;
 
-	dest = a.orig_artwork;
-	dest_alpha = a.alpha;
+        dest = a.orig_artwork;
+        dest_alpha = a.alpha;
 
-	if ((Machine.orientation & ORIENTATION_SWAP_XY)!=0)
-	{
-		w = source.height;
-		h = source.width;
-	}
-	else
-	{
-		h = source.height;
-		w = source.width;
-	}
+        if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
+            w = source.height;
+            h = source.width;
+        } else {
+            h = source.height;
+            w = source.width;
+        }
 
-	for (y = 0; y < h; y++)
-		for (x = 0; x < w; x++)
-		{
-			pen1 = read_pixel.handler(dest, sx + x, sy + y);
+        for (y = 0; y < h; y++) {
+            for (x = 0; x < w; x++) {
+                pen1 = read_pixel.handler(dest, sx + x, sy + y);
 
-			c1 = 0xff - a.u8_orig_palette[3*pen1];
-			m1 = 0xff - a.u8_orig_palette[3*pen1+1];
-			y1 = 0xff - a.u8_orig_palette[3*pen1+2];
+                c1 = 0xff - a.u8_orig_palette[3 * pen1];
+                m1 = 0xff - a.u8_orig_palette[3 * pen1 + 1];
+                y1 = 0xff - a.u8_orig_palette[3 * pen1 + 2];
 
-			pen2 = read_pixel.handler(source, x, y);
-			c2 = 0xff - a.u8_orig_palette[3*pen2] + c1;
-			m2 = 0xff - a.u8_orig_palette[3*pen2+1] + m1;
-			y2 = 0xff - a.u8_orig_palette[3*pen2+2] + y1;
+                pen2 = read_pixel.handler(source, x, y);
+                c2 = 0xff - a.u8_orig_palette[3 * pen2] + c1;
+                m2 = 0xff - a.u8_orig_palette[3 * pen2 + 1] + m1;
+                y2 = 0xff - a.u8_orig_palette[3 * pen2 + 2] + y1;
 
-			max = Math.max(c2, Math.max(m2, y2));
-			if (max > 0xff)
-			{
-				c2 = (c2 * 0xf8) / max;
-				m2 = (m2 * 0xf8) / max;
-				y2 = (y2 * 0xf8) / max;
-			}
+                max = Math.max(c2, Math.max(m2, y2));
+                if (max > 0xff) {
+                    c2 = (c2 * 0xf8) / max;
+                    m2 = (m2 * 0xf8) / max;
+                    y2 = (y2 * 0xf8) / max;
+                }
 
-			alpha = Math.min(0xff, read_pixel.handler(source_alpha, x, y)
-						 + read_pixel.handler(dest_alpha, sx + x, sy + y));
-			plot_pixel.handler(dest, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
-			plot_pixel.handler(dest_alpha, sx + x, sy + y, alpha);
-		}
+                alpha = Math.min(0xff, read_pixel.handler(source_alpha, x, y)
+                        + read_pixel.handler(dest_alpha, sx + x, sy + y));
+                plot_pixel.handler(dest, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
+                plot_pixel.handler(dest_alpha, sx + x, sy + y, alpha);
+            }
+        }
     }
 
     /**
@@ -392,29 +396,30 @@ public class artworkC {
 /*TODO*///
 /*TODO*///	return hist;
 /*TODO*///}
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  load_palette
-/*TODO*///
-/*TODO*///  This sets the palette colors used by the backdrop to the new colors
-/*TODO*///  passed in as palette.  The values should be stored as one byte of red,
-/*TODO*///  one byte of blue, one byte of green.  This could hopefully be used
-/*TODO*///  for special effects, like lightening and darkening the backdrop.
-/*TODO*/// *********************************************************************/
-/*TODO*///static void load_palette(struct artwork_info *a, UINT8 *palette)
-/*TODO*///{
-/*TODO*///	int i;
-/*TODO*///
-/*TODO*///	/* Load colors into the palette */
-/*TODO*///	if ((Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE))
-/*TODO*///	{
-/*TODO*///		for (i = 0; i < a->num_pens_used; i++)
-/*TODO*///			palette_change_color(i + a->start_pen, palette[i*3], palette[i*3+1], palette[i*3+2]);
-/*TODO*///
-/*TODO*///		palette_recalc();
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+    /**
+     * *******************************************************************
+     * load_palette
+     *
+     * This sets the palette colors used by the backdrop to the new colors
+     * passed in as palette. The values should be stored as one byte of red, one
+     * byte of blue, one byte of green. This could hopefully be used for special
+     * effects, like lightening and darkening the backdrop.
+     * *******************************************************************
+     */
+    static void load_palette(artwork_info a, char[] palette) {
+        int i;
+
+        /* Load colors into the palette */
+        if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
+            for (i = 0; i < a.num_pens_used; i++) {
+                palette_change_color(i + a.start_pen, palette[i * 3], palette[i * 3 + 1], palette[i * 3 + 2]);
+            }
+
+            palette_recalc();
+        }
+    }
+
+    /*TODO*///
 /*TODO*////*********************************************************************
 /*TODO*///
 /*TODO*///  Reads a PNG for a artwork struct and checks if it has the right
@@ -437,7 +442,7 @@ public class artworkC {
 /*TODO*///		strcat(file_name2, ".png");
 /*TODO*///	}
 /*TODO*///
-/*TODO*///	if (!(fp = osd_fopen(Machine->gamedrv->name, file_name2, OSD_FILETYPE_ARTWORK, 0)))
+/*TODO*///	if (!(fp = osd_fopen(Machine.gamedrv->name, file_name2, OSD_FILETYPE_ARTWORK, 0)))
 /*TODO*///	{
 /*TODO*///		logerror("Unable to open PNG %s\n", file_name);
 /*TODO*///		return 0;
@@ -666,76 +671,76 @@ public class artworkC {
 /*TODO*///	load_png(filename, start_pen, max_pens, Machine->scrbitmap->width, Machine->scrbitmap->height, a);
 /*TODO*///}
 /*TODO*///
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  backdrop_refresh
-/*TODO*///
-/*TODO*///  This remaps the "original" palette indexes to the abstract OS indexes
-/*TODO*///  used by MAME.  This needs to be called every time palette_recalc
-/*TODO*///  returns a non-zero value, since the mappings will have changed.
-/*TODO*/// *********************************************************************/
-/*TODO*///
-/*TODO*///void backdrop_refresh(struct artwork_info *a)
-/*TODO*///{
-/*TODO*///	int i, j, height,width, offset;
-/*TODO*///	struct osd_bitmap *back, *orig;
-/*TODO*///
-/*TODO*///	offset = a->start_pen;
-/*TODO*///	back = a->artwork;
-/*TODO*///	orig = a->orig_artwork;
-/*TODO*///	height = a->artwork->height;
-/*TODO*///	width = a->artwork->width;
-/*TODO*///
-/*TODO*///	if (back->depth == 8)
-/*TODO*///	{
-/*TODO*///		for ( j = 0; j < height; j++)
-/*TODO*///			for (i = 0; i < width; i++)
-/*TODO*///				back->line[j][i] = Machine->pens[orig->line[j][i] + offset];
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		for ( j = 0; j < height; j++)
+    /**
+     * *******************************************************************
+     * backdrop_refresh
+     *
+     * This remaps the "original" palette indexes to the abstract OS indexes
+     * used by MAME. This needs to be called every time palette_recalc returns a
+     * non-zero value, since the mappings will have changed.
+     * *******************************************************************
+     */
+    public static void backdrop_refresh(artwork_info a) {
+        int i, j, height, width, offset;
+        osd_bitmap back, orig;
+
+        offset = a.start_pen;
+        back = a.artwork;
+        orig = a.orig_artwork;
+        height = a.artwork.height;
+        width = a.artwork.width;
+
+        if (back.depth == 8) {
+            for (j = 0; j < height; j++) {
+                for (i = 0; i < width; i++) {
+                    back.line[j].write(i, Machine.pens[orig.line[j].read(i) + offset]);
+                }
+            }
+        } else {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		for ( j = 0; j < height; j++)
 /*TODO*///			for (i = 0; i < width; i++)
 /*TODO*///				((UINT16 *)back->line[j])[i] = Machine->pens[((UINT16 *)orig->line[j])[i] + offset];
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+        }
+    }
+
+    /*TODO*///
 /*TODO*///static void backdrop_remap(void)
 /*TODO*///{
 /*TODO*///	backdrop_refresh(artwork_backdrop);
 /*TODO*///	brightness_update (artwork_backdrop);
 /*TODO*///}
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  overlay_remap
-/*TODO*///
-/*TODO*///  This remaps the "original" palette indexes to the abstract OS indexes
-/*TODO*///  used by MAME. The alpha channel is also taken into account.
-/*TODO*/// *********************************************************************/
-/*TODO*///static void overlay_remap(void)
-/*TODO*///{
-/*TODO*///	int i,j;
-/*TODO*///	UINT8 r,g,b;
-/*TODO*///	float h, s, v, rf, gf, bf;
-/*TODO*///	int offset, height, width;
-/*TODO*///	struct osd_bitmap *overlay, *overlay1, *orig;
-/*TODO*///
-/*TODO*///	offset = artwork_overlay->start_pen;
-/*TODO*///	height = artwork_overlay->artwork->height;
-/*TODO*///	width = artwork_overlay->artwork->width;
-/*TODO*///	overlay = artwork_overlay->artwork;
-/*TODO*///	overlay1 = artwork_overlay->artwork1;
-/*TODO*///	orig = artwork_overlay->orig_artwork;
-/*TODO*///
-/*TODO*///	if (overlay->depth == 8)
-/*TODO*///	{
-/*TODO*///		for ( j=0; j<height; j++)
-/*TODO*///			for (i=0; i<width; i++)
-/*TODO*///				overlay->line[j][i] = Machine->pens[orig->line[j][i]+offset];
-/*TODO*///	}
-/*TODO*///	else
-/*TODO*///	{
-/*TODO*///		if (artwork_overlay->alpha)
+    /**
+     * *******************************************************************
+     * overlay_remap
+     *
+     * This remaps the "original" palette indexes to the abstract OS indexes
+     * used by MAME. The alpha channel is also taken into account.
+     * *******************************************************************
+     */
+    static void overlay_remap() {
+        int i, j;
+        /*TODO*///UINT8 r,g,b;
+        float h, s, v, rf, gf, bf;
+        int offset, height, width;
+        osd_bitmap overlay, overlay1, orig;
+
+        offset = artwork_overlay.start_pen;
+        height = artwork_overlay.artwork.height;
+        width = artwork_overlay.artwork.width;
+        overlay = artwork_overlay.artwork;
+        overlay1 = artwork_overlay.artwork1;
+        orig = artwork_overlay.orig_artwork;
+
+        if (overlay.depth == 8) {
+            for (j = 0; j < height; j++) {
+                for (i = 0; i < width; i++) {
+                    overlay.line[j].write(i, Machine.pens[orig.line[j].read(i) + offset]);
+                }
+            }
+        } else {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if (artwork_overlay->alpha)
 /*TODO*///		{
 /*TODO*///			for ( j=0; j<height; j++)
 /*TODO*///				for (i=0; i<width; i++)
@@ -766,16 +771,18 @@ public class artworkC {
 /*TODO*///				for (i=0; i<width; i++)
 /*TODO*///					((UINT16 *)overlay->line[j])[i] = Machine->pens[((UINT16 *)orig->line[j])[i]+offset];
 /*TODO*///		}
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* Calculate brightness of all colors */
-/*TODO*///	brightness_update(artwork_overlay);
-/*TODO*///}
-/*TODO*///
+        }
+
+        /* Calculate brightness of all colors */
+        brightness_update(artwork_overlay);
+    }
+
     public static void artwork_remap() {
-        System.out.println("artwork_remap");
+
         /*TODO*///	if (artwork_backdrop) backdrop_remap();
-/*TODO*///	if (artwork_overlay) overlay_remap();
+        if (artwork_overlay != null) {
+            overlay_remap();
+        }
     }
 
     /*TODO*///
@@ -787,66 +794,61 @@ public class artworkC {
 /*TODO*/// *********************************************************************/
 /*TODO*///
     public static void overlay_draw(osd_bitmap dest, osd_bitmap source) {
-        System.out.println("overlay_draw");
-        /*TODO*///	int i,j;
-/*TODO*///	int height,width;
-/*TODO*///
-/*TODO*///	/* the colors could have changed so update the brightness table */
-/*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
-/*TODO*///		brightness_update(artwork_overlay);
-/*TODO*///
-/*TODO*///	height = artwork_overlay->artwork->height;
-/*TODO*///	width = artwork_overlay->artwork->width;
-/*TODO*///
-/*TODO*///	if (dest->depth == 8)
-/*TODO*///	{
-/*TODO*///		if (Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)
-/*TODO*///		{
-/*TODO*///			UINT8 *dst, *ovr, *src;
-/*TODO*///			UINT8 *bright = artwork_overlay->brightness;
-/*TODO*///			UINT8 *tab = artwork_overlay->pTable;
+        int i, j;
+        int height, width;
+
+        /* the colors could have changed so update the brightness table */
+        if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
+            brightness_update(artwork_overlay);
+        }
+
+        height = artwork_overlay.artwork.height;
+        width = artwork_overlay.artwork.width;
+
+        if (dest.depth == 8) {
+            if ((Machine.drv.video_attributes & VIDEO_TYPE_VECTOR) != 0) {
+                throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///			UINT8 *dst, *ovr, *src;
+/*TODO*///			UINT8 *bright = artwork_overlay.brightness;
+/*TODO*///			UINT8 *tab = artwork_overlay.pTable;
 /*TODO*///			int bp;
 /*TODO*///
-/*TODO*///			copybitmap(dest, artwork_overlay->artwork ,0,0,0,0,NULL,TRANSPARENCY_NONE,0);
+/*TODO*///			copybitmap(dest, artwork_overlay.artwork ,0,0,0,0,NULL,TRANSPARENCY_NONE,0);
 /*TODO*///			for ( j = 0; j < height; j++)
 /*TODO*///			{
-/*TODO*///				dst = dest->line[j];
-/*TODO*///				src = source->line[j];
-/*TODO*///				ovr = artwork_overlay->orig_artwork->line[j];
+/*TODO*///				dst = dest.line[j];
+/*TODO*///				src = source.line[j];
+/*TODO*///				ovr = artwork_overlay.orig_artwork.line[j];
 /*TODO*///				for (i = 0; i < width; i++)
 /*TODO*///				{
 /*TODO*///					bp = bright[*src++];
 /*TODO*///					if (bp > 0)
-/*TODO*///						dst[i] = Machine->pens[tab[(ovr[i] << 8) + bp]];
+/*TODO*///						dst[i] = Machine.pens[tab[(ovr[i] << 8) + bp]];
 /*TODO*///				}
 /*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else /* !VECTOR */
-/*TODO*///		{
-/*TODO*///			UINT8 *dst, *ovr, *src;
-/*TODO*///			int black = Machine->pens[0];
-/*TODO*///
-/*TODO*///			for ( j = 0; j < height; j++)
-/*TODO*///			{
-/*TODO*///				dst = dest->line[j];
-/*TODO*///				src = source->line[j];
-/*TODO*///				ovr = artwork_overlay->artwork->line[j];
-/*TODO*///				for (i = width; i > 0; i--)
-/*TODO*///				{
-/*TODO*///					if (*src!=black)
-/*TODO*///						*dst = *ovr;
-/*TODO*///					else
-/*TODO*///						*dst = black;
-/*TODO*///					dst++;
-/*TODO*///					src++;
-/*TODO*///					ovr++;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	else /* 16 bit */
-/*TODO*///	{
-/*TODO*///		if (artwork_overlay->start_pen == 2)
+            } else /* !VECTOR */ {
+                UBytePtr dst, ovr, src;
+                int black = Machine.pens[0];
+
+                for (j = 0; j < height; j++) {
+                    dst = dest.line[j];
+                    src = source.line[j];
+                    ovr = artwork_overlay.artwork.line[j];
+                    for (i = width; i > 0; i--) {
+                        if (src.read() != black) {
+                            dst.write(ovr.read());
+                        } else {
+                            dst.write(black);
+                        }
+                        dst.inc();
+                        src.inc();
+                        ovr.inc();
+                    }
+                }
+            }
+        } else /* 16 bit */ {
+            throw new UnsupportedOperationException("Unsupported");
+            /*TODO*///		if (artwork_overlay.start_pen == 2)
 /*TODO*///		{
 /*TODO*///			/* fast version */
 /*TODO*///			UINT16 *dst, *bg, *fg, *src;
@@ -919,7 +921,7 @@ public class artworkC {
 /*TODO*///				}
 /*TODO*///			}
 /*TODO*///		}
-/*TODO*///	}
+        }
     }
 
     /*TODO*///
@@ -982,15 +984,14 @@ public class artworkC {
 /*TODO*///}
 /*TODO*///
     public static void artwork_draw(osd_bitmap dest, osd_bitmap source, int _bitmap_dirty) {
-        System.out.println("artwork_draw");
-        /*TODO*///	if (_bitmap_dirty)
-/*TODO*///	{
-/*TODO*///		artwork_remap();
-/*TODO*///		osd_mark_dirty (0, 0, dest->width-1, dest->height-1, 0);
-/*TODO*///	}
+        	if (_bitmap_dirty!=0)
+	{
+		artwork_remap();
+		osd_mark_dirty (0, 0, dest.width-1, dest.height-1, 0);
+	}
 /*TODO*///
 /*TODO*///	if (artwork_backdrop) backdrop_draw(dest, source);
-/*TODO*///	if (artwork_overlay) overlay_draw(dest, source);
+	if (artwork_overlay!=null) overlay_draw(dest, source);
     }
 
     /*TODO*///
@@ -1385,7 +1386,7 @@ public class artworkC {
                 }
                 fillbitmap(box, pen, null);
                 fillbitmap(box_alpha, alpha, null);
-/*TODO*///                merge_cmy(artwork_overlay, box, box_alpha, ae[ae_ptr].box.min_x, ae[ae_ptr].box.min_y);
+                merge_cmy(artwork_overlay, box, box_alpha, ae[ae_ptr].box.min_x, ae[ae_ptr].box.min_y);
                 bitmap_free(box);
                 bitmap_free(box_alpha);
             }
@@ -1400,15 +1401,15 @@ public class artworkC {
             artwork_kill();
             return;
         }
-        /*TODO*///
-/*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
-/*TODO*///	{
-/*TODO*///		load_palette(artwork_overlay,artwork_overlay->orig_palette);
-/*TODO*///		backdrop_refresh(artwork_overlay);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
-/*TODO*///		overlay_remap();
+
+        if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
+            load_palette(artwork_overlay, artwork_overlay.u8_orig_palette);
+            backdrop_refresh(artwork_overlay);
+        }
+
+        if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
+            overlay_remap();
+        }
     }
 
     /*TODO*///int artwork_get_size_info(const char *file_name, struct artwork_size_info *a)

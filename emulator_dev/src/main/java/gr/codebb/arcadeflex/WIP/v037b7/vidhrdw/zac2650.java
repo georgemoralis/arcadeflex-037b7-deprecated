@@ -42,7 +42,7 @@ public class zac2650 {
     public static int CollisionBackground;
     public static int CollisionSprite;
 
-    static artwork_element tinv2650_overlay[] = new artwork_element[]{
+    static artwork_element tinv2650_overlay[] = {
         new artwork_element(new rectangle(0, 255, 0, 255), 0xff, 0xff, 0xff, 0xff),
         new artwork_element(new rectangle(16, 71, 0, 255), 0x20, 0xff, 0x20, 0xff),
         new artwork_element(new rectangle(0, 15, 48, 133), 0x20, 0xff, 0x20, 0xff),
@@ -168,7 +168,7 @@ public class zac2650 {
 
     public static VhStartPtr tinvader_vh_start = new VhStartPtr() {
         public int handler() {
-            overlay_create(tinv2650_overlay, 1, 4);
+/*TODO*///            overlay_create(tinv2650_overlay, 1, 4);
 
             generic_vh_start.handler();
 

@@ -20,14 +20,22 @@ along with Arcadeflex.  If not, see <http://www.gnu.org/licenses/>.
  */
 package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkC.overlay_create;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkH.OVERLAY_DEFAULT_OPACITY;
+import gr.codebb.arcadeflex.WIP.v037b7.mame.artworkH.artwork_element;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.palette_recalc;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.dirtybuffer;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.generic_vh_start;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram;
+import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram_size;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
+import gr.codebb.arcadeflex.v037b7.common.fucPtr.VhStartPtr;
+import gr.codebb.arcadeflex.v037b7.common.fucPtr.VhUpdatePtr;
+import gr.codebb.arcadeflex.v037b7.common.fucPtr.WriteHandlerPtr;
 
 public class meadows {
 
@@ -52,27 +60,27 @@ public class meadows {
     static int[] sprite_index = new int[SPR_COUNT];
     /* index 0x00..0x0f, prom 0x10, flip horz 0x20 */
 
- /*TODO*///	static struct artwork_element deadeye_artwork[] = {
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 0, 	 4*8-1},		  32,192, 64, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 4*8,	 8*8-1},		  64, 64,192, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 8*8,	 11*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 1*8-1, 		 11*8,	 26*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{SCR_HORZ*8-8,  SCR_HORZ*8-1,	 11*8,	 26*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 26*8,	 SCR_VERT*8-1},   64, 64,192, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{-1,-1,-1,-1},0,0,0,0},
-/*TODO*///	};
+    static artwork_element deadeye_artwork[] = {
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 0, 4 * 8 - 1), 32, 192, 64, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 4 * 8, 8 * 8 - 1), 64, 64, 192, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 8 * 8, 11 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, 1 * 8 - 1, 11 * 8, 26 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(SCR_HORZ * 8 - 8, SCR_HORZ * 8 - 1, 11 * 8, 26 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 26 * 8, SCR_VERT * 8 - 1), 64, 64, 192, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(-1, -1, -1, -1), 0, 0, 0, 0)
+    };
 
-    /*TODO*///	static struct artwork_element gypsyjug_artwork[] = {
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 0, 	 4*8-1},		  32,192, 64, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 4*8,	 8*8-1},		  64, 64,192, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 4*8,	 5*8-1},		  32,192, 64, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 5*8,	 8*8-1},		  64, 64,192, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 8*8,	 11*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 1*8-1, 		 11*8,	 26*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{SCR_HORZ*8-8,  SCR_HORZ*8-1,	 11*8,	 26*8-1},		 192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{0,			 SCR_HORZ*8-1,	 26*8,	 SCR_VERT*8-1},  192,160, 32, OVERLAY_DEFAULT_OPACITY},
-/*TODO*///		{{-1,-1,-1,-1},0,0,0,0},
-/*TODO*///	};
+    static artwork_element gypsyjug_artwork[] = {
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 0, 4 * 8 - 1), 32, 192, 64, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 4 * 8, 8 * 8 - 1), 64, 64, 192, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 4 * 8, 5 * 8 - 1), 32, 192, 64, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 5 * 8, 8 * 8 - 1), 64, 64, 192, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 8 * 8, 11 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, 1 * 8 - 1, 11 * 8, 26 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(SCR_HORZ * 8 - 8, SCR_HORZ * 8 - 1, 11 * 8, 26 * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(0, SCR_HORZ * 8 - 1, 26 * 8, SCR_VERT * 8 - 1), 192, 160, 32, OVERLAY_DEFAULT_OPACITY),
+        new artwork_element(new rectangle(-1, -1, -1, -1), 0, 0, 0, 0)
+    };
     /**
      * **********************************************************
      */
@@ -86,7 +94,7 @@ public class meadows {
                 return 1;
             }
 
-            /*TODO*///		overlay_create(deadeye_artwork, 2, Machine.drv.total_colors - 2);
+/*TODO*///            overlay_create(deadeye_artwork, 2, Machine.drv.total_colors - 2);
             return 0;
         }
     };
@@ -97,7 +105,7 @@ public class meadows {
                 return 1;
             }
 
-            /*TODO*///		overlay_create(gypsyjug_artwork, 2, Machine.drv.total_colors - 2);
+/*TODO*///            overlay_create(gypsyjug_artwork, 2, Machine.drv.total_colors - 2);
             return 0;
         }
     };
