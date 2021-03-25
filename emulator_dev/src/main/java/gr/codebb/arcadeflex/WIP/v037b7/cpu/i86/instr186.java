@@ -28,7 +28,12 @@ public class instr186 {
 /*TODO*///#endif
 /*TODO*///
 /*TODO*///
-/*TODO*///static void PREFIX186(_pusha)(void)    /* Opcode 0x60 */
+    static InstructionPtr i186_pusha = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
+    /*TODO*///static void PREFIX186(_pusha)(void)    /* Opcode 0x60 */
 /*TODO*///{
 /*TODO*///	unsigned tmp=I.regs.w[SP];
 /*TODO*///	
@@ -43,6 +48,11 @@ public class instr186 {
 /*TODO*///	PUSH(I.regs.w[DI]);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_popa = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_popa)(void)    /* Opcode 0x61 */
 /*TODO*///{
 /*TODO*///	 unsigned tmp;
@@ -58,6 +68,11 @@ public class instr186 {
 /*TODO*///	POP(I.regs.w[AX]);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_bound = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_bound)(void)    /* Opcode 0x62 */
 /*TODO*///{
 /*TODO*///	unsigned ModRM = FETCHOP;
@@ -77,6 +92,11 @@ public class instr186 {
 /*TODO*///	ICOUNT -= cycles.bound;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_push_d16 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_push_d16)(void)    /* Opcode 0x68 */
 /*TODO*///{
 /*TODO*///	unsigned tmp = FETCH;
@@ -86,6 +106,11 @@ public class instr186 {
 /*TODO*///	PUSH(tmp);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_imul_d16 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_imul_d16)(void)    /* Opcode 0x69 */
 /*TODO*///{
 /*TODO*///	DEF_r16w(dst,src);
@@ -100,6 +125,11 @@ public class instr186 {
 /*TODO*///}
 /*TODO*///
 /*TODO*///
+    static InstructionPtr i186_push_d8 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_push_d8)(void)    /* Opcode 0x6a */
 /*TODO*///{
 /*TODO*///	unsigned tmp = (WORD)((INT16)((INT8)FETCH));
@@ -108,6 +138,11 @@ public class instr186 {
 /*TODO*///	PUSH(tmp);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_imul_d8 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_imul_d8)(void)    /* Opcode 0x6b */
 /*TODO*///{
 /*TODO*///	DEF_r16w(dst,src);
@@ -120,6 +155,11 @@ public class instr186 {
 /*TODO*///	RegWord(ModRM)=(WORD)dst;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_insb = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_insb)(void)    /* Opcode 0x6c */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.ins8;
@@ -127,6 +167,11 @@ public class instr186 {
 /*TODO*///	I.regs.w[DI] += I.DirVal;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_insw = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_insw)(void)    /* Opcode 0x6d */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.ins16;
@@ -135,6 +180,11 @@ public class instr186 {
 /*TODO*///	I.regs.w[DI] += 2 * I.DirVal;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_outsb = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_outsb)(void)    /* Opcode 0x6e */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.outs8;
@@ -142,6 +192,11 @@ public class instr186 {
 /*TODO*///	I.regs.w[DI] += I.DirVal;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_outsw = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_outsw)(void)    /* Opcode 0x6f */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.outs16;
@@ -150,6 +205,11 @@ public class instr186 {
 /*TODO*///	I.regs.w[DI] += 2 * I.DirVal;
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_rotshft_bd8 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_rotshft_bd8)(void)    /* Opcode 0xc0 */
 /*TODO*///{
 /*TODO*///	unsigned ModRM = FETCH;
@@ -158,6 +218,11 @@ public class instr186 {
 /*TODO*///	PREFIX86(_rotate_shift_Byte)(ModRM,count);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_rotshft_wd8 = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_rotshft_wd8)(void)    /* Opcode 0xc1 */
 /*TODO*///{
 /*TODO*///	unsigned ModRM = FETCH;
@@ -166,6 +231,11 @@ public class instr186 {
 /*TODO*///	PREFIX86(_rotate_shift_Word)(ModRM,count);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_enter = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_enter)(void)    /* Opcode 0xc8 */
 /*TODO*///{
 /*TODO*///	unsigned nb = FETCH;	 unsigned i,level;
@@ -181,6 +251,11 @@ public class instr186 {
 /*TODO*///	if (level) PUSH(I.regs.w[BP]);
 /*TODO*///}
 /*TODO*///
+    static InstructionPtr i186_leave = new InstructionPtr() {
+        public void handler() {
+            throw new UnsupportedOperationException("Unsupported");
+        }
+    };
 /*TODO*///static void PREFIX186(_leave)(void)    /* Opcode 0xc9 */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.leave;
