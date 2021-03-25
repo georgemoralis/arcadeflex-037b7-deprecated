@@ -168,7 +168,7 @@ public class I86H {
     }
 
     public static void WriteByte(int ea, int val) {
-        cpu_writemem20((ea) & AMASK, val);
+        cpu_writemem20((ea) & AMASK, val & 0xFF);
     }
 
     public static void WriteWord(int ea, int val) {

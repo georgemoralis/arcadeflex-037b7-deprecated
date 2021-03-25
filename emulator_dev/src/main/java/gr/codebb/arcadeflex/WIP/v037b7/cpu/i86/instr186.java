@@ -6,7 +6,9 @@ package gr.codebb.arcadeflex.WIP.v037b7.cpu.i86;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.I86H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i86.*;
-import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr86.InstructionPtr;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.instr86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.table186H.i186_instruction;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.modrmH.*;
 
 public class instr186 {
 
@@ -517,4 +519,75 @@ public class instr186 {
             /*TODO*///		PREFIX(_instruction)[next](); 
         }
     }
+    /**
+     * need to fetch instruction from i86 table
+     */
+    static InstructionPtr i186_cs = new InstructionPtr() /* Opcode 0x2e */ {
+        public void handler() {
+            seg_prefix = 1;
+            prefix_base = I.base[CS];
+            i86_ICount[0] -= cycles.override;
+            i186_instruction[FETCHOP()].handler();       
+        }
+    };
+        static InstructionPtr i186_mov_sregw = new InstructionPtr() /* Opcode 0x8e */ {
+        public void handler() {
+            int /*unsigned*/ ModRM = FETCH();
+            int /*WORD*/ src = GetRMWord(ModRM) & 0xFFFF;
+
+            i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mov_sr : cycles.mov_sm;
+            /*TODO*///#ifdef I286
+/*TODO*///    switch (ModRM & 0x38)
+/*TODO*///    {
+/*TODO*///    case 0x00:  /* mov es,ew */
+/*TODO*///		i286_data_descriptor(ES,src);
+/*TODO*///		break;
+/*TODO*///    case 0x18:  /* mov ds,ew */
+/*TODO*///		i286_data_descriptor(DS,src);
+/*TODO*///		break;
+/*TODO*///    case 0x10:  /* mov ss,ew */
+/*TODO*///		i286_data_descriptor(SS,src);
+/*TODO*///		PREFIX(_instruction)[FETCHOP]();
+/*TODO*///		break;
+/*TODO*///    case 0x08:  /* mov cs,ew */
+/*TODO*///		break;  /* doesn't do a jump far */
+/*TODO*///    }
+/*TODO*///#else
+            switch (ModRM & 0x38) {
+                case 0x00:
+                    /* mov es,ew */
+                    I.sregs[ES] = src;
+                    I.base[ES] = SegBase(ES);
+                    break;
+                case 0x18:
+                    /* mov ds,ew */
+                    I.sregs[DS] = src;
+                    I.base[DS] = SegBase(DS);
+                    break;
+                case 0x10:
+                    /* mov ss,ew */
+                    I.sregs[SS] = src;
+                    I.base[SS] = SegBase(SS);/* no interrupt allowed before next instr */
+                    i186_instruction[FETCHOP()].handler();
+                    break;
+                case 0x08:
+                    /* mov cs,ew */
+                    break;
+                /* doesn't do a jump far */
+            }
+            /*TODO*///#endif
+        }
+    };
+        static InstructionPtr i186_sti = new InstructionPtr() /* Opcode 0xfb */ {
+        public void handler() {
+            i86_ICount[0] -= cycles.flag_ops;
+            SetIF(1);
+            i186_instruction[FETCHOP()].handler();/* no interrupt before next instruction */
+
+            /* if an interrupt is pending, signal an interrupt */
+            if (I.irq_state != 0) {
+                i86_interrupt(-1);
+            }
+        }
+    };
 }

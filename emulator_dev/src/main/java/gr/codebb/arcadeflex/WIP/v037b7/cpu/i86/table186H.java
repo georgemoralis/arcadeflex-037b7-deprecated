@@ -55,7 +55,7 @@ public class table186H {
 	 i86_sub_r16w,          /* 0x2b */
 	 i86_sub_ald8,          /* 0x2c */
 	 i86_sub_axd16,         /* 0x2d */
-	 i86_cs,                /* 0x2e */
+	 i186_cs,                /* 0x2e */
 	 i86_das, 		/* 0x2f */
 	 i86_xor_br8,           /* 0x30 */
 	 i86_xor_wr16,          /* 0x31 */
@@ -151,7 +151,7 @@ public class table186H {
 	 i86_mov_r16w,          /* 0x8b */
 	 i86_mov_wsreg,         /* 0x8c */
 	 i86_lea,               /* 0x8d */
-	 i86_mov_sregw,         /* 0x8e */
+	 i186_mov_sregw,         /* 0x8e */
 	 i86_popw,              /* 0x8f */
 	 i86_nop,               /* 0x90 */
 	 i86_xchg_axcx,         /* 0x91 */
@@ -260,7 +260,7 @@ public class table186H {
 	 i86_clc,               /* 0xf8 */
 	 i86_stc,               /* 0xf9 */
 	 i86_cli,               /* 0xfa */
-	 i86_sti,               /* 0xfb */
+	 i186_sti,               /* 0xfb */
 	 i86_cld,               /* 0xfc */
 	 i86_std,               /* 0xfd */
 	 i86_fepre,             /* 0xfe */
