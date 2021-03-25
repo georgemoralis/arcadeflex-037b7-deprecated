@@ -5,7 +5,6 @@ package gr.codebb.arcadeflex.WIP.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.irobot.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
@@ -13,9 +12,7 @@ import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.fileio.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
-import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
@@ -264,7 +261,7 @@ public class irobot {
     /**
      * *************************************************************************
      * Game driver(s)
-     **************************************************************************
+     * *************************************************************************
      */
     static RomLoadPtr rom_irobot = new RomLoadPtr() {
         public void handler() {

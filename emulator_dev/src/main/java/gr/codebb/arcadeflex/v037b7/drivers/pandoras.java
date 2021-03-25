@@ -2,7 +2,7 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8039H.I8039_EXT_INT;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8039.i8039H.I8039_p1;
@@ -32,7 +32,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound.dac.DAC_0_data_w;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.dacH.DACinterface;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.colorram;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.videoram;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.pandoras.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.pandoras.*;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
 
 public class pandoras {

@@ -2,13 +2,12 @@
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.machine.atari_vg.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
@@ -18,14 +17,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.pokey.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.pokeyH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.avgdvg.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.centiped.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.centiped.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.vector.*;
 import static gr.codebb.arcadeflex.common.libc.cstdlib.rand;
-import static gr.codebb.arcadeflex.common.PtrLib.*;
 import static gr.codebb.arcadeflex.old.mame.common.*;
-import static gr.codebb.arcadeflex.old.mame.inputH.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;

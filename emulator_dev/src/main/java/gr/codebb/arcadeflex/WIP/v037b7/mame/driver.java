@@ -96,7 +96,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.grobda.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.jailbrek.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.junofrst.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.megazone.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pandoras.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.pandoras.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.tutankhm.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.hyperspt.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.trackfld.*;
@@ -114,16 +114,16 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.btime.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.bwidow.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.bzone.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.ccastles.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.centiped.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.centiped.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exprraid.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gameplan.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.gameplan.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.matmania.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.renegade.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tempest.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mhavoc.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.mhavoc.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.missile.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.exidy.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warlord.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.warlord.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.zac2650.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lazercmd.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meadows.*;
@@ -131,7 +131,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.actfancr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.battlera.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.punchout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.playch10.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sidepckt.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.sidepckt.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dec8.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pcktgal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.videopin.*;
@@ -139,7 +139,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tankbatt.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tagteam.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.subs.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ssozumo.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.ssozumo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sprint2.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skychut.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scregg.*;
@@ -411,7 +411,7 @@ public class driver {
         // driver_kaitein,	/* [1980] Namco */
         /*TODO*/
         // driver_sos,		/* [1980] Namco */
-        driver_tankbatt,	/* (c) 1980 Namco */
+        driver_tankbatt, /* (c) 1980 Namco */
         /*TODO*/
         // driver_warpwarp,	/* (c) 1981 Namco */
         /*TODO*/
@@ -426,13 +426,13 @@ public class driver {
         // driver_toypop,	/* (c) 1986 */
         /* Z8000 games */
         driver_polepos, /* (c) 1982  */
-        driver_poleposa,	/* (c) 1982 + Atari license */
-        driver_polepos1,	/* (c) 1982 Atari */
-        driver_topracer,	/* bootleg */
-        driver_polepos2,	/* (c) 1983 */
-        driver_poleps2a,	/* (c) 1983 + Atari license */
-        driver_poleps2b,	/* bootleg */
-        driver_poleps2c,	/* bootleg */
+        driver_poleposa, /* (c) 1982 + Atari license */
+        driver_polepos1, /* (c) 1982 Atari */
+        driver_topracer, /* bootleg */
+        driver_polepos2, /* (c) 1983 */
+        driver_poleps2a, /* (c) 1983 + Atari license */
+        driver_poleps2b, /* bootleg */
+        driver_poleps2c, /* bootleg */
         /* no custom I/O in the following, HD63701 (or compatible) microcontroller instead */
         driver_pacland, /* (c) 1984 */
         driver_pacland2, /* (c) 1984 */
@@ -622,68 +622,64 @@ public class driver {
         driver_dkngjrjp,
         driver_dkjrjp,
         driver_dkjrbl,
-        driver_dkong3,	/* (c) 1983 Nintendo of America */
-        driver_dkong3j,	/* (c) 1983 Nintendo */
-
-        driver_hunchbkd,	/* (c) 1983 Century */
-        driver_herbiedk,	/* (c) 1984 CVS */
-        
+        driver_dkong3, /* (c) 1983 Nintendo of America */
+        driver_dkong3j, /* (c) 1983 Nintendo */
+        driver_hunchbkd, /* (c) 1983 Century */
+        driver_herbiedk, /* (c) 1984 CVS */
         /// *TODO*///TESTDRIVER( herocast,
         driver_popeye,
         driver_popeye2,
         driver_popeyef,
         driver_popeyebl, /* bootleg */
-        driver_punchout,	/* (c) 1984 */
-        driver_spnchout,	/* (c) 1984 */
-        driver_spnchotj,	/* (c) 1984 (Japan) */
-        driver_armwrest,	/* (c) 1985 */
-
+        driver_punchout, /* (c) 1984 */
+        driver_spnchout, /* (c) 1984 */
+        driver_spnchotj, /* (c) 1984 (Japan) */
+        driver_armwrest, /* (c) 1985 */
         /* Nintendo Playchoice 10 games */
-        driver_pc_tenis,	/* (c) 1983 Nintendo */
-        driver_pc_bball,	/* (c) 1984 Nintendo of America */
-        driver_pc_bfght,	/* (c) 1984 Nintendo */
-        driver_pc_ebike,	/* (c) 1984 Nintendo */
-        driver_pc_golf,	/* (c) 1984 Nintendo */
-        driver_pc_kngfu,	/* (c) 1984 Irem (Nintendo license) */
-        driver_pc_1942,	/* (c) 1985 Capcom */
-        driver_pc_smb,	/* (c) 1985 Nintendo */
-        driver_pc_vball,	/* (c) 1986 Nintendo */
-        driver_pc_duckh,	/* (c) 1984 Nintendo */
-        driver_pc_hgaly,	/* (c) 1984 Nintendo */
-        driver_pc_wgnmn,	/* (c) 1984 Nintendo */
-        driver_pc_grdus,	/* (c) 1986 Konami */
-        driver_pc_tkfld,	/* (c) 1987 Konami (Nintendo of America license) */
-        driver_pc_pwrst,	/* (c) 1986 Nintendo */
-        driver_pc_cvnia,	/* (c) 1987 Konami (Nintendo of America license) */
-        driver_pc_dbldr,	/* (c) 1987 Konami (Nintendo of America license) */
-        driver_pc_rnatk,	/* (c) 1987 Konami (Nintendo of America license) */
-        driver_pc_rygar,	/* (c) 1987 Tecmo (Nintendo of America license) */
-        driver_pc_cntra,	/* (c) 1988 Konami (Nintendo of America license) */
-        driver_pc_goons,	/* (c) 1986 Konami */
-        driver_pc_radrc,	/* (c) 1987 Square */
-        driver_pc_miket,	/* (c) 1987 Nintendo */
-        driver_pc_rcpam,	/* (c) 1987 Rare */
-        driver_pc_ngaid,	/* (c) 1989 Tecmo (Nintendo of America license) */
-        driver_pc_tmnt,	/* (c) 1989 Konami (Nintendo of America license) */
-        driver_pc_drmro,	/* (c) 1990 Nintendo */
-        driver_pc_ynoid,	/* (c) 1990 Capcom USA (Nintendo of America license) */
+        driver_pc_tenis, /* (c) 1983 Nintendo */
+        driver_pc_bball, /* (c) 1984 Nintendo of America */
+        driver_pc_bfght, /* (c) 1984 Nintendo */
+        driver_pc_ebike, /* (c) 1984 Nintendo */
+        driver_pc_golf, /* (c) 1984 Nintendo */
+        driver_pc_kngfu, /* (c) 1984 Irem (Nintendo license) */
+        driver_pc_1942, /* (c) 1985 Capcom */
+        driver_pc_smb, /* (c) 1985 Nintendo */
+        driver_pc_vball, /* (c) 1986 Nintendo */
+        driver_pc_duckh, /* (c) 1984 Nintendo */
+        driver_pc_hgaly, /* (c) 1984 Nintendo */
+        driver_pc_wgnmn, /* (c) 1984 Nintendo */
+        driver_pc_grdus, /* (c) 1986 Konami */
+        driver_pc_tkfld, /* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_pwrst, /* (c) 1986 Nintendo */
+        driver_pc_cvnia, /* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_dbldr, /* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_rnatk, /* (c) 1987 Konami (Nintendo of America license) */
+        driver_pc_rygar, /* (c) 1987 Tecmo (Nintendo of America license) */
+        driver_pc_cntra, /* (c) 1988 Konami (Nintendo of America license) */
+        driver_pc_goons, /* (c) 1986 Konami */
+        driver_pc_radrc, /* (c) 1987 Square */
+        driver_pc_miket, /* (c) 1987 Nintendo */
+        driver_pc_rcpam, /* (c) 1987 Rare */
+        driver_pc_ngaid, /* (c) 1989 Tecmo (Nintendo of America license) */
+        driver_pc_tmnt, /* (c) 1989 Konami (Nintendo of America license) */
+        driver_pc_drmro, /* (c) 1990 Nintendo */
+        driver_pc_ynoid, /* (c) 1990 Capcom USA (Nintendo of America license) */
         driver_pc_ddrgn,
-        driver_pc_ftqst,	/* (c) 1989 Sunsoft (Nintendo of America license) */
-        driver_pc_rrngr,	/* (c) Capcom USA (Nintendo of America license) */
-        driver_pc_gntlt,	/* (c) 1985 Atari/Tengen (Nintendo of America license) */
-        driver_pc_smb2,	/* (c) 1988 Nintendo */
-        driver_pc_smb3,	/* (c) 1988 Nintendo */
-        driver_pc_mman3,	/* (c) 1990 Capcom USA (Nintendo of America license) */
-        driver_pc_radr2,	/* (c) 1990 Square (Nintendo of America license) */
-        driver_pc_suprc,	/* (c) 1990 Konami (Nintendo of America license) */
-        driver_pc_tmnt2,	/* (c) 1990 Konami (Nintendo of America license) */
-        driver_pc_wcup,	/* (c) 1990 Technos (Nintendo license) */
-        driver_pc_ngai3,	/* (c) 1991 Tecmo (Nintendo of America license) */
-        driver_pc_pwbld,	/* (c) 1991 Taito (Nintendo of America license) */
-        driver_pc_rkats,	/* (c) 1991 Atlus (Nintendo of America license) */
-        driver_pc_cshwk,	/* (c) 1989 Rare (Nintendo of America license) */
-        driver_pc_moglf,	/* (c) 1991 Nintendo */
-
+        driver_pc_ftqst, /* (c) 1989 Sunsoft (Nintendo of America license) */
+        driver_pc_rrngr, /* (c) Capcom USA (Nintendo of America license) */
+        driver_pc_gntlt, /* (c) 1985 Atari/Tengen (Nintendo of America license) */
+        driver_pc_smb2, /* (c) 1988 Nintendo */
+        driver_pc_smb3, /* (c) 1988 Nintendo */
+        driver_pc_mman3, /* (c) 1990 Capcom USA (Nintendo of America license) */
+        driver_pc_radr2, /* (c) 1990 Square (Nintendo of America license) */
+        driver_pc_suprc, /* (c) 1990 Konami (Nintendo of America license) */
+        driver_pc_tmnt2, /* (c) 1990 Konami (Nintendo of America license) */
+        driver_pc_wcup, /* (c) 1990 Technos (Nintendo license) */
+        driver_pc_ngai3, /* (c) 1991 Tecmo (Nintendo of America license) */
+        driver_pc_pwbld, /* (c) 1991 Taito (Nintendo of America license) */
+        driver_pc_rkats, /* (c) 1991 Atlus (Nintendo of America license) */
+        driver_pc_cshwk, /* (c) 1989 Rare (Nintendo of America license) */
+        driver_pc_moglf, /* (c) 1991 Nintendo */
         /* Midway 8080 b/w games */
         /*TODO*/
         // driver_seawolf,	/* 596 [1976] */
@@ -919,8 +915,8 @@ public class driver {
         /* trivia: IREM means "International Rental Electronics Machines" */
         /*TODO*/
         /// *TODO*///TESTDRIVER( iremm10,	/* M10 */
-        driver_skychut,	/* (c) [1980] */
-        driver_spacbeam,	/* M15 no copyright notice */
+        driver_skychut, /* (c) [1980] */
+        driver_spacbeam, /* M15 no copyright notice */
         /*TODO*/
         /// *TODO*///TESTDRIVER( greenber,
 
@@ -2187,20 +2183,17 @@ public class driver {
         /*TODO*/
         // driver_firetpbl,	/* bootleg */
 
-        driver_shootout,	/* (c) 1985 Data East USA (US) */
-        driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
-        driver_shootoub,	/* bootleg */
-        driver_sidepckt,	/* (c) 1986 Data East Corporation */
-        driver_sidepctj,	/* (c) 1986 Data East Corporation */
-        driver_sidepctb,	/* bootleg */
+        driver_shootout, /* (c) 1985 Data East USA (US) */
+        driver_shootouj, /* (c) 1985 Data East USA (Japan) */
+        driver_shootoub, /* bootleg */
         driver_exprraid, /* (c) 1986 Data East USA (US) */
         driver_wexpress, /* (c) 1986 Data East Corporation (World?) */
         driver_wexpresb, /* bootleg */
-        driver_pcktgal,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_pcktgalb,	/* bootleg */
-        driver_pcktgal2,	/* (c) 1989 Data East Corporation (World?) */
-        driver_spool3,	/* (c) 1989 Data East Corporation (World?) */
-        driver_spool3i,	/* (c) 1990 Data East Corporation + I-Vics license */
+        driver_pcktgal, /* (c) 1987 Data East Corporation (Japan) */
+        driver_pcktgalb, /* bootleg */
+        driver_pcktgal2, /* (c) 1989 Data East Corporation (World?) */
+        driver_spool3, /* (c) 1989 Data East Corporation (World?) */
+        driver_spool3i, /* (c) 1990 Data East Corporation + I-Vics license */
         driver_battlera, /* (c) 1988 Data East Corporation (World) */
         driver_bldwolf, /* (c) 1988 Data East USA (US) */
         driver_actfancr, /* (c) 1989 Data East Corporation (World) */
@@ -2208,25 +2201,24 @@ public class driver {
         driver_actfancj, /* (c) 1989 Data East Corporation (Japan) */
         driver_triothep, /* (c) 1989 Data East Corporation (Japan) */
         /* Data East 8-bit games */
-        driver_lastmiss,	/* (c) 1986 Data East USA (US) */
-        driver_lastmss2,	/* (c) 1986 Data East USA (US) */
-        driver_shackled,	/* (c) 1986 Data East USA (US) */
-        driver_breywood,	/* (c) 1986 Data East Corporation (Japan) */
-        driver_csilver,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_ghostb,	/* (c) 1987 Data East USA (US) */
-        driver_ghostb3,	/* (c) 1987 Data East USA (US) */
-        driver_meikyuh,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_srdarwin,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_gondo,		/* (c) 1987 Data East USA (US) */
-        driver_makyosen,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_garyoret,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_cobracom,	/* (c) 1988 Data East Corporation (World) */
-        driver_cobracmj,	/* (c) 1988 Data East Corporation (Japan) */
-        driver_oscar,		/* (c) 1988 Data East USA (US) */
-        driver_oscarj,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_oscarj1,	/* (c) 1987 Data East Corporation (Japan) */
-        driver_oscarj0,	/* (c) 1987 Data East Corporation (Japan) */
-
+        driver_lastmiss, /* (c) 1986 Data East USA (US) */
+        driver_lastmss2, /* (c) 1986 Data East USA (US) */
+        driver_shackled, /* (c) 1986 Data East USA (US) */
+        driver_breywood, /* (c) 1986 Data East Corporation (Japan) */
+        driver_csilver, /* (c) 1987 Data East Corporation (Japan) */
+        driver_ghostb, /* (c) 1987 Data East USA (US) */
+        driver_ghostb3, /* (c) 1987 Data East USA (US) */
+        driver_meikyuh, /* (c) 1987 Data East Corporation (Japan) */
+        driver_srdarwin, /* (c) 1987 Data East Corporation (Japan) */
+        driver_gondo, /* (c) 1987 Data East USA (US) */
+        driver_makyosen, /* (c) 1987 Data East Corporation (Japan) */
+        driver_garyoret, /* (c) 1987 Data East Corporation (Japan) */
+        driver_cobracom, /* (c) 1988 Data East Corporation (World) */
+        driver_cobracmj, /* (c) 1988 Data East Corporation (Japan) */
+        driver_oscar, /* (c) 1988 Data East USA (US) */
+        driver_oscarj, /* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj1, /* (c) 1987 Data East Corporation (Japan) */
+        driver_oscarj0, /* (c) 1987 Data East Corporation (Japan) */
         /* Data East 16-bit games */
         /*TODO*/
         // driver_karnov,	/* (c) 1987 Data East USA (US) */
@@ -2363,7 +2355,6 @@ public class driver {
         /*TODO*/
         // driver_ginkun,	/* (c) 1995 Tecmo */
 
-        driver_pandoras,
         //driver_tp84,		/* GX388 (c) 1984 */
         /*TODO*/
         // driver_tp84a,		/* GX388 (c) 1984 */
@@ -2371,7 +2362,6 @@ public class driver {
         driver_hpolym84,
         driver_roadf,
         driver_roadf2,
-        
         driver_gberet,
         driver_rushatck,
         driver_gberetb,
@@ -2684,9 +2674,8 @@ public class driver {
         // driver_starfire,	/* Exidy [1979?] */
         /*TODO*/
         // driver_fireone,	/* (c) 1979 Exidy */
-        driver_victory,	/* (c) 1982 */
-        driver_victorba,	/* (c) 1982 */
-
+        driver_victory, /* (c) 1982 */
+        driver_victorba, /* (c) 1982 */
         /* Exidy 440 games */
         /*TODO*/
         // driver_crossbow,	/* (c) 1983 */
@@ -2722,10 +2711,6 @@ public class driver {
         driver_starwars, /* (c) 1983 */
         driver_starwar1, /* (c) 1983 */
         driver_esb, /* (c) 1985 */
-        driver_mhavoc, /* (c) 1983 */
-        driver_mhavoc2, /* (c) 1983 */
-        driver_mhavocp, /* (c) 1983 */
-        driver_mhavocrv, /* hack */
         /*TODO*/
         // driver_quantum,	/* (c) 1982 */	/* made by Gencomp */
         /*TODO*/
@@ -2734,8 +2719,8 @@ public class driver {
         // driver_quantump,	/* (c) 1982 */	/* made by Gencomp */
 
         /* Atari b/w games */
-        driver_sprint1,	/* no copyright notice */
-        driver_sprint2,	/* no copyright notice */
+        driver_sprint1, /* no copyright notice */
+        driver_sprint2, /* no copyright notice */
         /*TODO*/
         // driver_sbrkout,	/* no copyright notice */
         /*TODO*/
@@ -2748,7 +2733,7 @@ public class driver {
         // driver_copsnrob,	/* [1976] */
         /*TODO*/
         // driver_avalnche,	/* no copyright notice [1978] */
-        driver_subs,		/* no copyright notice [1976] */
+        driver_subs, /* no copyright notice [1976] */
         /*TODO*/
         // driver_atarifb,	/* no copyright notice [1978] */
         /*TODO*/
@@ -2766,14 +2751,7 @@ public class driver {
         /*TODO*/
         // driver_canbprot,	/* no copyright notice [1977] */
 
-        driver_videopin,	/* no copyright notice [1979] */
-
-        /* Atari "Centipede hardware" games */
-        driver_warlord, /* (c) 1980 */
-        driver_centiped, /* (c) 1980 */
-        driver_centipd2, /* (c) 1980 */
-        driver_centipdb, /* bootleg */
-        driver_centipb2, /* bootleg */
+        driver_videopin, /* no copyright notice [1979] */
         /*TODO*/
         // driver_milliped,	/* (c) 1982 */
         /*TODO*/
@@ -3004,11 +2982,11 @@ public class driver {
         // driver_sbasebal,	/* Alpha-68K96V       (c) 1989 SNK of America licensed from Alpha */
 
         /* Technos games */
-        driver_scregg,	/* TA-0001 (c) 1983 */
-        driver_eggs,		/* TA-0002 (c) 1983 Universal USA */
-        driver_bigprowr,	/* TA-0007 (c) 1983 */
-        driver_tagteam,	/* TA-0007 (c) 1983 + Data East license */
-        driver_ssozumo,	/* TA-0008 (c) 1984 */
+        driver_scregg, /* TA-0001 (c) 1983 */
+        driver_eggs, /* TA-0002 (c) 1983 Universal USA */
+        driver_bigprowr, /* TA-0007 (c) 1983 */
+        driver_tagteam, /* TA-0007 (c) 1983 + Data East license */
+         
         /*TODO*/
         /*TODO*/
         // driver_xsleena,	/* TA-0019 (c) 1986 */
@@ -3030,11 +3008,6 @@ public class driver {
         /*TODO*/
         // driver_ddrago3b,	/* bootleg */
         /* TA-0031 WWF Wrestlefest */
-        /* GamePlan games */
-        driver_megatack, /* (c) 1980 Centuri */
-        driver_killcom, /* (c) 1980 Centuri */
-        driver_challeng, /* (c) 1981 Centuri */
-        driver_kaos, /* (c) 1981 */
         /* Zaccaria games */
         driver_sia2650,
         driver_tinv2650,
@@ -4454,7 +4427,25 @@ public class driver {
         driver_gravitr2,
         driver_spacduel,
         driver_kicker,
-        driver_shaolins, 
+        driver_shaolins,
+        driver_pandoras,
+        driver_warlord,
+        driver_centiped,
+        driver_centipd2,
+        driver_centipdb,
+        driver_centipb2,
+        driver_megatack,
+        driver_killcom,
+        driver_challeng,
+        driver_kaos,
+        driver_mhavoc,
+        driver_mhavoc2,
+        driver_mhavocp,
+        driver_mhavocrv,
+        driver_sidepckt, 
+        driver_sidepctj,
+        driver_sidepctb,
+        driver_ssozumo,
         /*
      * NOT Working flag
          */

@@ -1,31 +1,12 @@
-/***************************************************************************
-
-Side Pocket - (c) 1986 Data East
-
-The original board has an 8751 protection mcu
-
-Ernesto Corvi
-ernesto@imagina.com
-
-Thanks must go to Mirko Buffoni for testing the music.
-
-i8751 protection simluation and other fixes by Bryan McPhail, 15/10/00.
-
-***************************************************************************/
-
 /*
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */ 
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.m6502H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_INT_FIRQ;
-import static gr.codebb.arcadeflex.common.PtrLib.*;
-import static gr.codebb.arcadeflex.common.libc.cstring.memset;
-import static gr.codebb.arcadeflex.old.arcadeflex.fileio.*;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
-
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
@@ -34,10 +15,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.sidepckt.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.install_mem_read_handler;
-import gr.codebb.arcadeflex.WIP.v037b7.sound.samplesH.Samplesinterface;
-import static gr.codebb.arcadeflex.old.mame.inputH.*;
+import static gr.codebb.arcadeflex.v037b7.vidhrdw.sidepckt.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.vidhrdw.generic.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.sndintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound._2203intf.*;
