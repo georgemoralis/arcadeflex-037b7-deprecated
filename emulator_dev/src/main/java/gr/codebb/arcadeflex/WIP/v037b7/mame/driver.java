@@ -141,6 +141,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tagteam.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.subs.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ssozumo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sprint2.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skychut.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scregg.*;
 
 public class driver {
 
@@ -916,10 +918,8 @@ public class driver {
         /* trivia: IREM means "International Rental Electronics Machines" */
         /*TODO*/
         /// *TODO*///TESTDRIVER( iremm10,	/* M10 */
-        /*TODO*/
-        // driver_skychut,	/* (c) [1980] */
-        /*TODO*/
-        // driver_spacbeam,	/* M15 no copyright notice */
+        driver_skychut,	/* (c) [1980] */
+        driver_spacbeam,	/* M15 no copyright notice */
         /*TODO*/
         /// *TODO*///TESTDRIVER( greenber,
 
@@ -3006,10 +3006,8 @@ public class driver {
         // driver_sbasebal,	/* Alpha-68K96V       (c) 1989 SNK of America licensed from Alpha */
 
         /* Technos games */
-        /*TODO*/
-        // driver_scregg,	/* TA-0001 (c) 1983 */
-        /*TODO*/
-        // driver_eggs,		/* TA-0002 (c) 1983 Universal USA */
+        driver_scregg,	/* TA-0001 (c) 1983 */
+        driver_eggs,		/* TA-0002 (c) 1983 Universal USA */
         driver_bigprowr,	/* TA-0007 (c) 1983 */
         driver_tagteam,	/* TA-0007 (c) 1983 + Data East license */
         driver_ssozumo,	/* TA-0008 (c) 1984 */
