@@ -137,6 +137,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pcktgal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.videopin.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tankbatt.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tagteam.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.subs.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ssozumo.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sprint2.*;
 
 public class driver {
 
@@ -2732,10 +2736,8 @@ public class driver {
         // driver_quantump,	/* (c) 1982 */	/* made by Gencomp */
 
         /* Atari b/w games */
-        /*TODO*/
-        // driver_sprint1,	/* no copyright notice */
-        /*TODO*/
-        // driver_sprint2,	/* no copyright notice */
+        driver_sprint1,	/* no copyright notice */
+        driver_sprint2,	/* no copyright notice */
         /*TODO*/
         // driver_sbrkout,	/* no copyright notice */
         /*TODO*/
@@ -2748,8 +2750,7 @@ public class driver {
         // driver_copsnrob,	/* [1976] */
         /*TODO*/
         // driver_avalnche,	/* no copyright notice [1978] */
-        /*TODO*/
-        // driver_subs,		/* no copyright notice [1976] */
+        driver_subs,		/* no copyright notice [1976] */
         /*TODO*/
         // driver_atarifb,	/* no copyright notice [1978] */
         /*TODO*/
@@ -3009,12 +3010,9 @@ public class driver {
         // driver_scregg,	/* TA-0001 (c) 1983 */
         /*TODO*/
         // driver_eggs,		/* TA-0002 (c) 1983 Universal USA */
-        /*TODO*/
-        // driver_bigprowr,	/* TA-0007 (c) 1983 */
-        /*TODO*/
-        // driver_tagteam,	/* TA-0007 (c) 1983 + Data East license */
-        /*TODO*/
-        // driver_ssozumo,	/* TA-0008 (c) 1984 */
+        driver_bigprowr,	/* TA-0007 (c) 1983 */
+        driver_tagteam,	/* TA-0007 (c) 1983 + Data East license */
+        driver_ssozumo,	/* TA-0008 (c) 1984 */
         /*TODO*/
         /*TODO*/
         // driver_xsleena,	/* TA-0019 (c) 1986 */
