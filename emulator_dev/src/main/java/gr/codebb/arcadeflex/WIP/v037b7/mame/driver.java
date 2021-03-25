@@ -143,6 +143,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ssozumo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sprint2.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skychut.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scregg.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shootout.*;
 
 public class driver {
 
@@ -2186,12 +2187,9 @@ public class driver {
         /*TODO*/
         // driver_firetpbl,	/* bootleg */
 
-        /*TODO*/
-        // driver_shootout,	/* (c) 1985 Data East USA (US) */
-        /*TODO*/
-        // driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
-        /*TODO*/
-        // driver_shootoub,	/* bootleg */
+        driver_shootout,	/* (c) 1985 Data East USA (US) */
+        driver_shootouj,	/* (c) 1985 Data East USA (Japan) */
+        driver_shootoub,	/* bootleg */
         driver_sidepckt,	/* (c) 1986 Data East Corporation */
         driver_sidepctj,	/* (c) 1986 Data East Corporation */
         driver_sidepctb,	/* bootleg */
