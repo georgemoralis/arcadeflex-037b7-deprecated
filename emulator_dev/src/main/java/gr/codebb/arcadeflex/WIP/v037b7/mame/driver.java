@@ -146,6 +146,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scregg.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shootout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sbrkout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rockola.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.qwakprot.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pinbo.*;
 
 public class driver {
 
@@ -2755,8 +2757,7 @@ public class driver {
         driver_videopin, /* no copyright notice [1979] */
         /*TODO*/
         // driver_milliped,	/* (c) 1982 */
-        /*TODO*/
-        // driver_qwakprot,	/* (c) 1982 */
+        driver_qwakprot,	/* (c) 1982 */
 
         /* Atari "Missile Command hardware" games */
         /* misc Atari games */
@@ -3212,10 +3213,8 @@ public class driver {
         /*TODO*/
         // driver_aeroboto,	/* (c) 1984 Williams */
 
-        /*TODO*/
-        // driver_pinbo,		/* (c) 1984 Jaleco */
-        /*TODO*/
-        // driver_pinbos,	/* (c) 1985 Strike */
+        driver_pinbo,		/* (c) 1984 Jaleco */
+        driver_pinbos,	/* (c) 1985 Strike */
         driver_psychic5, /* (c) 1987 Jaleco */
         /*TODO*/
         // driver_ginganin,	/* (c) 1987 Jaleco */
