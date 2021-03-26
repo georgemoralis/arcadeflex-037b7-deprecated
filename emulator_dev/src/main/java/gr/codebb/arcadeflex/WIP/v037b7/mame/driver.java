@@ -148,6 +148,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sbrkout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rockola.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.qwakprot.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pinbo.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mole.*;
 
 public class driver {
 
@@ -3484,8 +3485,7 @@ public class driver {
         // driver_meteor,	/* (c) 1981 Venture Line */
         /*TODO*/
         // driver_aztarac,	/* (c) 1983 Centuri (vector game) */
-        /*TODO*/
-        // driver_mole,		/* (c) 1982 Yachiyo Electronics, Ltd. */
+        driver_mole,		/* (c) 1982 Yachiyo Electronics, Ltd. */
 
         /* Neo Geo games */
         /* the four digits number is the game ID stored at address 0x0108 of the program ROM */
