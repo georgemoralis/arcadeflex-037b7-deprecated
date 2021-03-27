@@ -75,24 +75,27 @@ public class instr86 {
                     I.OverVal = (src ^ dst) & 0x80;
                 }
                 break;
-                /*TODO*///		case 0x08:	/* ROR eb,1 */
-/*TODO*///			I.CarryVal = src & 0x01;
-/*TODO*///			dst = ((CF<<8)+src) >> 1;
-/*TODO*///			PutbackRMByte(ModRM,dst);
-/*TODO*///			I.OverVal = (src^dst)&0x80;
-/*TODO*///			break;
-/*TODO*///		case 0x10:	/* RCL eb,1 */
-/*TODO*///			dst=(src<<1)+CF;
-/*TODO*///			PutbackRMByte(ModRM,dst);
-/*TODO*///			SetCFB(dst);
-/*TODO*///			I.OverVal = (src^dst)&0x80;
-/*TODO*///			break;
-/*TODO*///		case 0x18:	/* RCR eb,1 */
-/*TODO*///			dst = ((CF<<8)+src) >> 1;
-/*TODO*///			PutbackRMByte(ModRM,dst);
-/*TODO*///			I.CarryVal = src & 0x01;
-/*TODO*///			I.OverVal = (src^dst)&0x80;
-/*TODO*///			break;
+                case 0x08: /* ROR eb,1 */ {
+                    I.CarryVal = src & 0x01;
+                    dst = ((CF() << 8) + src) >>> 1;//unsigned?
+                    PutbackRMByte(ModRM, dst & 0xFF);//unsigned??
+                    I.OverVal = (src ^ dst) & 0x80;
+                }
+                break;
+                case 0x10: /* RCL eb,1 */ {
+                    dst = (src << 1) + CF();
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    SetCFB(dst);
+                    I.OverVal = (src ^ dst) & 0x80;
+                }
+                break;
+                case 0x18: /* RCR eb,1 */ {
+                    dst = ((CF() << 8) + src) >>> 1;//unsigned shift???
+                    PutbackRMByte(ModRM, dst & 0xFF);//unsigned?
+                    I.CarryVal = src & 0x01;
+                    I.OverVal = (src ^ dst) & 0x80;
+                }
+                break;
                 case 0x20:
                 case 0x30: {
                     dst = src << 1;
@@ -182,14 +185,15 @@ public class instr86 {
                     PutbackRMByte(ModRM, dst & 0xFF);
                 }
                 break;
-                /*TODO*///		case 0x38:	/* SAR eb,count */
-/*TODO*///			dst = ((INT8)dst) >> (count-1);
-/*TODO*///			I.CarryVal = dst & 0x1;
-/*TODO*///			dst = ((INT8)((BYTE)dst)) >> 1;
-/*TODO*///			SetSZPF_Byte(dst);
-/*TODO*///			I.AuxVal = 1;
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
+                case 0x38: /* SAR eb,count */ {
+                    dst = ((byte) dst) >>> (count - 1);
+                    I.CarryVal = dst & 0x1;
+                    dst = ((byte) (dst & 0xFF)) >>> 1;
+                    SetSZPF_Byte(dst);
+                    I.AuxVal = 1;
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                }
+                break;
                 default:
                     System.out.println("rot unsupported 0x " + (Integer.toHexString((ModRM & 0x38))));
                     throw new UnsupportedOperationException("unsupported");
@@ -220,12 +224,13 @@ public class instr86 {
 /*TODO*///			PutbackRMWord(ModRM,dst);
 /*TODO*///			I.OverVal = (src^dst)&0x8000;
 /*TODO*///			break;
-/*TODO*///		case 0x10:	/* RCL ew,1 */
-/*TODO*///			dst=(src<<1)+CF;
-/*TODO*///			PutbackRMWord(ModRM,dst);
-/*TODO*///			SetCFW(dst);
-/*TODO*///			I.OverVal = (src^dst)&0x8000;
-/*TODO*///			break;
+                case 0x10: /* RCL ew,1 */ {
+                    dst = (src << 1) + CF();
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    SetCFW(dst);
+                    I.OverVal = (src ^ dst) & 0x8000;
+                }
+                break;
                 case 0x18: /* RCR ew,1 */ {
                     dst = ((CF() << 16) + src) >>> 1;
                     PutbackRMWord(ModRM, dst & 0xFFFF);
@@ -581,24 +586,28 @@ public class instr86 {
                 I.regs.SetW(CX, count);
             }
             break;
-            /*TODO*///	case 0xaf:  /* REP(N)E SCASW */ 
-/*TODO*///		i86_ICount[0] -= cycles.rep_scas16_base;
-/*TODO*///		for (I.ZeroVal = !flagval; (ZF == flagval) && (count > 0); count--) 
-/*TODO*///		{
-/*TODO*///			unsigned src, dst;
-/*TODO*///			
-/*TODO*///			if (i86_ICount[0] <= 0) { I.pc = I.prevpc; break; }
-/*TODO*///			src = GetMemW(ES, I.regs.w[DI]);
-/*TODO*///			dst = I.regs.w[AX];
-/*TODO*///		    SUBW(dst,src);
-/*TODO*///			I.regs.w[DI] += 2 * I.DirVal;
-/*TODO*///			i86_ICount[0] -= cycles.rep_scas16_count;
-/*TODO*///		}
-/*TODO*///		I.regs.w[CX]=count; 
-/*TODO*///		break; 
-/*TODO*///	default: 
-/*TODO*///		PREFIX(_instruction)[next](); 
-/*TODO*///	} 
+            case 0xaf: /* REP(N)E SCASW */ {
+                i86_ICount[0] -= cycles.rep_scas16_base;
+                for (I.ZeroVal = NOT(flagval); (ZF() == flagval) && (count > 0); count--) {
+                    if (i86_ICount[0] <= 0) {
+                        I.pc = I.prevpc;
+                        break;
+                    }
+                    int/*unsigned*/ src = GetMemW(ES, I.regs.w[DI]);
+                    int/*unsigned*/ dst = I.regs.w[AX];
+                    // SUBW(dst,src);
+                    int/*unsigned*/ res = dst - src;
+                    SetCFW(res);
+                    SetOFW_Sub(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Word(res);
+                    dst = res & 0xFFFF;
+                    I.regs.SetW(DI, I.regs.w[DI] + 2 * I.DirVal);
+                    i86_ICount[0] -= cycles.rep_scas16_count;
+                }
+                I.regs.SetW(CX, count);
+            }
+            break;
             default:
                 System.out.println("rep 0x" + Integer.toHexString(next));
                 throw new UnsupportedOperationException("Unsupported");
@@ -624,7 +633,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_add_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -680,7 +688,6 @@ public class instr86 {
             SetRegWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_add_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -697,7 +704,6 @@ public class instr86 {
             I.regs.SetB(AL, dst);
         }
     };
-
     static InstructionPtr i86_add_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -718,14 +724,12 @@ public class instr86 {
             I.regs.SetW(AX, dst);
         }
     };
-
     static InstructionPtr i86_push_es = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.push_seg;
             PUSH(I.sregs[ES]);
         }
     };
-
     static InstructionPtr i86_pop_es = new InstructionPtr() {
         public void handler() {
             I.sregs[ES] = POP();
@@ -733,7 +737,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.pop_seg;
         }
     };
-
     static InstructionPtr i86_or_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst, src);
@@ -748,7 +751,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_or_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -763,7 +765,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_or_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst, src);
@@ -796,7 +797,6 @@ public class instr86 {
             SetRegWord(ModRM, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_or_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -810,7 +810,6 @@ public class instr86 {
             I.regs.SetB(AL, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_or_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -826,14 +825,12 @@ public class instr86 {
             I.regs.SetW(AX, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_push_cs = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.push_seg;
             PUSH(I.sregs[CS]);
         }
     };
-
     static InstructionPtr i86_adc_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -852,7 +849,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_adc_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -871,7 +867,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_adc_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -892,7 +887,6 @@ public class instr86 {
             SetRegByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_adc_r16w = new InstructionPtr() {
         public void handler() {
             //DEF_r16w(dst,src);
@@ -913,7 +907,6 @@ public class instr86 {
             SetRegWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_adc_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -931,7 +924,6 @@ public class instr86 {
             I.regs.SetB(AL, dst);
         }
     };
-
     static InstructionPtr i86_adc_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -951,7 +943,6 @@ public class instr86 {
             I.regs.SetW(AX, dst);
         }
     };
-    
     static InstructionPtr i86_push_ss = new InstructionPtr() {
         public void handler() {
             PUSH(I.sregs[SS]);
@@ -996,10 +987,9 @@ public class instr86 {
             PutbackRMByte(ModRM, dst);
         }
     };
- 
     static InstructionPtr i86_sbb_wr16 = new InstructionPtr() {
         public void handler() {
-             //DEF_wr16(dst,src);
+            //DEF_wr16(dst,src);
             int ModRM = FETCHOP();
             int src = RegWord(ModRM);
             int dst = GetRMWord(ModRM);
@@ -1015,7 +1005,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sbb_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1036,7 +1025,6 @@ public class instr86 {
             SetRegByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sbb_r16w = new InstructionPtr() {
         public void handler() {
             //DEF_r16w(dst,src);
@@ -1057,7 +1045,6 @@ public class instr86 {
             SetRegWord(ModRM, dst);
         }
     };
- 
     static InstructionPtr i86_sbb_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -1075,7 +1062,6 @@ public class instr86 {
             I.regs.SetB(AL, dst);
         }
     };
-
     static InstructionPtr i86_sbb_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -1095,14 +1081,12 @@ public class instr86 {
             I.regs.SetW(AX, dst);
         }
     };
- 
     static InstructionPtr i86_push_ds = new InstructionPtr() {
         public void handler() {
             PUSH(I.sregs[DS]);
             i86_ICount[0] -= cycles.push_seg;
         }
     };
-
     static InstructionPtr i86_pop_ds = new InstructionPtr() {
         public void handler() {
             /*TODO*///#ifdef I286
@@ -1116,7 +1100,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.push_seg;
         }
     };
-
     static InstructionPtr i86_and_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst, src);
@@ -1131,7 +1114,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_and_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -1146,7 +1128,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_and_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1163,7 +1144,6 @@ public class instr86 {
             SetRegByte(ModRM, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_and_r16w = new InstructionPtr() {
         public void handler() {
             //DEF_r16w(dst,src);
@@ -1180,7 +1160,6 @@ public class instr86 {
             SetRegWord(ModRM, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_and_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -1194,7 +1173,6 @@ public class instr86 {
             I.regs.SetB(AL, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_and_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst, src);
@@ -1211,7 +1189,6 @@ public class instr86 {
             I.regs.SetW(AX, dst);
         }
     };
-
     static InstructionPtr i86_es = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1244,7 +1221,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.daa;
         }
     };
-
     static InstructionPtr i86_sub_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -1262,7 +1238,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sub_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst, src);
@@ -1280,7 +1255,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sub_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1300,7 +1274,6 @@ public class instr86 {
             SetRegByte(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sub_r16w = new InstructionPtr() /* Opcode 0x2b */ {
         public void handler() {
             //    DEF_r16w(dst,src);
@@ -1322,7 +1295,6 @@ public class instr86 {
             SetRegWord(ModRM, dst);
         }
     };
-
     static InstructionPtr i86_sub_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -1339,7 +1311,6 @@ public class instr86 {
             I.regs.SetB(AL, dst);
         }
     };
-
     static InstructionPtr i86_sub_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -1357,7 +1328,6 @@ public class instr86 {
             I.regs.SetW(AX, dst);
         }
     };
-
     static InstructionPtr i86_cs = new InstructionPtr() /* Opcode 0x2e */ {
         public void handler() {
             seg_prefix = 1;
@@ -1366,7 +1336,6 @@ public class instr86 {
             i86_instruction[FETCHOP()].handler();
         }
     };
-
     static InstructionPtr i86_das = new InstructionPtr() {
         public void handler() {
             if (AF() != 0 || ((I.regs.b[AL] & 0xf) > 9)) {
@@ -1386,7 +1355,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.das;
         }
     };
-
     static InstructionPtr i86_xor_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -1401,7 +1369,6 @@ public class instr86 {
             PutbackRMByte(ModRM, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_xor_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -1416,7 +1383,6 @@ public class instr86 {
             PutbackRMWord(ModRM, dst & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_xor_r8b = new InstructionPtr() /* Opcode 0x32 */ {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1448,7 +1414,6 @@ public class instr86 {
             SetRegWord(ModRM, dst);//RegWord(ModRM) = dst;
         }
     };
-
     static InstructionPtr i86_xor_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -1462,7 +1427,6 @@ public class instr86 {
             I.regs.SetB(AL, dst & 0xFF);
         }
     };
-
     static InstructionPtr i86_xor_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -1506,7 +1470,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.aaa;
         }
     };
-
     static InstructionPtr i86_cmp_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -1523,7 +1486,6 @@ public class instr86 {
             dst = res & 0xFF;
         }
     };
-
     static InstructionPtr i86_cmp_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -1539,7 +1501,6 @@ public class instr86 {
             SetSZPF_Word(res);
         }
     };
-
     static InstructionPtr i86_cmp_r8b = new InstructionPtr() {
         public void handler() {
             //DEF_r8b(dst,src);
@@ -1575,7 +1536,6 @@ public class instr86 {
 
         }
     };
-
     static InstructionPtr i86_cmp_ald8 = new InstructionPtr() {
         public void handler() {
             //DEF_ald8(dst,src);
@@ -1591,7 +1551,6 @@ public class instr86 {
             dst = res & 0xFF;
         }
     };
-
     static InstructionPtr i86_cmp_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -1707,13 +1666,11 @@ public class instr86 {
         I.regs.SetW(Reg, tmp1 & 0xFFFF);
         i86_ICount[0] -= cycles.incdec_r16;
     }
-
     static InstructionPtr i86_dec_ax = new InstructionPtr() /* Opcode 0x48 */ {
         public void handler() {
             DecWordReg(AX);
         }
     };
-
     static InstructionPtr i86_dec_cx = new InstructionPtr() /* Opcode 0x48 */ {
         public void handler() {
             DecWordReg(CX);
@@ -1749,14 +1706,12 @@ public class instr86 {
             DecWordReg(DI);
         }
     };
-
     static InstructionPtr i86_push_ax = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.push_r16;
             PUSH(I.regs.w[AX]);
         }
     };
-
     static InstructionPtr i86_push_cx = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.push_r16;
@@ -1847,7 +1802,6 @@ public class instr86 {
             I.regs.SetW(DI, POP());
         }
     };
-
     static InstructionPtr i86_jo = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -1861,7 +1815,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jno = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -1875,7 +1828,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jb = new InstructionPtr() /* Opcode 0x72 */ {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -1967,7 +1919,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jns = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -2007,7 +1958,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jl = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -2034,7 +1984,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jle = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -2061,7 +2010,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_80pre = new InstructionPtr() {
         public void handler() {
             int ModRM = FETCH();
@@ -2092,18 +2040,32 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
                 }
                 break;
-                /*TODO*///    case 0x10:  /* ADC eb,d8 */
-/*TODO*///        src+=CF;
-/*TODO*///        ADDB(dst,src);
-/*TODO*///		PutbackRMByte(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
-/*TODO*///		break;
-/*TODO*///    case 0x18:  /* SBB eb,b8 */
-/*TODO*///		src+=CF;
-/*TODO*///		SUBB(dst,src);
-/*TODO*///        PutbackRMByte(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
-/*TODO*///		break;
+                case 0x10: /* ADC eb,d8 */ {
+                    src += CF();
+                    //ADDB(dst,src);
+                    int res = dst + src;
+                    SetCFB(res);
+                    SetOFB_Add(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Byte(res);
+                    dst = res & 0xFF;
+                    PutbackRMByte(ModRM, dst);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
+                }
+                break;
+                case 0x18: /* SBB eb,b8 */ {
+                    src += CF();
+                    //SUBB(dst, src);
+                    int res = dst - src;
+                    SetCFB(res);
+                    SetOFB_Sub(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Byte(res);
+                    dst = res & 0xFF;
+                    PutbackRMByte(ModRM, dst);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8;
+                }
+                break;
                 case 0x20: /* AND eb,d8 */ {
                     //ANDB(dst,src);
                     dst &= src;
@@ -2146,8 +2108,7 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri8 : cycles.alu_mi8_ro;
                     break;
                 default:
-                    System.out.println("i_80pre 0x" + Integer.toHexString(ModRM & 0x38));
-                    throw new UnsupportedOperationException("Unsupported");
+                    System.out.println("unexpected i_80pre 0x" + Integer.toHexString(ModRM & 0x38));//that shouldn't happended leave it here for debug
             }
         }
     };
@@ -2219,11 +2180,15 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
                 }
                 break;
-                /*TODO*///    case 0x30:  /* XOR ew,d16 */
-/*TODO*///		XORW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
-/*TODO*///		break;
+                case 0x30: /* XOR ew,d16 */ {
+                    //XORW(dst,src);
+                    dst ^= src;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_ri16 : cycles.alu_mi16;
+                }
+                break;
                 case 0x38: /* CMP ew,d16 */ {
                     //SUBW(dst,src);
                     /*unsigned*/
@@ -2319,11 +2284,15 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
                 }
                 break;
-                /*TODO*///    case 0x08:  /* OR ew,d16 */
-/*TODO*///		ORW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
-/*TODO*///		break;
+                case 0x08: /* OR ew,d16 */ {
+                    //ORW(dst,src);
+                    dst |= src;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
+                }
+                break;
                 case 0x10: /* ADC ew,d16 */ {
                     src += CF();
                     //ADDW(dst,src);
@@ -2337,17 +2306,28 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
                 }
                 break;
-                /*TODO*///	case 0x18:	/* SBB ew,d16 */
-/*TODO*///		src+=CF;
-/*TODO*///        SUBW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
-/*TODO*///		break;
-/*TODO*///	case 0x20:	/* AND ew,d16 */
-/*TODO*///        ANDW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
-/*TODO*///		break;
+                case 0x18: /* SBB ew,d16 */ {
+                    src += CF();
+                    //SUBW(dst,src);
+                    int res = dst - src;
+                    SetCFW(res);
+                    SetOFW_Sub(res, src, dst);
+                    SetAF(res, src, dst);
+                    SetSZPF_Word(res);
+                    dst = res & 0xFFFF;
+                    PutbackRMWord(ModRM, dst);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
+                }
+                break;
+                case 0x20: /* AND ew,d16 */ {
+                    //ANDW(dst,src);
+                    dst &= src;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
+                }
+                break;
                 case 0x28: /* SUB ew,d16 */ {
                     //SUBW(dst,src);
                     int res = dst - src;
@@ -2360,11 +2340,14 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
                 }
                 break;
-                /*TODO*///    case 0x30:  /* XOR ew,d16 */
-/*TODO*///		XORW(dst,src);
-/*TODO*///        PutbackRMWord(ModRM,dst);
-/*TODO*///        i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
-/*TODO*///		break;
+                case 0x30: /* XOR ew,d16 */ {
+                    dst ^= src;
+                    I.CarryVal = I.OverVal = I.AuxVal = 0;
+                    SetSZPF_Word(dst);
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8;
+                }
+                break;
                 case 0x38:
                     /* CMP ew,d16 */
                     //SUBW(dst,src);
@@ -2376,12 +2359,10 @@ public class instr86 {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.alu_r16i8 : cycles.alu_m16i8_ro;
                     break;
                 default:
-                    System.out.println("i_83pre 0x" + Integer.toHexString(ModRM & 0x38));
-                    throw new UnsupportedOperationException("Unsupported");
+                    System.out.println("unexpected i_83pre 0x" + Integer.toHexString(ModRM & 0x38));//this shouldn't happend
             }
         }
     };
-
     static InstructionPtr i86_test_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -2408,7 +2389,6 @@ public class instr86 {
             SetSZPF_Word(dst);
         }
     };
-
     static InstructionPtr i86_xchg_br8 = new InstructionPtr() {
         public void handler() {
             //DEF_br8(dst,src);
@@ -2420,7 +2400,6 @@ public class instr86 {
             PutbackRMByte(ModRM, src & 0xFF);
         }
     };
-
     static InstructionPtr i86_xchg_wr16 = new InstructionPtr() {
         public void handler() {
             //DEF_wr16(dst,src);
@@ -2432,7 +2411,6 @@ public class instr86 {
             PutbackRMWord(ModRM, src & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_mov_br8 = new InstructionPtr() {
         public void handler() {
             int ModRM = FETCH();
@@ -2459,7 +2437,6 @@ public class instr86 {
             SetRegByte(ModRM, src);
         }
     };
-
     static InstructionPtr i86_mov_r16w = new InstructionPtr() /* Opcode 0x8b */ {
         public void handler() {
             int /*unsigned*/ ModRM = FETCH();
@@ -2486,7 +2463,6 @@ public class instr86 {
             PutRMWord(ModRM, I.sregs[(ModRM & 0x38) >> 3]);
         }
     };
-
     static InstructionPtr i86_lea = new InstructionPtr() {
         public void handler() {
             int ModRM = FETCH();
@@ -2495,7 +2471,6 @@ public class instr86 {
             SetRegWord(ModRM, EO & 0xFFFF);
         }
     };
-
     static InstructionPtr i86_mov_sregw = new InstructionPtr() /* Opcode 0x8e */ {
         public void handler() {
             int /*unsigned*/ ModRM = FETCH();
@@ -2544,7 +2519,6 @@ public class instr86 {
             /*TODO*///#endif
         }
     };
-
     static InstructionPtr i86_popw = new InstructionPtr() {
         public void handler() {
             int ModRM = FETCH();
@@ -2564,70 +2538,59 @@ public class instr86 {
         I.regs.SetW(AX, tmp & 0xFFFF);
         i86_ICount[0] -= cycles.xchg_ar16;
     }
-
     static InstructionPtr i86_nop = new InstructionPtr() /* Opcode 0x90 */ {
         public void handler() {
             /* this is XchgAXReg(AX); */
             i86_ICount[0] -= cycles.nop;
         }
     };
-
     static InstructionPtr i86_xchg_axcx = new InstructionPtr() {
         public void handler() {
             XchgAXReg(CX);
         }
     };
-
     static InstructionPtr i86_xchg_axdx = new InstructionPtr() {
         public void handler() {
             XchgAXReg(DX);
         }
     };
-
     static InstructionPtr i86_xchg_axbx = new InstructionPtr() {
         public void handler() {
             XchgAXReg(BX);
         }
     };
-
     static InstructionPtr i86_xchg_axsp = new InstructionPtr() {
         public void handler() {
             XchgAXReg(SP);
         }
     };
-
     static InstructionPtr i86_xchg_axbp = new InstructionPtr() {
         public void handler() {
             XchgAXReg(BP);
         }
     };
-
     static InstructionPtr i86_xchg_axsi = new InstructionPtr() {
         public void handler() {
             XchgAXReg(SI);
         }
     };
-
     static InstructionPtr i86_xchg_axdi = new InstructionPtr() {
         public void handler() {
             XchgAXReg(DI);
         }
     };
-
     static InstructionPtr i86_cbw = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.cbw;
             I.regs.SetB(AH, (I.regs.b[AL] & 0x80) != 0 ? 0xff : 0);
         }
     };
-
     static InstructionPtr i86_cwd = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.cwd;
             I.regs.SetW(DX, (I.regs.b[AH] & 0x80) != 0 ? 0xffff : 0);
         }
     };
-
     static InstructionPtr i86_call_far = new InstructionPtr() {
         public void handler() {
 
@@ -2654,13 +2617,11 @@ public class instr86 {
             change_pc20(I.pc);
         }
     };
-
     static InstructionPtr i86_wait = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.wait;
         }
     };
-
     static InstructionPtr i86_pushf = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.pushf;
@@ -2672,7 +2633,6 @@ public class instr86 {
             PUSH(CompressFlags() | 0xf000);
         }
     };
-
     static InstructionPtr i86_popf = new InstructionPtr() {
         public void handler() {
             int tmp;
@@ -2691,7 +2651,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_sahf = new InstructionPtr() {
         public void handler() {
             int tmp = (CompressFlags() & 0xff00) | (I.regs.b[AH] & 0xd5);
@@ -2699,15 +2658,13 @@ public class instr86 {
             ExpandFlags(tmp);
         }
     };
-
     static InstructionPtr i86_lahf = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(AH, CompressFlags() & 0xff);
             i86_ICount[0] -= cycles.lahf;
         }
     };
-
-    public static InstructionPtr i86_mov_aldisp = new InstructionPtr() /* Opcode 0xa0 */ {
+    static InstructionPtr i86_mov_aldisp = new InstructionPtr() /* Opcode 0xa0 */ {
         public void handler() {
             /*unsigned*/
             int addr;
@@ -2718,8 +2675,7 @@ public class instr86 {
             I.regs.SetB(AL, GetMemB(DS, addr));
         }
     };
-
-    public static InstructionPtr i86_mov_axdisp = new InstructionPtr() /* Opcode 0xa1 */ {
+    static InstructionPtr i86_mov_axdisp = new InstructionPtr() /* Opcode 0xa1 */ {
         public void handler() {
             /*unsigned*/
             int addr;
@@ -2749,7 +2705,6 @@ public class instr86 {
             PutMemB(DS, addr + 1, I.regs.b[AH]);
         }
     };
-
     static InstructionPtr i86_movsb = new InstructionPtr() {
         public void handler() {
             int/*BYTE*/ tmp = GetMemB(DS, I.regs.w[SI]) & 0xFF;
@@ -2759,7 +2714,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.movs8;
         }
     };
-
     static InstructionPtr i86_movsw = new InstructionPtr() {
         public void handler() {
             int/*WORD*/ tmp = GetMemW(DS, I.regs.w[SI]) & 0xFFFF;
@@ -2812,7 +2766,6 @@ public class instr86 {
             SetSZPF_Byte(dst);
         }
     };
-
     static InstructionPtr i86_test_axd16 = new InstructionPtr() {
         public void handler() {
             //DEF_axd16(dst,src);
@@ -2826,7 +2779,6 @@ public class instr86 {
             SetSZPF_Word(dst);
         }
     };
-
     static InstructionPtr i86_stosb = new InstructionPtr() {
         public void handler() {
             PutMemB(ES, I.regs.w[DI], I.regs.b[AL]);
@@ -2834,7 +2786,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.stos8;
         }
     };
-
     static InstructionPtr i86_stosw = new InstructionPtr() /* Opcode 0xab */ {
         public void handler() {
             PutMemB(ES, I.regs.w[DI], I.regs.b[AL]);
@@ -2850,7 +2801,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.lods8;
         }
     };
-
     static InstructionPtr i86_lodsw = new InstructionPtr() {
         public void handler() {
             I.regs.SetW(AX, GetMemW(DS, I.regs.w[SI]));
@@ -2858,7 +2808,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.lods16;
         }
     };
-
     static InstructionPtr i86_scasb = new InstructionPtr() {
         public void handler() {
             int src = GetMemB(ES, I.regs.w[DI]);
@@ -2873,7 +2822,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.scas8;
         }
     };
-
     static InstructionPtr i86_scasw = new InstructionPtr() {
         public void handler() {
             int/*unsigned*/ src = GetMemW(ES, I.regs.w[DI]);
@@ -2889,49 +2837,42 @@ public class instr86 {
             i86_ICount[0] -= cycles.scas16;
         }
     };
-
     static InstructionPtr i86_mov_ald8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(AL, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_cld8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(CL, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_dld8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(DL, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_bld8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(BL, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_ahd8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(AH, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_chd8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(CH, FETCH());
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_dhd8 = new InstructionPtr() {
         public void handler() {
             I.regs.SetB(DH, FETCH());
@@ -2944,7 +2885,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.mov_ri8;
         }
     };
-
     static InstructionPtr i86_mov_axd16 = new InstructionPtr() /* Opcode 0xb8 */ {
         public void handler() {
             I.regs.SetB(AL, FETCH());//I.regs.b[AL] = FETCH;
@@ -2995,7 +2935,6 @@ public class instr86 {
             i86_ICount[0] -= cycles.mov_ri16;
         }
     };
-
     static InstructionPtr i86_mov_did16 = new InstructionPtr() /* Opcode 0xbf */ {
         public void handler() {
             I.regs.SetB(DIL, FETCH());
@@ -3029,7 +2968,6 @@ public class instr86 {
             change_pc20(I.pc);
         }
     };
-
     static InstructionPtr i86_les_dw = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3084,7 +3022,6 @@ public class instr86 {
             PutImmRMWord(ModRM);
         }
     };
-
     static InstructionPtr i86_retf_d16 = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3132,7 +3069,6 @@ public class instr86 {
             change_pc20(I.pc);
         }
     };
-
     static InstructionPtr i86_int3 = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3207,25 +3143,21 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_rotshft_b = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Byte(FETCHOP(), 1);
         }
     };
-
     static InstructionPtr i86_rotshft_w = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Word(FETCHOP(), 1);
         }
     };
-
     static InstructionPtr i86_rotshft_bcl = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Byte(FETCHOP(), I.regs.b[CL]);
         }
     };
-
     static InstructionPtr i86_rotshft_wcl = new InstructionPtr() {
         public void handler() {
             i86_rotate_shift_Word(FETCHOP(), I.regs.b[CL]);
@@ -3308,7 +3240,6 @@ public class instr86 {
             I.regs.SetB(AL, GetMemB(DS, dest) & 0xFF);
         }
     };
-
     static InstructionPtr i86_escape = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3376,7 +3307,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_jcxz = new InstructionPtr() {
         public void handler() {
             int disp = (int) ((byte) FETCH());
@@ -3391,7 +3321,6 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_inal = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3459,7 +3388,6 @@ public class instr86 {
             change_pc20(I.pc);
         }
     };
-
     static InstructionPtr i86_jmp_d16 = new InstructionPtr() {
         public void handler() {
             int/*WORD*/ ip, tmp;
@@ -3492,7 +3420,6 @@ public class instr86 {
             change_pc20(I.pc);
         }
     };
-
     static InstructionPtr i86_jmp_d8 = new InstructionPtr() {
         public void handler() {
             int tmp = (int) ((byte) FETCH());
@@ -3631,22 +3558,23 @@ public class instr86 {
                     PutbackRMByte(ModRM, tmp2);
                 }
                 break;
-                /*TODO*///    case 0x20:  /* MUL AL, Eb */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mul_r8 : cycles.mul_m8;
-/*TODO*///		{
-/*TODO*///			UINT16 result;
-/*TODO*///			tmp2 = I.regs.b[AL];
-/*TODO*///
-/*TODO*///			SetSF((INT8)tmp2);
-/*TODO*///			SetPF(tmp2);
-/*TODO*///
-/*TODO*///			result = (UINT16)tmp2*tmp;
-/*TODO*///			I.regs.w[AX]=(WORD)result;
-/*TODO*///
-/*TODO*///			SetZF(I.regs.w[AX]);
-/*TODO*///			I.CarryVal = I.OverVal = (I.regs.b[AH] != 0);
-/*TODO*///		}
-/*TODO*///		break;
+                case 0x20:
+                    /* MUL AL, Eb */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.mul_r8 : cycles.mul_m8;
+                     {
+                        int/*UINT16*/ result;
+                        tmp2 = I.regs.b[AL];
+
+                        SetSF((byte) tmp2);
+                        SetPF(tmp2);
+
+                        result = (tmp2 & 0xFFFF) * tmp;
+                        I.regs.SetW(AX, result & 0xFFFF);
+
+                        SetZF(I.regs.w[AX]);
+                        I.CarryVal = I.OverVal = (I.regs.b[AH] != 0) ? 1 : 0;
+                    }
+                    break;
                 case 0x28:
                     /* IMUL AL, Eb */
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.imul_r8 : cycles.imul_m8;
@@ -3747,14 +3675,12 @@ public class instr86 {
                     SetSZPF_Word(tmp);
                 }
                 break;
-
                 case 0x10: /* NOT Ew */ {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r16 : cycles.negnot_m16;
                     tmp = ~tmp;
                     PutbackRMWord(ModRM, tmp & 0xFFFF);
                 }
                 break;
-                /*TODO*///
                 case 0x18: /* NEG Ew */ {
                     i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.negnot_r16 : cycles.negnot_m16;
                     tmp2 = 0;
@@ -3828,49 +3754,34 @@ public class instr86 {
                     }
                 }
                 break;
-                /*TODO*///    case 0x38:  /* IDIV AX, Ew */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.idiv_r16 : cycles.idiv_m16;
-/*TODO*///		{
-/*TODO*///			INT32 result;
-/*TODO*///
-/*TODO*///			result = (I.regs.w[DX] << 16) + I.regs.w[AX];
-/*TODO*///
-/*TODO*///			if (tmp)
-/*TODO*///			{
-/*TODO*///				tmp2 = result % (INT32)((INT16)tmp);
-/*TODO*///				if ((result /= (INT32)((INT16)tmp)) > 0xffff)
-/*TODO*///				{
-/*TODO*///#ifdef V20
-/*TODO*///					PREFIX(_interrupt)(0,0);
-/*TODO*///#else
-/*TODO*///					PREFIX(_interrupt)(0);
-/*TODO*///#endif
-/*TODO*///					break;
-/*TODO*///				}
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					I.regs.w[AX]=result;
-/*TODO*///					I.regs.w[DX]=tmp2;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///#ifdef V20
-/*TODO*///				PREFIX(_interrupt)(0,0);
-/*TODO*///#else
-/*TODO*///				PREFIX(_interrupt)(0);
-/*TODO*///#endif
-/*TODO*///				break;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		break;
+                case 0x38:
+                    /* IDIV AX, Ew */
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.idiv_r16 : cycles.idiv_m16;
+                     {
+                        int result;
+
+                        result = (I.regs.w[DX] << 16) + I.regs.w[AX];
+
+                        if (tmp != 0) {
+                            tmp2 = result % (int) ((short) tmp);
+                            if ((result /= (int) ((short) tmp)) > 0xffff) {
+                                i86_interrupt(0);
+                                break;
+                            } else {
+                                I.regs.SetW(AX, result & 0xFFFF);
+                                I.regs.SetW(DX, tmp2 & 0xFFFF);
+                            }
+                        } else {
+                            i86_interrupt(0);
+                            break;
+                        }
+                    }
+                    break;
                 default:
-                    System.out.println("i_f7pre 0x" + Integer.toHexString(ModRM & 0x38));
-                    throw new UnsupportedOperationException("Unsupported");
+                    System.out.println("unexpected i_f7pre 0x" + Integer.toHexString(ModRM & 0x38));//should now reach here
             }
         }
     };
-
     static InstructionPtr i86_clc = new InstructionPtr() {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
@@ -3883,14 +3794,12 @@ public class instr86 {
             I.CarryVal = 1;
         }
     };
-
     static InstructionPtr i86_cli = new InstructionPtr() /* Opcode 0xfa */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
             SetIF(0);
         }
     };
-
     static InstructionPtr i86_sti = new InstructionPtr() /* Opcode 0xfb */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
@@ -3903,14 +3812,12 @@ public class instr86 {
             }
         }
     };
-
     static InstructionPtr i86_cld = new InstructionPtr() /* Opcode 0xfc */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
             SetDF(0);
         }
     };
-
     static InstructionPtr i86_std = new InstructionPtr() /* Opcode 0xfd */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
