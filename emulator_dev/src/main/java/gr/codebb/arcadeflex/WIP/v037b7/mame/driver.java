@@ -149,6 +149,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rockola.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.qwakprot.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pinbo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mole.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.nitedrvr.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dominos.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.milliped.*;
 
 public class driver {
 
@@ -2727,10 +2730,8 @@ public class driver {
         driver_sprint1, /* no copyright notice */
         driver_sprint2, /* no copyright notice */
         driver_sbrkout,	/* no copyright notice */
-        /*TODO*/
-        // driver_dominos,	/* no copyright notice */
-        /*TODO*/
-        // driver_nitedrvr,	/* no copyright notice [1976] */
+        driver_dominos,	/* no copyright notice */
+        driver_nitedrvr,	/* no copyright notice [1976] */
         /*TODO*/
         // driver_bsktball,	/* no copyright notice */
         /*TODO*/
@@ -2756,8 +2757,7 @@ public class driver {
         // driver_canbprot,	/* no copyright notice [1977] */
 
         driver_videopin, /* no copyright notice [1979] */
-        /*TODO*/
-        // driver_milliped,	/* (c) 1982 */
+        driver_milliped,	/* (c) 1982 */
         driver_qwakprot,	/* (c) 1982 */
 
         /* Atari "Missile Command hardware" games */
