@@ -425,8 +425,7 @@ public class i86 extends cpu_interface {
         I.irq_state = state;
         /* if the IF is set, signal an interrupt */
         if (state != CLEAR_LINE && I.IF != 0) {
-            //PREFIX(_interrupt)(-1);
-            throw new UnsupportedOperationException("Unsupported");
+            i86_interrupt(-1);
         }
     }
 

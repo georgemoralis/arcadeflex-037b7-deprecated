@@ -61,6 +61,15 @@ public class i186 extends i86 {
     public static void i86_set_irq_callback(irqcallbacksPtr callback) {
         I.irq_callback = callback;
     }
+    
+    public static void i86_set_irq_line(int irqline, int state)
+    {
+       I.irq_state = state;
+        /* if the IF is set, signal an interrupt */
+        if (state != CLEAR_LINE && I.IF != 0) {
+            i86_interrupt(-1);
+        }
+    }
 
     /*TODO*///#include "i186intf.h"
 /*TODO*///

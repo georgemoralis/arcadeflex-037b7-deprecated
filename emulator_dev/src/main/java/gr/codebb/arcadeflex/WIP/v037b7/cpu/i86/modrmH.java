@@ -62,9 +62,10 @@ public class modrmH {
         }
     }
 
-    /*TODO*///
-/*TODO*///#define GetnextRMWord ReadWord(EA+2)
-/*TODO*///
+     public static final int GetnextRMWord() {
+        return ReadWord(EA + 2);
+    }
+
 /*TODO*///#define GetRMWordOffset(offs) \
 /*TODO*///		ReadWord(EA-EO+(UINT16)(EO+offs))
 /*TODO*///

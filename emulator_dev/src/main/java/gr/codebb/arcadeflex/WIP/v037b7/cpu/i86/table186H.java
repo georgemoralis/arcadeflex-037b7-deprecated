@@ -47,7 +47,7 @@ public class table186H {
 	 i86_and_r16w,          /* 0x23 */
 	 i86_and_ald8,          /* 0x24 */
 	 i86_and_axd16,         /* 0x25 */
-	 i86_es,                /* 0x26 */
+	 i186_es,                /* 0x26 */
 	 i86_daa,               /* 0x27 */
 	 i86_sub_br8,           /* 0x28 */
 	 i86_sub_wr16,          /* 0x29 */
@@ -249,7 +249,7 @@ public class table186H {
 	 i86_inaxdx,            /* 0xed */
 	 i86_outdxal,           /* 0xee */
 	 i86_outdxax,           /* 0xef */
-	 i86_lock,              /* 0xf0 */
+	 i186_lock,              /* 0xf0 */
 	 i86_invalid,           /* 0xf1 */
 	 i186_repne,             /* 0xf2 */
 	 i186_repe,              /* 0xf3 */

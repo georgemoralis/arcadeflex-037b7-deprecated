@@ -4,7 +4,9 @@
  */
 package gr.codebb.arcadeflex.WIP.v037b7.sndhrdw;
 
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186.i86_set_irq_callback;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i86.i186.i86_set_irq_line;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.REGION_CPU3;
 import gr.codebb.arcadeflex.common.PtrLib.ShortPtr;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
@@ -266,6 +268,8 @@ public class leland {
     };
     static i186state i186_state;
 
+    static final int DAC_BUFFER_SIZE_MASK = (DAC_BUFFER_SIZE - 1);
+
     static class dac_state {
 
         short value;
@@ -314,153 +318,145 @@ public class leland {
      *
      ************************************
      */
+    public static StreamInitPtr leland_i186_dac_update = new StreamInitPtr() {
+        public void handler(int param, ShortPtr buffer, int length) {
+            int i, j, start, stop;
+
+            if (LOG_SHORTAGES != 0) {
+                logerror("----\n");
+            }
+
+            /* reset the buffer */
+            memset(buffer, 0, length * 2);
+
+            /* if we're redline racer, we have more DACs */
+            if (is_redline == 0) {
+                start = 2;
+                stop = 7;
+            } else {
+                start = 0;
+                stop = 8;
+            }
+
+            /* loop over manual DAC channels */
+            for (i = start; i < stop; i++) {
+                dac_state d = dac[i];
+                int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
+
+                /* if we have data, process it */
+                if (count > 0) {
+                    short[] base = d.buffer;
+                    int source = d.bufout;
+                    int frac = d.fraction;
+                    int step = d.step;
+
+                    /* sample-rate convert to the output frequency */
+                    for (j = 0; j < length && count > 0; j++) {
+                        buffer.write(j, (short) (buffer.read(j) + base[source]));
+                        frac += step;
+                        source += frac >> 24;
+                        count -= frac >> 24;
+                        frac &= 0xffffff;
+                        source &= DAC_BUFFER_SIZE_MASK;
+                    }
+
+                    if (LOG_SHORTAGES != 0 && j < length) {
+                        logerror("DAC #%d short by %d/%d samples\n", i, length - j, length);
+                    }
+
+                    /* update the DAC state */
+                    d.fraction = frac;
+                    d.bufout = source;
+                }
+
+                /* update the clock status */
+                if (count < d.buftarget) {
+                    if (LOG_OPTIMIZATION != 0) {
+                        logerror("  - trigger due to clock active in update\n");
+                    }
+                    cpu_trigger.handler(CPU_RESUME_TRIGGER);
+                    clock_active |= 1 << i;
+                }
+            }
+        }
+    };
+
+    /**
+     * ***********************************
+     *
+     * DMA-based DAC sound generation
+     *
+     ************************************
+     */
+    public static StreamInitPtr leland_i186_dma_update = new StreamInitPtr() {
+        public void handler(int param, ShortPtr buffer, int length) {
+            int i, j;
+
+            /* reset the buffer */
+            memset(buffer, 0, length * 2);
+
+            /* loop over DMA buffers */
+            for (i = 0; i < 2; i++) {
+                dma_state d = i186_state.dma[i];
+
+                /* check for enabled DMA */
+                if ((d.control & 0x0002) != 0) {
+                    /* make sure the parameters meet our expectations */
+                    if ((d.control & 0xfe00) != 0x1600) {
+                        logerror("Unexpected DMA control %02X\n", d.control);
+                    } else if (is_redline == 0 && ((d.dest & 1) != 0 || (d.dest & 0x3f) > 0x0b)) {
+                        logerror("Unexpected DMA destination %02X\n", d.dest);
+                    } else if (is_redline != 0 && (d.dest & 0xf000) != 0x4000 && (d.dest & 0xf000) != 0x5000) {
+                        logerror("Unexpected DMA destination %02X\n", d.dest);
+                    } /* otherwise, we're ready for liftoff */ else {
+                        UBytePtr base = memory_region(REGION_CPU3);
+                        int source = d.source;
+                        int count = d.count;
+                        int which, frac, step, volume;
+
+                        /* adjust for redline racer */
+                        if (is_redline == 0) {
+                            which = (d.dest & 0x3f) / 2;
+                        } else {
+                            which = (d.dest >> 9) & 7;
+                        }
+
+                        frac = dac[which].fraction;
+                        step = dac[which].step;
+                        volume = dac[which].volume;
+
+                        /* sample-rate convert to the output frequency */
+                        for (j = 0; j < length && count > 0; j++) {
+                            buffer.write(j, (short) (buffer.read(j) + ((int) base.read(source) - 0x80) * volume));//buffer[j] += ((int)base[source] - 0x80) * volume;
+                            frac += step;
+                            source += frac >> 24;
+                            count -= frac >> 24;
+                            frac &= 0xffffff;
+                        }
+
+                        /* update the DMA state */
+                        if (count > 0) {
+                            d.source = source;
+                            d.count = (char) count;
+                        } else {
+                            /* let the timer callback actually mark the transfer finished */
+                            d.source = source + count - 1;
+                            d.count = 1;
+                            d.u8_finished = 1;
+                        }
+
+                        if (LOG_DMA != 0) {
+                            logerror("DMA Generated %d samples - new count = %04X, source = %04X\n", j, d.count, d.source);
+                        }
+
+                        /* update the DAC state */
+                        dac[which].fraction = frac;
+                    }
+                }
+            }
+        }
+    };
     /*TODO*///	
-/*TODO*///	static void leland_i186_dac_update(int param, INT16 *buffer, int length)
-/*TODO*///	{
-/*TODO*///		int i, j, start, stop;
-/*TODO*///	
-/*TODO*///		if (LOG_SHORTAGES != 0) logerror("----\n");
-/*TODO*///	
-/*TODO*///		/* reset the buffer */
-/*TODO*///		memset(buffer, 0, length * sizeof(INT16));
-/*TODO*///	
-/*TODO*///		/* if we're redline racer, we have more DACs */
-/*TODO*///		if (!is_redline)
-/*TODO*///			start = 2, stop = 7;
-/*TODO*///		else
-/*TODO*///			start = 0, stop = 8;
-/*TODO*///	
-/*TODO*///		/* loop over manual DAC channels */
-/*TODO*///		for (i = start; i < stop; i++)
-/*TODO*///		{
-/*TODO*///			struct dac_state *d = &dac[i];
-/*TODO*///			int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///			/* if we have data, process it */
-/*TODO*///			if (count > 0)
-/*TODO*///			{
-/*TODO*///				INT16 *base = d.buffer;
-/*TODO*///				int source = d.bufout;
-/*TODO*///				int frac = d.fraction;
-/*TODO*///				int step = d.step;
-/*TODO*///	
-/*TODO*///				/* sample-rate convert to the output frequency */
-/*TODO*///				for (j = 0; j < length && count > 0; j++)
-/*TODO*///				{
-/*TODO*///					buffer[j] += base[source];
-/*TODO*///					frac += step;
-/*TODO*///					source += frac >> 24;
-/*TODO*///					count -= frac >> 24;
-/*TODO*///					frac &= 0xffffff;
-/*TODO*///					source &= DAC_BUFFER_SIZE_MASK;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				if (LOG_SHORTAGES && j < length)
-/*TODO*///					logerror("DAC #%d short by %d/%d samples\n", i, length - j, length);
-/*TODO*///	
-/*TODO*///				/* update the DAC state */
-/*TODO*///				d.fraction = frac;
-/*TODO*///				d.bufout = source;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			/* update the clock status */
-/*TODO*///			if (count < d.buftarget)
-/*TODO*///			{
-/*TODO*///				if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to clock active in update\n");
-/*TODO*///				cpu_trigger(CPU_RESUME_TRIGGER);
-/*TODO*///				clock_active |= 1 << i;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	DMA-based DAC sound generation
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
-/*TODO*///	static void leland_i186_dma_update(int param, INT16 *buffer, int length)
-/*TODO*///	{
-/*TODO*///		int i, j;
-/*TODO*///	
-/*TODO*///		/* reset the buffer */
-/*TODO*///		memset(buffer, 0, length * sizeof(INT16));
-/*TODO*///	
-/*TODO*///		/* loop over DMA buffers */
-/*TODO*///		for (i = 0; i < 2; i++)
-/*TODO*///		{
-/*TODO*///			struct dma_state *d = &i186.dma[i];
-/*TODO*///	
-/*TODO*///			/* check for enabled DMA */
-/*TODO*///			if (d.control & 0x0002)
-/*TODO*///			{
-/*TODO*///				/* make sure the parameters meet our expectations */
-/*TODO*///				if ((d.control & 0xfe00) != 0x1600)
-/*TODO*///				{
-/*TODO*///					logerror("Unexpected DMA control %02X\n", d.control);
-/*TODO*///				}
-/*TODO*///				else if (!is_redline && ((d.dest & 1) || (d.dest & 0x3f) > 0x0b))
-/*TODO*///				{
-/*TODO*///					logerror("Unexpected DMA destination %02X\n", d.dest);
-/*TODO*///				}
-/*TODO*///				else if (is_redline && (d.dest & 0xf000) != 0x4000 && (d.dest & 0xf000) != 0x5000)
-/*TODO*///				{
-/*TODO*///					logerror("Unexpected DMA destination %02X\n", d.dest);
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* otherwise, we're ready for liftoff */
-/*TODO*///				else
-/*TODO*///				{
-/*TODO*///					UINT8 *base = memory_region(REGION_CPU3);
-/*TODO*///					int source = d.source;
-/*TODO*///					int count = d.count;
-/*TODO*///					int which, frac, step, volume;
-/*TODO*///	
-/*TODO*///					/* adjust for redline racer */
-/*TODO*///					if (!is_redline)
-/*TODO*///						which = (d.dest & 0x3f) / 2;
-/*TODO*///					else
-/*TODO*///						which = (d.dest >> 9) & 7;
-/*TODO*///	
-/*TODO*///					frac = dac[which].fraction;
-/*TODO*///					step = dac[which].step;
-/*TODO*///					volume = dac[which].volume;
-/*TODO*///	
-/*TODO*///					/* sample-rate convert to the output frequency */
-/*TODO*///					for (j = 0; j < length && count > 0; j++)
-/*TODO*///					{
-/*TODO*///						buffer[j] += ((int)base[source] - 0x80) * volume;
-/*TODO*///						frac += step;
-/*TODO*///						source += frac >> 24;
-/*TODO*///						count -= frac >> 24;
-/*TODO*///						frac &= 0xffffff;
-/*TODO*///					}
-/*TODO*///	
-/*TODO*///					/* update the DMA state */
-/*TODO*///					if (count > 0)
-/*TODO*///					{
-/*TODO*///						d.source = source;
-/*TODO*///						d.count = count;
-/*TODO*///					}
-/*TODO*///					else
-/*TODO*///					{
-/*TODO*///						/* let the timer callback actually mark the transfer finished */
-/*TODO*///						d.source = source + count - 1;
-/*TODO*///						d.count = 1;
-/*TODO*///						d.finished = 1;
-/*TODO*///					}
-/*TODO*///	
-/*TODO*///					if (LOG_DMA != 0) logerror("DMA Generated %d samples - new count = %04X, source = %04X\n", j, d.count, d.source);
-/*TODO*///	
-/*TODO*///					/* update the DAC state */
-/*TODO*///					dac[which].fraction = frac;
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	/*************************************
@@ -525,13 +521,14 @@ public class leland {
                     has_ym2151 = 1;
                 }
             }
-            /*TODO*///	
-/*TODO*///		/* allocate separate streams for the DMA and non-DMA DACs */
-/*TODO*///		dma_stream = stream_init("80186 DMA-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dma_update);
-/*TODO*///		nondma_stream = stream_init("80186 manually-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dac_update);
-/*TODO*///	
+
+            /* allocate separate streams for the DMA and non-DMA DACs */
+            dma_stream = stream_init("80186 DMA-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dma_update);
+            nondma_stream = stream_init("80186 manually-driven DACs", 100, Machine.sample_rate, 0, leland_i186_dac_update);
+
             /* if we have a 2151, install an externally driven DAC stream */
             if (has_ym2151 != 0) {
+                System.out.println("External");
                 /*TODO*///			ext_base = memory_region(REGION_SOUND1);
 /*TODO*///			extern_stream = stream_init("80186 externally-driven DACs", 100, Machine.sample_rate, 0, leland_i186_extern_update);
             }
@@ -589,13 +586,14 @@ public class leland {
         i186_state.intr.ext[1] = 0x000f;
         i186_state.intr.ext[2] = 0x000f;
         i186_state.intr.ext[3] = 0x000f;
-        /*TODO*///	
-/*TODO*///		/* reset the DAC and counter states as well */
-/*TODO*///		memset(&dac, 0, sizeof(dac));
-/*TODO*///		memset(&counter, 0, sizeof(counter));
-/*TODO*///	
-/*TODO*///		/* send a trigger in case we're suspended */
-/*TODO*///		if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to reset\n");
+        /* reset the DAC and counter states as well */
+        dac = dac_state.create(8);//		memset(&dac, 0, sizeof(dac));
+        counter = counter_state.create(9);//		memset(&counter, 0, sizeof(counter));
+
+        /* send a trigger in case we're suspended */
+        if (LOG_OPTIMIZATION != 0) {
+            logerror("  - trigger due to reset\n");
+        }
         cpu_trigger.handler(CPU_RESUME_TRIGGER);
         total_reads = 0;
 
@@ -622,47 +620,47 @@ public class leland {
         ext_active = 0;
     }
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	80186 interrupt controller
-/*TODO*///	 *
-/*TODO*///	 *************************************/
-/*TODO*///	
+    /**
+     * ***********************************
+     *
+     * 80186 interrupt controller
+     *
+     ************************************
+     */
     public static irqcallbacksPtr int_callback = new irqcallbacksPtr() {
         public int handler(int line) {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///		if (LOG_INTERRUPTS != 0) logerror("(%f) **** Acknowledged interrupt vector %02X\n", timer_get_time(), i186.intr.poll_status & 0x1f);
-/*TODO*///	
-/*TODO*///		/* clear the interrupt */
-/*TODO*///		i86_set_irq_line(0, CLEAR_LINE);
-/*TODO*///		i186.intr.pending = 0;
-/*TODO*///	
-/*TODO*///		/* clear the request and set the in-service bit */
-/*TODO*///	#if LATCH_INTS
-/*TODO*///		i186.intr.request &= ~i186.intr.ack_mask;
-/*TODO*///	#else
-/*TODO*///		i186.intr.request &= ~(i186.intr.ack_mask & 0x0f);
-/*TODO*///	#endif
-/*TODO*///		i186.intr.in_service |= i186.intr.ack_mask;
-/*TODO*///		if (i186.intr.ack_mask == 0x0001)
-/*TODO*///		{
-/*TODO*///			switch (i186.intr.poll_status & 0x1f)
-/*TODO*///			{
-/*TODO*///				case 0x08:	i186.intr.status &= ~0x01;	break;
-/*TODO*///				case 0x12:	i186.intr.status &= ~0x02;	break;
-/*TODO*///				case 0x13:	i186.intr.status &= ~0x04;	break;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		i186.intr.ack_mask = 0;
-/*TODO*///	
-/*TODO*///		/* a request no longer pending */
-/*TODO*///		i186.intr.poll_status &= ~0x8000;
-/*TODO*///	
-/*TODO*///		/* return the vector */
-/*TODO*///		return i186.intr.poll_status & 0x1f;
+            if (LOG_INTERRUPTS != 0) {
+                logerror("(%f) **** Acknowledged interrupt vector %02X\n", timer_get_time(), i186_state.intr.poll_status & 0x1f);
+            }
+
+            /* clear the interrupt */
+            i86_set_irq_line(0, CLEAR_LINE);
+            i186_state.intr.u8_pending = 0;
+
+            /* clear the request and set the in-service bit */
+            i186_state.intr.request &= ~i186_state.intr.ack_mask;
+
+            i186_state.intr.in_service |= i186_state.intr.ack_mask;
+            if (i186_state.intr.ack_mask == 0x0001) {
+                switch (i186_state.intr.poll_status & 0x1f) {
+                    case 0x08:
+                        i186_state.intr.status &= ~0x01;
+                        break;
+                    case 0x12:
+                        i186_state.intr.status &= ~0x02;
+                        break;
+                    case 0x13:
+                        i186_state.intr.status &= ~0x04;
+                        break;
+                }
+            }
+            i186_state.intr.ack_mask = 0;
+
+            /* a request no longer pending */
+            i186_state.intr.poll_status &= ~0x8000;
+
+            /* return the vector */
+            return i186_state.intr.poll_status & 0x1f;
         }
     };
 
@@ -751,73 +749,93 @@ public class leland {
         }
         i186_state.intr.u8_pending = 1;
         cpu_trigger.handler(CPU_RESUME_TRIGGER);
-        //if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to interrupt pending\n");
-        //if (LOG_INTERRUPTS != 0) logerror("(%f) **** Requesting interrupt vector %02X\n", timer_get_time(), new_vector);
+        if (LOG_OPTIMIZATION != 0) {
+            logerror("  - trigger due to interrupt pending\n");
+        }
+        if (LOG_INTERRUPTS != 0) {
+            logerror("(%f) **** Requesting interrupt vector %02X\n", timer_get_time(), new_vector);
+        }
 
     }
 
+    static void handle_eoi(int data) {
+        int i, j;
+
+        /* specific case */
+        if ((data & 0x8000) == 0) {
+            /* turn off the appropriate in-service bit */
+            switch (data & 0x1f) {
+                case 0x08:
+                    i186_state.intr.in_service &= ~0x01;
+                    break;
+                case 0x12:
+                    i186_state.intr.in_service &= ~0x01;
+                    break;
+                case 0x13:
+                    i186_state.intr.in_service &= ~0x01;
+                    break;
+                case 0x0a:
+                    i186_state.intr.in_service &= ~0x04;
+                    break;
+                case 0x0b:
+                    i186_state.intr.in_service &= ~0x08;
+                    break;
+                case 0x0c:
+                    i186_state.intr.in_service &= ~0x10;
+                    break;
+                case 0x0d:
+                    i186_state.intr.in_service &= ~0x20;
+                    break;
+                case 0x0e:
+                    i186_state.intr.in_service &= ~0x40;
+                    break;
+                case 0x0f:
+                    i186_state.intr.in_service &= ~0x80;
+                    break;
+                default:
+                    logerror("%05X:ERROR - 80186 EOI with unknown vector %02X\n", cpu_get_pc(), data & 0x1f);
+            }
+            if (LOG_INTERRUPTS != 0) {
+                logerror("(%f) **** Got EOI for vector %02X\n", timer_get_time(), data & 0x1f);
+            }
+        } /* non-specific case */ else {
+            /* loop over priorities */
+            for (i = 0; i <= 7; i++) {
+                /* check for in-service timers */
+                if ((i186_state.intr.timer & 7) == i && (i186_state.intr.in_service & 0x01) != 0) {
+                    i186_state.intr.in_service &= ~0x01;
+                    if (LOG_INTERRUPTS != 0) {
+                        logerror("(%f) **** Got EOI for timer\n", timer_get_time());
+                    }
+                    return;
+                }
+
+                /* check for in-service DMA interrupts */
+                for (j = 0; j < 2; j++) {
+                    if ((i186_state.intr.dma[j] & 7) == i && (i186_state.intr.in_service & (0x04 << j)) != 0) {
+                        i186_state.intr.in_service &= ~(0x04 << j);
+                        if (LOG_INTERRUPTS != 0) {
+                            logerror("(%f) **** Got EOI for DMA%d\n", timer_get_time(), j);
+                        }
+                        return;
+                    }
+                }
+
+                /* check external interrupts */
+                for (j = 0; j < 4; j++) {
+                    if ((i186_state.intr.ext[j] & 7) == i && (i186_state.intr.in_service & (0x10 << j)) != 0) {
+                        i186_state.intr.in_service &= ~(0x10 << j);
+                        if (LOG_INTERRUPTS != 0) {
+                            logerror("(%f) **** Got EOI for INT%d\n", timer_get_time(), j);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     /*TODO*///	
-/*TODO*///	static void handle_eoi(int data)
-/*TODO*///	{
-/*TODO*///		int i, j;
-/*TODO*///	
-/*TODO*///		/* specific case */
-/*TODO*///		if (!(data & 0x8000))
-/*TODO*///		{
-/*TODO*///			/* turn off the appropriate in-service bit */
-/*TODO*///			switch (data & 0x1f)
-/*TODO*///			{
-/*TODO*///				case 0x08:	i186.intr.in_service &= ~0x01;	break;
-/*TODO*///				case 0x12:	i186.intr.in_service &= ~0x01;	break;
-/*TODO*///				case 0x13:	i186.intr.in_service &= ~0x01;	break;
-/*TODO*///				case 0x0a:	i186.intr.in_service &= ~0x04;	break;
-/*TODO*///				case 0x0b:	i186.intr.in_service &= ~0x08;	break;
-/*TODO*///				case 0x0c:	i186.intr.in_service &= ~0x10;	break;
-/*TODO*///				case 0x0d:	i186.intr.in_service &= ~0x20;	break;
-/*TODO*///				case 0x0e:	i186.intr.in_service &= ~0x40;	break;
-/*TODO*///				case 0x0f:	i186.intr.in_service &= ~0x80;	break;
-/*TODO*///				default:	logerror("%05X:ERROR - 80186 EOI with unknown vector %02X\n", cpu_get_pc(), data & 0x1f);
-/*TODO*///			}
-/*TODO*///			if (LOG_INTERRUPTS != 0) logerror("(%f) **** Got EOI for vector %02X\n", timer_get_time(), data & 0x1f);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* non-specific case */
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			/* loop over priorities */
-/*TODO*///			for (i = 0; i <= 7; i++)
-/*TODO*///			{
-/*TODO*///				/* check for in-service timers */
-/*TODO*///				if ((i186.intr.timer & 7) == i && (i186.intr.in_service & 0x01))
-/*TODO*///				{
-/*TODO*///					i186.intr.in_service &= ~0x01;
-/*TODO*///					if (LOG_INTERRUPTS != 0) logerror("(%f) **** Got EOI for timer\n", timer_get_time());
-/*TODO*///					return;
-/*TODO*///				}
-/*TODO*///	
-/*TODO*///				/* check for in-service DMA interrupts */
-/*TODO*///				for (j = 0; j < 2; j++)
-/*TODO*///					if ((i186.intr.dma[j] & 7) == i && (i186.intr.in_service & (0x04 << j)))
-/*TODO*///					{
-/*TODO*///						i186.intr.in_service &= ~(0x04 << j);
-/*TODO*///						if (LOG_INTERRUPTS != 0) logerror("(%f) **** Got EOI for DMA%d\n", timer_get_time(), j);
-/*TODO*///						return;
-/*TODO*///					}
-/*TODO*///	
-/*TODO*///				/* check external interrupts */
-/*TODO*///				for (j = 0; j < 4; j++)
-/*TODO*///					if ((i186.intr.ext[j] & 7) == i && (i186.intr.in_service & (0x10 << j)))
-/*TODO*///					{
-/*TODO*///						i186.intr.in_service &= ~(0x10 << j);
-/*TODO*///						if (LOG_INTERRUPTS != 0) logerror("(%f) **** Got EOI for INT%d\n", timer_get_time(), j);
-/*TODO*///						return;
-/*TODO*///					}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
 /*TODO*///	/*************************************
 /*TODO*///	 *
 /*TODO*///	 *	80186 internal timers
@@ -1347,19 +1365,21 @@ public class leland {
             data = ((data & 0xff) << 8) | u8_even_byte;
 
             switch (offset & ~1) {
-                /*TODO*///			case 0x22:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 EOI = %04X\n", cpu_get_pc(), data);
-/*TODO*///				handle_eoi(0x8000);
-/*TODO*///				update_interrupt_state();
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x24:
-/*TODO*///				logerror("%05X:ERROR - write to 80186 interrupt poll = %04X\n", cpu_get_pc(), data);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0x26:
-/*TODO*///				logerror("%05X:ERROR - write to 80186 interrupt poll status = %04X\n", cpu_get_pc(), data);
-/*TODO*///				break;
+                case 0x22:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 EOI = %04X\n", cpu_get_pc(), data);
+                    }
+                    handle_eoi(0x8000);
+                    update_interrupt_state();
+                    break;
+
+                case 0x24:
+                    logerror("%05X:ERROR - write to 80186 interrupt poll = %04X\n", cpu_get_pc(), data);
+                    break;
+
+                case 0x26:
+                    logerror("%05X:ERROR - write to 80186 interrupt poll status = %04X\n", cpu_get_pc(), data);
+                    break;
 
                 case 0x28:
                     if (LOG_PORTS != 0) {
@@ -1535,46 +1555,56 @@ public class leland {
                     i86_set_irq_callback(int_callback);
                     break;
 
-                /*TODO*///			case 0xc0:
-/*TODO*///			case 0xd0:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d lower source address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				i186.dma[which].source = (i186.dma[which].source & ~0x0ffff) | (data & 0x0ffff);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xc2:
-/*TODO*///			case 0xd2:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d upper source address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				i186.dma[which].source = (i186.dma[which].source & ~0xf0000) | ((data << 16) & 0xf0000);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xc4:
-/*TODO*///			case 0xd4:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d lower dest address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				i186.dma[which].dest = (i186.dma[which].dest & ~0x0ffff) | (data & 0x0ffff);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xc6:
-/*TODO*///			case 0xd6:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d upper dest address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				i186.dma[which].dest = (i186.dma[which].dest & ~0xf0000) | ((data << 16) & 0xf0000);
-/*TODO*///				break;
-/*TODO*///	
-/*TODO*///			case 0xc8:
-/*TODO*///			case 0xd8:
-/*TODO*///				if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d transfer count = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
-/*TODO*///				which = (offset - 0xc0) / 0x10;
-/*TODO*///				stream_update(dma_stream, 0);
-/*TODO*///				i186.dma[which].count = data;
-/*TODO*///				break;
-/*TODO*///	
+                case 0xc0:
+                case 0xd0:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA%d lower source address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    i186_state.dma[which].source = (i186_state.dma[which].source & ~0x0ffff) | (data & 0x0ffff);
+                    break;
+
+                case 0xc2:
+                case 0xd2:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA%d upper source address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    i186_state.dma[which].source = (i186_state.dma[which].source & ~0xf0000) | ((data << 16) & 0xf0000);
+                    break;
+
+                case 0xc4:
+                case 0xd4:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA%d lower dest address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    i186_state.dma[which].dest = (i186_state.dma[which].dest & ~0x0ffff) | (data & 0x0ffff);
+                    break;
+
+                case 0xc6:
+                case 0xd6:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA%d upper dest address = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    i186_state.dma[which].dest = (i186_state.dma[which].dest & ~0xf0000) | ((data << 16) & 0xf0000);
+                    break;
+
+                case 0xc8:
+                case 0xd8:
+                    if (LOG_PORTS != 0) {
+                        logerror("%05X:80186 DMA%d transfer count = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
+                    }
+                    which = (offset - 0xc0) / 0x10;
+                    stream_update(dma_stream, 0);
+                    i186_state.dma[which].count = (char) data;
+                    break;
+
                 case 0xca:
                 case 0xda:
                     //if (LOG_PORTS != 0) logerror("%05X:80186 DMA%d control = %04X\n", cpu_get_pc(), (offset - 0xc0) / 0x10, data);
@@ -1735,7 +1765,6 @@ public class leland {
             }
         }
     };
-
     /**
      * ***********************************
      *
@@ -1801,7 +1830,6 @@ public class leland {
             update_interrupt_state();
         }
     };
-
     /**
      * ***********************************
      *
@@ -1864,7 +1892,9 @@ public class leland {
 		   accurate, so after the system has synced up, we go back into the master CPUs
 		   state and put the proper value into the A register. */
             if (pc == checkpc) {
-                if (LOG_COMM != 0) logerror("(Updated sound response latch to %02X)\n", sound_response);
+                if (LOG_COMM != 0) {
+                    logerror("(Updated sound response latch to %02X)\n", sound_response);
+                }
                 oldaf = (oldaf & 0x00ff) | (sound_response << 8);
                 cpunum_set_reg(0, Z80_AF, oldaf);
             } else {
@@ -1897,149 +1927,159 @@ public class leland {
         }
     };
 
-    /*TODO*///	
-/*TODO*///	
-/*TODO*///	/*************************************
-/*TODO*///	 *
-/*TODO*///	 *	Low-level DAC I/O
-/*TODO*///	 *
-/*TODO*///	 *************************************/
+    /**
+     * ***********************************
+     *
+     * Low-level DAC I/O
+     *
+     ************************************
+     */
     static void set_dac_frequency(int which, int frequency) {
-        /*TODO*///		struct dac_state *d = &dac[which];
-/*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///		/* set the frequency of the associated DAC */
-/*TODO*///		d.frequency = frequency;
-/*TODO*///		d.step = (int)((double)frequency * (double)(1 << 24) / (double)Machine.sample_rate);
-/*TODO*///	
-/*TODO*///		/* also determine the target buffer size */
-/*TODO*///		d.buftarget = dac[which].frequency / 60 + 50;
-/*TODO*///		if (d.buftarget > DAC_BUFFER_SIZE - 1)
-/*TODO*///			d.buftarget = DAC_BUFFER_SIZE - 1;
-/*TODO*///	
-/*TODO*///		/* reevaluate the count */
-/*TODO*///		if (count > d.buftarget)
-/*TODO*///			clock_active &= ~(1 << which);
-/*TODO*///		else if (count < d.buftarget)
-/*TODO*///		{
-/*TODO*///			if (LOG_OPTIMIZATION != 0) logerror("  - trigger due to clock active in set_dac_frequency\n");
-/*TODO*///			cpu_trigger(CPU_RESUME_TRIGGER);
-/*TODO*///			clock_active |= 1 << which;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		if (LOG_DAC != 0) logerror("DAC %d frequency = %d, step = %08X\n", which, d.frequency, d.step);
+        dac_state d = dac[which];
+        int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
+
+        /* set the frequency of the associated DAC */
+        d.frequency = frequency;
+        d.step = (int) ((double) frequency * (double) (1 << 24) / (double) Machine.sample_rate);
+
+        /* also determine the target buffer size */
+        d.buftarget = dac[which].frequency / 60 + 50;
+        if (d.buftarget > DAC_BUFFER_SIZE - 1) {
+            d.buftarget = DAC_BUFFER_SIZE - 1;
+        }
+
+        /* reevaluate the count */
+        if (count > d.buftarget) {
+            clock_active &= ~(1 << which);
+        } else if (count < d.buftarget) {
+            if (LOG_OPTIMIZATION != 0) {
+                logerror("  - trigger due to clock active in set_dac_frequency\n");
+            }
+            cpu_trigger.handler(CPU_RESUME_TRIGGER);
+            clock_active |= 1 << which;
+        }
+
+        if (LOG_DAC != 0) {
+            logerror("DAC %d frequency = %d, step = %08X\n", which, d.frequency, d.step);
+        }
     }
 
     public static WriteHandlerPtr dac_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
-            /*TODO*///		int which = offset / 2;
-/*TODO*///		struct dac_state *d = &dac[which];
-/*TODO*///	
-/*TODO*///		/* handle value changes */
-/*TODO*///		if (!(offset & 1))
-/*TODO*///		{
-/*TODO*///			int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///			/* set the new value */
-/*TODO*///			d.value = (INT16)data - 0x80;
-/*TODO*///			if (LOG_DAC != 0) logerror("%05X:DAC %d value = %02X\n", cpu_get_pc(), offset / 2, data);
-/*TODO*///	
-/*TODO*///			/* if we haven't overflowed the buffer, add the value value to it */
-/*TODO*///			if (count < DAC_BUFFER_SIZE - 1)
-/*TODO*///			{
-/*TODO*///				/* if this is the first byte, sync the stream */
-/*TODO*///				if (count == 0)
-/*TODO*///					stream_update(nondma_stream, 0);
-/*TODO*///	
-/*TODO*///				/* prescale by the volume */
-/*TODO*///				d.buffer[d.bufin] = d.value * d.volume;
-/*TODO*///				d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///				/* update the clock status */
-/*TODO*///				if (++count > d.buftarget)
-/*TODO*///					clock_active &= ~(1 << which);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* handle volume changes */
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			d.volume = (data ^ 0x00) / DAC_VOLUME_SCALE;
-/*TODO*///			if (LOG_DAC != 0) logerror("%05X:DAC %d volume = %02X\n", cpu_get_pc(), offset / 2, data);
-/*TODO*///		}
+            int which = offset / 2;
+            dac_state d = dac[which];
+
+            /* handle value changes */
+            if ((offset & 1) == 0) {
+                int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
+
+                /* set the new value */
+                d.value = (short) ((short) data - 0x80);
+                if (LOG_DAC != 0) {
+                    logerror("%05X:DAC %d value = %02X\n", cpu_get_pc(), offset / 2, data);
+                }
+
+                /* if we haven't overflowed the buffer, add the value value to it */
+                if (count < DAC_BUFFER_SIZE - 1) {
+                    /* if this is the first byte, sync the stream */
+                    if (count == 0) {
+                        stream_update(nondma_stream, 0);
+                    }
+
+                    /* prescale by the volume */
+                    d.buffer[d.bufin] = (short) (d.value * d.volume);
+                    d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
+
+                    /* update the clock status */
+                    if (++count > d.buftarget) {
+                        clock_active &= ~(1 << which);
+                    }
+                }
+            } /* handle volume changes */ else {
+                d.volume = (short) ((data ^ 0x00) / DAC_VOLUME_SCALE);
+                if (LOG_DAC != 0) {
+                    logerror("%05X:DAC %d volume = %02X\n", cpu_get_pc(), offset / 2, data);
+                }
+            }
         }
     };
 
     public static WriteHandlerPtr redline_dac_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
-            /*TODO*///		int which = offset / 0x200;
-/*TODO*///		struct dac_state *d = &dac[which];
-/*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///		/* set the new value */
-/*TODO*///		d.value = (INT16)data - 0x80;
-/*TODO*///	
-/*TODO*///		/* if we haven't overflowed the buffer, add the value value to it */
-/*TODO*///		if (count < DAC_BUFFER_SIZE - 1)
-/*TODO*///		{
-/*TODO*///			/* if this is the first byte, sync the stream */
-/*TODO*///			if (count == 0)
-/*TODO*///				stream_update(nondma_stream, 0);
-/*TODO*///	
-/*TODO*///			/* prescale by the volume */
-/*TODO*///			d.buffer[d.bufin] = d.value * d.volume;
-/*TODO*///			d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///			/* update the clock status */
-/*TODO*///			if (++count > d.buftarget)
-/*TODO*///				clock_active &= ~(1 << which);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* update the volume */
-/*TODO*///		d.volume = (offset & 0x1fe) / 2 / DAC_VOLUME_SCALE;
-/*TODO*///		if (LOG_DAC != 0) logerror("%05X:DAC %d value = %02X, volume = %02X\n", cpu_get_pc(), which, data, (offset & 0x1fe) / 2);
+            int which = offset / 0x200;
+            dac_state d = dac[which];
+            int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
+
+            /* set the new value */
+            d.value = (short) ((short) data - 0x80);
+
+            /* if we haven't overflowed the buffer, add the value value to it */
+            if (count < DAC_BUFFER_SIZE - 1) {
+                /* if this is the first byte, sync the stream */
+                if (count == 0) {
+                    stream_update(nondma_stream, 0);
+                }
+
+                /* prescale by the volume */
+                d.buffer[d.bufin] = (short) (d.value * d.volume);
+                d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
+
+                /* update the clock status */
+                if (++count > d.buftarget) {
+                    clock_active &= ~(1 << which);
+                }
+            }
+
+            /* update the volume */
+            d.volume = (short) ((offset & 0x1fe) / 2 / DAC_VOLUME_SCALE);
+            if (LOG_DAC != 0) {
+                logerror("%05X:DAC %d value = %02X, volume = %02X\n", cpu_get_pc(), which, data, (offset & 0x1fe) / 2);
+            }
         }
     };
-
+    static int/*UINT8*/ even_byte;
     public static WriteHandlerPtr dac_10bit_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
-            /*TODO*///		static UINT8 even_byte;
-/*TODO*///		struct dac_state *d = &dac[6];
-/*TODO*///		int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///		/* warning: this assumes all port writes here are word-sized */
-/*TODO*///		/* if the offset is even, just stash the value */
-/*TODO*///		if (!(offset & 1))
-/*TODO*///		{
-/*TODO*///			even_byte = data;
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///		data = ((data & 0xff) << 8) | even_byte;
-/*TODO*///	
-/*TODO*///		/* set the new value */
-/*TODO*///		d.value = (INT16)data - 0x200;
-/*TODO*///		if (LOG_DAC != 0) logerror("%05X:DAC 10-bit value = %02X\n", cpu_get_pc(), data);
-/*TODO*///	
-/*TODO*///		/* if we haven't overflowed the buffer, add the value value to it */
-/*TODO*///		if (count < DAC_BUFFER_SIZE - 1)
-/*TODO*///		{
-/*TODO*///			/* if this is the first byte, sync the stream */
-/*TODO*///			if (count == 0)
-/*TODO*///				stream_update(nondma_stream, 0);
-/*TODO*///	
-/*TODO*///			/* prescale by the volume */
-/*TODO*///			d.buffer[d.bufin] = d.value * (0xff / DAC_VOLUME_SCALE / 2);
-/*TODO*///			d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
-/*TODO*///	
-/*TODO*///			/* update the clock status */
-/*TODO*///			if (++count > d.buftarget)
-/*TODO*///				clock_active &= ~0x40;
-/*TODO*///		}
+
+            dac_state d = dac[6];
+            int count = (d.bufin - d.bufout) & DAC_BUFFER_SIZE_MASK;
+
+            /* warning: this assumes all port writes here are word-sized */
+ /* if the offset is even, just stash the value */
+            if ((offset & 1) == 0) {
+                even_byte = data & 0xFF;
+                return;
+            }
+            data = ((data & 0xff) << 8) | even_byte;
+
+            /* set the new value */
+            d.value = (short) ((short) data - 0x200);
+            if (LOG_DAC != 0) {
+                logerror("%05X:DAC 10-bit value = %02X\n", cpu_get_pc(), data);
+            }
+
+            /* if we haven't overflowed the buffer, add the value value to it */
+            if (count < DAC_BUFFER_SIZE - 1) {
+                /* if this is the first byte, sync the stream */
+                if (count == 0) {
+                    stream_update(nondma_stream, 0);
+                }
+
+                /* prescale by the volume */
+                d.buffer[d.bufin] = (short) (d.value * (0xff / DAC_VOLUME_SCALE / 2));
+                d.bufin = (d.bufin + 1) & DAC_BUFFER_SIZE_MASK;
+
+                /* update the clock status */
+                if (++count > d.buftarget) {
+                    clock_active &= ~0x40;
+                }
+            }
         }
     };
 
     public static WriteHandlerPtr ataxx_dac_control = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
+            throw new UnsupportedOperationException("Unsupported");
             /*TODO*///		/* handle common offsets */
 /*TODO*///		switch (offset)
 /*TODO*///		{
@@ -2182,7 +2222,6 @@ public class leland {
             return 0xff;
         }
     };
-
     public static WriteHandlerPtr peripheral_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             int select = offset / 0x80;
@@ -2241,7 +2280,6 @@ public class leland {
             active_mask = null;
         }
     }
-
     /**
      * ***********************************
      *
@@ -2259,7 +2297,6 @@ public class leland {
             leland_i86_control_w.handler(offset, modified);
         }
     };
-
     /**
      * ***********************************
      *

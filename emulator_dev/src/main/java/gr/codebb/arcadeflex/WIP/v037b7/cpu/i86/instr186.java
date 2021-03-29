@@ -55,7 +55,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_popa)(void)    /* Opcode 0x61 */
+    /*TODO*///static void PREFIX186(_popa)(void)    /* Opcode 0x61 */
 /*TODO*///{
 /*TODO*///	 unsigned tmp;
 /*TODO*///
@@ -75,7 +75,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_bound)(void)    /* Opcode 0x62 */
+    /*TODO*///static void PREFIX186(_bound)(void)    /* Opcode 0x62 */
 /*TODO*///{
 /*TODO*///	unsigned ModRM = FETCHOP;
 /*TODO*///	int low = (INT16)GetRMWord(ModRM);
@@ -99,7 +99,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_push_d16)(void)    /* Opcode 0x68 */
+    /*TODO*///static void PREFIX186(_push_d16)(void)    /* Opcode 0x68 */
 /*TODO*///{
 /*TODO*///	unsigned tmp = FETCH;
 /*TODO*///
@@ -113,7 +113,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_imul_d16)(void)    /* Opcode 0x69 */
+    /*TODO*///static void PREFIX186(_imul_d16)(void)    /* Opcode 0x69 */
 /*TODO*///{
 /*TODO*///	DEF_r16w(dst,src);
 /*TODO*///	unsigned src2=FETCH;
@@ -132,7 +132,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_push_d8)(void)    /* Opcode 0x6a */
+    /*TODO*///static void PREFIX186(_push_d8)(void)    /* Opcode 0x6a */
 /*TODO*///{
 /*TODO*///	unsigned tmp = (WORD)((INT16)((INT8)FETCH));
 /*TODO*///
@@ -145,7 +145,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_imul_d8)(void)    /* Opcode 0x6b */
+    /*TODO*///static void PREFIX186(_imul_d8)(void)    /* Opcode 0x6b */
 /*TODO*///{
 /*TODO*///	DEF_r16w(dst,src);
 /*TODO*///	unsigned src2= (WORD)((INT16)((INT8)FETCH));
@@ -162,7 +162,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_insb)(void)    /* Opcode 0x6c */
+    /*TODO*///static void PREFIX186(_insb)(void)    /* Opcode 0x6c */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.ins8;
 /*TODO*///	PutMemB(ES,I.regs.w[DI],read_port(I.regs.w[DX]));
@@ -174,7 +174,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_insw)(void)    /* Opcode 0x6d */
+    /*TODO*///static void PREFIX186(_insw)(void)    /* Opcode 0x6d */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.ins16;
 /*TODO*///	PutMemB(ES,I.regs.w[DI],read_port(I.regs.w[DX]));
@@ -187,7 +187,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_outsb)(void)    /* Opcode 0x6e */
+    /*TODO*///static void PREFIX186(_outsb)(void)    /* Opcode 0x6e */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.outs8;
 /*TODO*///	write_port(I.regs.w[DX],GetMemB(DS,I.regs.w[SI]));
@@ -199,7 +199,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_outsw)(void)    /* Opcode 0x6f */
+    /*TODO*///static void PREFIX186(_outsw)(void)    /* Opcode 0x6f */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.outs16;
 /*TODO*///	write_port(I.regs.w[DX],GetMemB(DS,I.regs.w[SI]));
@@ -209,36 +209,26 @@ public class instr186 {
 /*TODO*///
     static InstructionPtr i186_rotshft_bd8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int/*unsigned*/ ModRM = FETCH();
+            int/*unsigned*/ count = FETCH();
+            i86_rotate_shift_Byte(ModRM, count);
         }
     };
-/*TODO*///static void PREFIX186(_rotshft_bd8)(void)    /* Opcode 0xc0 */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	unsigned count = FETCH;
-/*TODO*///
-/*TODO*///	PREFIX86(_rotate_shift_Byte)(ModRM,count);
-/*TODO*///}
-/*TODO*///
     static InstructionPtr i186_rotshft_wd8 = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int/*unsigned*/ ModRM = FETCH();
+            int/*unsigned*/ count = FETCH();
+
+            i86_rotate_shift_Word(ModRM, count);
         }
     };
-/*TODO*///static void PREFIX186(_rotshft_wd8)(void)    /* Opcode 0xc1 */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///	unsigned count = FETCH;
-/*TODO*///
-/*TODO*///	PREFIX86(_rotate_shift_Word)(ModRM,count);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i186_enter = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_enter)(void)    /* Opcode 0xc8 */
+    /*TODO*///static void PREFIX186(_enter)(void)    /* Opcode 0xc8 */
 /*TODO*///{
 /*TODO*///	unsigned nb = FETCH;	 unsigned i,level;
 /*TODO*///
@@ -258,7 +248,7 @@ public class instr186 {
             throw new UnsupportedOperationException("Unsupported");
         }
     };
-/*TODO*///static void PREFIX186(_leave)(void)    /* Opcode 0xc9 */
+    /*TODO*///static void PREFIX186(_leave)(void)    /* Opcode 0xc9 */
 /*TODO*///{
 /*TODO*///	ICOUNT -= cycles.leave;
 /*TODO*///	I.regs.w[SP]=I.regs.w[BP];
@@ -527,10 +517,10 @@ public class instr186 {
             seg_prefix = 1;
             prefix_base = I.base[CS];
             i86_ICount[0] -= cycles.override;
-            i186_instruction[FETCHOP()].handler();       
+            i186_instruction[FETCHOP()].handler();
         }
     };
-        static InstructionPtr i186_mov_sregw = new InstructionPtr() /* Opcode 0x8e */ {
+    static InstructionPtr i186_mov_sregw = new InstructionPtr() /* Opcode 0x8e */ {
         public void handler() {
             int /*unsigned*/ ModRM = FETCH();
             int /*WORD*/ src = GetRMWord(ModRM) & 0xFFFF;
@@ -578,16 +568,30 @@ public class instr186 {
             /*TODO*///#endif
         }
     };
-        static InstructionPtr i186_sti = new InstructionPtr() /* Opcode 0xfb */ {
+    static InstructionPtr i186_sti = new InstructionPtr() /* Opcode 0xfb */ {
         public void handler() {
             i86_ICount[0] -= cycles.flag_ops;
             SetIF(1);
             i186_instruction[FETCHOP()].handler();/* no interrupt before next instruction */
 
-            /* if an interrupt is pending, signal an interrupt */
+ /* if an interrupt is pending, signal an interrupt */
             if (I.irq_state != 0) {
                 i86_interrupt(-1);
             }
+        }
+    };
+    static InstructionPtr i186_es = new InstructionPtr() {
+        public void handler() {
+            seg_prefix = 1;
+            prefix_base = I.base[ES];
+            i86_ICount[0] -= cycles.override;
+            i186_instruction[FETCHOP()].handler();
+        }
+    };
+    static InstructionPtr i186_lock = new InstructionPtr() {
+        public void handler() {
+            i86_ICount[0] -= cycles.nop;
+            i186_instruction[FETCHOP()].handler();/* un-interruptible */
         }
     };
 }

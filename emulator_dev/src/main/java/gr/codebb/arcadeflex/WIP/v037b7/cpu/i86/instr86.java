@@ -134,39 +134,39 @@ public class instr86 {
             i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m8_bit;
 
             switch (ModRM & 0x38) {
-                /*TODO*///		case 0x00:	/* ROL eb,count */
-/*TODO*///			for (; count > 0; count--)
-/*TODO*///			{
-/*TODO*///				I.CarryVal = dst & 0x80;
-/*TODO*///				dst = (dst << 1) + CF;
-/*TODO*///			}
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
-/*TODO*///		case 0x08:	/* ROR eb,count */
-/*TODO*///			for (; count > 0; count--)
-/*TODO*///			{
-/*TODO*///				I.CarryVal = dst & 0x01;
-/*TODO*///				dst = (dst >> 1) + (CF << 7);
-/*TODO*///			}
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
-/*TODO*///		case 0x10:	/* RCL eb,count */
-/*TODO*///			for (; count > 0; count--)
-/*TODO*///			{
-/*TODO*///				dst = (dst << 1) + CF;
-/*TODO*///				SetCFB(dst);
-/*TODO*///			}
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
-/*TODO*///		case 0x18:	/* RCR eb,count */
-/*TODO*///			for (; count > 0; count--)
-/*TODO*///			{
-/*TODO*///				dst = (CF<<8)+dst;
-/*TODO*///				I.CarryVal = dst & 0x01;
-/*TODO*///				dst >>= 1;
-/*TODO*///			}
-/*TODO*///			PutbackRMByte(ModRM,(BYTE)dst);
-/*TODO*///			break;
+                case 0x00:
+                    /* ROL eb,count */
+                    for (; count > 0; count--) {
+                        I.CarryVal = dst & 0x80;
+                        dst = (dst << 1) + CF();
+                    }
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    break;
+                case 0x08:
+                    /* ROR eb,count */
+                    for (; count > 0; count--) {
+                        I.CarryVal = dst & 0x01;
+                        dst = (dst >>> 1) + (CF() << 7);
+                    }
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    break;
+                case 0x10:
+                    /* RCL eb,count */
+                    for (; count > 0; count--) {
+                        dst = (dst << 1) + CF();
+                        SetCFB(dst);
+                    }
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    break;
+                case 0x18:
+                    /* RCR eb,count */
+                    for (; count > 0; count--) {
+                        dst = (CF() << 8) + dst;
+                        I.CarryVal = dst & 0x01;
+                        dst >>>= 1;
+                    }
+                    PutbackRMByte(ModRM, dst & 0xFF);
+                    break;
                 case 0x20:
                 case 0x30: /* SHL eb,count */ {
                     dst <<= count;
@@ -273,15 +273,15 @@ public class instr86 {
         } else {
             i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.rot_reg_base + cycles.rot_reg_bit : cycles.rot_m8_base + cycles.rot_m16_bit;
             switch (ModRM & 0x38) {
-                /*TODO*///		case 0x00:	/* ROL ew,count */
-/*TODO*///			for (; count > 0; count--)
-/*TODO*///			{
-/*TODO*///				I.CarryVal = dst & 0x8000;
-/*TODO*///				dst = (dst << 1) + CF;
-/*TODO*///			}
-/*TODO*///			PutbackRMWord(ModRM,dst);
-/*TODO*///			break;
-/*TODO*///		case 0x08:	/* ROR ew,count */
+                case 0x00: /* ROL ew,count */ {
+                    for (; count > 0; count--) {
+                        I.CarryVal = dst & 0x8000;
+                        dst = (dst << 1) + CF();
+                    }
+                    PutbackRMWord(ModRM, dst & 0xFFFF);
+                }
+                break;
+                /*TODO*///		case 0x08:	/* ROR ew,count */
 /*TODO*///			for (; count > 0; count--)
 /*TODO*///			{
 /*TODO*///				I.CarryVal = dst & 0x01;
@@ -1191,17 +1191,12 @@ public class instr86 {
     };
     static InstructionPtr i86_es = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            seg_prefix = 1;
+            prefix_base = I.base[ES];
+            i86_ICount[0] -= cycles.override;
+            i86_instruction[FETCHOP()].handler();
         }
     };
-    /*TODO*///static void PREFIX86(_es)(void)    /* Opcode 0x26 */
-/*TODO*///{
-/*TODO*///	seg_prefix=TRUE;
-/*TODO*///	prefix_base=I.base[ES];
-/*TODO*///	i86_ICount[0] -= cycles.override;
-/*TODO*///	PREFIX(_instruction)[FETCHOP]();
-/*TODO*///}
-/*TODO*///
     static InstructionPtr i86_daa = new InstructionPtr() {
         public void handler() {
             if (AF() != 0 || ((I.regs.b[AL] & 0xf) > 9)) {
@@ -2970,24 +2965,21 @@ public class instr86 {
     };
     static InstructionPtr i86_les_dw = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-        }
-    };
-    /*TODO*///static void PREFIX86(_les_dw)(void)    /* Opcode 0xc4 */
-/*TODO*///{
-/*TODO*///	unsigned ModRM = FETCH;
-/*TODO*///    WORD tmp = GetRMWord(ModRM);
-/*TODO*///	
-/*TODO*///    RegWord(ModRM)= tmp;
-/*TODO*///#ifdef I286
+            int ModRM = FETCH();
+            /*WORD*/
+            int tmp = GetRMWord(ModRM);
+
+            SetRegWord(ModRM, tmp & 0xFFFF);
+            /*TODO*///#ifdef I286
 /*TODO*///	i286_data_descriptor(ES,GetnextRMWord);
 /*TODO*///#else
-/*TODO*///	I.sregs[ES] = GetnextRMWord;
-/*TODO*///	I.base[ES] = SegBase(ES);
-/*TODO*///#endif
-/*TODO*///	i86_ICount[0] -= cycles.load_ptr;
-/*TODO*///}
-/*TODO*///
+            I.sregs[ES] = GetnextRMWord();
+            I.base[ES] = SegBase(ES);
+            /*TODO*///#endif
+            i86_ICount[0] -= cycles.load_ptr;
+        }
+    };
+
     static InstructionPtr i86_lds_dw = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3350,17 +3342,12 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_outal = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            int/*unsigned*/ port = FETCH();
+            i86_ICount[0] -= cycles.out_imm8;
+            write_port(port, I.regs.b[AL]);
         }
     };
-    /*TODO*///static void PREFIX86(_outal)(void)    /* Opcode 0xe6 */
-/*TODO*///{
-/*TODO*///	unsigned port = FETCH;
-/*TODO*///
-/*TODO*///	i86_ICount[0] -= cycles.out_imm8;
-/*TODO*///	write_port(port, I.regs.b[AL]);
-/*TODO*///}
-/*TODO*///
+
     static InstructionPtr i86_outax = new InstructionPtr() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -3458,15 +3445,10 @@ public class instr86 {
 /*TODO*///
     static InstructionPtr i86_outdxal = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_ICount[0] -= cycles.out_dx8;
+            write_port(I.regs.w[DX], I.regs.b[AL]);
         }
     };
-    /*TODO*///static void PREFIX86(_outdxal)(void)    /* Opcode 0xee */
-/*TODO*///{
-/*TODO*///	i86_ICount[0] -= cycles.out_dx8;
-/*TODO*///	write_port(I.regs.w[DX], I.regs.b[AL]);
-/*TODO*///}
-/*TODO*///
     static InstructionPtr i86_outdxax = new InstructionPtr() {/* Opcode 0xef */
         public void handler() {
             int/*unsigned*/ port = I.regs.w[DX];
@@ -3479,18 +3461,11 @@ public class instr86 {
 
     static InstructionPtr i86_lock = new InstructionPtr() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
+            i86_ICount[0] -= cycles.nop;
+            i86_instruction[FETCHOP()].handler();/* un-interruptible */
         }
     };
-    /*TODO*///
-/*TODO*////* I think thats not a V20 instruction...*/
-/*TODO*///static void PREFIX86(_lock)(void)    /* Opcode 0xf0 */
-/*TODO*///{
-/*TODO*///	i86_ICount[0] -= cycles.nop;
-/*TODO*///	PREFIX(_instruction)[FETCHOP]();  /* un-interruptible */
-/*TODO*///}
-/*TODO*///#endif
-/*TODO*///
+
     static InstructionPtr i86_repne = new InstructionPtr() {
         public void handler() {
             i86_rep(0);
@@ -3927,11 +3902,12 @@ public class instr86 {
 /*TODO*///		CHANGE_PC(I.pc);
 /*TODO*///		break;
 /*TODO*///
-/*TODO*///    case 0x30:  /* PUSH ea */
-/*TODO*///		i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.push_r16 : cycles.push_m16;
-/*TODO*///		tmp = GetRMWord(ModRM);
-/*TODO*///		PUSH(tmp);
-/*TODO*///		break;
+                case 0x30: /* PUSH ea */ {
+                    i86_ICount[0] -= (ModRM >= 0xc0) ? cycles.push_r16 : cycles.push_m16;
+                    tmp = GetRMWord(ModRM);
+                    PUSH(tmp);
+                }
+                break;
                 default:
                     System.out.println("i_ffpre 0x" + Integer.toHexString(ModRM & 0x38));
                     throw new UnsupportedOperationException("Unsupported");
