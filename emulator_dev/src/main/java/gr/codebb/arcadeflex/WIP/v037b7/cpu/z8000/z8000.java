@@ -296,7 +296,7 @@ public class z8000  extends cpu_interface {
 /*TODO*///			&Z.regs.B[14],&Z.regs.B[12],&Z.regs.B[10],&Z.regs.B[ 8]
 /*TODO*///		};
 /*TODO*///	
-/*TODO*///		static UINT16	*pRW[16] =
+/*TODO*///		static int[]	*pRW[16] =
 /*TODO*///		{
 /*TODO*///	        &Z.regs.W[ 3],&Z.regs.W[ 2],&Z.regs.W[ 1],&Z.regs.W[ 0],
 /*TODO*///	        &Z.regs.W[ 7],&Z.regs.W[ 6],&Z.regs.W[ 5],&Z.regs.W[ 4],

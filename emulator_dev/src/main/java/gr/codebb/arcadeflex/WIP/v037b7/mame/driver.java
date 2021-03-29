@@ -152,7 +152,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.mole.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.nitedrvr.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dominos.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.milliped.*;
-
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.leprechn.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.firetrap.*;
+        
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -2186,10 +2188,8 @@ public class driver {
         // driver_tomahawk,	/* (c) [1980?] */
         /*TODO*/
         // driver_tomahaw5,	/* (c) [1980?] */
-        /*TODO*/
-        // driver_firetrap,	/* (c) 1986 */
-        /*TODO*/
-        // driver_firetpbl,	/* bootleg */
+        driver_firetrap,	/* (c) 1986 */
+        driver_firetpbl,	/* bootleg */
 
         driver_shootout, /* (c) 1985 Data East USA (US) */
         driver_shootouj, /* (c) 1985 Data East USA (Japan) */
@@ -3462,10 +3462,8 @@ public class driver {
         /*TODO*/
         // driver_omegrace,	/* (c) 1981 Midway */
 
-        /*TODO*/
-        // driver_leprechn,	/* (c) 1982 Tong Electronic */
-        /*TODO*/
-        // driver_potogold,	/* (c) 1982 Tong Electronic */
+        driver_leprechn,	/* (c) 1982 Tong Electronic */
+        driver_potogold,	/* (c) 1982 Tong Electronic */
         driver_irobot, /* (c) 1983 Atari */
         /*TODO*/
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */

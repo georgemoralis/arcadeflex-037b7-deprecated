@@ -2095,10 +2095,10 @@ public class z8000ops {
      static OpcodePtr Z21_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-/*TODO*///	            dst = GET_DST(OP0,NIB3);
-/*TODO*///	    	GET_IMM16(OP1);
-    /*TODO*///	RW(dst) = imm16;
+            //throw new UnsupportedOperationException("unsupported");
+	        int dst = GET_DST(OP0,NIB3);
+	    	int imm16 = GET_IMM16(OP1);
+/*TODO*///                RW(dst, imm16);
         }
      };
     
