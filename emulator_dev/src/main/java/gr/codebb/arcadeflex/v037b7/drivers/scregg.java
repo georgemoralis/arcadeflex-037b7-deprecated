@@ -1,27 +1,14 @@
-/***************************************************************************
-
-Eggs
-
-Very similar to Burger Time hardware (and uses its video driver)
-
-driver by Nicola Salmoria
-
-***************************************************************************/
-
 /*
  * ported to v0.37b7
  * using automatic conversion tool v0.01
  */ 
-package gr.codebb.arcadeflex.WIP.v037b7.drivers;
+package gr.codebb.arcadeflex.v037b7.drivers;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptportH.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.ay8910H.*;

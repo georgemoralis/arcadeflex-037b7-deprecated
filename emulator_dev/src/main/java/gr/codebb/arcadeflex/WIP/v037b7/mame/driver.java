@@ -137,12 +137,12 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.pcktgal.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.videopin.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.victory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tankbatt.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.tagteam.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.tagteam.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.subs.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.ssozumo.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sprint2.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skychut.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.drivers.scregg.*;
+import static gr.codebb.arcadeflex.v037b7.drivers.scregg.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.shootout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.sbrkout.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.rockola.*;
@@ -154,7 +154,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.dominos.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.milliped.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.leprechn.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.firetrap.*;
-        
+import static gr.codebb.arcadeflex.v037b7.drivers.xain.*;
+
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -2188,9 +2189,8 @@ public class driver {
         // driver_tomahawk,	/* (c) [1980?] */
         /*TODO*/
         // driver_tomahaw5,	/* (c) [1980?] */
-        driver_firetrap,	/* (c) 1986 */
-        driver_firetpbl,	/* bootleg */
-
+        driver_firetrap, /* (c) 1986 */
+        driver_firetpbl, /* bootleg */
         driver_shootout, /* (c) 1985 Data East USA (US) */
         driver_shootouj, /* (c) 1985 Data East USA (Japan) */
         driver_shootoub, /* bootleg */
@@ -2729,9 +2729,9 @@ public class driver {
         /* Atari b/w games */
         driver_sprint1, /* no copyright notice */
         driver_sprint2, /* no copyright notice */
-        driver_sbrkout,	/* no copyright notice */
-        driver_dominos,	/* no copyright notice */
-        driver_nitedrvr,	/* no copyright notice [1976] */
+        driver_sbrkout, /* no copyright notice */
+        driver_dominos, /* no copyright notice */
+        driver_nitedrvr, /* no copyright notice [1976] */
         /*TODO*/
         // driver_bsktball,	/* no copyright notice */
         /*TODO*/
@@ -2757,9 +2757,8 @@ public class driver {
         // driver_canbprot,	/* no copyright notice [1977] */
 
         driver_videopin, /* no copyright notice [1979] */
-        driver_milliped,	/* (c) 1982 */
-        driver_qwakprot,	/* (c) 1982 */
-
+        driver_milliped, /* (c) 1982 */
+        driver_qwakprot, /* (c) 1982 */
         /* Atari "Missile Command hardware" games */
         /* misc Atari games */
         /*TODO*/
@@ -2904,17 +2903,16 @@ public class driver {
         // driver_sparkz,	/* (c) 1992 */
 
         /* SNK / Rock-ola games */
-        driver_sasuke,	/* [1980] Shin Nihon Kikaku (SNK) */
-        driver_satansat,	/* (c) 1981 SNK */
-        driver_zarzon,	/* (c) 1981 Taito, gameplay says SNK */
-        driver_vanguard,	/* (c) 1981 SNK */
-        driver_vangrdce,	/* (c) 1981 SNK + Centuri */
-        driver_fantasy,	/* (c) 1981 Rock-ola */
-        driver_fantasyj,	/* (c) 1981 SNK */
-        driver_pballoon,	/* (c) 1982 SNK */
-        driver_nibbler,	/* (c) 1982 Rock-ola */
-        driver_nibblera,	/* (c) 1982 Rock-ola */
-
+        driver_sasuke, /* [1980] Shin Nihon Kikaku (SNK) */
+        driver_satansat, /* (c) 1981 SNK */
+        driver_zarzon, /* (c) 1981 Taito, gameplay says SNK */
+        driver_vanguard, /* (c) 1981 SNK */
+        driver_vangrdce, /* (c) 1981 SNK + Centuri */
+        driver_fantasy, /* (c) 1981 Rock-ola */
+        driver_fantasyj, /* (c) 1981 SNK */
+        driver_pballoon, /* (c) 1982 SNK */
+        driver_nibbler, /* (c) 1982 Rock-ola */
+        driver_nibblera, /* (c) 1982 Rock-ola */
         /* later SNK games, each game can be identified by PCB code and ROM
     code, the ROM code is the same between versions, and usually based
     upon the Japanese title. */
@@ -2973,20 +2971,6 @@ public class driver {
         // driver_gangwarb,	/* Alpha-68K96V bootleg */
         /*TODO*/
         // driver_sbasebal,	/* Alpha-68K96V       (c) 1989 SNK of America licensed from Alpha */
-
-        /* Technos games */
-        driver_scregg, /* TA-0001 (c) 1983 */
-        driver_eggs, /* TA-0002 (c) 1983 Universal USA */
-        driver_bigprowr, /* TA-0007 (c) 1983 */
-        driver_tagteam, /* TA-0007 (c) 1983 + Data East license */
-         
-        /*TODO*/
-        /*TODO*/
-        // driver_xsleena,	/* TA-0019 (c) 1986 */
-        /*TODO*/
-        // driver_xsleenab,	/* bootleg */
-        /*TODO*/
-        // driver_solarwar,	/* TA-0019 (c) 1986 Taito + Memetron license */
 
         /*TODO*/
         // driver_ctribe,	/* TA-0028 (c) 1990 (US) */
@@ -3214,8 +3198,8 @@ public class driver {
         /*TODO*/
         // driver_aeroboto,	/* (c) 1984 Williams */
 
-        driver_pinbo,		/* (c) 1984 Jaleco */
-        driver_pinbos,	/* (c) 1985 Strike */
+        driver_pinbo, /* (c) 1984 Jaleco */
+        driver_pinbos, /* (c) 1985 Strike */
         driver_psychic5, /* (c) 1987 Jaleco */
         /*TODO*/
         // driver_ginganin,	/* (c) 1987 Jaleco */
@@ -3462,8 +3446,8 @@ public class driver {
         /*TODO*/
         // driver_omegrace,	/* (c) 1981 Midway */
 
-        driver_leprechn,	/* (c) 1982 Tong Electronic */
-        driver_potogold,	/* (c) 1982 Tong Electronic */
+        driver_leprechn, /* (c) 1982 Tong Electronic */
+        driver_potogold, /* (c) 1982 Tong Electronic */
         driver_irobot, /* (c) 1983 Atari */
         /*TODO*/
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
@@ -3483,8 +3467,7 @@ public class driver {
         // driver_meteor,	/* (c) 1981 Venture Line */
         /*TODO*/
         // driver_aztarac,	/* (c) 1983 Centuri (vector game) */
-        driver_mole,		/* (c) 1982 Yachiyo Electronics, Ltd. */
-
+        driver_mole, /* (c) 1982 Yachiyo Electronics, Ltd. */
         /* Neo Geo games */
         /* the four digits number is the game ID stored at address 0x0108 of the program ROM */
         /*TODO*/
@@ -4430,10 +4413,17 @@ public class driver {
         driver_mhavoc2,
         driver_mhavocp,
         driver_mhavocrv,
-        driver_sidepckt, 
+        driver_sidepckt,
         driver_sidepctj,
         driver_sidepctb,
         driver_ssozumo,
+        driver_scregg,
+        driver_eggs,
+        driver_bigprowr,
+        driver_tagteam,
+        driver_xsleena,
+        driver_xsleenab,
+        driver_solarwar,
         /*
      * NOT Working flag
          */
