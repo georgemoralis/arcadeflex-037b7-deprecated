@@ -2096,9 +2096,9 @@ public class z8000ops {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-	        int dst = GET_DST(OP0,NIB3);
-	    	int imm16 = GET_IMM16(OP1);
-/*TODO*///                RW(dst, imm16);
+	        GET_DST(OP0,NIB3);
+	    	GET_IMM16(OP1);
+                RW(dst, imm16);
         }
      };
     
@@ -5724,10 +5724,9 @@ public class z8000ops {
      ******************************************/
      static OpcodePtr Z8D_dddd_1000 = new OpcodePtr() {
         @Override
-        public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RW(dst) = 0;
+        public void handler() {            
+            GET_DST(OP0,NIB2);
+            RW(dst, 0);
         }
      };
     

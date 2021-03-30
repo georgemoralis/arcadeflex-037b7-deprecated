@@ -1,6 +1,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.pRW;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.z8000_Regs;
 
 public class z8000cpuH {
@@ -29,7 +30,8 @@ public class z8000cpuH {
 
 /*TODO*////* pointers to the registers inside the Z8000_Regs struct Z */
 /*TODO*///#define RB(n)   (*pRB[n])
-/*TODO*///#define RW(n)   (*pRW[n])
+    public static int RW(int n) { return pRW(n); }
+    public static void RW(int n, int m) { pRW(n, m); }
 /*TODO*///#define RL(n)   (*pRL[n])
 /*TODO*///#define RQ(n)   (*pRQ[n])
 /*TODO*///
@@ -81,12 +83,12 @@ public class z8000cpuH {
     public static final int OP1     = 1;
     public static final int OP2     = 2;
 
-/*TODO*////* nibble shift factors for an opcode word */
-/*TODO*////* left to right: 0x1340 . NIB0=1, NIB1=3, NIB2=4, NIB3=0 */
-/*TODO*///#define NIB0    12
-/*TODO*///#define NIB1	8
-/*TODO*///#define NIB2	4
-    public static final int NIB3	= 0;
+    /* nibble shift factors for an opcode word */
+    /* left to right: 0x1340 . NIB0=1, NIB1=3, NIB2=4, NIB3=0 */
+    public static final int NIB0    = 12;
+    public static final int NIB1    = 8;
+    public static final int NIB2    = 4;
+    public static final int NIB3    = 0;
 
 /*TODO*////* sign bit masks for byte, word and long */
 /*TODO*///#define S08 0x80
@@ -155,8 +157,8 @@ public class z8000cpuH {
 /*TODO*////* s is a nibble shift factor	  */
 /*TODO*///#define GET_BIT(o)      UINT16 bit = 1 << (Z.op[o] & 15)
 /*TODO*///#define GET_CCC(o,s)	UINT8 cc = (Z.op[o] >> (s)) & 15
-
-    public static int GET_DST(int o, int s){	return /*UINT8 dst =*/ ((Z.op[o] >> (s)) & 15) & 0xf; }
+    public static int dst;
+    public static void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((Z.op[o] >> (s)) & 15) & 0xf; }
 /*TODO*///#define GET_SRC(o,s)	UINT8 src = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_IDX(o,s)	UINT8 idx = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_CNT(o,s)	INT8 cnt = (Z.op[o] >> (s)) & 15
@@ -169,7 +171,8 @@ public class z8000cpuH {
 /*TODO*///
 /*TODO*///#define GET_IMM8(o) 	UINT8 imm8 = (UINT8)Z.op[o]
 /*TODO*///
-    public static int GET_IMM16(int o){	return /*UINT16 imm16 =*/ (Z.op[o])&0xff; }
+    public static int imm16;
+    public static void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (Z.op[o])&0xff; }
 /*TODO*///#define GET_IMM32		UINT32 imm32 = Z.op[2] + (Z.op[1] << 16)
 /*TODO*///#define GET_DSP7		UINT8 dsp7 = Z.op[0] & 127
 /*TODO*///#define GET_DSP8		INT8 dsp8 = (INT8)Z.op[0]
