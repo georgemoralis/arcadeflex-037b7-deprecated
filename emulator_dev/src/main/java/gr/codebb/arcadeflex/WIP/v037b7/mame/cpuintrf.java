@@ -45,7 +45,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.h6280.h6280H.*;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6502.n2a03;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000H.*;
-
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6808;
 
 public class cpuintrf {
 
@@ -310,7 +310,7 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(M6801,    m6801,	 1,  0,1.00,M6801_INT_NONE,    M6801_INT_IRQ,  M6801_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new m6802(),//CPU0(M6802,    m6802,	 1,  0,1.00,M6802_INT_NONE,    M6802_INT_IRQ,  M6802_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new m6803(),//CPU0(M6803,    m6803,	 1,  0,1.00,M6803_INT_NONE,    M6803_INT_IRQ,  M6803_INT_NMI,  16,	  0,16,BE,1, 4,16	),
-                new Dummy_cpu(),//CPU0(M6808,    m6808,	 1,  0,1.00,M6808_INT_NONE,    M6808_INT_IRQ,  M6808_INT_NMI,  16,	  0,16,BE,1, 4,16	),
+                new m6808(),//CPU0(M6808,    m6808,	 1,  0,1.00,M6808_INT_NONE,    M6808_INT_IRQ,  M6808_INT_NMI,  16,	  0,16,BE,1, 4,16	),
                 new hd63701(),//CPU0(HD63701,  hd63701,  1,  0,1.00,HD63701_INT_NONE,  HD63701_INT_IRQ,HD63701_INT_NMI,16,	  0,16,BE,1, 4,16	),
                 new nsc8105(),//CPU0(NSC8105,  nsc8105,  1,  0,1.00,NSC8105_INT_NONE,  NSC8105_INT_IRQ,NSC8105_INT_NMI,16,	  0,16,BE,1, 4,16	),
                 new m6805(),//CPU0(M6805,    m6805,	 1,  0,1.00,M6805_INT_NONE,    M6805_INT_IRQ,  -1,			   16,	  0,11,BE,1, 3,16	),
