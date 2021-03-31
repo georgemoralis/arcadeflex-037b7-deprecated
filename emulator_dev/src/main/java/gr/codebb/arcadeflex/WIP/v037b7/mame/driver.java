@@ -158,6 +158,7 @@ import static gr.codebb.arcadeflex.v037b7.drivers.xain.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.williams.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lasso.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cloud9.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cloak.*;
 
 public class driver {
 
@@ -2743,8 +2744,7 @@ public class driver {
         /*TODO*/
         // TESTDRIVER( liberat2,
 
-        /*TODO*/
-        // driver_cloak,		/* (c) 1983 */
+        driver_cloak,		/* (c) 1983 */
         driver_cloud9,	/* (c) 1983 */
         driver_jedi, /* (c) 1984 */
         /* Atari System 1 games */
