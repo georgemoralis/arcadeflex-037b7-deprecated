@@ -156,6 +156,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.leprechn.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.firetrap.*;
 import static gr.codebb.arcadeflex.v037b7.drivers.xain.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.williams.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.lasso.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cloud9.*;
+
 public class driver {
 
     public static GameDriver drivers[] = {
@@ -2742,8 +2745,7 @@ public class driver {
 
         /*TODO*/
         // driver_cloak,		/* (c) 1983 */
-        /*TODO*/
-        // driver_cloud9,	/* (c) 1983 */
+        driver_cloud9,	/* (c) 1983 */
         driver_jedi, /* (c) 1984 */
         /* Atari System 1 games */
         /*TODO*/
@@ -2888,8 +2890,7 @@ public class driver {
         /* later SNK games, each game can be identified by PCB code and ROM
     code, the ROM code is the same between versions, and usually based
     upon the Japanese title. */
-        /*TODO*/
-        // driver_lasso,		/*       'WM' (c) 1982 */	
+        driver_lasso,		/*       'WM' (c) 1982 */	
         /*TODO*/
         // driver_ikari3,	/* A7007 'IK3'(c) 1989 */
         /*TODO*/
