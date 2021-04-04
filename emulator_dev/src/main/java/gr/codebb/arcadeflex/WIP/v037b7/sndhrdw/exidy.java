@@ -82,7 +82,7 @@ public class exidy {
     /*
 	 *  PIA callback to generate the interrupt to the main CPU
      */
-    public static irqfuncPtr exidy_irq = new irqfuncPtr() {
+    public static IrqfuncPtr exidy_irq = new IrqfuncPtr() {
         public void handler(int state) {
             cpu_set_irq_line(1, 0, state != 0 ? ASSERT_LINE : CLEAR_LINE);
         }

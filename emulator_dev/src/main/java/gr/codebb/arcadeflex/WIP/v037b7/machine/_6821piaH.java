@@ -1,7 +1,6 @@
 /*
  * ported to 0.37b7 
- * ported to 0.36 
-*/
+ */
 package gr.codebb.arcadeflex.WIP.v037b7.machine;
 
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
@@ -33,23 +32,14 @@ public class _6821piaH {
     public static final int PIA_16BIT_UPPER = (PIA_16BIT | PIA_UPPER);
     public static final int PIA_16BIT_AUTO = (PIA_16BIT | PIA_AUTOSENSE);
 
-    public static abstract interface irqfuncPtr {
+    public static abstract interface IrqfuncPtr {
 
         public abstract void handler(int state);
     }
 
     public static class pia6821_interface {
 
-        public pia6821_interface(ReadHandlerPtr in_a_func, ReadHandlerPtr in_b_func, ReadHandlerPtr in_ca1_func,
-                ReadHandlerPtr in_cb1_func,
-                ReadHandlerPtr in_ca2_func,
-                ReadHandlerPtr in_cb2_func,
-                WriteHandlerPtr out_a_func,
-                WriteHandlerPtr out_b_func,
-                WriteHandlerPtr out_ca2_func,
-                WriteHandlerPtr out_cb2_func,
-                irqfuncPtr irq_a_func,
-                irqfuncPtr irq_b_func) {
+        public pia6821_interface(ReadHandlerPtr in_a_func, ReadHandlerPtr in_b_func, ReadHandlerPtr in_ca1_func, ReadHandlerPtr in_cb1_func, ReadHandlerPtr in_ca2_func, ReadHandlerPtr in_cb2_func, WriteHandlerPtr out_a_func, WriteHandlerPtr out_b_func, WriteHandlerPtr out_ca2_func, WriteHandlerPtr out_cb2_func, IrqfuncPtr irq_a_func, IrqfuncPtr irq_b_func) {
             this.in_a_func = in_a_func;
             this.in_b_func = in_b_func;
             this.in_ca1_func = in_ca1_func;
@@ -74,7 +64,7 @@ public class _6821piaH {
         WriteHandlerPtr out_b_func;
         WriteHandlerPtr out_ca2_func;
         WriteHandlerPtr out_cb2_func;
-        irqfuncPtr irq_a_func;
-        irqfuncPtr irq_b_func;
+        IrqfuncPtr irq_a_func;
+        IrqfuncPtr irq_b_func;
     }
 }

@@ -9,7 +9,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6800Η.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_FIRQ_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.m6809.m6809H.M6809_IRQ_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.machine._6821pia.*;
-import gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.irqfuncPtr;
+import gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.IrqfuncPtr;
 import gr.codebb.arcadeflex.WIP.v037b7.machine._6821piaH.pia6821_interface;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
@@ -101,13 +101,13 @@ public class williams {
         }
     };
 
-    public static irqfuncPtr williams_main_irq = new irqfuncPtr() {
+    public static IrqfuncPtr williams_main_irq = new IrqfuncPtr() {
 
         public void handler(int state) {
             cpu_set_irq_line(0, M6809_IRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
         }
     };
-    public static irqfuncPtr williams_main_firq = new irqfuncPtr() {
+    public static IrqfuncPtr williams_main_firq = new IrqfuncPtr() {
 
         public void handler(int state) {
             /* FIRQ to the main CPU */
@@ -115,7 +115,7 @@ public class williams {
         }
     };
 
-    public static irqfuncPtr williams_snd_irq = new irqfuncPtr() {
+    public static IrqfuncPtr williams_snd_irq = new IrqfuncPtr() {
 
         public void handler(int state) {
             /* IRQ to the sound CPU */

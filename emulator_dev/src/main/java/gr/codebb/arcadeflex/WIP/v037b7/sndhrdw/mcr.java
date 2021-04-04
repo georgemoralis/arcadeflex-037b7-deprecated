@@ -309,7 +309,7 @@ public class mcr {
         }
     };
 
-    static irqfuncPtr csdeluxe_irq = new irqfuncPtr() {
+    static IrqfuncPtr csdeluxe_irq = new IrqfuncPtr() {
         @Override
         public void handler(int state) {
             cpu_set_irq_line(u8_csdeluxe_sound_cpu, 4, state != 0 ? ASSERT_LINE : CLEAR_LINE);
@@ -403,7 +403,7 @@ public class mcr {
         }
     };
 
-    static irqfuncPtr soundsgood_irq = new irqfuncPtr() {
+    static IrqfuncPtr soundsgood_irq = new IrqfuncPtr() {
         @Override
         public void handler(int state) {
             cpu_set_irq_line(u8_soundsgood_sound_cpu, 4, state != 0 ? ASSERT_LINE : CLEAR_LINE);
@@ -501,7 +501,7 @@ public class mcr {
         }
     };
 
-       public static irqfuncPtr turbocs_irq = new irqfuncPtr() {
+       public static IrqfuncPtr turbocs_irq = new IrqfuncPtr() {
         public void handler(int state) {
             cpu_set_irq_line(u8_turbocs_sound_cpu, M6809_IRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
         }
@@ -611,7 +611,7 @@ public class mcr {
             u8_squawkntalk_tms_strobes = data & 0xFF;
         }
     };
-    public static irqfuncPtr squawkntalk_irq = new irqfuncPtr() {
+    public static IrqfuncPtr squawkntalk_irq = new IrqfuncPtr() {
         public void handler(int state) {
             cpu_set_irq_line(u8_squawkntalk_sound_cpu, M6800_IRQ_LINE, state != 0 ? ASSERT_LINE : CLEAR_LINE);
         }
