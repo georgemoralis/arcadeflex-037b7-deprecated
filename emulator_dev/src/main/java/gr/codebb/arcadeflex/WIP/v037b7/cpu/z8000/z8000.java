@@ -605,6 +605,7 @@ public class z8000  extends cpu_interface {
 	
 	public int RDOP()
 	{
+            
             int res = cpu_readop16(Z.pc & 0xffff);
 	    Z.pc += 2;
 	    return res;
