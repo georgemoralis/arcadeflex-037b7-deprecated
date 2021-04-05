@@ -15,8 +15,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.commonH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.*;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MRA_BANK2;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.MWA_ROM;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.cpu_setbank;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.paletteram_BBGGGRRR_w;
 import static gr.codebb.arcadeflex.WIP.v037b7.sound.dac.DAC_0_data_w;
@@ -480,13 +480,11 @@ public class williams {
 
             /* if the bank maps into normal RAM, it represents I/O space */
             if (bank_offset < 0x10000) {
-                System.out.println("Unsupported");
-/*TODO*///                cpu_setbankhandler_r(2, defender_io_r);
-/*TODO*///                cpu_setbankhandler_w(2, defender_io_w);
+                cpu_setbankhandler_r(2, defender_io_r);
+                cpu_setbankhandler_w(2, defender_io_w);
             } /* otherwise, it's ROM space */ else {
-                System.out.println("Unsupported");
-/*TODO*///                cpu_setbankhandler_r(2, MRA_BANK2);
-/*TODO*///                cpu_setbankhandler_w(2, MWA_ROM);
+                cpu_setbankhandler_r(2, MRA_BANK2);
+                cpu_setbankhandler_w(2, MWA_ROM);
             }
         }
     };
