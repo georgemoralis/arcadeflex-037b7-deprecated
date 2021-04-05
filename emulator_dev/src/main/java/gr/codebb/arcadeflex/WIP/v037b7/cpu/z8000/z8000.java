@@ -73,7 +73,7 @@ public class z8000  extends cpu_interface {
 
     @Override
     public void exit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        z8000_exit();
     }
 
     @Override
@@ -224,6 +224,10 @@ public class z8000  extends cpu_interface {
 	/* opcode execution table */
 	public static Z8000_exec[] z8000_exec = null;
 
+    private void z8000_deinit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
         public static class z8000_reg_file {
 	    int[] /*UINT8*/   B=new int[16]; /* RL0,RH0,RL1,RH1...RL7,RH7 */
 	    int[] /*UINT16*/  W=new int[16]; /* R0,R1,R2...R15 */
@@ -296,98 +300,13 @@ public class z8000  extends cpu_interface {
 /*TODO*///			&Z.regs.B[14],&Z.regs.B[12],&Z.regs.B[10],&Z.regs.B[ 8]
 /*TODO*///		};
 /*TODO*///	
-		public static int pRW(int _val)
-		{
-                    switch (_val){
-                        case 0:
-                            return (Z.regs.W[ 3] & 0xFFFF);
-                            //break;
-                        case 1:
-                            return (Z.regs.W[ 2] & 0xFFFF);
-                        case 2:
-                            return (Z.regs.W[ 1] & 0xFFFF);
-                        case 3:
-                            return (Z.regs.W[ 0] & 0xFFFF);
-                        case 4:
-                            return (Z.regs.W[ 7] & 0xFFFF);
-                        case 5:
-                            return (Z.regs.W[ 6] & 0xFFFF);
-                        case 6:
-                            return (Z.regs.W[ 5] & 0xFFFF);
-                        case 7:
-                            return (Z.regs.W[ 4] & 0xFFFF);
-                        case 8:
-                            return (Z.regs.W[11] & 0xFFFF);
-                        case 9:
-                            return (Z.regs.W[10] & 0xFFFF);
-                        case 10:
-                            return (Z.regs.W[ 9] & 0xFFFF);
-                        case 11:
-                            return (Z.regs.W[ 8] & 0xFFFF);
-                        case 12:
-                            return (Z.regs.W[15] & 0xFFFF);
-                        case 13:
-                            return (Z.regs.W[14] & 0xFFFF);
-                        case 14:
-                            return (Z.regs.W[13] & 0xFFFF);
-                        default:
-                            return (Z.regs.W[12] & 0xFFFF);
-                    }
-	    };
-            
-            public static void pRW(int _pos, int _val)
-		{
-                    switch (_pos){
-                        case 0:
-                            Z.regs.W[ 3] = _val & 0xFFFF;
-                            break;
-                        case 1:
-                            Z.regs.W[ 2] = _val & 0xFFFF;
-                            break;
-                        case 2:
-                            Z.regs.W[ 1] = _val & 0xFFFF;
-                            break;
-                        case 3:
-                            Z.regs.W[ 0] = _val & 0xFFFF;
-                            break;
-                        case 4:
-                            Z.regs.W[ 7] = _val & 0xFFFF;
-                            break;
-                        case 5:
-                            Z.regs.W[ 6] = _val & 0xFFFF;
-                            break;
-                        case 6:
-                            Z.regs.W[ 5] = _val & 0xFFFF;
-                            break;
-                        case 7:
-                            Z.regs.W[ 4] = _val & 0xFFFF;
-                            break;
-                        case 8:
-                            Z.regs.W[ 11] = _val & 0xFFFF;
-                            break;
-                        case 9:
-                            Z.regs.W[ 10] = _val & 0xFFFF;
-                            break;
-                        case 10:
-                            Z.regs.W[ 9] = _val & 0xFFFF;
-                            break;
-                        case 11:
-                            Z.regs.W[ 8] = _val & 0xFFFF;
-                            break;
-                        case 12:
-                            Z.regs.W[ 15] = _val & 0xFFFF;
-                            break;
-                        case 13:
-                            Z.regs.W[ 14] = _val & 0xFFFF;
-                            break;
-                        case 14:
-                            Z.regs.W[ 13] = _val & 0xFFFF;
-                            break;
-                        default:
-                            Z.regs.W[ 12] = _val & 0xFFFF;
-                            break;
-                    }
-	    };
+/*TODO*///              static UINT16	*pRW[16] =
+/*TODO*///		{
+/*TODO*///	        &Z.regs.W[ 3],&Z.regs.W[ 2],&Z.regs.W[ 1],&Z.regs.W[ 0],
+/*TODO*///	        &Z.regs.W[ 7],&Z.regs.W[ 6],&Z.regs.W[ 5],&Z.regs.W[ 4],
+/*TODO*///	        &Z.regs.W[11],&Z.regs.W[10],&Z.regs.W[ 9],&Z.regs.W[ 8],
+/*TODO*///	        &Z.regs.W[15],&Z.regs.W[14],&Z.regs.W[13],&Z.regs.W[12]
+/*TODO*///	    };
 /*TODO*///	
 /*TODO*///	    /* pointers to long (32bit) registers */
 /*TODO*///		static UINT32	*pRL[16] =
@@ -399,16 +318,194 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    };
 /*TODO*///	
 /*TODO*///	#else	/* MSB_FIRST */
-/*TODO*///	
-/*TODO*///	    /* pointers to byte (8bit) registers */
-/*TODO*///		static UINT8	*pRB[16] =
-/*TODO*///		{
-/*TODO*///			&Z.regs.B[ 0],&Z.regs.B[ 2],&Z.regs.B[ 4],&Z.regs.B[ 6],
-/*TODO*///			&Z.regs.B[ 8],&Z.regs.B[10],&Z.regs.B[12],&Z.regs.B[14],
-/*TODO*///			&Z.regs.B[ 1],&Z.regs.B[ 3],&Z.regs.B[ 5],&Z.regs.B[ 7],
-/*TODO*///			&Z.regs.B[ 9],&Z.regs.B[11],&Z.regs.B[13],&Z.regs.B[15]
-/*TODO*///		};
-/*TODO*///	
+	
+	    /* pointers to byte (8bit) registers */
+		public static int pRB(int _val)
+		{
+                    switch (_val){
+			case 0:
+                            return (Z.regs.B[ 0]);
+                        case 1:
+                            return (Z.regs.B[ 2]);
+                        case 2:
+                            return (Z.regs.B[ 4]);
+                        case 3:
+                            return (Z.regs.B[ 6]);
+			case 4:
+                            return (Z.regs.B[ 8]);
+                        case 5:
+                            return (Z.regs.B[10]);
+                        case 6:
+                            return (Z.regs.B[12]);
+                        case 7:
+                            return (Z.regs.B[14]);
+			case 8:
+                            return (Z.regs.B[ 1]);
+                        case 9:
+                            return (Z.regs.B[ 3]);
+                        case 10:
+                            return (Z.regs.B[ 5]);
+                        case 11:
+                            return (Z.regs.B[ 7]);
+			case 12:
+                            return (Z.regs.B[ 9]);
+                        case 13:
+                            return (Z.regs.B[11]);
+                        case 14:
+                            return (Z.regs.B[13]);
+                        case 15:
+                            return (Z.regs.B[15]);
+                        default:
+                            return 0;
+                    }
+		};
+                
+                public static void pRB(int _pos, int _val)
+		{
+                    switch (_pos){
+                        case 0:
+                            Z.regs.B[ 0] = _val & 0xFFFF;
+                            break;
+                        case 1:
+                            Z.regs.B[ 2] = _val & 0xFFFF;
+                            break;
+                        case 2:
+                            Z.regs.B[ 4] = _val & 0xFFFF;
+                            break;
+                        case 3:
+                            Z.regs.B[ 6] = _val & 0xFFFF;
+                            break;
+                        case 4:
+                            Z.regs.B[ 8] = _val & 0xFFFF;
+                            break;
+                        case 5:
+                            Z.regs.B[ 10] = _val & 0xFFFF;
+                            break;
+                        case 6:
+                            Z.regs.B[ 12] = _val & 0xFFFF;
+                            break;
+                        case 7:
+                            Z.regs.B[ 14] = _val & 0xFFFF;
+                            break;
+                        case 8:
+                            Z.regs.B[ 1] = _val & 0xFFFF;
+                            break;
+                        case 9:
+                            Z.regs.B[ 3] = _val & 0xFFFF;
+                            break;
+                        case 10:
+                            Z.regs.B[ 5] = _val & 0xFFFF;
+                            break;
+                        case 11:
+                            Z.regs.B[ 7] = _val & 0xFFFF;
+                            break;
+                        case 12:
+                            Z.regs.B[ 9] = _val & 0xFFFF;
+                            break;
+                        case 13:
+                            Z.regs.B[ 11] = _val & 0xFFFF;
+                            break;
+                        case 14:
+                            Z.regs.B[ 13] = _val & 0xFFFF;
+                            break;
+                        default:
+                            Z.regs.B[ 15] = _val & 0xFFFF;
+                            break;
+                    }
+	    };
+	
+                public static int pRW(int _val)
+		{
+                    switch (_val){
+                        case 0:
+                            return (Z.regs.W[ 0] & 0xFFFF);
+                            //break;
+                        case 1:
+                            return (Z.regs.W[ 1] & 0xFFFF);
+                        case 2:
+                            return (Z.regs.W[ 2] & 0xFFFF);
+                        case 3:
+                            return (Z.regs.W[ 3] & 0xFFFF);
+                        case 4:
+                            return (Z.regs.W[ 4] & 0xFFFF);
+                        case 5:
+                            return (Z.regs.W[ 5] & 0xFFFF);
+                        case 6:
+                            return (Z.regs.W[ 6] & 0xFFFF);
+                        case 7:
+                            return (Z.regs.W[ 7] & 0xFFFF);
+                        case 8:
+                            return (Z.regs.W[ 8] & 0xFFFF);
+                        case 9:
+                            return (Z.regs.W[ 9] & 0xFFFF);
+                        case 10:
+                            return (Z.regs.W[10] & 0xFFFF);
+                        case 11:
+                            return (Z.regs.W[11] & 0xFFFF);
+                        case 12:
+                            return (Z.regs.W[12] & 0xFFFF);
+                        case 13:
+                            return (Z.regs.W[13] & 0xFFFF);
+                        case 14:
+                            return (Z.regs.W[14] & 0xFFFF);
+                        default:
+                            return (Z.regs.W[15] & 0xFFFF);
+                    }
+	    };
+            
+            public static void pRW(int _pos, int _val)
+		{
+                    switch (_pos){
+                        case 0:
+                            Z.regs.W[ 0] = _val & 0xFFFF;
+                            break;
+                        case 1:
+                            Z.regs.W[ 1] = _val & 0xFFFF;
+                            break;
+                        case 2:
+                            Z.regs.W[ 2] = _val & 0xFFFF;
+                            break;
+                        case 3:
+                            Z.regs.W[ 3] = _val & 0xFFFF;
+                            break;
+                        case 4:
+                            Z.regs.W[ 4] = _val & 0xFFFF;
+                            break;
+                        case 5:
+                            Z.regs.W[ 5] = _val & 0xFFFF;
+                            break;
+                        case 6:
+                            Z.regs.W[ 6] = _val & 0xFFFF;
+                            break;
+                        case 7:
+                            Z.regs.W[ 7] = _val & 0xFFFF;
+                            break;
+                        case 8:
+                            Z.regs.W[ 8] = _val & 0xFFFF;
+                            break;
+                        case 9:
+                            Z.regs.W[ 9] = _val & 0xFFFF;
+                            break;
+                        case 10:
+                            Z.regs.W[ 10] = _val & 0xFFFF;
+                            break;
+                        case 11:
+                            Z.regs.W[ 11] = _val & 0xFFFF;
+                            break;
+                        case 12:
+                            Z.regs.W[ 12] = _val & 0xFFFF;
+                            break;
+                        case 13:
+                            Z.regs.W[ 13] = _val & 0xFFFF;
+                            break;
+                        case 14:
+                            Z.regs.W[ 14] = _val & 0xFFFF;
+                            break;
+                        default:
+                            Z.regs.W[ 15] = _val & 0xFFFF;
+                            break;
+                    }
+	    };            
 /*TODO*///		/* pointers to word (16bit) registers */
 /*TODO*///		static UINT16	*pRW[16] =
 /*TODO*///		{
@@ -417,16 +514,86 @@ public class z8000  extends cpu_interface {
 /*TODO*///			&Z.regs.W[ 8],&Z.regs.W[ 9],&Z.regs.W[10],&Z.regs.W[11],
 /*TODO*///			&Z.regs.W[12],&Z.regs.W[13],&Z.regs.W[14],&Z.regs.W[15]
 /*TODO*///		};
-/*TODO*///	
-/*TODO*///		/* pointers to long (32bit) registers */
-/*TODO*///		static UINT32	*pRL[16] =
-/*TODO*///		{
-/*TODO*///			&Z.regs.L[ 0],&Z.regs.L[ 0],&Z.regs.L[ 1],&Z.regs.L[ 1],
-/*TODO*///			&Z.regs.L[ 2],&Z.regs.L[ 2],&Z.regs.L[ 3],&Z.regs.L[ 3],
-/*TODO*///			&Z.regs.L[ 4],&Z.regs.L[ 4],&Z.regs.L[ 5],&Z.regs.L[ 5],
-/*TODO*///			&Z.regs.L[ 6],&Z.regs.L[ 6],&Z.regs.L[ 7],&Z.regs.L[ 7]
-/*TODO*///		};
-/*TODO*///	
+	
+		/* pointers to long (32bit) registers */
+		public static int pRL(int _val)
+		{
+                    switch (_val){
+                        case 0:
+                            return Z.regs.L[ 0];
+			case 1:
+                            return Z.regs.L[ 0];
+                        case 2:
+                            return Z.regs.L[ 1];
+                        case 3:
+                            return Z.regs.L[ 1];
+			case 4:
+                            return Z.regs.L[ 2];
+                        case 5:
+                            return Z.regs.L[ 2];
+                        case 6:
+                            return Z.regs.L[ 3];
+                        case 7:
+                            return Z.regs.L[ 3];
+			case 8:
+                            return Z.regs.L[ 4];
+                        case 9:
+                            return Z.regs.L[ 4];
+                        case 10:
+                            return Z.regs.L[ 5];
+                        case 11:
+                            return Z.regs.L[ 5];
+			case 12:
+                            return Z.regs.L[ 6];
+                        case 13:
+                            return Z.regs.L[ 6];
+                        case 14:
+                            return Z.regs.L[ 7];
+                        case 15:
+                            return Z.regs.L[ 7];
+                    }
+                    
+                    return 0;
+		};
+
+                public static void pRL(int _pos, int _val)
+		{
+                    switch (_pos){
+                        case 0:
+                            Z.regs.L[ 0] = _val;
+			case 1:
+                            Z.regs.L[ 0] = _val;
+                        case 2:
+                            Z.regs.L[ 1] = _val;
+                        case 3:
+                            Z.regs.L[ 1] = _val;
+			case 4:
+                            Z.regs.L[ 2] = _val;
+                        case 5:
+                            Z.regs.L[ 2] = _val;
+                        case 6:
+                            Z.regs.L[ 3] = _val;
+                        case 7:
+                            Z.regs.L[ 3] = _val;
+			case 8:
+                            Z.regs.L[ 4] = _val;
+                        case 9:
+                            Z.regs.L[ 4] = _val;
+                        case 10:
+                            Z.regs.L[ 5] = _val;
+                        case 11:
+                            Z.regs.L[ 5] = _val;
+			case 12:
+                            Z.regs.L[ 6] = _val;
+                        case 13:
+                            Z.regs.L[ 6] = _val;
+                        case 14:
+                            Z.regs.L[ 7] = _val;
+                        case 15:
+                            Z.regs.L[ 7] = _val;
+                    }
+                    
+		};
 /*TODO*///	#endif
 /*TODO*///	
 /*TODO*///	/* pointers to quad word (64bit) registers */
@@ -438,41 +605,41 @@ public class z8000  extends cpu_interface {
 	
 	public int RDOP()
 	{
-            int res = cpu_readop16(Z.pc);
+            int res = cpu_readop16(Z.pc & 0xffff);
 	    Z.pc += 2;
 	    return res;
 	}
 	
-/*TODO*///	INLINE UINT8 RDMEM_B(UINT16 addr)
-/*TODO*///	{
-/*TODO*///		return cpu_readmem16bew(addr);
-/*TODO*///	}
-	
-	public int RDMEM_W(int addr)
+        public static int RDMEM_B(int addr)
 	{
-		addr &= ~1;
-		return cpu_readmem16bew_word(addr);
+		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
 	}
 	
-/*TODO*///	INLINE UINT32 RDMEM_L(UINT16 addr)
-/*TODO*///	{
-/*TODO*///		UINT32 result;
-/*TODO*///		addr &= ~1;
-/*TODO*///		result = cpu_readmem16bew_word(addr) << 16;
-/*TODO*///		return result + cpu_readmem16bew_word(addr + 2);
-/*TODO*///	}
-/*TODO*///	
+	public static int RDMEM_W(int addr)
+	{
+		addr &= ~1;
+		return cpu_readmem16bew_word(addr & 0xffff);
+	}
+	
+	public static int RDMEM_L(int addr)
+	{
+		int result;
+		addr &= ~1;
+		result = cpu_readmem16bew_word(addr & 0xffff) << 16;
+		return result + cpu_readmem16bew_word((addr + 2) & 0xffff);
+	}
+	
 /*TODO*///	INLINE void WRMEM_B(UINT16 addr, UINT8 value)
 /*TODO*///	{
 /*TODO*///		cpu_writemem16bew(addr, value);
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	INLINE void WRMEM_W(UINT16 addr, UINT16 value)
-/*TODO*///	{
-/*TODO*///		addr &= ~1;
-/*TODO*///		cpu_writemem16bew_word(addr, value);
-/*TODO*///	}
-/*TODO*///	
+	
+	public static void WRMEM_W(int addr, int value)
+	{
+		addr &= ~1;
+		cpu_writemem16bew_word(addr, value);
+	}
+	
 /*TODO*///	INLINE void WRMEM_L(UINT16 addr, UINT32 value)
 /*TODO*///	{
 /*TODO*///		addr &= ~1;
@@ -719,14 +886,14 @@ public class z8000  extends cpu_interface {
             change_pc16bew(Z.pc);
 	}
 	
-/*TODO*///	void z8000_exit(void)
-/*TODO*///	{
-/*TODO*///		z8000_deinit();
-/*TODO*///	}
+	public void z8000_exit()
+	{
+		z8000_deinit();
+	}
 	
 	public int z8000_execute(int cycles)
 	{
-            System.out.println("z8000_execute");
+            //System.out.println("z8000_execute");
 	    z8000_ICount[0] = cycles;
 	
 	    do

@@ -23,9 +23,15 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_B;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.WRMEM_W;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_W;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_L;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.z8000_ICount;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.*;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.OpcodePtr;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 
 public class z8000ops {
     
@@ -72,90 +78,90 @@ public class z8000ops {
 /*TODO*///    RW(dst) -= 2;
 /*TODO*///	WRMEM_W( RW(dst), value );
 /*TODO*///}
-/*TODO*///
-/*TODO*///INLINE UINT16 POPW(UINT8 src)
-/*TODO*///{
-/*TODO*///	UINT16 result = RDMEM_W( RW(src) );
-/*TODO*///    RW(src) += 2;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    public static int POPW(int src)
+    {
+        int result = RDMEM_W( RW(src) );
+        RW(src, RW(src) + 2);
+        return result;
+    }
+
 /*TODO*///INLINE void PUSHL(UINT8 dst, UINT32 value)
 /*TODO*///{
 /*TODO*///	RW(dst) -= 4;
 /*TODO*///	WRMEM_L( RW(dst), value );
 /*TODO*///}
-/*TODO*///
-/*TODO*///INLINE UINT32 POPL(UINT8 src)
-/*TODO*///{
-/*TODO*///	UINT32 result = RDMEM_L( RW(src) );
-/*TODO*///    RW(src) += 4;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* check zero and sign flag for byte, word and long results */
-/*TODO*///#define CHK_XXXB_ZS if (!result) SET_Z; else if ((INT8) result < 0) SET_S
-/*TODO*///#define CHK_XXXW_ZS if (!result) SET_Z; else if ((INT16)result < 0) SET_S
-/*TODO*///#define CHK_XXXL_ZS if (!result) SET_Z; else if ((INT32)result < 0) SET_S
+
+    public static int POPL(int src)
+    {
+        int result = RDMEM_L( RW(src) );
+        RW(src, RW(src) + 4);
+        return result;
+    }
+
+    /* check zero and sign flag for byte, word and long results */
+    public static void CHK_XXXB_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
+    public static void CHK_XXXW_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
+    public static void CHK_XXXL_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
 /*TODO*///#define CHK_XXXQ_ZS if (!result) SET_Z; else if ((INT64)result < 0) SET_S
-/*TODO*///
+
 /*TODO*///#define CHK_XXXB_ZSP FCW |= z8000_zsp[result]
-/*TODO*///
+
 /*TODO*////* check carry for addition and subtraction */
-/*TODO*///#define CHK_ADDX_C if (result < dest) SET_C
+    public static void CHK_ADDX_C(int result, int dest){ if (result < dest) SET_C(); }
 /*TODO*///#define CHK_ADCX_C if (result < dest || (result == dest && value)) SET_C
-/*TODO*///
-/*TODO*///#define CHK_SUBX_C if (result > dest) SET_C
+
+    public static void CHK_SUBX_C(int result, int dest){ if (result > dest) SET_C(); }
 /*TODO*///#define CHK_SBCX_C if (result > dest || (result == dest && value)) SET_C
-/*TODO*///
+
 /*TODO*////* check half carry for A addition and S subtraction */
-/*TODO*///#define CHK_ADDB_H  if ((result & 15) < (dest & 15)) SET_H
+    public static void CHK_ADDB_H(int result, int dest){  if ((result & 15) < (dest & 15)) SET_H(); }
 /*TODO*///#define CHK_ADCB_H	if ((result & 15) < (dest & 15) || ((result & 15) == (dest & 15) && (value & 15))) SET_H
-/*TODO*///
-/*TODO*///#define CHK_SUBB_H  if ((result & 15) > (dest & 15)) SET_H
+
+    public static void CHK_SUBB_H(int result, int dest){  if ((result & 15) > (dest & 15)) SET_H(); }
 /*TODO*///#define CHK_SBCB_H	if ((result & 15) > (dest & 15) || ((result & 15) == (dest & 15) && (value & 15))) SET_H
-/*TODO*///
-/*TODO*////* check overflow for addition for byte, word and long */
-/*TODO*///#define CHK_ADDB_V if (((value & dest & ~result) | (~value & ~dest & result)) & S08) SET_V
-/*TODO*///#define CHK_ADDW_V if (((value & dest & ~result) | (~value & ~dest & result)) & S16) SET_V
+
+    /* check overflow for addition for byte, word and long */
+    public static void CHK_ADDB_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S08) != 0) SET_V(); }
+    public static void CHK_ADDW_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S16) != 0) SET_V(); }
 /*TODO*///#define CHK_ADDL_V if (((value & dest & ~result) | (~value & ~dest & result)) & S32) SET_V
-/*TODO*///
-/*TODO*////* check overflow for subtraction for byte, word and long */
-/*TODO*///#define CHK_SUBB_V if (((~value & dest & ~result) | (value & ~dest & result)) & S08) SET_V
-/*TODO*///#define CHK_SUBW_V if (((~value & dest & ~result) | (value & ~dest & result)) & S16) SET_V
+
+    /* check overflow for subtraction for byte, word and long */
+    public static void CHK_SUBB_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S08) != 0) SET_V(); }
+    public static void CHK_SUBW_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S16) != 0) SET_V(); }
 /*TODO*///#define CHK_SUBL_V if (((~value & dest & ~result) | (value & ~dest & result)) & S32) SET_V
-/*TODO*///
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// add byte
-/*TODO*/// flags:  CZSVDH
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT8 ADDB(UINT8 dest, UINT8 value)
-/*TODO*///{
-/*TODO*///	UINT8 result = dest + value;
-/*TODO*///    CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
-/*TODO*///    CLR_DA;         /* clear DA (decimal adjust) flag for addb */
-/*TODO*///    CHK_XXXB_ZS;    /* set Z and S flags for result byte       */
-/*TODO*///	CHK_ADDX_C; 	/* set C if result overflowed			   */
-/*TODO*///	CHK_ADDB_V; 	/* set V if result has incorrect sign	   */
-/*TODO*///    CHK_ADDB_H;     /* set H if lower nibble overflowed        */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// add word
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 ADDW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest + value;
-/*TODO*///    CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	CHK_ADDX_C; 	/* set C if result overflowed			   */
-/*TODO*///	CHK_ADDW_V; 	/* set V if result has incorrect sign	   */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    //static int result=0;
+    /******************************************
+     add byte
+     flags:  CZSVDH
+     ******************************************/
+    public static int ADDB(int dest, int value)
+    {
+        int result = dest + value;
+        CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
+        CLR_DA();         /* clear DA (decimal adjust) flag for addb */
+        CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
+        CHK_ADDX_C(result, dest); 	/* set C if result overflowed			   */
+        CHK_ADDB_V(value, dest, result); 	/* set V if result has incorrect sign	   */
+        CHK_ADDB_H(result, dest);     /* set H if lower nibble overflowed        */
+        return result;
+    }
+
+    /******************************************
+     add word
+     flags:  CZSV--
+     ******************************************/
+    public static int ADDW(int dest, int value)
+    {
+        int result = dest + value;
+        CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        CHK_ADDX_C(result, dest); 	/* set C if result overflowed			   */
+        CHK_ADDW_V(value, dest, result); 	/* set V if result has incorrect sign	   */
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// add long
 /*TODO*/// flags:  CZSV--
@@ -199,37 +205,37 @@ public class z8000ops {
 /*TODO*///	CHK_ADDW_V; 	/* set V if result has incorrect sign	   */
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// subtract byte
-/*TODO*/// flags:  CZSVDH
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT8 SUBB(UINT8 dest, UINT8 value)
-/*TODO*///{
-/*TODO*///	UINT8 result = dest - value;
-/*TODO*///    CLR_CZSVH;      /* first clear C, Z, S, P/V and H flags    */
-/*TODO*///    SET_DA;         /* set DA (decimal adjust) flag for subb   */
-/*TODO*///    CHK_XXXB_ZS;    /* set Z and S flags for result byte       */
-/*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
-/*TODO*///	CHK_SUBB_V; 	/* set V if result has incorrect sign	   */
-/*TODO*///    CHK_SUBB_H;     /* set H if lower nibble underflowed       */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// subtract word
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 SUBW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest - value;
-/*TODO*///    CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
-/*TODO*///	CHK_SUBW_V; 	/* set V if result has incorrect sign	   */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     subtract byte
+     flags:  CZSVDH
+     ******************************************/
+    public static int SUBB(int dest, int value)
+    {
+        int result = dest - value;
+        CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
+        SET_DA();         /* set DA (decimal adjust) flag for subb   */
+        CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
+        CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
+        CHK_SUBB_V(value, dest, result); 	/* set V if result has incorrect sign	   */
+        CHK_SUBB_H(result, dest);     /* set H if lower nibble underflowed       */
+        return result;
+    }
+
+    /******************************************
+     subtract word
+     flags:  CZSV--
+     ******************************************/
+    public static int SUBW(int dest, int value)
+    {
+        int result = dest - value;
+        CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
+        CHK_SUBW_V(value, dest, result); 	/* set V if result has incorrect sign	   */
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// subtract long
 /*TODO*/// flags:  CZSV--
@@ -285,19 +291,19 @@ public class z8000ops {
 /*TODO*///	CHK_XXXB_ZSP;	/* set Z, S and P flags for result byte    */
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// logical or word
-/*TODO*/// flags:  -ZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 ORW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest | value;
-/*TODO*///	CLR_ZS; 		/* first clear Z, and S flags			   */
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     logical or word
+     flags:  -ZS---
+     ******************************************/
+    public static int ORW(int dest, int value)
+    {
+            int result = dest | value;
+            CLR_ZS(); 		/* first clear Z, and S flags			   */
+            CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+            return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// logical and byte
 /*TODO*/// flags:  -ZSP--
@@ -309,19 +315,19 @@ public class z8000ops {
 /*TODO*///	CHK_XXXB_ZSP;	/* set Z, S and P flags for result byte    */
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// logical and word
-/*TODO*/// flags:  -ZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 ANDW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest & value;
-/*TODO*///    CLR_ZS;         /* first clear Z and S flags               */
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     logical and word
+     flags:  -ZS---
+     ******************************************/
+    public static int ANDW(int dest, int value)
+    {
+        int result = dest & value;
+        CLR_ZS();         /* first clear Z and S flags               */
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// logical exclusive or byte
 /*TODO*/// flags:  -ZSP--
@@ -467,33 +473,33 @@ public class z8000ops {
 /*TODO*///	CLR_ZS;
 /*TODO*///	if (!dest) SET_Z; else if ((dest & S32) != 0) SET_S;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// increment byte
-/*TODO*/// flags: -ZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT8 INCB(UINT8 dest, UINT8 value)
-/*TODO*///{
-/*TODO*///    UINT8 result = dest + value;
-/*TODO*///	CLR_ZSV;
-/*TODO*///    CHK_XXXB_ZS;    /* set Z and S flags for result byte       */
-/*TODO*///	CHK_ADDB_V; 	/* set V if result overflowed			   */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// increment word
-/*TODO*/// flags: -ZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 INCW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///    UINT16 result = dest + value;
-/*TODO*///	CLR_ZSV;
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result byte       */
-/*TODO*///	CHK_ADDW_V; 	/* set V if result overflowed			   */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     increment byte
+     flags: -ZSV--
+     ******************************************/
+    public static int INCB(int dest, int value)
+    {
+        int result = dest + value;
+        CLR_ZSV();
+        CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
+        CHK_ADDB_V(value, dest, result); 	/* set V if result overflowed			   */
+        return result;
+    }
+
+    /******************************************
+     increment word
+     flags: -ZSV--
+     ******************************************/
+    public static int INCW(int dest, int value)
+    {
+        int result = dest + value;
+        CLR_ZSV();
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result byte       */
+        CHK_ADDW_V(value, dest, result); 	/* set V if result overflowed			   */
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// decrement byte
 /*TODO*/// flags: -ZSV--
@@ -519,25 +525,25 @@ public class z8000ops {
 /*TODO*///	CHK_SUBW_V; 	/* set V if result overflowed			   */
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// multiply words
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT32 MULTW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT32 result = (INT32)(INT16)dest * (INT16)value;
-/*TODO*///	CLR_CZSV;
-/*TODO*///    CHK_XXXL_ZS;
-/*TODO*///	if( !value )
-/*TODO*///	{
-/*TODO*///		/* multiplication with zero is faster */
-/*TODO*///        z8000_ICount += (70-18);
-/*TODO*///	}
-/*TODO*///	if( (INT32)result < -0x7fff || (INT32)result >= 0x7fff ) SET_C;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     multiply words
+     flags:  CZSV--
+     ******************************************/
+    public static int MULTW(int dest, int value)
+    {
+            int result = dest * value;
+            CLR_CZSV();
+            CHK_XXXL_ZS(result);
+            if( value==0 )
+            {
+                    /* multiplication with zero is faster */
+            z8000_ICount[0] += (70-18);
+            }
+            if( result < -0x7fff || result >= 0x7fff ) SET_C();
+            return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// multiply longs
 /*TODO*/// flags:  CZSV--
@@ -561,51 +567,51 @@ public class z8000ops {
 /*TODO*///	if( (INT64)result < -0x7fffffffL || (INT64)result >= 0x7fffffffL ) SET_C;
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// divide long by word
-/*TODO*/// flags: CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT32 DIVW(UINT32 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT32 result = dest;
-/*TODO*///	UINT16 remainder = 0;
-/*TODO*///	CLR_CZSV;
-/*TODO*///	if (value != 0)
-/*TODO*///	{
-/*TODO*///		UINT16 qsign = ((dest >> 16) ^ value) & S16;
-/*TODO*///		UINT16 rsign = (dest >> 16) & S16;
-/*TODO*///		if ((INT32)dest < 0) dest = -dest;
-/*TODO*///		if ((INT16)value < 0) value = -value;
-/*TODO*///		result = dest / value;
-/*TODO*///		remainder = dest % value;
-/*TODO*///		if (qsign != 0) result = -result;
-/*TODO*///		if (rsign != 0) remainder = -remainder;
-/*TODO*///		if ((INT32)result < -0x8000 || (INT32)result > 0x7fff)
-/*TODO*///		{
-/*TODO*///			INT32 temp = (INT32)result >> 1;
-/*TODO*///			SET_V;
-/*TODO*///			if (temp >= -0x8000 && temp <= 0x7fff)
-/*TODO*///			{
-/*TODO*///				result = (temp < 0) ? -1 : 0;
-/*TODO*///				CHK_XXXW_ZS;
-/*TODO*///				SET_C;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			CHK_XXXW_ZS;
-/*TODO*///		}
-/*TODO*///		result = ((UINT32)remainder << 16) | (result & 0xffff);
-/*TODO*///    }
-/*TODO*///    else
-/*TODO*///    {
-/*TODO*///		SET_Z;
-/*TODO*///        SET_V;
-/*TODO*///    }
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     divide long by word
+     flags: CZSV--
+     ******************************************/
+    public static int DIVW(int dest, int value)
+    {
+            int result = dest;
+            int remainder = 0;
+            CLR_CZSV();
+            if (value != 0)
+            {
+                    int qsign = ((dest >> 16) ^ value) & S16;
+                    int rsign = (dest >> 16) & S16;
+                    if (dest < 0) dest = -dest;
+                    if (value < 0) value = -value;
+                    result = dest / value;
+                    remainder = dest % value;
+                    if (qsign != 0) result = -result;
+                    if (rsign != 0) remainder = -remainder;
+                    if (result < -0x8000 || result > 0x7fff)
+                    {
+                            int temp = result >> 1;
+                            SET_V();
+                            if (temp >= -0x8000 && temp <= 0x7fff)
+                            {
+                                    result = (temp < 0) ? -1 : 0;
+                                    CHK_XXXW_ZS(result);
+                                    SET_C();
+                            }
+                    }
+                    else
+                    {
+                            CHK_XXXW_ZS(result);
+                    }
+                    result = (remainder << 16) | (result & 0xffff);
+        }
+        else
+        {
+                    SET_Z();
+            SET_V();
+        }
+            return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// divide quad word by long
 /*TODO*/// flags: CZSV--
@@ -996,35 +1002,35 @@ public class z8000ops {
 /*TODO*///	if (c != 0) SET_C;
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// shift left logic word
-/*TODO*/// flags:  CZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 SLLW(UINT16 dest, UINT8 count)
-/*TODO*///{
-/*TODO*///    UINT16 c = (count) ? (dest << (count - 1)) & S16 : 0;
-/*TODO*///	UINT16 result = dest << count;
-/*TODO*///	CLR_CZS;
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	if (c != 0) SET_C;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// shift left logic long
-/*TODO*/// flags:  CZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT32 SLLL(UINT32 dest, UINT8 count)
-/*TODO*///{
-/*TODO*///    UINT32 c = (count) ? (dest << (count - 1)) & S32 : 0;
-/*TODO*///	UINT32 result = dest << count;
-/*TODO*///	CLR_CZS;
-/*TODO*///    CHK_XXXL_ZS;    /* set Z and S flags for result long       */
-/*TODO*///	if (c != 0) SET_C;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     shift left logic word
+     flags:  CZS---
+     ******************************************/
+    public static int SLLW(int dest, int count)
+    {
+        int c = (count!=0) ? (dest << (count - 1)) & S16 : 0;
+        int result = dest << count;
+        CLR_CZS();
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        if (c != 0) SET_C();
+        return result;
+    }
+
+    /******************************************
+     shift left logic long
+     flags:  CZS---
+     ******************************************/
+    public static int SLLL(int dest, int count)
+    {
+        int c = (count!=0) ? (dest << (count - 1)) & S32 : 0;
+        int result = dest << count;
+        CLR_CZS();
+        CHK_XXXL_ZS(result);    /* set Z and S flags for result long       */
+        if (c != 0) SET_C();
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// shift right arithmetic byte
 /*TODO*/// flags:  CZSV--
@@ -1080,34 +1086,34 @@ public class z8000ops {
 /*TODO*///	if (c != 0) SET_C;
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// shift right logic word
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 SRLW(UINT16 dest, UINT8 count)
-/*TODO*///{
-/*TODO*///	UINT8 c = (count) ? (dest >> (count - 1)) & 1 : 0;
-/*TODO*///	UINT16 result = dest >> count;
-/*TODO*///	CLR_CZS;
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	if (c != 0) SET_C;
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// shift right logic long
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT32 SRLL(UINT32 dest, UINT8 count)
-/*TODO*///{
-/*TODO*///	UINT8 c = (count) ? (dest >> (count - 1)) & 1 : 0;
-/*TODO*///	UINT32 result = dest >> count;
-/*TODO*///	CLR_CZS;
-/*TODO*///    CHK_XXXL_ZS;    /* set Z and S flags for result long       */
-/*TODO*///	if (c != 0) SET_C;
-/*TODO*///	return result;
-/*TODO*///}
+
+    /******************************************
+     shift right logic word
+     flags:  CZSV--
+     ******************************************/
+    public static int SRLW(int dest, int count)
+    {
+        int c = (count!=0) ? (dest >> (count - 1)) & 1 : 0;
+        int result = dest >> count;
+        CLR_CZS();
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        if (c != 0) SET_C();
+        return result;
+    }
+
+    /******************************************
+     shift right logic long
+     flags:  CZSV--
+     ******************************************/
+    public static int SRLL(int dest, int count)
+    {
+            int c = (count!=0) ? (dest >> (count - 1)) & 1 : 0;
+            int result = dest >> count;
+            CLR_CZS();
+            CHK_XXXL_ZS(result);    /* set Z and S flags for result long       */
+            if (c != 0) SET_C();
+            return result;
+    }
 
     /******************************************
      invalid
@@ -1129,10 +1135,10 @@ public class z8000ops {
     static OpcodePtr  Z00_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM8(OP1);
-    /*TODO*///	RB(dst) = ADDB( RB(dst), imm8);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM8(OP1);
+            RB(dst, ADDB( RB(dst), imm8));
         }
     };
 
@@ -1143,10 +1149,10 @@ public class z8000ops {
      static OpcodePtr Z00_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RB(dst) = ADDB( RB(dst), RDMEM_B(RW(src)) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RB(dst, ADDB( RB(dst), RDMEM_B(RW(src)) ));
         }
      };
 
@@ -1157,10 +1163,10 @@ public class z8000ops {
      static OpcodePtr Z01_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	RW(dst) = ADDW( RW(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM16(OP1);
+            RW(dst, ADDW( RW(dst), imm16 ));
         }
      };
     
@@ -1171,10 +1177,10 @@ public class z8000ops {
      static OpcodePtr Z01_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = ADDW( RW(dst), RDMEM_W(RW(src)) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RW(dst, ADDW( RW(dst), RDMEM_W(RW(src)) ));
         }
      };
     
@@ -1199,10 +1205,10 @@ public class z8000ops {
      static OpcodePtr Z02_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RB(dst) = SUBB( RB(dst), RDMEM_B(RW(src)) ); /* EHC */
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RB(dst, SUBB( RB(dst), RDMEM_B(RW(src)) )); /* EHC */
         }
      };
     
@@ -1227,10 +1233,10 @@ public class z8000ops {
      static OpcodePtr Z03_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = SUBW( RW(dst), RDMEM_W(RW(src)) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RW(dst, SUBW( RW(dst), RDMEM_W(RW(src)) ));
         }
      };
     
@@ -1325,10 +1331,10 @@ public class z8000ops {
      static OpcodePtr Z07_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	RW(dst) = ANDW( RW(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM16(OP1);
+            RW(dst, ANDW( RW(dst), imm16 ));
         }
      };
     
@@ -1612,10 +1618,10 @@ public class z8000ops {
      static OpcodePtr Z0D_ddN0_0101_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	WRMEM_W( RW(dst), imm16);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB2);
+            GET_IMM16(OP1);
+            WRMEM_W( RW(dst), imm16);
         }
      };
     
@@ -1785,10 +1791,10 @@ public class z8000ops {
      static OpcodePtr Z14_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM32;
-    /*TODO*///	RL(dst) = imm32;
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM32();
+            RL(dst, imm32);
         }
      };
     
@@ -1883,10 +1889,10 @@ public class z8000ops {
      static OpcodePtr Z19_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	RL(dst) = MULTW( RL(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM16(OP1);
+            RL(dst, MULTW( RL(dst), imm16 ));
         }
      };
     
@@ -1939,10 +1945,10 @@ public class z8000ops {
      static OpcodePtr Z1B_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	RL(dst) = DIVW( RL(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_IMM16(OP1);
+            RL(dst, DIVW( RL(dst), imm16 ));
         }
      };
     
@@ -2393,10 +2399,10 @@ public class z8000ops {
      static OpcodePtr Z2F_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_SRC(OP0,NIB3);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	WRMEM_W( RW(dst), RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_SRC(OP0,NIB3);
+            GET_DST(OP0,NIB2);
+            WRMEM_W( RW(dst), RW(src) );
         }
      };
     
@@ -3168,10 +3174,10 @@ public class z8000ops {
      static OpcodePtr Z40_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	RB(dst) = ADDB( RB(dst), RDMEM_B(addr) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_ADDR(OP1);
+            RB(dst, ADDB( RB(dst), RDMEM_B(addr) ));
         }
      };
     
@@ -3811,9 +3817,9 @@ public class z8000ops {
      static OpcodePtr Z4D_0000_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	WRMEM_W( addr, 0 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_ADDR(OP1);
+            WRMEM_W( addr, 0 );
         }
      };
     
@@ -4218,10 +4224,10 @@ public class z8000ops {
      static OpcodePtr Z59_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	RL(dst) = MULTW( RL(dst), RDMEM_W(addr) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_ADDR(OP1);
+            RL(dst, MULTW( RL(dst), RDMEM_W(addr) ));
         }
      };
     
@@ -4574,10 +4580,10 @@ public class z8000ops {
      static OpcodePtr Z61_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	RW(dst) = RDMEM_W(addr);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_ADDR(OP1);
+            RW(dst, RDMEM_W(addr));
         }
      };
     
@@ -5004,10 +5010,10 @@ public class z8000ops {
      static OpcodePtr Z6F_0000_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_SRC(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	WRMEM_W( addr, RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_SRC(OP0,NIB3);
+            GET_ADDR(OP1);
+            WRMEM_W( addr, RW(src) );
         }
      };
     
@@ -5440,10 +5446,10 @@ public class z8000ops {
      static OpcodePtr Z81_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = ADDW( RW(dst), RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RW(dst, ADDW( RW(dst), RW(src) ));
         }
      };
     
@@ -5496,10 +5502,10 @@ public class z8000ops {
      static OpcodePtr Z85_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = ORW( RW(dst), RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RW(dst, ORW( RW(dst), RW(src) ));
         }
      };
     
@@ -5863,10 +5869,10 @@ public class z8000ops {
      static OpcodePtr Z94_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RL(dst) = RL(src);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RL(dst, RL(src));
         }
      };
     
@@ -5877,10 +5883,10 @@ public class z8000ops {
      static OpcodePtr Z95_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///    GET_DST(OP0,NIB3);
-    /*TODO*///    GET_SRC(OP0,NIB2);
-    /*TODO*///    RL(dst) = POPL( src );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RL(dst, POPL( src ));
         }
      };
     
@@ -6007,27 +6013,27 @@ public class z8000ops {
      static OpcodePtr Z9E_0000_cccc = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_CCC(OP0,NIB3);
-    /*TODO*///	switch (cc) {
-    /*TODO*///		case  0: if (CC0 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  1: if (CC1 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  2: if (CC2 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  3: if (CC3 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  4: if (CC4 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  5: if (CC5 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  6: if (CC6 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  7: if (CC7 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  8: if (CC8 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case  9: if (CC9 != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 10: if (CCA != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 11: if (CCB != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 12: if (CCC != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 13: if (CCD != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 14: if (CCE != 0) PC = POPW( SP ); break;
-    /*TODO*///		case 15: if (CCF != 0) PC = POPW( SP ); break;
-    /*TODO*///	}
-    /*TODO*///	change_pc16bew(PC);
+            //throw new UnsupportedOperationException("unsupported");
+    	GET_CCC(OP0,NIB3);
+    	switch (cc) {
+    		case  0: if (CC0() != 0) Z.pc = POPW( SP ); break;
+    		case  1: if (CC1() != 0) Z.pc = POPW( SP ); break;
+    		case  2: if (CC2() != 0) Z.pc = POPW( SP ); break;
+    		case  3: if (CC3() != 0) Z.pc = POPW( SP ); break;
+    		case  4: if (CC4() != 0) Z.pc = POPW( SP ); break;
+    		case  5: if (CC5() != 0) Z.pc = POPW( SP ); break;
+    		case  6: if (CC6() != 0) Z.pc = POPW( SP ); break;
+    		case  7: if (CC7() != 0) Z.pc = POPW( SP ); break;
+    		case  8: if (CC8() != 0) Z.pc = POPW( SP ); break;
+    		case  9: if (CC9() != 0) Z.pc = POPW( SP ); break;
+    		case 10: if (CCA() != 0) Z.pc = POPW( SP ); break;
+    		case 11: if (CCB() != 0) Z.pc = POPW( SP ); break;
+    		case 12: if (CCC() != 0) Z.pc = POPW( SP ); break;
+    		case 13: if (CCD() != 0) Z.pc = POPW( SP ); break;
+    		case 14: if (CCE() != 0) Z.pc = POPW( SP ); break;
+    		case 15: if (CCF() != 0) Z.pc = POPW( SP ); break;
+    	}
+    	change_pc16bew(Z.pc);
         }
      };
     
@@ -6069,10 +6075,10 @@ public class z8000ops {
      static OpcodePtr ZA1_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = RW(src);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB3);
+            GET_SRC(OP0,NIB2);
+            RW(dst, RW(src));
         }
      };
     
@@ -6153,10 +6159,10 @@ public class z8000ops {
      static OpcodePtr ZA7_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_BIT(OP0);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	if (RW(dst) & bit) CLR_Z; else SET_Z;
+            //throw new UnsupportedOperationException("unsupported");
+            GET_BIT(OP0);
+            GET_DST(OP0,NIB2);
+            if ((RW(dst) & bit) != 0) CLR_Z(); else SET_Z();
         }
      };
     
@@ -6167,10 +6173,10 @@ public class z8000ops {
      static OpcodePtr ZA8_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_I4M1(OP0,NIB3);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RB(dst) = INCB( RB(dst), i4p1);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_I4M1(OP0,NIB3);
+            GET_DST(OP0,NIB2);
+            RB(dst, INCB( RB(dst), i4p1));
         }
      };
     
@@ -6181,10 +6187,10 @@ public class z8000ops {
      static OpcodePtr ZA9_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_I4M1(OP0,NIB3);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RW(dst) = INCW( RW(dst), i4p1 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_I4M1(OP0,NIB3);
+            GET_DST(OP0,NIB2);
+            RW(dst, INCW( RW(dst), i4p1 ));
         }
      };
     
@@ -6508,13 +6514,13 @@ public class z8000ops {
      static OpcodePtr ZB3_dddd_0001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	if ((imm16 & S16) != 0)
-    /*TODO*///		RW(dst) = SRLW( RW(dst), -(INT16)imm16 );
-    /*TODO*///	else
-    /*TODO*///        RW(dst) = SLLW( RW(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB2);
+            GET_IMM16(OP1);
+            if ((imm16 & S16) != 0)
+                    RW(dst, SRLW( RW(dst), -imm16 ));
+            else
+                RW(dst, SLLW( RW(dst), imm16 ));
         }
      };
     
@@ -6555,13 +6561,13 @@ public class z8000ops {
      static OpcodePtr ZB3_dddd_0101_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	if ((imm16 & S16) != 0)
-    /*TODO*///		RL(dst) = SRLL( RL(dst), -(INT16)imm16 );
-    /*TODO*///	else
-    /*TODO*///		RL(dst) = SLLL( RL(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB2);
+            GET_IMM16(OP1);
+            if ((imm16 & S16) != 0)
+                RL(dst, SRLL( RL(dst), -imm16 ));
+            else
+                RL(dst, SLLL( RL(dst), imm16 ));
         }
      };
     
@@ -7676,28 +7682,28 @@ public class z8000ops {
      static OpcodePtr ZE_cccc_dsp8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DSP8;
-    /*TODO*///	GET_CCC(OP0,NIB1);
-    /*TODO*///	switch (cc) {
-    /*TODO*///		case  0: if (CC0 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  1: if (CC1 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  2: if (CC2 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  3: if (CC3 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  4: if (CC4 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  5: if (CC5 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  6: if (CC6 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  7: if (CC7 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  8: if (CC8 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case  9: if (CC9 != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 10: if (CCA != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 11: if (CCB != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 12: if (CCC != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 13: if (CCD != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 14: if (CCE != 0) PC += dsp8 * 2; break;
-    /*TODO*///		case 15: if (CCF != 0) PC += dsp8 * 2; break;
-    /*TODO*///    }
-    /*TODO*///	change_pc16bew(PC);
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DSP8();
+            GET_CCC(OP0,NIB1);
+            switch (cc) {
+                    case  0: if (CC0() != 0) Z.pc += dsp8 * 2; break;
+                    case  1: if (CC1() != 0) Z.pc += dsp8 * 2; break;
+                    case  2: if (CC2() != 0) Z.pc += dsp8 * 2; break;
+                    case  3: if (CC3() != 0) Z.pc += dsp8 * 2; break;
+                    case  4: if (CC4() != 0) Z.pc += dsp8 * 2; break;
+                    case  5: if (CC5() != 0) Z.pc += dsp8 * 2; break;
+                    case  6: if (CC6() != 0) Z.pc += dsp8 * 2; break;
+                    case  7: if (CC7() != 0) Z.pc += dsp8 * 2; break;
+                    case  8: if (CC8() != 0) Z.pc += dsp8 * 2; break;
+                    case  9: if (CC9() != 0) Z.pc += dsp8 * 2; break;
+                    case 10: if (CCA() != 0) Z.pc += dsp8 * 2; break;
+                    case 11: if (CCB() != 0) Z.pc += dsp8 * 2; break;
+                    case 12: if (CCC() != 0) Z.pc += dsp8 * 2; break;
+                    case 13: if (CCD() != 0) Z.pc += dsp8 * 2; break;
+                    case 14: if (CCE() != 0) Z.pc += dsp8 * 2; break;
+                    case 15: if (CCF() != 0) Z.pc += dsp8 * 2; break;
+            }
+            change_pc16bew(Z.pc);
         }
      };
     
@@ -7726,14 +7732,14 @@ public class z8000ops {
      static OpcodePtr ZF_dddd_1dsp7 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB1);
-    /*TODO*///	GET_DSP7;
-    /*TODO*///	RW(dst) -= 1;
-    /*TODO*///	if (RW(dst)) {
-    /*TODO*///		PC = PC - 2 * dsp7;
-    /*TODO*///		change_pc16bew(PC);
-    /*TODO*///	}
+            //throw new UnsupportedOperationException("unsupported");
+            GET_DST(OP0,NIB1);
+            GET_DSP7();
+            RW(dst,  RW(dst)-1);
+            if (RW(dst) != 0) {
+                    Z.pc = Z.pc - 2 * dsp7;
+                    change_pc16bew(Z.pc);
+            }
         }
      };
     

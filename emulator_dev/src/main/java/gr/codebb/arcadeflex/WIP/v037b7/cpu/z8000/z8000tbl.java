@@ -604,14 +604,14 @@ public class z8000tbl {
     	}
         System.out.println("END z8000_init");
     }
-/*TODO*///
-/*TODO*///void z8000_deinit(void)
-/*TODO*///{
-/*TODO*///	if( !z8000_exec )
-/*TODO*///		return;
-/*TODO*///	free( z8000_exec );
-/*TODO*///	z8000_exec = 0;
-/*TODO*///}
-/*TODO*///
+
+    public static void z8000_deinit()
+    {
+            if( z8000_exec==null )
+                    return;
+            
+            z8000_exec = null;
+    }
+
     
 }

@@ -1622,10 +1622,117 @@ public class memory {
     /*TODO*///WRITEBYTE(cpu_writemem16,	 TYPE_8BIT, 	16)
 /*TODO*///WRITEBYTE(cpu_writemem20,	 TYPE_8BIT, 	20)
 /*TODO*///WRITEBYTE(cpu_writemem21,	 TYPE_8BIT, 	21)
-/*TODO*///
-/*TODO*///WRITEBYTE(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW)
-/*TODO*///WRITEWORD(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
-/*TODO*///
+
+        //WRITEBYTE(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW)
+        /*TODO*///#define WRITEBYTE(name,type,abits)														\
+        public static void cpu_writemem16bew(int address, int data)													
+        {																						
+            char hw;																			
+
+            /* first-level lookup */															
+            hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];			
+
+            /* for compatibility with setbankhandler, 8-bit systems must call handlers */		
+            /* for banked memory reads/writes */												
+            if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM)												
+            {																					
+                    cpu_bankbase[HT_RAM].write(address, data);
+                    return; 																		
+            }																					
+            else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) 									
+            {																					
+                    if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
+                            cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
+                    else if (TYPE_16BIT_BE == TYPE_16BIT_LE)
+                            cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);
+                    return; 																		
+            }																					
+
+            /* second-level lookup */															
+            if (hw >= MH_HARDMAX)																
+            {																					
+                    hw -= MH_HARDMAX;																
+                    hw = u8_writehardware[(hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];	
+
+                    /* for compatibility with setbankhandler, 8-bit systems must call handlers */	
+                    /* for banked memory reads/writes */											
+                    if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM)											
+                    {																				
+                            cpu_bankbase[HT_RAM].write(address, data);
+                            return; 																	
+                    }																				
+                    else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) 								
+                    {																				
+                            if (TYPE_16BIT_BE == TYPE_16BIT_BE)													
+                                    cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
+                            else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 											
+                                    cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);	
+                            return; 																	
+                    }																				
+            }																					
+
+            /* fall back to handler */															
+            if (TYPE_16BIT_BE != TYPE_8BIT)																
+            {																					
+                    int shift = (address & 1) << 3; 												
+                    if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
+                            shift ^= 8; 																
+                    data = (0xff000000 >> shift) | ((data & 0xff) << shift);						
+                    address &= ~1;																	
+            }																					
+            (memorywritehandler[hw]).handler(address - memorywriteoffset[hw], data);					
+        }
+    
+        //WRITEWORD(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
+        //#define WRITEWORD(name,type,abits,align)												
+	public static void cpu_writemem16bew_word(int address, int data)											
+	{																						
+		char u8_hw;																			
+																							
+		/* only supports 16-bit memory systems */											
+		if (TYPE_16BIT_BE == TYPE_8BIT)																
+			printf("Unsupported type for WRITEWORD macro!n");                              
+																							
+		/* handle aligned case first */ 													
+		if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1)==0)										
+		{																					
+			/* first-level lookup */														
+			u8_hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];		
+			if (u8_hw <= HT_BANKMAX)															
+			{																				
+				cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);		
+				return; 																	
+			}																				
+																							
+			/* second-level lookup */														
+			if (u8_hw >= MH_HARDMAX)															
+			{																				
+				u8_hw -= MH_HARDMAX;															
+				u8_hw = u8_writehardware[(u8_hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))]; 
+				if (u8_hw <= HT_BANKMAX)														
+				{																			
+					cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);	
+					return; 																
+				}																			
+			}																				
+																							
+			/* fall back to handler */														
+			(memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data & 0xffff);		
+		}																					
+																							
+		/* unaligned case */																
+		else if (TYPE_16BIT_BE == TYPE_16BIT_BE) 													
+		{																					
+			cpu_writemem16bew(address, data >> 8);														
+			cpu_writemem16bew(address + 1, data & 0xff); 												
+		}																					
+		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 													
+		{																					
+			cpu_writemem16bew(address, data & 0xff); 													
+			cpu_writemem16bew(address + 1, data >> 8);													
+		}																					
+	}
+
 /*TODO*///WRITEBYTE(cpu_writemem16lew, TYPE_16BIT_LE, 16LEW)
 /*TODO*///WRITEWORD(cpu_writemem16lew, TYPE_16BIT_LE, 16LEW, ALWAYS_ALIGNED)
 /*TODO*///
