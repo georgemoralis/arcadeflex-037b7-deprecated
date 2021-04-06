@@ -935,23 +935,29 @@ public class memory {
     }
 
     /*TODO*///
-
-
-    /***************************************************************************
-
-      Perform a memory read. This function is called by the CPU emulation.
-
-    ***************************************************************************/
+    /**
+     * *************************************************************************
+     *
+     * Perform a memory read. This function is called by the CPU emulation.
+     *
+     **************************************************************************
+     */
 
     /* use these constants to define which type of memory handler to build */
-    public static final int TYPE_8BIT		= 0;		/* 8-bit aligned */
-    public static final int TYPE_16BIT_BE	= 1;		/* 16-bit aligned, big-endian */
-    public static final int TYPE_16BIT_LE	= 2;		/* 16-bit aligned, little-endian */
+    public static final int TYPE_8BIT = 0;
+    /* 8-bit aligned */
+    public static final int TYPE_16BIT_BE = 1;
+    /* 16-bit aligned, big-endian */
+    public static final int TYPE_16BIT_LE = 2;
+    /* 16-bit aligned, little-endian */
 
-    public static final int CAN_BE_MISALIGNED	= 0;		/* word/dwords can be read on non-16-bit boundaries */
-    public static final int ALWAYS_ALIGNED	= 1;		/* word/dwords are always read on 16-bit boundaries */
-    
-/*TODO*////* stupid workarounds so that we can generate an address mask that works even for 32 bits */
+    public static final int CAN_BE_MISALIGNED = 0;
+    /* word/dwords can be read on non-16-bit boundaries */
+    public static final int ALWAYS_ALIGNED = 1;
+
+    /* word/dwords are always read on 16-bit boundaries */
+
+ /*TODO*////* stupid workarounds so that we can generate an address mask that works even for 32 bits */
 /*TODO*///#define ADDRESS_TOPBIT(abits)		(1UL << (ABITS1_##abits + ABITS2_##abits + ABITS_MIN_##abits - 1))
 /*TODO*///#define ADDRESS_MASK(abits) 		(ADDRESS_TOPBIT(abits) | (ADDRESS_TOPBIT(abits) - 1))
 /*TODO*///
@@ -1146,10 +1152,11 @@ public class memory {
         }
 
         /* fall back to handler */
-        if (memoryreadhandler[u8_hw] != null)
+        if (memoryreadhandler[u8_hw] != null) {
             return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
-        else
+        } else {
             return 0;
+        }
     }
 
     public static int cpu_readmem20(int address) {
@@ -1216,105 +1223,97 @@ public class memory {
     /*TODO*///
     /*TODO*///READBYTE(cpu_readmem16bew, TYPE_16BIT_BE, 16BEW)
     /*TODO*///#define READBYTE(name,type,abits)														\
-    public static int cpu_readmem16bew(int address) 															
-    {																						
-    	char u8_hw;																			
-    																						
-    	/* first-level lookup */															
-    	u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
-    																						
-    	/* for compatibility with setbankhandler, 8-bit systems must call handlers */		
-    	/* for banked memory reads/writes */												
-    	if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM)												
-    		return cpu_bankbase[HT_RAM].read(address);
-    	else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) 									
-    	{																					
-    		if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
-    			return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
-    		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 												
-    			return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
-    	}																					
-    																						
-    	/* second-level lookup */															
-    	if (u8_hw >= MH_HARDMAX)																
-    	{																					
-    		u8_hw -= MH_HARDMAX;																
-    		u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
-    																						
-    		/* for compatibility with setbankhandler, 8-bit systems must call handlers */	
-    		/* for banked memory reads/writes */											
-    		if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM)											
-    			return cpu_bankbase[HT_RAM].read(address);
-    		else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) 								
-    		{																				
-    			if (TYPE_16BIT_BE == TYPE_16BIT_BE)													
-    				return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
-    			else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 											
-    				return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
-    		}																				
-    	}																					
-    																						
-    	/* fall back to handler */															
-    	if (TYPE_16BIT_BE == TYPE_8BIT)																
-    		return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
-    	else																				
-    	{																					
-    		int shift = (address & 1) << 3; 												
-    		int data = (memoryreadhandler[u8_hw]).handler((address & ~1) - memoryreadoffset[u8_hw]); 	
-    		if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
-    			return (data >> (shift ^ 8)) & 0xff;										
-    		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 												
-    			return (data >> shift) & 0xff;												
-    	}
-        
+    public static int cpu_readmem16bew(int address) {
+        char u8_hw;
+
+        /* first-level lookup */
+        u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
+
+        /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+        if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM) {
+            return cpu_bankbase[HT_RAM].read(address);
+        } else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) {
+            if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
+            } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+                return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
+            }
+        }
+
+        /* second-level lookup */
+        if (u8_hw >= MH_HARDMAX) {
+            u8_hw -= MH_HARDMAX;
+            u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+
+            /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+            if (TYPE_16BIT_BE == TYPE_8BIT && u8_hw == HT_RAM) {
+                return cpu_bankbase[HT_RAM].read(address);
+            } else if (TYPE_16BIT_BE != TYPE_8BIT && u8_hw <= HT_BANKMAX) {
+                if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                    return cpu_bankbase[u8_hw].read(BYTE_XOR_BE(address) - memoryreadoffset[u8_hw]);
+                } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+                    return cpu_bankbase[u8_hw].read(BYTE_XOR_LE(address) - memoryreadoffset[u8_hw]);
+                }
+            }
+        }
+
+        /* fall back to handler */
+        if (TYPE_16BIT_BE == TYPE_8BIT) {
+            return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+        } else {
+            int shift = (address & 1) << 3;
+            int data = (memoryreadhandler[u8_hw]).handler((address & ~1) - memoryreadoffset[u8_hw]);
+            if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                return (data >> (shift ^ 8)) & 0xff;
+            } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+                return (data >> shift) & 0xff;
+            }
+        }
+
         return 0;
     }
-    
+
     /*TODO*///READWORD(cpu_readmem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
     /*TODO*///#define READWORD(name,type,abits,align) 												\
-    public static int cpu_readmem16bew_word(int address)														
-    {																						
-            char u8_hw;
-                                                                                                                                                                                    
-            /* only supports 16-bit memory systems */											
-            if (TYPE_16BIT_BE == TYPE_8BIT)																
-                    printf("Unsupported type for READWORD macro!n");                               
-                                                                                                                                                                                    
-            /* handle aligned case first */ 													
-            if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1)==0)
-            {																					
-                    /* first-level lookup */														
-                    u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];		
-                    
-                    if (u8_hw <= HT_BANKMAX)															
-                            return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);		
-                                                                                                                                                                                    
-                    /* second-level lookup */														
-                    if (u8_hw >= MH_HARDMAX)															
-                    {																				
-                            u8_hw -= MH_HARDMAX;															
-                            u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];	
-                            if (u8_hw <= HT_BANKMAX)														
-                                    return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);	
-                    }																				
-                                                                                                                                                                                    
-                    /* fall back to handler */														
-                    return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
-            }																					
-                                                                                                                                                                                    
-            /* unaligned case */																
-            else if (TYPE_16BIT_BE == TYPE_16BIT_BE) 													
-            {																					
-                    int data = cpu_readmem16bew(address) << 8;													
-                    return data | (cpu_readmem16bew(address + 1) & 0xff);										
-            }																					
-            else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 													
-            {																					
-                    int data = cpu_readmem16bew(address) & 0xff;												
-                    return data | (cpu_readmem16bew(address + 1) << 8); 										
-            }				
-            
-            return 0;
+    public static int cpu_readmem16bew_word(int address) {
+        char u8_hw;
+
+        /* only supports 16-bit memory systems */
+        if (TYPE_16BIT_BE == TYPE_8BIT) {
+            printf("Unsupported type for READWORD macro!n");
+        }
+
+        /* handle aligned case first */
+        if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1) == 0) {
+            /* first-level lookup */
+            u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
+
+            if (u8_hw <= HT_BANKMAX) {
+                return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);
+            }
+
+            /* second-level lookup */
+            if (u8_hw >= MH_HARDMAX) {
+                u8_hw -= MH_HARDMAX;
+                u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+                if (u8_hw <= HT_BANKMAX) {
+                    return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);
+                }
+            }
+
+            /* fall back to handler */
+            return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
+        } /* unaligned case */ else if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+            int data = cpu_readmem16bew(address) << 8;
+            return data | (cpu_readmem16bew(address + 1) & 0xff);
+        } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+            int data = cpu_readmem16bew(address) & 0xff;
+            return data | (cpu_readmem16bew(address + 1) << 8);
+        }
+
+        return 0;
     }
 
     /*TODO*///
@@ -1558,8 +1557,9 @@ public class memory {
         }
 
         /* fall back to handler */
-        if (memorywritehandler[u8_hw] != null)
+        if (memorywritehandler[u8_hw] != null) {
             (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
+        }
     }
 
     public static void cpu_writemem20(int address, int data) {
@@ -1619,121 +1619,105 @@ public class memory {
         /* fall back to handler */
         (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data);
     }
+
     /*TODO*///WRITEBYTE(cpu_writemem16,	 TYPE_8BIT, 	16)
 /*TODO*///WRITEBYTE(cpu_writemem20,	 TYPE_8BIT, 	20)
 /*TODO*///WRITEBYTE(cpu_writemem21,	 TYPE_8BIT, 	21)
+    //WRITEBYTE(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW)
+    /*TODO*///#define WRITEBYTE(name,type,abits)														\
+    public static void cpu_writemem16bew(int address, int data) {
+        char hw;
 
-        //WRITEBYTE(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW)
-        /*TODO*///#define WRITEBYTE(name,type,abits)														\
-        public static void cpu_writemem16bew(int address, int data)													
-        {																						
-            char hw;																			
+        /* first-level lookup */
+        hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];
 
-            /* first-level lookup */															
-            hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];			
-
-            /* for compatibility with setbankhandler, 8-bit systems must call handlers */		
-            /* for banked memory reads/writes */												
-            if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM)												
-            {																					
-                    cpu_bankbase[HT_RAM].write(address, data);
-                    return; 																		
-            }																					
-            else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) 									
-            {																					
-                    if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
-                            cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
-                    else if (TYPE_16BIT_BE == TYPE_16BIT_LE)
-                            cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);
-                    return; 																		
-            }																					
-
-            /* second-level lookup */															
-            if (hw >= MH_HARDMAX)																
-            {																					
-                    hw -= MH_HARDMAX;																
-                    hw = u8_writehardware[(hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];	
-
-                    /* for compatibility with setbankhandler, 8-bit systems must call handlers */	
-                    /* for banked memory reads/writes */											
-                    if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM)											
-                    {																				
-                            cpu_bankbase[HT_RAM].write(address, data);
-                            return; 																	
-                    }																				
-                    else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) 								
-                    {																				
-                            if (TYPE_16BIT_BE == TYPE_16BIT_BE)													
-                                    cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
-                            else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 											
-                                    cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);	
-                            return; 																	
-                    }																				
-            }																					
-
-            /* fall back to handler */															
-            if (TYPE_16BIT_BE != TYPE_8BIT)																
-            {																					
-                    int shift = (address & 1) << 3; 												
-                    if (TYPE_16BIT_BE == TYPE_16BIT_BE)														
-                            shift ^= 8; 																
-                    data = (0xff000000 >> shift) | ((data & 0xff) << shift);						
-                    address &= ~1;																	
-            }																					
-            (memorywritehandler[hw]).handler(address - memorywriteoffset[hw], data);					
+        /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+        if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM) {
+            cpu_bankbase[HT_RAM].write(address, data);
+            return;
+        } else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) {
+            if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
+            } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+                cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);
+            }
+            return;
         }
-    
-        //WRITEWORD(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
-        //#define WRITEWORD(name,type,abits,align)												
-	public static void cpu_writemem16bew_word(int address, int data)											
-	{																						
-		char u8_hw;																			
-																							
-		/* only supports 16-bit memory systems */											
-		if (TYPE_16BIT_BE == TYPE_8BIT)																
-			printf("Unsupported type for WRITEWORD macro!n");                              
-																							
-		/* handle aligned case first */ 													
-		if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1)==0)										
-		{																					
-			/* first-level lookup */														
-			u8_hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];		
-			if (u8_hw <= HT_BANKMAX)															
-			{																				
-				cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);		
-				return; 																	
-			}																				
-																							
-			/* second-level lookup */														
-			if (u8_hw >= MH_HARDMAX)															
-			{																				
-				u8_hw -= MH_HARDMAX;															
-				u8_hw = u8_writehardware[(u8_hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))]; 
-				if (u8_hw <= HT_BANKMAX)														
-				{																			
-					cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);	
-					return; 																
-				}																			
-			}																				
-																							
-			/* fall back to handler */														
-			(memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data & 0xffff);		
-		}																					
-																							
-		/* unaligned case */																
-		else if (TYPE_16BIT_BE == TYPE_16BIT_BE) 													
-		{																					
-			cpu_writemem16bew(address, data >> 8);														
-			cpu_writemem16bew(address + 1, data & 0xff); 												
-		}																					
-		else if (TYPE_16BIT_BE == TYPE_16BIT_LE) 													
-		{																					
-			cpu_writemem16bew(address, data & 0xff); 													
-			cpu_writemem16bew(address + 1, data >> 8);													
-		}																					
-	}
 
-/*TODO*///WRITEBYTE(cpu_writemem16lew, TYPE_16BIT_LE, 16LEW)
+        /* second-level lookup */
+        if (hw >= MH_HARDMAX) {
+            hw -= MH_HARDMAX;
+            hw = u8_writehardware[(hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+
+            /* for compatibility with setbankhandler, 8-bit systems must call handlers */
+ /* for banked memory reads/writes */
+            if (TYPE_16BIT_BE == TYPE_8BIT && hw == HT_RAM) {
+                cpu_bankbase[HT_RAM].write(address, data);
+                return;
+            } else if (TYPE_16BIT_BE != TYPE_8BIT && hw <= HT_BANKMAX) {
+                if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                    cpu_bankbase[hw].write(BYTE_XOR_BE(address) - memorywriteoffset[hw], data);
+                } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+                    cpu_bankbase[hw].write(BYTE_XOR_LE(address) - memorywriteoffset[hw], data);
+                }
+                return;
+            }
+        }
+
+        /* fall back to handler */
+        if (TYPE_16BIT_BE != TYPE_8BIT) {
+            int shift = (address & 1) << 3;
+            if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+                shift ^= 8;
+            }
+            data = (0xff000000 >> shift) | ((data & 0xff) << shift);
+            address &= ~1;
+        }
+        (memorywritehandler[hw]).handler(address - memorywriteoffset[hw], data);
+    }
+
+    //WRITEWORD(cpu_writemem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
+    //#define WRITEWORD(name,type,abits,align)												
+    public static void cpu_writemem16bew_word(int address, int data) {
+        char u8_hw;
+
+        /* only supports 16-bit memory systems */
+        if (TYPE_16BIT_BE == TYPE_8BIT) {
+            printf("Unsupported type for WRITEWORD macro!n");
+        }
+
+        /* handle aligned case first */
+        if (ALWAYS_ALIGNED == ALWAYS_ALIGNED || (address & 1) == 0) {
+            /* first-level lookup */
+            u8_hw = u8_cur_mwhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];
+            if (u8_hw <= HT_BANKMAX) {
+                cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);
+                return;
+            }
+
+            /* second-level lookup */
+            if (u8_hw >= MH_HARDMAX) {
+                u8_hw -= MH_HARDMAX;
+                u8_hw = u8_writehardware[(u8_hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+                if (u8_hw <= HT_BANKMAX) {
+                    cpu_bankbase[u8_hw].WRITE_WORD(address - memorywriteoffset[u8_hw], data);
+                    return;
+                }
+            }
+
+            /* fall back to handler */
+            (memorywritehandler[u8_hw]).handler(address - memorywriteoffset[u8_hw], data & 0xffff);
+        } /* unaligned case */ else if (TYPE_16BIT_BE == TYPE_16BIT_BE) {
+            cpu_writemem16bew(address, data >> 8);
+            cpu_writemem16bew(address + 1, data & 0xff);
+        } else if (TYPE_16BIT_BE == TYPE_16BIT_LE) {
+            cpu_writemem16bew(address, data & 0xff);
+            cpu_writemem16bew(address + 1, data >> 8);
+        }
+    }
+
+    /*TODO*///WRITEBYTE(cpu_writemem16lew, TYPE_16BIT_LE, 16LEW)
 /*TODO*///WRITEWORD(cpu_writemem16lew, TYPE_16BIT_LE, 16LEW, ALWAYS_ALIGNED)
 /*TODO*///
 /*TODO*///WRITEBYTE(cpu_writemem24,	  TYPE_8BIT, 	24)
@@ -1908,27 +1892,26 @@ public class memory {
     /*TODO*///SETOPBASE(cpu_setOPbase16bew, 16BEW, 0)
     //#define SETOPBASE(name,abits,shift) 													
     public static setopbase cpu_setOPbase16bew = new setopbase() {
-        public void handler(int pc) {																
-            char u8_hw;																			
+        public void handler(int pc) {
+            char u8_hw;
 
             //not shift neccesary pc = (UINT32)pc >> 0;															
 
-            /* allow overrides */																
-            if (OPbasefunc != null) 																	
-            {																					
-                    pc = OPbasefunc.handler(pc);															
-                    if (pc == -1)																	
-                            return; 																	
-            }																					
-
-            /* perform the lookup */															
-            u8_hw = u8_cur_mrhard[/*(UINT32)*/pc >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];				
-            if (u8_hw >= MH_HARDMAX)																
-            {																					
-                    u8_hw -= MH_HARDMAX;																
-                    u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/pc >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))]; 
+            /* allow overrides */
+            if (OPbasefunc != null) {
+                pc = OPbasefunc.handler(pc);
+                if (pc == -1) {
+                    return;
+                }
             }
-            
+
+            /* perform the lookup */
+            u8_hw = u8_cur_mrhard[/*(UINT32)*/pc >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
+            if (u8_hw >= MH_HARDMAX) {
+                u8_hw -= MH_HARDMAX;
+                u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/pc >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
+            }
+
             u8_ophw = (char) (u8_hw & 0xFF);
 
             /* RAM or banked memory */
@@ -1936,14 +1919,14 @@ public class memory {
                 SET_OP_RAMROM(new UBytePtr(cpu_bankbase[u8_hw], -memoryreadoffset[u8_hw]));
                 return;
             }
-            
-            /* do not support on callback memory region */										
-            logerror("CPU #%d PC %04x: warning - op-code execute on mapped i/o\n",              
-                                    cpu_getactivecpu(),cpu_get_pc());										
+
+            /* do not support on callback memory region */
+            logerror("CPU #%d PC %04x: warning - op-code execute on mapped i/o\n",
+                    cpu_getactivecpu(), cpu_get_pc());
         }
     };
-    
-/*TODO*///SETOPBASE(cpu_setOPbase16lew, 16LEW, 0)
+
+    /*TODO*///SETOPBASE(cpu_setOPbase16lew, 16LEW, 0)
 /*TODO*///SETOPBASE(cpu_setOPbase24,	  24,	 0)
 /*TODO*///SETOPBASE(cpu_setOPbase24bew, 24BEW, 0)
 /*TODO*///SETOPBASE(cpu_setOPbase26lew, 26LEW, 0)
@@ -2015,100 +1998,110 @@ public class memory {
         logerror("CPU #%d PC %04x: warning - write %02x to unmapped I/O port %02x\n", cpu_getactivecpu(), cpu_get_pc(), value, port);
     }
 
-    /*TODO*///
-/*TODO*///
-/*TODO*////* set readmemory handler for bank memory  */
-/*TODO*///void cpu_setbankhandler_r(int bank, mem_read_handler handler)
-/*TODO*///{
-/*TODO*///	int offset = 0;
-/*TODO*///	MHELE hardware;
-/*TODO*///
-/*TODO*///	switch( (FPTR)handler )
-/*TODO*///	{
-/*TODO*///	case (FPTR)MRA_RAM:
-/*TODO*///	case (FPTR)MRA_ROM:
-/*TODO*///		handler = mrh_ram;
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MRA_BANK1:
-/*TODO*///	case (FPTR)MRA_BANK2:
-/*TODO*///	case (FPTR)MRA_BANK3:
-/*TODO*///	case (FPTR)MRA_BANK4:
-/*TODO*///	case (FPTR)MRA_BANK5:
-/*TODO*///	case (FPTR)MRA_BANK6:
-/*TODO*///	case (FPTR)MRA_BANK7:
-/*TODO*///	case (FPTR)MRA_BANK8:
-/*TODO*///	case (FPTR)MRA_BANK9:
-/*TODO*///	case (FPTR)MRA_BANK10:
-/*TODO*///	case (FPTR)MRA_BANK11:
-/*TODO*///	case (FPTR)MRA_BANK12:
-/*TODO*///	case (FPTR)MRA_BANK13:
-/*TODO*///	case (FPTR)MRA_BANK14:
-/*TODO*///	case (FPTR)MRA_BANK15:
-/*TODO*///	case (FPTR)MRA_BANK16:
-/*TODO*///		hardware = (int)MWA_BANK1 - (int)handler + 1;
-/*TODO*///		handler = bank_read_handler[hardware];
-/*TODO*///		offset = bankreadoffset[hardware];
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MRA_NOP:
-/*TODO*///		handler = mrh_nop;
-/*TODO*///		break;
-/*TODO*///	default:
-/*TODO*///		offset = bankreadoffset[bank];
-/*TODO*///		break;
-/*TODO*///	}
-/*TODO*///	memoryreadoffset[bank] = offset;
-/*TODO*///	memoryreadhandler[bank] = handler;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* set writememory handler for bank memory	*/
-/*TODO*///void cpu_setbankhandler_w(int bank, mem_write_handler handler)
-/*TODO*///{
-/*TODO*///	int offset = 0;
-/*TODO*///	MHELE hardware;
-/*TODO*///
-/*TODO*///	switch( (FPTR)handler )
-/*TODO*///	{
-/*TODO*///	case (FPTR)MWA_RAM:
-/*TODO*///		handler = mwh_ram;
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MWA_BANK1:
-/*TODO*///	case (FPTR)MWA_BANK2:
-/*TODO*///	case (FPTR)MWA_BANK3:
-/*TODO*///	case (FPTR)MWA_BANK4:
-/*TODO*///	case (FPTR)MWA_BANK5:
-/*TODO*///	case (FPTR)MWA_BANK6:
-/*TODO*///	case (FPTR)MWA_BANK7:
-/*TODO*///	case (FPTR)MWA_BANK8:
-/*TODO*///	case (FPTR)MWA_BANK9:
-/*TODO*///	case (FPTR)MWA_BANK10:
-/*TODO*///	case (FPTR)MWA_BANK11:
-/*TODO*///	case (FPTR)MWA_BANK12:
-/*TODO*///	case (FPTR)MWA_BANK13:
-/*TODO*///	case (FPTR)MWA_BANK14:
-/*TODO*///	case (FPTR)MWA_BANK15:
-/*TODO*///	case (FPTR)MWA_BANK16:
-/*TODO*///		hardware = (int)MWA_BANK1 - (int)handler + 1;
-/*TODO*///		handler = bank_write_handler[hardware];
-/*TODO*///		offset = bankwriteoffset[hardware];
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MWA_NOP:
-/*TODO*///		handler = mwh_nop;
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MWA_RAMROM:
-/*TODO*///		handler = mwh_ramrom;
-/*TODO*///		break;
-/*TODO*///	case (FPTR)MWA_ROM:
-/*TODO*///		handler = mwh_rom;
-/*TODO*///		break;
-/*TODO*///	default:
-/*TODO*///		offset = bankwriteoffset[bank];
-/*TODO*///		break;
-/*TODO*///	}
-/*TODO*///	memorywriteoffset[bank] = offset;
-/*TODO*///	memorywritehandler[bank] = handler;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* cpu change op-code memory base */
+    public static void cpu_setbankhandler_r(int bank, int handler) {
+        cpu_setbankhandler_r(bank, null, handler);
+    }
+
+    public static void cpu_setbankhandler_r(int bank, ReadHandlerPtr _handler) {
+        cpu_setbankhandler_r(bank, _handler, -15000);
+    }
+
+    /* set readmemory handler for bank memory  */
+    public static void cpu_setbankhandler_r(int bank, ReadHandlerPtr _handler, int handler) {
+        int offset = 0;
+        char u8_hardware;
+
+        switch (handler) {
+            case MRA_RAM:
+            case MRA_ROM:
+                _handler = mrh_ram;
+                break;
+            case MRA_BANK1:
+            case MRA_BANK2:
+            case MRA_BANK3:
+            case MRA_BANK4:
+            case MRA_BANK5:
+            case MRA_BANK6:
+            case MRA_BANK7:
+            case MRA_BANK8:
+            case MRA_BANK9:
+            case MRA_BANK10:
+            case MRA_BANK11:
+            case MRA_BANK12:
+            case MRA_BANK13:
+            case MRA_BANK14:
+            case MRA_BANK15:
+            case MRA_BANK16:
+                u8_hardware = (char) (((int) MWA_BANK1 - (int) handler + 1) & 0xFF);
+                _handler = bank_read_handler[u8_hardware];
+                offset = bankreadoffset[u8_hardware];
+                break;
+            case MRA_NOP:
+                _handler = mrh_nop;
+                break;
+            default:
+                offset = bankreadoffset[bank];
+                break;
+        }
+        memoryreadoffset[bank] = offset;
+        memoryreadhandler[bank] = _handler;
+    }
+
+    public static void cpu_setbankhandler_w(int bank, int handler) {
+        cpu_setbankhandler_w(bank, null, handler);
+    }
+
+    public static void cpu_setbankhandler_w(int bank, WriteHandlerPtr _handler) {
+        cpu_setbankhandler_w(bank, _handler, -15000);
+    }
+
+    /* set writememory handler for bank memory	*/
+    public static void cpu_setbankhandler_w(int bank, WriteHandlerPtr _handler, int handler) {
+        int offset = 0;
+        char u8_hardware;
+
+        switch (handler) {
+            case MWA_RAM:
+                _handler = mwh_ram;
+                break;
+            case MWA_BANK1:
+            case MWA_BANK2:
+            case MWA_BANK3:
+            case MWA_BANK4:
+            case MWA_BANK5:
+            case MWA_BANK6:
+            case MWA_BANK7:
+            case MWA_BANK8:
+            case MWA_BANK9:
+            case MWA_BANK10:
+            case MWA_BANK11:
+            case MWA_BANK12:
+            case MWA_BANK13:
+            case MWA_BANK14:
+            case MWA_BANK15:
+            case MWA_BANK16:
+                u8_hardware = (char) (((int) MWA_BANK1 - (int) handler + 1) & 0xFF);
+                _handler = bank_write_handler[u8_hardware];
+                offset = bankwriteoffset[u8_hardware];
+                break;
+            case MWA_NOP:
+                _handler = mwh_nop;
+                break;
+            case MWA_RAMROM:
+                _handler = mwh_ramrom;
+                break;
+            case MWA_ROM:
+                _handler = mwh_rom;
+                break;
+            default:
+                offset = bankwriteoffset[bank];
+                break;
+        }
+        memorywriteoffset[bank] = offset;
+        memorywritehandler[bank] = _handler;
+    }
+
+    /* cpu change op-code memory base */
     public static void cpu_setOPbaseoverride(int cpu, opbase_handlerPtr function) {
         setOPbasefunc[cpu] = function;
         if (cpu == cpu_getactivecpu()) {
