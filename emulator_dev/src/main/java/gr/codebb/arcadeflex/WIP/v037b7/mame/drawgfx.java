@@ -1722,9 +1722,11 @@ public static void copyrozbitmap(osd_bitmap dest, osd_bitmap src,
                                 }
                             }
                         } /* case 3: TRANSPARENCY_COLOR */ else if (transparency == TRANSPARENCY_COLOR) {
-                            throw new UnsupportedOperationException("drawgfxzoom");
-                            /*TODO*///						if (pri_buffer)
-/*TODO*///						{
+                            //throw new UnsupportedOperationException("drawgfxzoom");
+                            
+                            if (pri_buffer != null)
+                            {
+                                throw new UnsupportedOperationException("drawgfxzoom");
 /*TODO*///							for( y=sy; y<ey; y++ )
 /*TODO*///							{
 /*TODO*///								UBytePtr source = gfx.gfxdata + (source_base+(y_index>>16)) * gfx.line_modulo;
@@ -1746,25 +1748,25 @@ public static void copyrozbitmap(osd_bitmap dest, osd_bitmap src,
 /*TODO*///
 /*TODO*///								y_index += dy;
 /*TODO*///							}
-/*TODO*///						}
-/*TODO*///						else
-/*TODO*///						{
-/*TODO*///							for( y=sy; y<ey; y++ )
-/*TODO*///							{
-/*TODO*///								UBytePtr source = gfx.gfxdata + (source_base+(y_index>>16)) * gfx.line_modulo;
-/*TODO*///								UBytePtr dest = dest_bmp.line[y];
-/*TODO*///
-/*TODO*///								int x, x_index = x_index_base;
-/*TODO*///								for( x=sx; x<ex; x++ )
-/*TODO*///								{
-/*TODO*///									int c = pal[source[x_index>>16]];
-/*TODO*///									if( c != transparent_color ) dest[x] = c;
-/*TODO*///									x_index += dx;
-/*TODO*///								}
-/*TODO*///
-/*TODO*///								y_index += dy;
-/*TODO*///							}
-/*TODO*///						}
+                            }
+                            else
+                            {
+                                for( y=sy; y<ey; y++ )
+                                {
+                                        UBytePtr source = new UBytePtr(gfx.gfxdata, (source_base+(y_index>>16)) * gfx.line_modulo);
+                                        UBytePtr dest = new UBytePtr(dest_bmp.line[y]);
+
+                                        int x, x_index = x_index_base;
+                                        for( x=sx; x<ex; x++ )
+                                        {
+                                                int c = pal.read(source.read(x_index>>16));
+                                                if( c != transparent_color ) dest.write(x, c);
+                                                x_index += dx;
+                                        }
+
+                                        y_index += dy;
+                                }
+                            }
                         }
 
                         /* case 4: TRANSPARENCY_PEN_TABLE */

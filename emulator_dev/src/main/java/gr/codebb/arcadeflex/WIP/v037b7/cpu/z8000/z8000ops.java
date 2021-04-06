@@ -22,12 +22,6 @@
  *****************************************************************************/
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_B;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.WRMEM_W;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_W;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.RDMEM_L;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.z8000_ICount;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.*;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.OpcodePtr;
 import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
@@ -36,7 +30,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.*;
 public class z8000ops {
     
     private z8000 _cpu = null;
-
+    
     public z8000ops(z8000 _cpu) {
         this._cpu = _cpu;
     }
@@ -79,10 +73,10 @@ public class z8000ops {
 /*TODO*///	WRMEM_W( RW(dst), value );
 /*TODO*///}
 
-    public static int POPW(int src)
+    public int POPW(int src)
     {
-        int result = RDMEM_W( RW(src) );
-        RW(src, RW(src) + 2);
+        int result = (_cpu.RDMEM_W( _cpu._cpuH.RW(src) )) & 0xffff;
+        _cpu._cpuH.RW(src, _cpu._cpuH.RW(src) + 2);
         return result;
     }
 
@@ -92,55 +86,55 @@ public class z8000ops {
 /*TODO*///	WRMEM_L( RW(dst), value );
 /*TODO*///}
 
-    public static int POPL(int src)
+    public int POPL(int src)
     {
-        int result = RDMEM_L( RW(src) );
-        RW(src, RW(src) + 4);
+        int result = _cpu.RDMEM_L( _cpu._cpuH.RW(src) );
+        _cpu._cpuH.RW(src, _cpu._cpuH.RW(src) + 4);
         return result;
     }
 
     /* check zero and sign flag for byte, word and long results */
-    public static void CHK_XXXB_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
-    public static void CHK_XXXW_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
-    public static void CHK_XXXL_ZS(int result){ if (result==0) SET_Z(); else if (result < 0) SET_S(); }
+    public void CHK_XXXB_ZS(int result){ if (result==0) _cpu._cpuH.SET_Z(); else if (result < 0) _cpu._cpuH.SET_S(); }
+    public void CHK_XXXW_ZS(int result){ if (result==0) _cpu._cpuH.SET_Z(); else if (result < 0) _cpu._cpuH.SET_S(); }
+    public void CHK_XXXL_ZS(int result){ if (result==0) _cpu._cpuH.SET_Z(); else if (result < 0) _cpu._cpuH.SET_S(); }
 /*TODO*///#define CHK_XXXQ_ZS if (!result) SET_Z; else if ((INT64)result < 0) SET_S
 
-/*TODO*///#define CHK_XXXB_ZSP FCW |= z8000_zsp[result]
+    public void CHK_XXXB_ZSP(int result){ _cpu.Z.fcw |= _cpu.z8000_zsp[result]; }
 
 /*TODO*////* check carry for addition and subtraction */
-    public static void CHK_ADDX_C(int result, int dest){ if (result < dest) SET_C(); }
+    public void CHK_ADDX_C(int result, int dest){ if (result < dest) _cpu._cpuH.SET_C(); }
 /*TODO*///#define CHK_ADCX_C if (result < dest || (result == dest && value)) SET_C
 
-    public static void CHK_SUBX_C(int result, int dest){ if (result > dest) SET_C(); }
+    public void CHK_SUBX_C(int result, int dest){ if (result > dest) _cpu._cpuH.SET_C(); }
 /*TODO*///#define CHK_SBCX_C if (result > dest || (result == dest && value)) SET_C
 
 /*TODO*////* check half carry for A addition and S subtraction */
-    public static void CHK_ADDB_H(int result, int dest){  if ((result & 15) < (dest & 15)) SET_H(); }
+    public void CHK_ADDB_H(int result, int dest){  if ((result & 15) < (dest & 15)) _cpu._cpuH.SET_H(); }
 /*TODO*///#define CHK_ADCB_H	if ((result & 15) < (dest & 15) || ((result & 15) == (dest & 15) && (value & 15))) SET_H
 
-    public static void CHK_SUBB_H(int result, int dest){  if ((result & 15) > (dest & 15)) SET_H(); }
+    public void CHK_SUBB_H(int result, int dest){  if ((result & 15) > (dest & 15)) _cpu._cpuH.SET_H(); }
 /*TODO*///#define CHK_SBCB_H	if ((result & 15) > (dest & 15) || ((result & 15) == (dest & 15) && (value & 15))) SET_H
 
     /* check overflow for addition for byte, word and long */
-    public static void CHK_ADDB_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S08) != 0) SET_V(); }
-    public static void CHK_ADDW_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S16) != 0) SET_V(); }
+    public void CHK_ADDB_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S08) != 0) _cpu._cpuH.SET_V(); }
+    public void CHK_ADDW_V(int value, int dest, int result){ if ((((value & dest & ~result) | (~value & ~dest & result)) & S16) != 0) _cpu._cpuH.SET_V(); }
 /*TODO*///#define CHK_ADDL_V if (((value & dest & ~result) | (~value & ~dest & result)) & S32) SET_V
 
     /* check overflow for subtraction for byte, word and long */
-    public static void CHK_SUBB_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S08) != 0) SET_V(); }
-    public static void CHK_SUBW_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S16) != 0) SET_V(); }
-/*TODO*///#define CHK_SUBL_V if (((~value & dest & ~result) | (value & ~dest & result)) & S32) SET_V
+    public void CHK_SUBB_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S08) != 0) _cpu._cpuH.SET_V(); }
+    public void CHK_SUBW_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S16) != 0) _cpu._cpuH.SET_V(); }
+    public void CHK_SUBL_V(int value, int dest, int result){ if ((((~value & dest & ~result) | (value & ~dest & result)) & S32) != 0) _cpu._cpuH.SET_V(); }
 
     //static int result=0;
     /******************************************
      add byte
      flags:  CZSVDH
      ******************************************/
-    public static int ADDB(int dest, int value)
+    public int ADDB(int dest, int value)
     {
-        int result = dest + value;
-        CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
-        CLR_DA();         /* clear DA (decimal adjust) flag for addb */
+        int result = (dest + value) & 0xff;
+        _cpu._cpuH.CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
+        _cpu._cpuH.CLR_DA();         /* clear DA (decimal adjust) flag for addb */
         CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
         CHK_ADDX_C(result, dest); 	/* set C if result overflowed			   */
         CHK_ADDB_V(value, dest, result); 	/* set V if result has incorrect sign	   */
@@ -152,10 +146,10 @@ public class z8000ops {
      add word
      flags:  CZSV--
      ******************************************/
-    public static int ADDW(int dest, int value)
+    public int ADDW(int dest, int value)
     {
-        int result = dest + value;
-        CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
+        int result = (dest + value) & 0xffff;
+        _cpu._cpuH.CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
         CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
         CHK_ADDX_C(result, dest); 	/* set C if result overflowed			   */
         CHK_ADDW_V(value, dest, result); 	/* set V if result has incorrect sign	   */
@@ -210,11 +204,11 @@ public class z8000ops {
      subtract byte
      flags:  CZSVDH
      ******************************************/
-    public static int SUBB(int dest, int value)
+    public int SUBB(int dest, int value)
     {
-        int result = dest - value;
-        CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
-        SET_DA();         /* set DA (decimal adjust) flag for subb   */
+        int result = (dest - value) & 0xff;
+        _cpu._cpuH.CLR_CZSVH();      /* first clear C, Z, S, P/V and H flags    */
+        _cpu._cpuH.SET_DA();         /* set DA (decimal adjust) flag for subb   */
         CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
         CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
         CHK_SUBB_V(value, dest, result); 	/* set V if result has incorrect sign	   */
@@ -226,30 +220,30 @@ public class z8000ops {
      subtract word
      flags:  CZSV--
      ******************************************/
-    public static int SUBW(int dest, int value)
+    public int SUBW(int dest, int value)
     {
         int result = dest - value;
-        CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
+        _cpu._cpuH.CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
         CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
         CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
         CHK_SUBW_V(value, dest, result); 	/* set V if result has incorrect sign	   */
         return result;
     }
 
-/*TODO*////******************************************
-/*TODO*/// subtract long
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT32 SUBL(UINT32 dest, UINT32 value)
-/*TODO*///{
-/*TODO*///	UINT32 result = dest - value;
-/*TODO*///    CLR_CZSV;       /* first clear C, Z, S, P/V flags          */
-/*TODO*///    CHK_XXXL_ZS;    /* set Z and S flags for result long       */
-/*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
-/*TODO*///	CHK_SUBL_V; 	/* set V if result has incorrect sign	   */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+    /******************************************
+     subtract long
+     flags:  CZSV--
+     ******************************************/
+    public int SUBL(int dest, int value)
+    {
+        int result = dest - value;
+        _cpu._cpuH.CLR_CZSV();       /* first clear C, Z, S, P/V flags          */
+        CHK_XXXL_ZS(result);    /* set Z and S flags for result long       */
+        CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
+        CHK_SUBL_V(value, dest, result); 	/* set V if result has incorrect sign	   */
+        return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// subtract with carry byte
 /*TODO*/// flags:  CZSVDH
@@ -296,10 +290,10 @@ public class z8000ops {
      logical or word
      flags:  -ZS---
      ******************************************/
-    public static int ORW(int dest, int value)
+    public int ORW(int dest, int value)
     {
-            int result = dest | value;
-            CLR_ZS(); 		/* first clear Z, and S flags			   */
+            int result = (dest | value) & 0xffff;
+            _cpu._cpuH.CLR_ZS(); 		/* first clear Z, and S flags			   */
             CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
             return result;
     }
@@ -320,65 +314,65 @@ public class z8000ops {
      logical and word
      flags:  -ZS---
      ******************************************/
-    public static int ANDW(int dest, int value)
+    public int ANDW(int dest, int value)
     {
         int result = dest & value;
-        CLR_ZS();         /* first clear Z and S flags               */
+        _cpu._cpuH.CLR_ZS();         /* first clear Z and S flags               */
         CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
         return result;
     }
 
-/*TODO*////******************************************
-/*TODO*/// logical exclusive or byte
-/*TODO*/// flags:  -ZSP--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT8 XORB(UINT8 dest, UINT8 value)
-/*TODO*///{
-/*TODO*///	UINT8 result = dest ^ value;
-/*TODO*///    CLR_ZSP;        /* first clear Z, S and P/V flags          */
-/*TODO*///	CHK_XXXB_ZSP;	/* set Z, S and P flags for result byte    */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// logical exclusive or word
-/*TODO*/// flags:  -ZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 XORW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest ^ value;
-/*TODO*///    CLR_ZS;         /* first clear Z and S flags               */
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// compare byte
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE void CPB(UINT8 dest, UINT8 value)
-/*TODO*///{
-/*TODO*///	UINT8 result = dest - value;
-/*TODO*///    CLR_CZSV;       /* first clear C, Z, S and P/V flags       */
-/*TODO*///    CHK_XXXB_ZS;    /* set Z and S flags for result byte       */
-/*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
-/*TODO*///	CHK_SUBB_V;
-/*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// compare word
-/*TODO*/// flags:  CZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE void CPW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///	UINT16 result = dest - value;
-/*TODO*///	CLR_CZSV;
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
-/*TODO*///	CHK_SUBW_V;
-/*TODO*///}
-/*TODO*///
+    /******************************************
+     logical exclusive or byte
+     flags:  -ZSP--
+     ******************************************/
+    public int XORB(int dest, int value)
+    {
+            int result = (dest ^ value) & 0xff;
+            _cpu._cpuH.CLR_ZSP();        /* first clear Z, S and P/V flags          */
+            CHK_XXXB_ZSP(result);	/* set Z, S and P flags for result byte    */
+            return result;
+    }
+
+    /******************************************
+     logical exclusive or word
+     flags:  -ZS---
+     ******************************************/
+    public int XORW(int dest, int value)
+    {
+        int result = (dest ^ value) & 0xffff;
+        _cpu._cpuH.CLR_ZS();         /* first clear Z and S flags               */
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        return result;
+    }
+
+
+    /******************************************
+     compare byte
+     flags:  CZSV--
+     ******************************************/
+    public void CPB(int dest, int value)
+    {
+        int result = (dest - value) & 0xff;
+        _cpu._cpuH.CLR_CZSV();       /* first clear C, Z, S and P/V flags       */
+        CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
+        CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
+        CHK_SUBB_V(value, dest, result);
+    }
+
+    /******************************************
+     compare word
+     flags:  CZSV--
+     ******************************************/
+    public void CPW(int dest, int value)
+    {
+            int result = (dest - value) & 0xffff;
+            _cpu._cpuH.CLR_CZSV();
+            CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+            CHK_SUBX_C(result, dest); 	/* set C if result underflowed			   */
+            CHK_SUBW_V(value, dest, result);
+    }
+
 /*TODO*////******************************************
 /*TODO*/// compare long
 /*TODO*/// flags:  CZSV--
@@ -391,19 +385,19 @@ public class z8000ops {
 /*TODO*///	CHK_SUBX_C; 	/* set C if result underflowed			   */
 /*TODO*///	CHK_SUBL_V;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// complement byte
-/*TODO*/// flags: -ZSP--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT8 COMB(UINT8 dest)
-/*TODO*///{
-/*TODO*///	UINT8 result = ~dest;
-/*TODO*///	CLR_ZSP;
-/*TODO*///	CHK_XXXB_ZSP;	/* set Z, S and P flags for result byte    */
-/*TODO*///	return result;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     complement byte
+     flags: -ZSP--
+     ******************************************/
+    public int COMB(int dest)
+    {
+            int result = (~dest) & 0xff;
+            _cpu._cpuH.CLR_ZSP();
+            CHK_XXXB_ZSP(result);	/* set Z, S and P flags for result byte    */
+            return result;
+    }
+
 /*TODO*////******************************************
 /*TODO*/// complement word
 /*TODO*/// flags: -ZS---
@@ -453,17 +447,17 @@ public class z8000ops {
 /*TODO*///	CLR_ZSP;
 /*TODO*///	CHK_XXXB_ZSP;	/* set Z and S flags for result byte	   */
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// test word
-/*TODO*/// flags:  -ZS---
-/*TODO*/// ******************************************/
-/*TODO*///INLINE void TESTW(UINT16 dest)
-/*TODO*///{
-/*TODO*///	CLR_ZS;
-/*TODO*///    if (!dest) SET_Z; else if ((dest & S16) != 0) SET_S;
-/*TODO*///}
-/*TODO*///
+
+    /******************************************
+     test word
+     flags:  -ZS---
+     ******************************************/
+    public void TESTW(int dest)
+    {
+        _cpu._cpuH.CLR_ZS();
+        if (dest==0) _cpu._cpuH.SET_Z(); else if ((dest & S16) != 0) _cpu._cpuH.SET_S();
+    }
+
 /*TODO*////******************************************
 /*TODO*/// test long
 /*TODO*/// flags:  -ZS---
@@ -478,10 +472,10 @@ public class z8000ops {
      increment byte
      flags: -ZSV--
      ******************************************/
-    public static int INCB(int dest, int value)
+    public int INCB(int dest, int value)
     {
-        int result = dest + value;
-        CLR_ZSV();
+        int result = (dest + value) & 0xff;
+        _cpu._cpuH.CLR_ZSV();
         CHK_XXXB_ZS(result);    /* set Z and S flags for result byte       */
         CHK_ADDB_V(value, dest, result); 	/* set V if result overflowed			   */
         return result;
@@ -491,10 +485,10 @@ public class z8000ops {
      increment word
      flags: -ZSV--
      ******************************************/
-    public static int INCW(int dest, int value)
+    public int INCW(int dest, int value)
     {
-        int result = dest + value;
-        CLR_ZSV();
+        int result = (dest + value) & 0xffff;
+        _cpu._cpuH.CLR_ZSV();
         CHK_XXXW_ZS(result);    /* set Z and S flags for result byte       */
         CHK_ADDW_V(value, dest, result); 	/* set V if result overflowed			   */
         return result;
@@ -512,35 +506,35 @@ public class z8000ops {
 /*TODO*///	CHK_SUBB_V; 	/* set V if result overflowed			   */
 /*TODO*///	return result;
 /*TODO*///}
-/*TODO*///
-/*TODO*////******************************************
-/*TODO*/// decrement word
-/*TODO*/// flags: -ZSV--
-/*TODO*/// ******************************************/
-/*TODO*///INLINE UINT16 DECW(UINT16 dest, UINT16 value)
-/*TODO*///{
-/*TODO*///    UINT16 result = dest - value;
-/*TODO*///	CLR_ZSV;
-/*TODO*///    CHK_XXXW_ZS;    /* set Z and S flags for result word       */
-/*TODO*///	CHK_SUBW_V; 	/* set V if result overflowed			   */
-/*TODO*///	return result;
-/*TODO*///}
+
+    /******************************************
+     decrement word
+     flags: -ZSV--
+     ******************************************/
+    public int DECW(int dest, int value)
+    {
+        int result = (dest - value) & 0xffff;
+        _cpu._cpuH.CLR_ZSV();
+        CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
+        CHK_SUBW_V(value, dest, result); 	/* set V if result overflowed			   */
+        return result;
+    }
 
     /******************************************
      multiply words
      flags:  CZSV--
      ******************************************/
-    public static int MULTW(int dest, int value)
+    public int MULTW(int dest, int value)
     {
-            int result = dest * value;
-            CLR_CZSV();
+            int result = (dest * value) & 0xffff;
+            _cpu._cpuH.CLR_CZSV();
             CHK_XXXL_ZS(result);
             if( value==0 )
             {
                     /* multiplication with zero is faster */
-            z8000_ICount[0] += (70-18);
+                    _cpu.z8000_ICount[0] += (70-18);
             }
-            if( result < -0x7fff || result >= 0x7fff ) SET_C();
+            if( result < -0x7fff || result >= 0x7fff ) _cpu._cpuH.SET_C();
             return result;
     }
 
@@ -572,11 +566,11 @@ public class z8000ops {
      divide long by word
      flags: CZSV--
      ******************************************/
-    public static int DIVW(int dest, int value)
+    public int DIVW(int dest, int value)
     {
             int result = dest;
             int remainder = 0;
-            CLR_CZSV();
+            _cpu._cpuH.CLR_CZSV();
             if (value != 0)
             {
                     int qsign = ((dest >> 16) ^ value) & S16;
@@ -590,12 +584,12 @@ public class z8000ops {
                     if (result < -0x8000 || result > 0x7fff)
                     {
                             int temp = result >> 1;
-                            SET_V();
+                            _cpu._cpuH.SET_V();
                             if (temp >= -0x8000 && temp <= 0x7fff)
                             {
                                     result = (temp < 0) ? -1 : 0;
                                     CHK_XXXW_ZS(result);
-                                    SET_C();
+                                    _cpu._cpuH.SET_C();
                             }
                     }
                     else
@@ -606,8 +600,8 @@ public class z8000ops {
         }
         else
         {
-                    SET_Z();
-            SET_V();
+            _cpu._cpuH.SET_Z();
+            _cpu._cpuH.SET_V();
         }
             return result;
     }
@@ -1007,13 +1001,13 @@ public class z8000ops {
      shift left logic word
      flags:  CZS---
      ******************************************/
-    public static int SLLW(int dest, int count)
+    public int SLLW(int dest, int count)
     {
         int c = (count!=0) ? (dest << (count - 1)) & S16 : 0;
         int result = dest << count;
-        CLR_CZS();
+        _cpu._cpuH.CLR_CZS();
         CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
-        if (c != 0) SET_C();
+        if (c != 0) _cpu._cpuH.SET_C();
         return result;
     }
 
@@ -1021,13 +1015,13 @@ public class z8000ops {
      shift left logic long
      flags:  CZS---
      ******************************************/
-    public static int SLLL(int dest, int count)
+    public int SLLL(int dest, int count)
     {
         int c = (count!=0) ? (dest << (count - 1)) & S32 : 0;
         int result = dest << count;
-        CLR_CZS();
+        _cpu._cpuH.CLR_CZS();
         CHK_XXXL_ZS(result);    /* set Z and S flags for result long       */
-        if (c != 0) SET_C();
+        if (c != 0) _cpu._cpuH.SET_C();
         return result;
     }
 
@@ -1091,13 +1085,13 @@ public class z8000ops {
      shift right logic word
      flags:  CZSV--
      ******************************************/
-    public static int SRLW(int dest, int count)
+    public int SRLW(int dest, int count)
     {
         int c = (count!=0) ? (dest >> (count - 1)) & 1 : 0;
-        int result = dest >> count;
-        CLR_CZS();
+        int result = (dest >> count) & 0xffff;
+        _cpu._cpuH.CLR_CZS();
         CHK_XXXW_ZS(result);    /* set Z and S flags for result word       */
-        if (c != 0) SET_C();
+        if (c != 0) _cpu._cpuH.SET_C();
         return result;
     }
 
@@ -1105,13 +1099,13 @@ public class z8000ops {
      shift right logic long
      flags:  CZSV--
      ******************************************/
-    public static int SRLL(int dest, int count)
+    public int SRLL(int dest, int count)
     {
             int c = (count!=0) ? (dest >> (count - 1)) & 1 : 0;
             int result = dest >> count;
-            CLR_CZS();
+            _cpu._cpuH.CLR_CZS();
             CHK_XXXL_ZS(result);    /* set Z and S flags for result long       */
-            if (c != 0) SET_C();
+            if (c != 0) _cpu._cpuH.SET_C();
             return result;
     }
 
@@ -1119,12 +1113,12 @@ public class z8000ops {
      invalid
      flags:  ------
      ******************************************/
-    static OpcodePtr zinvalid = new OpcodePtr() {
+    public OpcodePtr zinvalid = new OpcodePtr() {
         @Override
         public void handler() {
-            logerror("Z8000 invalid opcode %04x: %04x\n", Z.pc, Z.op[0]);
-            gr.codebb.arcadeflex.old.arcadeflex.libc_old.printf("Z8000 invalid opcode %04x: %04x\n", Z.pc, Z.op[0]);
-            throw new UnsupportedOperationException("unsupported");
+            logerror("Z8000 invalid opcode %04x: %04x\n", _cpu.Z.pc, _cpu.Z.op[0]);
+            gr.codebb.arcadeflex.old.arcadeflex.libc_old.printf("Z8000 invalid opcode %04x: %04x\n", _cpu.Z.pc, _cpu.Z.op[0]);
+            //throw new UnsupportedOperationException("unsupported");
         }
     };
     
@@ -1132,13 +1126,13 @@ public class z8000ops {
      addb	 rbd,imm8
      flags:  CZSVDH
      ******************************************/
-    static OpcodePtr  Z00_0000_dddd_imm8 = new OpcodePtr() {
+    public OpcodePtr  Z00_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM8(OP1);
-            RB(dst, ADDB( RB(dst), imm8));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM8(OP1);
+            _cpu._cpuH.RB(dst, ADDB( _cpu._cpuH.RB(dst), imm8));
         }
     };
 
@@ -1146,13 +1140,13 @@ public class z8000ops {
      addb	 rbd,@rs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z00_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z00_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RB(dst, ADDB( RB(dst), RDMEM_B(RW(src)) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RB(dst, ADDB( _cpu._cpuH.RB(dst), _cpu.RDMEM_B(_cpu._cpuH.RW(src)) ));
         }
      };
 
@@ -1160,13 +1154,13 @@ public class z8000ops {
      add	 rd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z01_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z01_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM16(OP1);
-            RW(dst, ADDW( RW(dst), imm16 ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM16(OP1);
+            _cpu._cpuH.RW(dst, ADDW( _cpu._cpuH.RW(dst), imm16 ));
         }
      };
     
@@ -1174,13 +1168,13 @@ public class z8000ops {
      add	 rd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z01_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z01_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RW(dst, ADDW( RW(dst), RDMEM_W(RW(src)) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, ADDW( _cpu._cpuH.RW(dst), _cpu.RDMEM_W(_cpu._cpuH.RW(src)) ));
         }
      };
     
@@ -1188,7 +1182,7 @@ public class z8000ops {
      subb	 rbd,imm8
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z02_0000_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr Z02_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1202,13 +1196,13 @@ public class z8000ops {
      subb	 rbd,@rs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z02_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z02_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RB(dst, SUBB( RB(dst), RDMEM_B(RW(src)) )); /* EHC */
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RB(dst, SUBB( _cpu._cpuH.RB(dst), _cpu.RDMEM_B(_cpu._cpuH.RW(src)) )); /* EHC */
         }
      };
     
@@ -1216,7 +1210,7 @@ public class z8000ops {
      sub	 rd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z03_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z03_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1230,13 +1224,13 @@ public class z8000ops {
      sub	 rd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z03_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z03_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RW(dst, SUBW( RW(dst), RDMEM_W(RW(src)) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, SUBW( _cpu._cpuH.RW(dst), _cpu.RDMEM_W(_cpu._cpuH.RW(src)) ));
         }
      };
     
@@ -1244,7 +1238,7 @@ public class z8000ops {
      orb	 rbd,imm8
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z04_0000_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr Z04_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1258,7 +1252,7 @@ public class z8000ops {
      orb	 rbd,@rs
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z04_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z04_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1272,7 +1266,7 @@ public class z8000ops {
      or 	 rd,imm16
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z05_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z05_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1286,7 +1280,7 @@ public class z8000ops {
      or 	 rd,@rs
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z05_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z05_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1300,7 +1294,7 @@ public class z8000ops {
      andb	 rbd,imm8
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z06_0000_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr Z06_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1314,7 +1308,7 @@ public class z8000ops {
      andb	 rbd,@rs
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z06_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z06_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1328,13 +1322,13 @@ public class z8000ops {
      and	 rd,imm16
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z07_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z07_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM16(OP1);
-            RW(dst, ANDW( RW(dst), imm16 ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM16(OP1);
+            _cpu._cpuH.RW(dst, ANDW( _cpu._cpuH.RW(dst), imm16 ));
         }
      };
     
@@ -1342,7 +1336,7 @@ public class z8000ops {
      and	 rd,@rs
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z07_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z07_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1356,7 +1350,7 @@ public class z8000ops {
      xorb	 rbd,imm8
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z08_0000_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr Z08_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1370,7 +1364,7 @@ public class z8000ops {
      xorb	 rbd,@rs
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z08_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z08_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1384,7 +1378,7 @@ public class z8000ops {
      xor	 rd,imm16
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z09_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z09_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1398,13 +1392,13 @@ public class z8000ops {
      xor	 rd,@rs
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z09_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z09_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RW(dst) = XORW( RW(dst), RDMEM_W(RW(src)) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, XORW( _cpu._cpuH.RW(dst), _cpu.RDMEM_W(_cpu._cpuH.RW(src)) ));
         }
      };
     
@@ -1412,7 +1406,7 @@ public class z8000ops {
      cpb	 rbd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0A_0000_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr Z0A_0000_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1426,13 +1420,13 @@ public class z8000ops {
      cpb	 rbd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0A_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z0A_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	CPB( RB(dst), RDMEM_B(RW(src)) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            CPB( _cpu._cpuH.RB(dst), _cpu.RDMEM_B(_cpu._cpuH.RW(src)) );
         }
      };
     
@@ -1440,13 +1434,13 @@ public class z8000ops {
      cp 	 rd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0B_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z0B_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_IMM16(OP1);
-    /*TODO*///	CPW( RW(dst), imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM16(OP1);
+            CPW( _cpu._cpuH.RW(dst), imm16 );
         }
      };
     
@@ -1454,7 +1448,7 @@ public class z8000ops {
      cp 	 rd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0B_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z0B_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1468,7 +1462,7 @@ public class z8000ops {
      comb	 @rd
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0000 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1481,7 +1475,7 @@ public class z8000ops {
      cpb	 @rd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0001_imm8 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1495,7 +1489,7 @@ public class z8000ops {
      negb	 @rd
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0010 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1508,7 +1502,7 @@ public class z8000ops {
      testb	 @rd
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0100 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0100 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1521,7 +1515,7 @@ public class z8000ops {
      ldb	 @rd,imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0101_imm8 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0101_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1535,7 +1529,7 @@ public class z8000ops {
      tsetb	 @rd
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z0C_ddN0_0110 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_0110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1549,7 +1543,7 @@ public class z8000ops {
      clrb	 @rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0C_ddN0_1000 = new OpcodePtr() {
+     public OpcodePtr Z0C_ddN0_1000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1562,7 +1556,7 @@ public class z8000ops {
      com	 @rd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0000 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1575,7 +1569,7 @@ public class z8000ops {
      cp 	 @rd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0001_imm16 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0001_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1589,7 +1583,7 @@ public class z8000ops {
      neg	 @rd
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0010 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1602,7 +1596,7 @@ public class z8000ops {
      test	 @rd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0100 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0100 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1615,13 +1609,13 @@ public class z8000ops {
      ld 	 @rd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0101_imm16 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0101_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB2);
-            GET_IMM16(OP1);
-            WRMEM_W( RW(dst), imm16);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.GET_IMM16(OP1);
+            _cpu.WRMEM_W( _cpu._cpuH.RW(dst), imm16);
         }
      };
     
@@ -1629,7 +1623,7 @@ public class z8000ops {
      tset	 @rd
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z0D_ddN0_0110 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_0110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1643,7 +1637,7 @@ public class z8000ops {
      clr	 @rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0D_ddN0_1000 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_1000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1656,7 +1650,7 @@ public class z8000ops {
      push	 @rd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0D_ddN0_1001_imm16 = new OpcodePtr() {
+     public OpcodePtr Z0D_ddN0_1001_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1670,7 +1664,7 @@ public class z8000ops {
      ext0e	 imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0E_imm8 = new OpcodePtr() {
+     public OpcodePtr Z0E_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1687,10 +1681,10 @@ public class z8000ops {
      ext0f	 imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z0F_imm8 = new OpcodePtr() {
+     public OpcodePtr Z0F_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
+            //throw new UnsupportedOperationException("unsupported");
     /*TODO*///	GET_IMM8(0);
     /*TODO*///	LOG(("Z8K#%d %04x: ext0f  $%02x\n", cpu_getactivecpu(), PC, imm8));
     /*TODO*///    if ((FCW & F_EPU) != 0) {
@@ -1704,7 +1698,7 @@ public class z8000ops {
      cpl	 rrd,imm32
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z10_0000_dddd_imm32 = new OpcodePtr() {
+     public OpcodePtr Z10_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1718,7 +1712,7 @@ public class z8000ops {
      cpl	 rrd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z10_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z10_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1732,7 +1726,7 @@ public class z8000ops {
      pushl	 @rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z11_ddN0_ssN0 = new OpcodePtr() {
+     public OpcodePtr Z11_ddN0_ssN0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1746,7 +1740,7 @@ public class z8000ops {
      subl	 rrd,imm32
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z12_0000_dddd_imm32 = new OpcodePtr() {
+     public OpcodePtr Z12_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1760,7 +1754,7 @@ public class z8000ops {
      subl	 rrd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z12_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z12_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1774,7 +1768,7 @@ public class z8000ops {
      push	 @rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z13_ddN0_ssN0 = new OpcodePtr() {
+     public OpcodePtr Z13_ddN0_ssN0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1788,13 +1782,13 @@ public class z8000ops {
      ldl	 rrd,imm32
      flags:  ------
      ******************************************/
-     static OpcodePtr Z14_0000_dddd_imm32 = new OpcodePtr() {
+     public OpcodePtr Z14_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM32();
-            RL(dst, imm32);
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM32();
+            _cpu._cpuH.RL(dst, imm32);
         }
      };
     
@@ -1802,7 +1796,7 @@ public class z8000ops {
      ldl	 rrd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z14_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z14_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1816,7 +1810,7 @@ public class z8000ops {
      popl	 @rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z15_ssN0_ddN0 = new OpcodePtr() {
+     public OpcodePtr Z15_ssN0_ddN0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1830,7 +1824,7 @@ public class z8000ops {
      addl	 rrd,imm32
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z16_0000_dddd_imm32 = new OpcodePtr() {
+     public OpcodePtr Z16_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1844,7 +1838,7 @@ public class z8000ops {
      addl	 rrd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z16_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z16_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1858,7 +1852,7 @@ public class z8000ops {
      pop	 @rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z17_ssN0_ddN0 = new OpcodePtr() {
+     public OpcodePtr Z17_ssN0_ddN0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1872,7 +1866,7 @@ public class z8000ops {
      multl	 rqd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z18_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z18_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1886,13 +1880,13 @@ public class z8000ops {
      mult	 rrd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z19_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z19_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM16(OP1);
-            RL(dst, MULTW( RL(dst), imm16 ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM16(OP1);
+            _cpu._cpuH.RL(dst, MULTW( _cpu._cpuH.RL(dst), imm16 ));
         }
      };
     
@@ -1900,7 +1894,7 @@ public class z8000ops {
      mult	 rrd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z19_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z19_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1914,7 +1908,7 @@ public class z8000ops {
      divl	 rqd,imm32
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z1A_0000_dddd_imm32 = new OpcodePtr() {
+     public OpcodePtr Z1A_0000_dddd_imm32 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1928,7 +1922,7 @@ public class z8000ops {
      divl	 rqd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z1A_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z1A_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1942,13 +1936,13 @@ public class z8000ops {
      div	 rrd,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z1B_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z1B_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_IMM16(OP1);
-            RL(dst, DIVW( RL(dst), imm16 ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_IMM16(OP1);
+            _cpu._cpuH.RL(dst, DIVW( _cpu._cpuH.RL(dst), imm16 ));
         }
      };
     
@@ -1956,7 +1950,7 @@ public class z8000ops {
      div	 rrd,@rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z1B_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z1B_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1970,7 +1964,7 @@ public class z8000ops {
      testl	 @rd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z1C_ddN0_1000 = new OpcodePtr() {
+     public OpcodePtr Z1C_ddN0_1000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -1983,7 +1977,7 @@ public class z8000ops {
      ldm     @rd,rs,n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z1C_ddN0_1001_0000_ssss_0000_nmin1 = new OpcodePtr() {
+     public OpcodePtr Z1C_ddN0_1001_0000_ssss_0000_nmin1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2003,7 +1997,7 @@ public class z8000ops {
      ldm	 rd,@rs,n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z1C_ssN0_0001_0000_dddd_0000_nmin1 = new OpcodePtr() {
+     public OpcodePtr Z1C_ssN0_0001_0000_dddd_0000_nmin1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2023,7 +2017,7 @@ public class z8000ops {
      ldl	 @rd,rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z1D_ddN0_ssss = new OpcodePtr() {
+     public OpcodePtr Z1D_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2037,7 +2031,7 @@ public class z8000ops {
      jp      cc,rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z1E_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr Z1E_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2069,7 +2063,7 @@ public class z8000ops {
      call	 @rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z1F_ddN0_0000 = new OpcodePtr() {
+     public OpcodePtr Z1F_ddN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2084,13 +2078,13 @@ public class z8000ops {
      ldb	 rbd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z20_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z20_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RB(dst) = RDMEM_B( RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RB(dst, _cpu.RDMEM_B( _cpu._cpuH.RW(src) ));
         }
      };
     
@@ -2098,13 +2092,13 @@ public class z8000ops {
      ld 	 rd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z21_0000_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z21_0000_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-	        GET_DST(OP0,NIB3);
-	    	GET_IMM16(OP1);
-                RW(dst, imm16);
+	        _cpu._cpuH.GET_DST(OP0,NIB3);
+	    	_cpu._cpuH.GET_IMM16(OP1);
+                _cpu._cpuH.RW(dst, imm16);
         }
      };
     
@@ -2112,7 +2106,7 @@ public class z8000ops {
      ld 	 rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z21_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z21_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2126,7 +2120,7 @@ public class z8000ops {
      resb	 rbd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z22_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z22_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2140,7 +2134,7 @@ public class z8000ops {
      resb	 @rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z22_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z22_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2154,13 +2148,13 @@ public class z8000ops {
      result 	rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z23_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z23_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_SRC(OP0,NIB3);
-    /*TODO*///	GET_DST(OP1,NIB1);
-    /*TODO*///	RW(dst) = RW(dst) & ~(1 << (RW(src) & 15));
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_SRC(OP0,NIB3);
+            _cpu._cpuH.GET_DST(OP1,NIB1);
+            _cpu._cpuH.RW(dst, _cpu._cpuH.RW(dst) & ~(1 << (_cpu._cpuH.RW(src) & 15)));
         }
      };
     
@@ -2168,7 +2162,7 @@ public class z8000ops {
      res	 @rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z23_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z23_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2182,7 +2176,7 @@ public class z8000ops {
      setb	 rbd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z24_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z24_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2196,7 +2190,7 @@ public class z8000ops {
      setb	 @rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z24_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z24_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2210,7 +2204,7 @@ public class z8000ops {
      set	 rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z25_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z25_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2224,7 +2218,7 @@ public class z8000ops {
      set	 @rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z25_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z25_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2238,7 +2232,7 @@ public class z8000ops {
      bitb	 rbd,rs
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z26_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z26_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2252,7 +2246,7 @@ public class z8000ops {
      bitb	 @rd,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z26_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z26_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2266,7 +2260,7 @@ public class z8000ops {
      bit	 rd,rs
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z27_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z27_0000_ssss_0000_dddd_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2280,13 +2274,13 @@ public class z8000ops {
      bit	 @rd,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z27_ddN0_imm4 = new OpcodePtr() {
+     public OpcodePtr Z27_ddN0_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_BIT(OP0);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	if (RDMEM_W(RW(dst)) & bit) CLR_Z; else SET_Z;
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_BIT(OP0);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            if ((_cpu.RDMEM_W(_cpu._cpuH.RW(dst)) & bit)!=0) _cpu._cpuH.CLR_Z(); else _cpu._cpuH.SET_Z();
         }
      };
     
@@ -2294,7 +2288,7 @@ public class z8000ops {
      incb	 @rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z28_ddN0_imm4m1 = new OpcodePtr() {
+     public OpcodePtr Z28_ddN0_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2308,7 +2302,7 @@ public class z8000ops {
      inc     @rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z29_ddN0_imm4m1 = new OpcodePtr() {
+     public OpcodePtr Z29_ddN0_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2322,7 +2316,7 @@ public class z8000ops {
      decb	 @rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z2A_ddN0_imm4m1 = new OpcodePtr() {
+     public OpcodePtr Z2A_ddN0_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2336,7 +2330,7 @@ public class z8000ops {
      dec     @rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z2B_ddN0_imm4m1 = new OpcodePtr() {
+     public OpcodePtr Z2B_ddN0_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2350,7 +2344,7 @@ public class z8000ops {
      exb	 rbd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z2C_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z2C_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2366,7 +2360,7 @@ public class z8000ops {
      ex 	 rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z2D_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z2D_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2382,7 +2376,7 @@ public class z8000ops {
      ldb	 @rd,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z2E_ddN0_ssss = new OpcodePtr() {
+     public OpcodePtr Z2E_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2396,13 +2390,13 @@ public class z8000ops {
      ld 	 @rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z2F_ddN0_ssss = new OpcodePtr() {
+     public OpcodePtr Z2F_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_SRC(OP0,NIB3);
-            GET_DST(OP0,NIB2);
-            WRMEM_W( RW(dst), RW(src) );
+            _cpu._cpuH.GET_SRC(OP0,NIB3);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu.WRMEM_W( _cpu._cpuH.RW(dst), _cpu._cpuH.RW(src) );
         }
      };
     
@@ -2410,7 +2404,7 @@ public class z8000ops {
      ldrb	 rbd,dsp16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z30_0000_dddd_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z30_0000_dddd_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2424,7 +2418,7 @@ public class z8000ops {
      ldb	 rbd,rs(imm16)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z30_ssN0_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z30_ssN0_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2440,7 +2434,7 @@ public class z8000ops {
      ldr	 rd,dsp16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z31_0000_dddd_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z31_0000_dddd_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2454,7 +2448,7 @@ public class z8000ops {
      ld 	 rd,rs(imm16)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z31_ssN0_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z31_ssN0_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2470,7 +2464,7 @@ public class z8000ops {
      ldrb	 dsp16,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z32_0000_ssss_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z32_0000_ssss_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2484,7 +2478,7 @@ public class z8000ops {
      ldb	 rd(imm16),rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z32_ddN0_ssss_imm16 = new OpcodePtr() {
+     public OpcodePtr Z32_ddN0_ssss_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2500,7 +2494,7 @@ public class z8000ops {
      ldr	 dsp16,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z33_0000_ssss_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z33_0000_ssss_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2514,7 +2508,7 @@ public class z8000ops {
      ld 	 rd(imm16),rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z33_ddN0_ssss_imm16 = new OpcodePtr() {
+     public OpcodePtr Z33_ddN0_ssss_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2530,7 +2524,7 @@ public class z8000ops {
      ldar	 prd,dsp16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z34_0000_dddd_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z34_0000_dddd_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2544,7 +2538,7 @@ public class z8000ops {
      lda	 prd,rs(imm16)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z34_ssN0_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z34_ssN0_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2560,7 +2554,7 @@ public class z8000ops {
      ldrl	 rrd,dsp16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z35_0000_dddd_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z35_0000_dddd_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2574,7 +2568,7 @@ public class z8000ops {
      ldl	 rrd,rs(imm16)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z35_ssN0_dddd_imm16 = new OpcodePtr() {
+     public OpcodePtr Z35_ssN0_dddd_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2590,7 +2584,7 @@ public class z8000ops {
      bpt
      flags:  ------
      ******************************************/
-     static OpcodePtr Z36_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z36_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2603,7 +2597,7 @@ public class z8000ops {
      rsvd36
      flags:  ------
      ******************************************/
-     static OpcodePtr Z36_imm8 = new OpcodePtr() {
+     public OpcodePtr Z36_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2620,7 +2614,7 @@ public class z8000ops {
      ldrl	 dsp16,rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z37_0000_ssss_dsp16 = new OpcodePtr() {
+     public OpcodePtr Z37_0000_ssss_dsp16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2634,7 +2628,7 @@ public class z8000ops {
      ldl	 rd(imm16),rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z37_ddN0_ssss_imm16 = new OpcodePtr() {
+     public OpcodePtr Z37_ddN0_ssss_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2650,7 +2644,7 @@ public class z8000ops {
      rsvd38
      flags:  ------
      ******************************************/
-     static OpcodePtr Z38_imm8 = new OpcodePtr() {
+     public OpcodePtr Z38_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2667,7 +2661,7 @@ public class z8000ops {
      ldps	 @rs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z39_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr Z39_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2684,7 +2678,7 @@ public class z8000ops {
      inib(r) @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3A_ssss_0000_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0000_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2704,7 +2698,7 @@ public class z8000ops {
      sinibr  @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_ssss_0001_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0001_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2724,7 +2718,7 @@ public class z8000ops {
      outibr  @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3A_ssss_0010_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0010_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2744,7 +2738,7 @@ public class z8000ops {
      soutibr @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_ssss_0011_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0011_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2763,7 +2757,7 @@ public class z8000ops {
      inb     rbd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_dddd_0100_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3A_dddd_0100_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2777,7 +2771,7 @@ public class z8000ops {
      sinb    rbd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_dddd_0101_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3A_dddd_0101_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2791,7 +2785,7 @@ public class z8000ops {
      outb    imm16,rbs
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3A_ssss_0110_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0110_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2805,7 +2799,7 @@ public class z8000ops {
      soutb   imm16,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_ssss_0111_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_0111_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2820,7 +2814,7 @@ public class z8000ops {
      indbr	 @rd,@rs,rba
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3A_ssss_1000_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_1000_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2840,7 +2834,7 @@ public class z8000ops {
      sindbr  @rd,@rs,rba
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_ssss_1001_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_1001_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2860,7 +2854,7 @@ public class z8000ops {
      outdbr  @rd,@rs,rba
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3A_ssss_1010_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_1010_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2880,7 +2874,7 @@ public class z8000ops {
      soutdbr @rd,@rs,rba
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3A_ssss_1011_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3A_ssss_1011_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2900,7 +2894,7 @@ public class z8000ops {
      inir	 @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3B_ssss_0000_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0000_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2920,7 +2914,7 @@ public class z8000ops {
      sinir	 @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_ssss_0001_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0001_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2940,7 +2934,7 @@ public class z8000ops {
      outir	 @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3B_ssss_0010_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0010_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2960,7 +2954,7 @@ public class z8000ops {
      soutir  @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_ssss_0011_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0011_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2979,7 +2973,7 @@ public class z8000ops {
      in 	 rd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_dddd_0100_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3B_dddd_0100_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -2993,7 +2987,7 @@ public class z8000ops {
      sin	 rd,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_dddd_0101_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3B_dddd_0101_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3007,7 +3001,7 @@ public class z8000ops {
      out	 imm16,rs
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3B_ssss_0110_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0110_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3021,7 +3015,7 @@ public class z8000ops {
      sout	 imm16,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_ssss_0111_imm16 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_0111_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3036,7 +3030,7 @@ public class z8000ops {
      indr	 @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3B_ssss_1000_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_1000_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3056,7 +3050,7 @@ public class z8000ops {
      sindr	 @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_ssss_1001_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_1001_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3076,7 +3070,7 @@ public class z8000ops {
      outdr	 @rd,@rs,ra
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3B_ssss_1010_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_1010_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3096,7 +3090,7 @@ public class z8000ops {
      soutdr  @rd,@rs,ra
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3B_ssss_1011_0000_aaaa_dddd_x000 = new OpcodePtr() {
+     public OpcodePtr Z3B_ssss_1011_0000_aaaa_dddd_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3115,7 +3109,7 @@ public class z8000ops {
      inb	 rbd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3C_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z3C_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3129,7 +3123,7 @@ public class z8000ops {
      in 	 rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z3D_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z3D_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3143,7 +3137,7 @@ public class z8000ops {
      outb	 @rd,rbs
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3E_dddd_ssss = new OpcodePtr() {
+     public OpcodePtr Z3E_dddd_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3157,7 +3151,7 @@ public class z8000ops {
      out	 @rd,rs
      flags:  ---V--
      ******************************************/
-     static OpcodePtr Z3F_dddd_ssss = new OpcodePtr() {
+     public OpcodePtr Z3F_dddd_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3171,13 +3165,13 @@ public class z8000ops {
      addb	 rbd,addr
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z40_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z40_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_ADDR(OP1);
-            RB(dst, ADDB( RB(dst), RDMEM_B(addr) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.RB(dst, ADDB( _cpu._cpuH.RB(dst), _cpu.RDMEM_B(addr) ));
         }
      };
     
@@ -3185,7 +3179,7 @@ public class z8000ops {
      addb	 rbd,addr(rs)
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z40_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z40_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3201,7 +3195,7 @@ public class z8000ops {
      add	 rd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z41_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z41_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3215,7 +3209,7 @@ public class z8000ops {
      add	 rd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z41_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z41_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3231,7 +3225,7 @@ public class z8000ops {
      subb	 rbd,addr
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z42_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z42_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3245,7 +3239,7 @@ public class z8000ops {
      subb	 rbd,addr(rs)
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z42_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z42_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3261,7 +3255,7 @@ public class z8000ops {
      sub	 rd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z43_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z43_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3275,7 +3269,7 @@ public class z8000ops {
      sub	 rd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z43_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z43_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3291,7 +3285,7 @@ public class z8000ops {
      orb	 rbd,addr
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z44_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z44_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3305,7 +3299,7 @@ public class z8000ops {
      orb	 rbd,addr(rs)
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z44_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z44_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3321,7 +3315,7 @@ public class z8000ops {
      or 	 rd,addr
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z45_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z45_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3335,7 +3329,7 @@ public class z8000ops {
      or 	 rd,addr(rs)
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z45_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z45_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3351,7 +3345,7 @@ public class z8000ops {
      andb	 rbd,addr
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z46_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z46_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3365,7 +3359,7 @@ public class z8000ops {
      andb	 rbd,addr(rs)
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z46_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z46_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3381,7 +3375,7 @@ public class z8000ops {
      and	 rd,addr
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z47_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z47_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3395,7 +3389,7 @@ public class z8000ops {
      and	 rd,addr(rs)
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z47_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z47_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3411,13 +3405,13 @@ public class z8000ops {
      xorb	 rbd,addr
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z48_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z48_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	RB(dst) = XORB( RB(dst), RDMEM_B(addr) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.RB(dst, XORB( _cpu._cpuH.RB(dst), _cpu.RDMEM_B(addr) ));
         }
      };
     
@@ -3425,7 +3419,7 @@ public class z8000ops {
      xorb	 rbd,addr(rs)
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z48_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z48_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3441,7 +3435,7 @@ public class z8000ops {
      xor	 rd,addr
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z49_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z49_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3455,7 +3449,7 @@ public class z8000ops {
      xor	 rd,addr(rs)
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z49_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z49_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3471,7 +3465,7 @@ public class z8000ops {
      cpb	 rbd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4A_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z4A_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3485,7 +3479,7 @@ public class z8000ops {
      cpb	 rbd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4A_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z4A_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3501,7 +3495,7 @@ public class z8000ops {
      cp 	 rd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4B_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z4B_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3515,7 +3509,7 @@ public class z8000ops {
      cp 	 rd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4B_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z4B_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3531,7 +3525,7 @@ public class z8000ops {
      comb	 addr
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z4C_0000_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3544,7 +3538,7 @@ public class z8000ops {
      cpb	 addr,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4C_0000_0001_addr_imm8 = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0001_addr_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3558,7 +3552,7 @@ public class z8000ops {
      negb	 addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4C_0000_0010_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0010_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3571,7 +3565,7 @@ public class z8000ops {
      testb	 addr
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z4C_0000_0100_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0100_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3584,7 +3578,7 @@ public class z8000ops {
      ldb	 addr,imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4C_0000_0101_addr_imm8 = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0101_addr_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3598,7 +3592,7 @@ public class z8000ops {
      tsetb	 addr
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z4C_0000_0110_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_0110_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3612,7 +3606,7 @@ public class z8000ops {
      clrb	 addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4C_0000_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_0000_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3625,7 +3619,7 @@ public class z8000ops {
      comb	 addr(rd)
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3640,7 +3634,7 @@ public class z8000ops {
      cpb	 addr(rd),imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0001_addr_imm8 = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0001_addr_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3656,7 +3650,7 @@ public class z8000ops {
      negb	 addr(rd)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0010_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0010_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3671,7 +3665,7 @@ public class z8000ops {
      testb	 addr(rd)
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0100_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0100_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3686,7 +3680,7 @@ public class z8000ops {
      ldb	 addr(rd),imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0101_addr_imm8 = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0101_addr_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3702,7 +3696,7 @@ public class z8000ops {
      tsetb	 addr(rd)
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z4C_ddN0_0110_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_0110_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3718,7 +3712,7 @@ public class z8000ops {
      clrb	 addr(rd)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4C_ddN0_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z4C_ddN0_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3733,7 +3727,7 @@ public class z8000ops {
      com	 addr
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z4D_0000_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3746,7 +3740,7 @@ public class z8000ops {
      cp 	 addr,imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4D_0000_0001_addr_imm16 = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0001_addr_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3760,7 +3754,7 @@ public class z8000ops {
      neg	 addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4D_0000_0010_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0010_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3773,12 +3767,12 @@ public class z8000ops {
      test	 addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_0000_0100_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0100_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	TESTW( RDMEM_W(addr) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_ADDR(OP1);
+            TESTW( _cpu.RDMEM_W(addr) );
         }
      };
     
@@ -3786,13 +3780,13 @@ public class z8000ops {
      ld 	 addr,imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_0000_0101_addr_imm16 = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0101_addr_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	GET_IMM16(OP2);
-    /*TODO*///	WRMEM_W( addr, imm16 );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.GET_IMM16(OP2);
+            _cpu.WRMEM_W( addr, imm16 );
         }
      };
     
@@ -3800,7 +3794,7 @@ public class z8000ops {
      tset	 addr
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z4D_0000_0110_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_0110_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3814,12 +3808,12 @@ public class z8000ops {
      clr	 addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_0000_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_0000_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_ADDR(OP1);
-            WRMEM_W( addr, 0 );
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu.WRMEM_W( addr, 0 );
         }
      };
     
@@ -3827,7 +3821,7 @@ public class z8000ops {
      com	 addr(rd)
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3842,7 +3836,7 @@ public class z8000ops {
      cp 	 addr(rd),imm16
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0001_addr_imm16 = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0001_addr_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3858,7 +3852,7 @@ public class z8000ops {
      neg	 addr(rd)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0010_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0010_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3873,7 +3867,7 @@ public class z8000ops {
      test	 addr(rd)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0100_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0100_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3888,7 +3882,7 @@ public class z8000ops {
      ld 	 addr(rd),imm16
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0101_addr_imm16 = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0101_addr_imm16 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3904,7 +3898,7 @@ public class z8000ops {
      tset	 addr(rd)
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z4D_ddN0_0110_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_0110_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3920,7 +3914,7 @@ public class z8000ops {
      clr	 addr(rd)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4D_ddN0_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z4D_ddN0_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3935,7 +3929,7 @@ public class z8000ops {
      ldb	 addr(rd),rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z4E_ddN0_ssN0_addr = new OpcodePtr() {
+     public OpcodePtr Z4E_ddN0_ssN0_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3951,7 +3945,7 @@ public class z8000ops {
      cpl	 rrd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z50_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z50_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3965,7 +3959,7 @@ public class z8000ops {
      cpl	 rrd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z50_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z50_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3981,7 +3975,7 @@ public class z8000ops {
      pushl	 @rd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z51_ddN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z51_ddN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -3995,7 +3989,7 @@ public class z8000ops {
      pushl	 @rd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z51_ddN0_ssN0_addr = new OpcodePtr() {
+     public OpcodePtr Z51_ddN0_ssN0_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4011,13 +4005,13 @@ public class z8000ops {
      subl	 rrd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z52_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z52_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	RL(dst) = SUBL( RL(dst), RDMEM_L(addr) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.RL(dst, SUBL( _cpu._cpuH.RL(dst), _cpu.RDMEM_L(addr) ));
         }
      };
     
@@ -4025,7 +4019,7 @@ public class z8000ops {
      subl	 rrd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z52_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z52_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4041,7 +4035,7 @@ public class z8000ops {
      push	 @rd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z53_ddN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z53_ddN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4055,7 +4049,7 @@ public class z8000ops {
      push	 @rd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z53_ddN0_ssN0_addr = new OpcodePtr() {
+     public OpcodePtr Z53_ddN0_ssN0_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4071,7 +4065,7 @@ public class z8000ops {
      ldl	 rrd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z54_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z54_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4085,7 +4079,7 @@ public class z8000ops {
      ldl	 rrd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z54_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z54_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4101,7 +4095,7 @@ public class z8000ops {
      popl	 addr,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z55_ssN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z55_ssN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4115,7 +4109,7 @@ public class z8000ops {
      popl	 addr(rd),@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z55_ssN0_ddN0_addr = new OpcodePtr() {
+     public OpcodePtr Z55_ssN0_ddN0_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4131,7 +4125,7 @@ public class z8000ops {
      addl	 rrd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z56_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z56_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4145,7 +4139,7 @@ public class z8000ops {
      addl	 rrd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z56_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z56_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4161,7 +4155,7 @@ public class z8000ops {
      pop	 addr,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z57_ssN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z57_ssN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4175,7 +4169,7 @@ public class z8000ops {
      pop	 addr(rd),@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z57_ssN0_ddN0_addr = new OpcodePtr() {
+     public OpcodePtr Z57_ssN0_ddN0_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4191,7 +4185,7 @@ public class z8000ops {
      multl	 rqd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z58_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z58_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4205,7 +4199,7 @@ public class z8000ops {
      multl	 rqd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z58_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z58_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4221,13 +4215,13 @@ public class z8000ops {
      mult	 rrd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z59_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z59_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_ADDR(OP1);
-            RL(dst, MULTW( RL(dst), RDMEM_W(addr) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.RL(dst, MULTW( _cpu._cpuH.RL(dst), _cpu.RDMEM_W(addr) ));
         }
      };
     
@@ -4235,7 +4229,7 @@ public class z8000ops {
      mult	 rrd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z59_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z59_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4251,7 +4245,7 @@ public class z8000ops {
      divl	 rqd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z5A_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z5A_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4265,7 +4259,7 @@ public class z8000ops {
      divl	 rqd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z5A_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z5A_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4281,7 +4275,7 @@ public class z8000ops {
      div	 rrd,addr
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z5B_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z5B_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4295,7 +4289,7 @@ public class z8000ops {
      div	 rrd,addr(rs)
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z5B_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z5B_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4311,7 +4305,7 @@ public class z8000ops {
      ldm	 rd,addr,n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5C_0000_0001_0000_dddd_0000_nmin1_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_0000_0001_0000_dddd_0000_nmin1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4330,7 +4324,7 @@ public class z8000ops {
      testl	 addr
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z5C_0000_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_0000_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4343,7 +4337,7 @@ public class z8000ops {
      ldm	 addr,rs,n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5C_0000_1001_0000_ssss_0000_nmin1_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_0000_1001_0000_ssss_0000_nmin1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4362,7 +4356,7 @@ public class z8000ops {
      testl	 addr(rd)
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z5C_ddN0_1000_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_ddN0_1000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4377,7 +4371,7 @@ public class z8000ops {
      ldm	 addr(rd),rs,n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5C_ddN0_1001_0000_ssN0_0000_nmin1_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_ddN0_1001_0000_ssN0_0000_nmin1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4398,7 +4392,7 @@ public class z8000ops {
      ldm	 rd,addr(rs),n
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5C_ssN0_0001_0000_dddd_0000_nmin1_addr = new OpcodePtr() {
+     public OpcodePtr Z5C_ssN0_0001_0000_dddd_0000_nmin1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4419,7 +4413,7 @@ public class z8000ops {
      ldl	 addr,rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5D_0000_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z5D_0000_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4433,7 +4427,7 @@ public class z8000ops {
      ldl	 addr(rd),rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5D_ddN0_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z5D_ddN0_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4449,31 +4443,31 @@ public class z8000ops {
      jp 	 cc,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5E_0000_cccc_addr = new OpcodePtr() {
+     public OpcodePtr Z5E_0000_cccc_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_CCC(OP0,NIB3);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	switch (cc) {
-    /*TODO*///		case  0: if (CC0 != 0) PC = addr; break;
-    /*TODO*///		case  1: if (CC1 != 0) PC = addr; break;
-    /*TODO*///		case  2: if (CC2 != 0) PC = addr; break;
-    /*TODO*///		case  3: if (CC3 != 0) PC = addr; break;
-    /*TODO*///		case  4: if (CC4 != 0) PC = addr; break;
-    /*TODO*///		case  5: if (CC5 != 0) PC = addr; break;
-    /*TODO*///		case  6: if (CC6 != 0) PC = addr; break;
-    /*TODO*///		case  7: if (CC7 != 0) PC = addr; break;
-    /*TODO*///		case  8: if (CC8 != 0) PC = addr; break;
-    /*TODO*///		case  9: if (CC9 != 0) PC = addr; break;
-    /*TODO*///		case 10: if (CCA != 0) PC = addr; break;
-    /*TODO*///		case 11: if (CCB != 0) PC = addr; break;
-    /*TODO*///		case 12: if (CCC != 0) PC = addr; break;
-    /*TODO*///		case 13: if (CCD != 0) PC = addr; break;
-    /*TODO*///		case 14: if (CCE != 0) PC = addr; break;
-    /*TODO*///		case 15: if (CCF != 0) PC = addr; break;
-    /*TODO*///	}
-    /*TODO*///	change_pc16bew(PC);
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_CCC(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            switch (cc) {
+                    case  0: if (_cpu._cpuH.CC0() != 0) _cpu.Z.pc = addr; break;
+                    case  1: if (_cpu._cpuH.CC1() != 0) _cpu.Z.pc = addr; break;
+                    case  2: if (_cpu._cpuH.CC2() != 0) _cpu.Z.pc = addr; break;
+                    case  3: if (_cpu._cpuH.CC3() != 0) _cpu.Z.pc = addr; break;
+                    case  4: if (_cpu._cpuH.CC4() != 0) _cpu.Z.pc = addr; break;
+                    case  5: if (_cpu._cpuH.CC5() != 0) _cpu.Z.pc = addr; break;
+                    case  6: if (_cpu._cpuH.CC6() != 0) _cpu.Z.pc = addr; break;
+                    case  7: if (_cpu._cpuH.CC7() != 0) _cpu.Z.pc = addr; break;
+                    case  8: if (_cpu._cpuH.CC8() != 0) _cpu.Z.pc = addr; break;
+                    case  9: if (_cpu._cpuH.CC9() != 0) _cpu.Z.pc = addr; break;
+                    case 10: if (_cpu._cpuH.CCA() != 0) _cpu.Z.pc = addr; break;
+                    case 11: if (_cpu._cpuH.CCB() != 0) _cpu.Z.pc = addr; break;
+                    case 12: if (_cpu._cpuH.CCC() != 0) _cpu.Z.pc = addr; break;
+                    case 13: if (_cpu._cpuH.CCD() != 0) _cpu.Z.pc = addr; break;
+                    case 14: if (_cpu._cpuH.CCE() != 0) _cpu.Z.pc = addr; break;
+                    case 15: if (_cpu._cpuH.CCF() != 0) _cpu.Z.pc = addr; break;
+            }
+            change_pc16bew(_cpu.Z.pc);
         }
      };
     
@@ -4481,7 +4475,7 @@ public class z8000ops {
      jp 	 cc,addr(rd)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5E_ddN0_cccc_addr = new OpcodePtr() {
+     public OpcodePtr Z5E_ddN0_cccc_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4515,7 +4509,7 @@ public class z8000ops {
      call	 addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5F_0000_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z5F_0000_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4530,7 +4524,7 @@ public class z8000ops {
      call	 addr(rd)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z5F_ddN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z5F_ddN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4547,7 +4541,7 @@ public class z8000ops {
      ldb	 rbd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z60_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z60_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4561,7 +4555,7 @@ public class z8000ops {
      ldb	 rbd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z60_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z60_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4577,13 +4571,13 @@ public class z8000ops {
      ld 	 rd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z61_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z61_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_ADDR(OP1);
-            RW(dst, RDMEM_W(addr));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu._cpuH.RW(dst, _cpu.RDMEM_W(addr));
         }
      };
     
@@ -4591,15 +4585,15 @@ public class z8000ops {
      ld 	 rd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z61_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z61_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	addr += RW(src);
-    /*TODO*///	RW(dst) = RDMEM_W(addr);
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.GET_ADDR(OP1);
+            addr += _cpu._cpuH.RW(src);
+            _cpu._cpuH.RW(dst, _cpu.RDMEM_W(addr));
         }
      };
     
@@ -4607,7 +4601,7 @@ public class z8000ops {
      resb	 addr,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z62_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z62_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4621,7 +4615,7 @@ public class z8000ops {
      resb	 addr(rd),imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z62_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z62_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4637,13 +4631,13 @@ public class z8000ops {
      res	 addr,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z63_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z63_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_BIT(OP0);
-    /*TODO*///	GET_ADDR(OP1);
-    /*TODO*///	WRMEM_W( addr, RDMEM_W(addr) & ~bit );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_BIT(OP0);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu.WRMEM_W( addr, _cpu.RDMEM_W(addr) & ~bit );
         }
      };
     
@@ -4651,7 +4645,7 @@ public class z8000ops {
      res	 addr(rd),imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z63_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z63_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4667,7 +4661,7 @@ public class z8000ops {
      setb	 addr,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z64_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z64_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4681,7 +4675,7 @@ public class z8000ops {
      setb	 addr(rd),imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z64_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z64_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4697,7 +4691,7 @@ public class z8000ops {
      set	 addr,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z65_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z65_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4711,7 +4705,7 @@ public class z8000ops {
      set	 addr(rd),imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr Z65_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z65_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4727,7 +4721,7 @@ public class z8000ops {
      bitb	 addr,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z66_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z66_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4741,7 +4735,7 @@ public class z8000ops {
      bitb	 addr(rd),imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z66_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z66_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4757,7 +4751,7 @@ public class z8000ops {
      bit	 addr,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z67_0000_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z67_0000_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4771,7 +4765,7 @@ public class z8000ops {
      bit	 addr(rd),imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr Z67_ddN0_imm4_addr = new OpcodePtr() {
+     public OpcodePtr Z67_ddN0_imm4_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4787,7 +4781,7 @@ public class z8000ops {
      incb	 addr,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z68_0000_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z68_0000_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4801,7 +4795,7 @@ public class z8000ops {
      incb	 addr(rd),imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z68_ddN0_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z68_ddN0_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4817,7 +4811,7 @@ public class z8000ops {
      inc	 addr,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z69_0000_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z69_0000_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4831,7 +4825,7 @@ public class z8000ops {
      inc	 addr(rd),imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z69_ddN0_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z69_ddN0_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4847,7 +4841,7 @@ public class z8000ops {
      decb	 addr,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z6A_0000_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z6A_0000_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4861,7 +4855,7 @@ public class z8000ops {
      decb	 addr(rd),imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z6A_ddN0_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z6A_ddN0_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4877,7 +4871,7 @@ public class z8000ops {
      dec	 addr,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z6B_0000_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z6B_0000_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4891,7 +4885,7 @@ public class z8000ops {
      dec	 addr(rd),imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr Z6B_ddN0_imm4m1_addr = new OpcodePtr() {
+     public OpcodePtr Z6B_ddN0_imm4m1_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4907,7 +4901,7 @@ public class z8000ops {
      exb	 rbd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6C_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z6C_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4923,7 +4917,7 @@ public class z8000ops {
      exb	 rbd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6C_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z6C_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4942,7 +4936,7 @@ public class z8000ops {
      ex 	 rd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6D_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z6D_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4958,7 +4952,7 @@ public class z8000ops {
      ex 	 rd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6D_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z6D_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4977,7 +4971,7 @@ public class z8000ops {
      ldb	 addr,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6E_0000_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z6E_0000_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -4991,7 +4985,7 @@ public class z8000ops {
      ldb	 addr(rd),rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6E_ddN0_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z6E_ddN0_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5007,13 +5001,13 @@ public class z8000ops {
      ld 	 addr,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6F_0000_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z6F_0000_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_SRC(OP0,NIB3);
-            GET_ADDR(OP1);
-            WRMEM_W( addr, RW(src) );
+            _cpu._cpuH.GET_SRC(OP0,NIB3);
+            _cpu._cpuH.GET_ADDR(OP1);
+            _cpu.WRMEM_W( addr, _cpu._cpuH.RW(src) );
         }
      };
     
@@ -5021,7 +5015,7 @@ public class z8000ops {
      ld 	 addr(rd),rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z6F_ddN0_ssss_addr = new OpcodePtr() {
+     public OpcodePtr Z6F_ddN0_ssss_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5037,7 +5031,7 @@ public class z8000ops {
      ldb	 rbd,rs(rx)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z70_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z70_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5052,7 +5046,7 @@ public class z8000ops {
      ld 	 rd,rs(rx)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z71_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z71_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5067,7 +5061,7 @@ public class z8000ops {
      ldb	 rd(rx),rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z72_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z72_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5082,7 +5076,7 @@ public class z8000ops {
      ld 	 rd(rx),rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z73_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z73_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5097,7 +5091,7 @@ public class z8000ops {
      lda	 prd,rs(rx)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z74_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z74_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5112,7 +5106,7 @@ public class z8000ops {
      ldl	 rrd,rs(rx)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z75_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z75_ssN0_dddd_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5127,7 +5121,7 @@ public class z8000ops {
      lda	 prd,addr
      flags:  ------
      ******************************************/
-     static OpcodePtr Z76_0000_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z76_0000_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5141,7 +5135,7 @@ public class z8000ops {
      lda	 prd,addr(rs)
      flags:  ------
      ******************************************/
-     static OpcodePtr Z76_ssN0_dddd_addr = new OpcodePtr() {
+     public OpcodePtr Z76_ssN0_dddd_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5157,7 +5151,7 @@ public class z8000ops {
      ldl	 rd(rx),rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z77_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z77_ddN0_ssss_0000_xxxx_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5172,7 +5166,7 @@ public class z8000ops {
      rsvd78
      flags:  ------
      ******************************************/
-     static OpcodePtr Z78_imm8 = new OpcodePtr() {
+     public OpcodePtr Z78_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5189,7 +5183,7 @@ public class z8000ops {
      ldps	 addr
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z79_0000_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z79_0000_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5206,7 +5200,7 @@ public class z8000ops {
      ldps	 addr(rs)
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z79_ssN0_0000_addr = new OpcodePtr() {
+     public OpcodePtr Z79_ssN0_0000_addr = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5225,7 +5219,7 @@ public class z8000ops {
      halt
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7A_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z7A_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5238,7 +5232,7 @@ public class z8000ops {
      iret
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z7B_0000_0000 = new OpcodePtr() {
+     public OpcodePtr Z7B_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5257,7 +5251,7 @@ public class z8000ops {
      mset
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7B_0000_1000 = new OpcodePtr() {
+     public OpcodePtr Z7B_0000_1000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5269,7 +5263,7 @@ public class z8000ops {
      mres
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7B_0000_1001 = new OpcodePtr() {
+     public OpcodePtr Z7B_0000_1001 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5281,7 +5275,7 @@ public class z8000ops {
      mbit
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z7B_0000_1010 = new OpcodePtr() {
+     public OpcodePtr Z7B_0000_1010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5293,7 +5287,7 @@ public class z8000ops {
      mreq	 rd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z7B_dddd_1101 = new OpcodePtr() {
+     public OpcodePtr Z7B_dddd_1101 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5305,7 +5299,7 @@ public class z8000ops {
      di 	 i2
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7C_0000_00ii = new OpcodePtr() {
+     public OpcodePtr Z7C_0000_00ii = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5320,7 +5314,7 @@ public class z8000ops {
      ei 	 i2
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7C_0000_01ii = new OpcodePtr() {
+     public OpcodePtr Z7C_0000_01ii = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5335,7 +5329,7 @@ public class z8000ops {
      ldctl	 rd,ctrl
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7D_dddd_0ccc = new OpcodePtr() {
+     public OpcodePtr Z7D_dddd_0ccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5364,7 +5358,7 @@ public class z8000ops {
      ldctl	 ctrl,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7D_ssss_1ccc = new OpcodePtr() {
+     public OpcodePtr Z7D_ssss_1ccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5397,7 +5391,7 @@ public class z8000ops {
      rsvd7e
      flags:  ------
      ******************************************/
-     static OpcodePtr Z7E_imm8 = new OpcodePtr() {
+     public OpcodePtr Z7E_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5414,7 +5408,7 @@ public class z8000ops {
      sc 	 imm8
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z7F_imm8 = new OpcodePtr() {
+     public OpcodePtr Z7F_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5429,7 +5423,7 @@ public class z8000ops {
      addb	 rbd,rbs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z80_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z80_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5443,13 +5437,13 @@ public class z8000ops {
      add	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z81_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z81_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RW(dst, ADDW( RW(dst), RW(src) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, ADDW( _cpu._cpuH.RW(dst), _cpu._cpuH.RW(src) ));
         }
      };
     
@@ -5457,7 +5451,7 @@ public class z8000ops {
      subb	 rbd,rbs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr Z82_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z82_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5471,7 +5465,7 @@ public class z8000ops {
      sub	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z83_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z83_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5485,7 +5479,7 @@ public class z8000ops {
      orb	 rbd,rbs
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z84_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z84_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5499,13 +5493,13 @@ public class z8000ops {
      or 	 rd,rs
      flags:  CZS---
      ******************************************/
-     static OpcodePtr Z85_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z85_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RW(dst, ORW( RW(dst), RW(src) ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, ORW( _cpu._cpuH.RW(dst), _cpu._cpuH.RW(src) ));
         }
      };
     
@@ -5513,7 +5507,7 @@ public class z8000ops {
      andb	 rbd,rbs
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z86_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z86_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5527,7 +5521,7 @@ public class z8000ops {
      and	 rd,rs
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z87_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z87_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5541,7 +5535,7 @@ public class z8000ops {
      xorb	 rbd,rbs
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z88_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z88_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5555,7 +5549,7 @@ public class z8000ops {
      xor	 rd,rs
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z89_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z89_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5569,7 +5563,7 @@ public class z8000ops {
      cpb	 rbd,rbs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8A_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z8A_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5583,13 +5577,13 @@ public class z8000ops {
      cp 	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8B_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z8B_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	CPW( RW(dst), RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            CPW( _cpu._cpuH.RW(dst), _cpu._cpuH.RW(src) );
         }
      };
     
@@ -5597,12 +5591,12 @@ public class z8000ops {
      comb	 rbd
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z8C_dddd_0000 = new OpcodePtr() {
+     public OpcodePtr Z8C_dddd_0000 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RB(dst) = COMB( RB(dst) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RB(dst, COMB( _cpu._cpuH.RB(dst) ));
         }
      };
     
@@ -5610,7 +5604,7 @@ public class z8000ops {
      negb	 rbd
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8C_dddd_0010 = new OpcodePtr() {
+     public OpcodePtr Z8C_dddd_0010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5623,7 +5617,7 @@ public class z8000ops {
      testb	 rbd
      flags:  -ZSP--
      ******************************************/
-     static OpcodePtr Z8C_dddd_0100 = new OpcodePtr() {
+     public OpcodePtr Z8C_dddd_0100 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5636,7 +5630,7 @@ public class z8000ops {
      tsetb	 rbd
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z8C_dddd_0110 = new OpcodePtr() {
+     public OpcodePtr Z8C_dddd_0110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5650,12 +5644,12 @@ public class z8000ops {
      clrb	 rbd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8C_dddd_1000 = new OpcodePtr() {
+     public OpcodePtr Z8C_dddd_1000 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RB(dst) = 0;
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RB(dst, 0);
         }
      };
     
@@ -5663,7 +5657,7 @@ public class z8000ops {
      nop
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8D_0000_0111 = new OpcodePtr() {
+     public OpcodePtr Z8D_0000_0111 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5675,7 +5669,7 @@ public class z8000ops {
      com	 rd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z8D_dddd_0000 = new OpcodePtr() {
+     public OpcodePtr Z8D_dddd_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5688,7 +5682,7 @@ public class z8000ops {
      neg	 rd
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8D_dddd_0010 = new OpcodePtr() {
+     public OpcodePtr Z8D_dddd_0010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5701,12 +5695,12 @@ public class z8000ops {
      test	 rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8D_dddd_0100 = new OpcodePtr() {
+     public OpcodePtr Z8D_dddd_0100 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	TESTW( RW(dst) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            TESTW( _cpu._cpuH.RW(dst) );
         }
      };
     
@@ -5714,7 +5708,7 @@ public class z8000ops {
      tset	 rd
      flags:  --S---
      ******************************************/
-     static OpcodePtr Z8D_dddd_0110 = new OpcodePtr() {
+     public OpcodePtr Z8D_dddd_0110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5728,11 +5722,11 @@ public class z8000ops {
      clr	 rd
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8D_dddd_1000 = new OpcodePtr() {
+     public OpcodePtr Z8D_dddd_1000 = new OpcodePtr() {
         @Override
         public void handler() {            
-            GET_DST(OP0,NIB2);
-            RW(dst, 0);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RW(dst, 0);
         }
      };
     
@@ -5740,7 +5734,7 @@ public class z8000ops {
      setflg  imm4
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8D_imm4_0001 = new OpcodePtr() {
+     public OpcodePtr Z8D_imm4_0001 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5752,7 +5746,7 @@ public class z8000ops {
      resflg  imm4
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z8D_imm4_0011 = new OpcodePtr() {
+     public OpcodePtr Z8D_imm4_0011 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5764,7 +5758,7 @@ public class z8000ops {
      comflg  flags
      flags:  CZSP--
      ******************************************/
-     static OpcodePtr Z8D_imm4_0101 = new OpcodePtr() {
+     public OpcodePtr Z8D_imm4_0101 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5776,7 +5770,7 @@ public class z8000ops {
      ext8e	 imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8E_imm8 = new OpcodePtr() {
+     public OpcodePtr Z8E_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5793,7 +5787,7 @@ public class z8000ops {
      ext8f	 imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr Z8F_imm8 = new OpcodePtr() {
+     public OpcodePtr Z8F_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5810,7 +5804,7 @@ public class z8000ops {
      cpl	 rrd,rrs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z90_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z90_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5824,7 +5818,7 @@ public class z8000ops {
      pushl	 @rd,rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z91_ddN0_ssss = new OpcodePtr() {
+     public OpcodePtr Z91_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5838,7 +5832,7 @@ public class z8000ops {
      subl	 rrd,rrs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z92_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z92_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5852,7 +5846,7 @@ public class z8000ops {
      push	 @rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z93_ddN0_ssss = new OpcodePtr() {
+     public OpcodePtr Z93_ddN0_ssss = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5866,13 +5860,13 @@ public class z8000ops {
      ldl	 rrd,rrs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z94_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z94_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RL(dst, RL(src));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RL(dst, _cpu._cpuH.RL(src));
         }
      };
     
@@ -5880,13 +5874,13 @@ public class z8000ops {
      popl	 rrd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z95_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z95_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RL(dst, POPL( src ));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RL(dst, POPL( src ));
         }
      };
     
@@ -5894,7 +5888,7 @@ public class z8000ops {
      addl	 rrd,rrs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z96_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z96_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5908,7 +5902,7 @@ public class z8000ops {
      pop	 rd,@rs
      flags:  ------
      ******************************************/
-     static OpcodePtr Z97_ssN0_dddd = new OpcodePtr() {
+     public OpcodePtr Z97_ssN0_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5922,7 +5916,7 @@ public class z8000ops {
      multl	 rqd,rrs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z98_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z98_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5936,13 +5930,13 @@ public class z8000ops {
      mult	 rrd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z99_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z99_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///    GET_DST(OP0,NIB3);
-    /*TODO*///    GET_SRC(OP0,NIB2);
-    /*TODO*///	RL(dst) = MULTW( RL(dst), RW(src) );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RL(dst, MULTW( _cpu._cpuH.RL(dst), _cpu._cpuH.RW(src) ));
         }
      };
     
@@ -5950,7 +5944,7 @@ public class z8000ops {
      divl	 rqd,rrs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z9A_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z9A_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5964,7 +5958,7 @@ public class z8000ops {
      div	 rrd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr Z9B_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr Z9B_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5978,7 +5972,7 @@ public class z8000ops {
      testl	 rrd
      flags:  -ZS---
      ******************************************/
-     static OpcodePtr Z9C_dddd_1000 = new OpcodePtr() {
+     public OpcodePtr Z9C_dddd_1000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -5993,7 +5987,7 @@ public class z8000ops {
      rsvd9d
      flags:  ------
      ******************************************/
-     static OpcodePtr Z9D_imm8 = new OpcodePtr() {
+     public OpcodePtr Z9D_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6010,30 +6004,30 @@ public class z8000ops {
      ret	 cc
      flags:  ------
      ******************************************/
-     static OpcodePtr Z9E_0000_cccc = new OpcodePtr() {
+     public OpcodePtr Z9E_0000_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-    	GET_CCC(OP0,NIB3);
+    	_cpu._cpuH.GET_CCC(OP0,NIB3);
     	switch (cc) {
-    		case  0: if (CC0() != 0) Z.pc = POPW( SP ); break;
-    		case  1: if (CC1() != 0) Z.pc = POPW( SP ); break;
-    		case  2: if (CC2() != 0) Z.pc = POPW( SP ); break;
-    		case  3: if (CC3() != 0) Z.pc = POPW( SP ); break;
-    		case  4: if (CC4() != 0) Z.pc = POPW( SP ); break;
-    		case  5: if (CC5() != 0) Z.pc = POPW( SP ); break;
-    		case  6: if (CC6() != 0) Z.pc = POPW( SP ); break;
-    		case  7: if (CC7() != 0) Z.pc = POPW( SP ); break;
-    		case  8: if (CC8() != 0) Z.pc = POPW( SP ); break;
-    		case  9: if (CC9() != 0) Z.pc = POPW( SP ); break;
-    		case 10: if (CCA() != 0) Z.pc = POPW( SP ); break;
-    		case 11: if (CCB() != 0) Z.pc = POPW( SP ); break;
-    		case 12: if (CCC() != 0) Z.pc = POPW( SP ); break;
-    		case 13: if (CCD() != 0) Z.pc = POPW( SP ); break;
-    		case 14: if (CCE() != 0) Z.pc = POPW( SP ); break;
-    		case 15: if (CCF() != 0) Z.pc = POPW( SP ); break;
+    		case  0: if (_cpu._cpuH.CC0() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  1: if (_cpu._cpuH.CC1() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  2: if (_cpu._cpuH.CC2() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  3: if (_cpu._cpuH.CC3() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  4: if (_cpu._cpuH.CC4() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  5: if (_cpu._cpuH.CC5() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  6: if (_cpu._cpuH.CC6() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  7: if (_cpu._cpuH.CC7() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  8: if (_cpu._cpuH.CC8() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case  9: if (_cpu._cpuH.CC9() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 10: if (_cpu._cpuH.CCA() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 11: if (_cpu._cpuH.CCB() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 12: if (_cpu._cpuH.CCC() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 13: if (_cpu._cpuH.CCD() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 14: if (_cpu._cpuH.CCE() != 0) _cpu.Z.pc = POPW( SP ); break;
+    		case 15: if (_cpu._cpuH.CCF() != 0) _cpu.Z.pc = POPW( SP ); break;
     	}
-    	change_pc16bew(Z.pc);
+    	change_pc16bew(_cpu.Z.pc);
         }
      };
     
@@ -6041,7 +6035,7 @@ public class z8000ops {
      rsvd9f
      flags:  ------
      ******************************************/
-     static OpcodePtr Z9F_imm8 = new OpcodePtr() {
+     public OpcodePtr Z9F_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6058,13 +6052,13 @@ public class z8000ops {
      ldb	 rbd,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA0_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZA0_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB3);
-    /*TODO*///	GET_SRC(OP0,NIB2);
-    /*TODO*///	RB(dst) = RB(src);
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RB(dst, _cpu._cpuH.RB(src));
         }
      };
     
@@ -6072,13 +6066,13 @@ public class z8000ops {
      ld 	 rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA1_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZA1_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB3);
-            GET_SRC(OP0,NIB2);
-            RW(dst, RW(src));
+            _cpu._cpuH.GET_DST(OP0,NIB3);
+            _cpu._cpuH.GET_SRC(OP0,NIB2);
+            _cpu._cpuH.RW(dst, _cpu._cpuH.RW(src));
         }
      };
     
@@ -6086,7 +6080,7 @@ public class z8000ops {
      resb	 rbd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA2_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA2_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6100,7 +6094,7 @@ public class z8000ops {
      res	 rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA3_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA3_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6114,7 +6108,7 @@ public class z8000ops {
      setb	 rbd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA4_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA4_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6128,7 +6122,7 @@ public class z8000ops {
      set	 rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr ZA5_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA5_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6142,7 +6136,7 @@ public class z8000ops {
      bitb	 rbd,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZA6_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA6_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6156,13 +6150,13 @@ public class z8000ops {
      bit	 rd,imm4
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZA7_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZA7_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_BIT(OP0);
-            GET_DST(OP0,NIB2);
-            if ((RW(dst) & bit) != 0) CLR_Z(); else SET_Z();
+            _cpu._cpuH.GET_BIT(OP0);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            if ((_cpu._cpuH.RW(dst) & bit) != 0) _cpu._cpuH.CLR_Z(); else _cpu._cpuH.SET_Z();
         }
      };
     
@@ -6170,13 +6164,13 @@ public class z8000ops {
      incb	 rbd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZA8_dddd_imm4m1 = new OpcodePtr() {
+     public OpcodePtr ZA8_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_I4M1(OP0,NIB3);
-            GET_DST(OP0,NIB2);
-            RB(dst, INCB( RB(dst), i4p1));
+            _cpu._cpuH.GET_I4M1(OP0,NIB3);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RB(dst, INCB( _cpu._cpuH.RB(dst), i4p1));
         }
      };
     
@@ -6184,13 +6178,13 @@ public class z8000ops {
      inc	 rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZA9_dddd_imm4m1 = new OpcodePtr() {
+     public OpcodePtr ZA9_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_I4M1(OP0,NIB3);
-            GET_DST(OP0,NIB2);
-            RW(dst, INCW( RW(dst), i4p1 ));
+            _cpu._cpuH.GET_I4M1(OP0,NIB3);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RW(dst, INCW( _cpu._cpuH.RW(dst), i4p1 ));
         }
      };
     
@@ -6198,7 +6192,7 @@ public class z8000ops {
      decb	 rbd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZAA_dddd_imm4m1 = new OpcodePtr() {
+     public OpcodePtr ZAA_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6212,13 +6206,13 @@ public class z8000ops {
      dec	 rd,imm4m1
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZAB_dddd_imm4m1 = new OpcodePtr() {
+     public OpcodePtr ZAB_dddd_imm4m1 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_I4M1(OP0,NIB3);
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///	RW(dst) = DECW( RW(dst), i4p1 );
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_I4M1(OP0,NIB3);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RW(dst, DECW( _cpu._cpuH.RW(dst), i4p1 ));
         }
      };
     
@@ -6226,7 +6220,7 @@ public class z8000ops {
      exb	 rbd,rbs
      flags:  ------
      ******************************************/
-     static OpcodePtr ZAC_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZAC_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6242,7 +6236,7 @@ public class z8000ops {
      ex 	 rd,rs
      flags:  ------
      ******************************************/
-     static OpcodePtr ZAD_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZAD_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6258,7 +6252,7 @@ public class z8000ops {
      tccb	 cc,rbd
      flags:  ------
      ******************************************/
-     static OpcodePtr ZAE_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZAE_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6291,7 +6285,7 @@ public class z8000ops {
      tcc	 cc,rd
      flags:  ------
      ******************************************/
-     static OpcodePtr ZAF_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZAF_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6324,7 +6318,7 @@ public class z8000ops {
      dab	 rbd
      flags:  CZS---
      ******************************************/
-     static OpcodePtr ZB0_dddd_0000 = new OpcodePtr() {
+     public OpcodePtr ZB0_dddd_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6346,12 +6340,12 @@ public class z8000ops {
      extsb	 rd
      flags:  ------
      ******************************************/
-     static OpcodePtr ZB1_dddd_0000 = new OpcodePtr() {
+     public OpcodePtr ZB1_dddd_0000 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB2);
-    /*TODO*///    RW(dst) = (RW(dst) & 0xff) | ((RW(dst) & S08) ? 0xff00 : 0x0000);
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.RW(dst, (_cpu._cpuH.RW(dst) & 0xff) | ((_cpu._cpuH.RW(dst) & S08)!=0 ? 0xff00 : 0x0000));
         }
      };
     
@@ -6359,7 +6353,7 @@ public class z8000ops {
      extsl	 rqd
      flags:  ------
      ******************************************/
-     static OpcodePtr ZB1_dddd_0111 = new OpcodePtr() {
+     public OpcodePtr ZB1_dddd_0111 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6373,7 +6367,7 @@ public class z8000ops {
      exts	 rrd
      flags:  ------
      ******************************************/
-     static OpcodePtr ZB1_dddd_1010 = new OpcodePtr() {
+     public OpcodePtr ZB1_dddd_1010 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6389,7 +6383,7 @@ public class z8000ops {
      srlb	 rbd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB2_dddd_0001_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_0001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6406,7 +6400,7 @@ public class z8000ops {
      sdlb	 rbd,rs
      flags:  CZS---
      ******************************************/
-     static OpcodePtr ZB2_dddd_0011_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_0011_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6420,7 +6414,7 @@ public class z8000ops {
      rlb	 rbd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB2_dddd_00I0 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_00I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6434,7 +6428,7 @@ public class z8000ops {
      rrb	 rbd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB2_dddd_01I0 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_01I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6450,7 +6444,7 @@ public class z8000ops {
      srab	 rbd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB2_dddd_1001_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_1001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6467,7 +6461,7 @@ public class z8000ops {
      sdab	 rbd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB2_dddd_1011_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_1011_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6481,7 +6475,7 @@ public class z8000ops {
      rlcb	 rbd,imm1or2
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZB2_dddd_10I0 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_10I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6495,7 +6489,7 @@ public class z8000ops {
      rrcb	 rbd,imm1or2
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZB2_dddd_11I0 = new OpcodePtr() {
+     public OpcodePtr ZB2_dddd_11I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6511,16 +6505,16 @@ public class z8000ops {
      srl	 rd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_0001_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_0001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB2);
-            GET_IMM16(OP1);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.GET_IMM16(OP1);
             if ((imm16 & S16) != 0)
-                    RW(dst, SRLW( RW(dst), -imm16 ));
+                    _cpu._cpuH.RW(dst, SRLW( _cpu._cpuH.RW(dst), -imm16 ));
             else
-                RW(dst, SLLW( RW(dst), imm16 ));
+                _cpu._cpuH.RW(dst, SLLW( _cpu._cpuH.RW(dst), imm16 ));
         }
      };
     
@@ -6528,7 +6522,7 @@ public class z8000ops {
      sdl	 rd,rs
      flags:  CZS---
      ******************************************/
-     static OpcodePtr ZB3_dddd_0011_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_0011_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6542,7 +6536,7 @@ public class z8000ops {
      rl 	 rd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_00I0 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_00I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6558,16 +6552,16 @@ public class z8000ops {
      srll	 rrd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_0101_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_0101_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB2);
-            GET_IMM16(OP1);
+            _cpu._cpuH.GET_DST(OP0,NIB2);
+            _cpu._cpuH.GET_IMM16(OP1);
             if ((imm16 & S16) != 0)
-                RL(dst, SRLL( RL(dst), -imm16 ));
+                _cpu._cpuH.RL(dst, SRLL( _cpu._cpuH.RL(dst), -imm16 ));
             else
-                RL(dst, SLLL( RL(dst), imm16 ));
+                _cpu._cpuH.RL(dst, SLLL( _cpu._cpuH.RL(dst), imm16 ));
         }
      };
     
@@ -6575,7 +6569,7 @@ public class z8000ops {
      sdll	 rrd,rs
      flags:  CZS---
      ******************************************/
-     static OpcodePtr ZB3_dddd_0111_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_0111_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6589,7 +6583,7 @@ public class z8000ops {
      rr 	 rd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_01I0 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_01I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6605,7 +6599,7 @@ public class z8000ops {
      sra	 rd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_1001_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_1001_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6622,7 +6616,7 @@ public class z8000ops {
      sda	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_1011_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_1011_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6636,7 +6630,7 @@ public class z8000ops {
      rlc	 rd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_10I0 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_10I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6652,7 +6646,7 @@ public class z8000ops {
      sral	 rrd,imm8
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_1101_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_1101_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6669,7 +6663,7 @@ public class z8000ops {
      sdal	 rrd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_1111_0000_ssss_0000_0000 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_1111_0000_ssss_0000_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6683,7 +6677,7 @@ public class z8000ops {
      rrc	 rd,imm1or2
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB3_dddd_11I0 = new OpcodePtr() {
+     public OpcodePtr ZB3_dddd_11I0 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6697,7 +6691,7 @@ public class z8000ops {
      adcb	 rbd,rbs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr ZB4_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZB4_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6711,7 +6705,7 @@ public class z8000ops {
      adc	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB5_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZB5_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6725,7 +6719,7 @@ public class z8000ops {
      sbcb	 rbd,rbs
      flags:  CZSVDH
      ******************************************/
-     static OpcodePtr ZB6_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZB6_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6739,7 +6733,7 @@ public class z8000ops {
      sbc	 rd,rs
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZB7_ssss_dddd = new OpcodePtr() {
+     public OpcodePtr ZB7_ssss_dddd = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6753,7 +6747,7 @@ public class z8000ops {
      trtib	 @rd,@rs,rr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_0010_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_0010_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6772,7 +6766,7 @@ public class z8000ops {
      trtirb  @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_0110_0000_rrrr_ssN0_1110 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_0110_0000_rrrr_ssN0_1110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6791,7 +6785,7 @@ public class z8000ops {
      trtdb	 @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_1010_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_1010_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6810,7 +6804,7 @@ public class z8000ops {
      trtdrb  @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_1110_0000_rrrr_ssN0_1110 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_1110_0000_rrrr_ssN0_1110 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6829,7 +6823,7 @@ public class z8000ops {
      trib	 @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_0000_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_0000_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6847,7 +6841,7 @@ public class z8000ops {
      trirb	 @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_0100_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_0100_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6865,7 +6859,7 @@ public class z8000ops {
      trdb	 @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_1000_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_1000_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6883,7 +6877,7 @@ public class z8000ops {
      trdrb	 @rd,@rs,rbr
      flags:  -ZSV--
      ******************************************/
-     static OpcodePtr ZB8_ddN0_1100_0000_rrrr_ssN0_0000 = new OpcodePtr() {
+     public OpcodePtr ZB8_ddN0_1100_0000_rrrr_ssN0_0000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6901,7 +6895,7 @@ public class z8000ops {
      rsvdb9
      flags:  ------
      ******************************************/
-     static OpcodePtr ZB9_imm8 = new OpcodePtr() {
+     public OpcodePtr ZB9_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6919,7 +6913,7 @@ public class z8000ops {
      cpib	 rbd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_0000_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_0000_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6956,7 +6950,7 @@ public class z8000ops {
      ldibr	 @rd,@rs,rr
      flags:  ---V--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_0001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_0001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -6975,7 +6969,7 @@ public class z8000ops {
      cpsib	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_0010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_0010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7012,7 +7006,7 @@ public class z8000ops {
      cpirb	 rbd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_0100_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_0100_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7048,7 +7042,7 @@ public class z8000ops {
      cpsirb  @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_0110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_0110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7085,7 +7079,7 @@ public class z8000ops {
      cpdb	 rbd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_1000_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_1000_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7122,7 +7116,7 @@ public class z8000ops {
      lddbr	 @rs,@rd,rr
      flags:  ---V--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_1001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_1001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7141,7 +7135,7 @@ public class z8000ops {
      cpsdb	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_1010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_1010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7178,7 +7172,7 @@ public class z8000ops {
      cpdrb	 rbd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_1100_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_1100_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7214,7 +7208,7 @@ public class z8000ops {
      cpsdrb  @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBA_ssN0_1110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBA_ssN0_1110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7251,7 +7245,7 @@ public class z8000ops {
      cpi	 rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_0000_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_0000_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7288,7 +7282,7 @@ public class z8000ops {
      ldir	 @rd,@rs,rr
      flags:  ---V--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_0001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_0001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7307,7 +7301,7 @@ public class z8000ops {
      cpsi	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_0010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_0010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7344,7 +7338,7 @@ public class z8000ops {
      cpir	 rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_0100_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_0100_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7380,7 +7374,7 @@ public class z8000ops {
      cpsir	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_0110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_0110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7417,7 +7411,7 @@ public class z8000ops {
      cpd	 rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_1000_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_1000_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7454,7 +7448,7 @@ public class z8000ops {
      lddr	 @rs,@rd,rr
      flags:  ---V--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_1001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_1001_0000_rrrr_ddN0_x000 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7473,7 +7467,7 @@ public class z8000ops {
      cpsd	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_1010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_1010_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7510,7 +7504,7 @@ public class z8000ops {
      cpdr	 rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_1100_0000_rrrr_dddd_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_1100_0000_rrrr_dddd_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7546,7 +7540,7 @@ public class z8000ops {
      cpsdr	 @rd,@rs,rr,cc
      flags:  CZSV--
      ******************************************/
-     static OpcodePtr ZBB_ssN0_1110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
+     public OpcodePtr ZBB_ssN0_1110_0000_rrrr_ddN0_cccc = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7583,7 +7577,7 @@ public class z8000ops {
      rrdb	 rbb,rba
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZBC_aaaa_bbbb = new OpcodePtr() {
+     public OpcodePtr ZBC_aaaa_bbbb = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7600,7 +7594,7 @@ public class z8000ops {
      ldk	 rd,imm4
      flags:  ------
      ******************************************/
-     static OpcodePtr ZBD_dddd_imm4 = new OpcodePtr() {
+     public OpcodePtr ZBD_dddd_imm4 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7614,7 +7608,7 @@ public class z8000ops {
      rldb	 rbb,rba
      flags:  -Z----
      ******************************************/
-     static OpcodePtr ZBE_aaaa_bbbb = new OpcodePtr() {
+     public OpcodePtr ZBE_aaaa_bbbb = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7631,7 +7625,7 @@ public class z8000ops {
      rsvdbf
      flags:  ------
      ******************************************/
-     static OpcodePtr ZBF_imm8 = new OpcodePtr() {
+     public OpcodePtr ZBF_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7649,13 +7643,13 @@ public class z8000ops {
      ldb	 rbd,imm8
      flags:  ------
      ******************************************/
-     static OpcodePtr ZC_dddd_imm8 = new OpcodePtr() {
+     public OpcodePtr ZC_dddd_imm8 = new OpcodePtr() {
         @Override
         public void handler() {
-            throw new UnsupportedOperationException("unsupported");
-    /*TODO*///	GET_DST(OP0,NIB1);
-    /*TODO*///	GET_IMM8(0);
-    /*TODO*///	RB(dst) = imm8;
+            //throw new UnsupportedOperationException("unsupported");
+            _cpu._cpuH.GET_DST(OP0,NIB1);
+            _cpu._cpuH.GET_IMM8(0);
+            _cpu._cpuH.RB(dst, imm8);
         }
      };
     
@@ -7663,7 +7657,7 @@ public class z8000ops {
      calr	 dsp12
      flags:  ------
      ******************************************/
-     static OpcodePtr ZD_dsp12 = new OpcodePtr() {
+     public OpcodePtr ZD_dsp12 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7679,31 +7673,31 @@ public class z8000ops {
      jr 	 cc,dsp8
      flags:  ------
      ******************************************/
-     static OpcodePtr ZE_cccc_dsp8 = new OpcodePtr() {
+     public OpcodePtr ZE_cccc_dsp8 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DSP8();
-            GET_CCC(OP0,NIB1);
+            _cpu._cpuH.GET_DSP8();
+            _cpu._cpuH.GET_CCC(OP0,NIB1);
             switch (cc) {
-                    case  0: if (CC0() != 0) Z.pc += dsp8 * 2; break;
-                    case  1: if (CC1() != 0) Z.pc += dsp8 * 2; break;
-                    case  2: if (CC2() != 0) Z.pc += dsp8 * 2; break;
-                    case  3: if (CC3() != 0) Z.pc += dsp8 * 2; break;
-                    case  4: if (CC4() != 0) Z.pc += dsp8 * 2; break;
-                    case  5: if (CC5() != 0) Z.pc += dsp8 * 2; break;
-                    case  6: if (CC6() != 0) Z.pc += dsp8 * 2; break;
-                    case  7: if (CC7() != 0) Z.pc += dsp8 * 2; break;
-                    case  8: if (CC8() != 0) Z.pc += dsp8 * 2; break;
-                    case  9: if (CC9() != 0) Z.pc += dsp8 * 2; break;
-                    case 10: if (CCA() != 0) Z.pc += dsp8 * 2; break;
-                    case 11: if (CCB() != 0) Z.pc += dsp8 * 2; break;
-                    case 12: if (CCC() != 0) Z.pc += dsp8 * 2; break;
-                    case 13: if (CCD() != 0) Z.pc += dsp8 * 2; break;
-                    case 14: if (CCE() != 0) Z.pc += dsp8 * 2; break;
-                    case 15: if (CCF() != 0) Z.pc += dsp8 * 2; break;
+                    case  0: if (_cpu._cpuH.CC0() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  1: if (_cpu._cpuH.CC1() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  2: if (_cpu._cpuH.CC2() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  3: if (_cpu._cpuH.CC3() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  4: if (_cpu._cpuH.CC4() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  5: if (_cpu._cpuH.CC5() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  6: if (_cpu._cpuH.CC6() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  7: if (_cpu._cpuH.CC7() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  8: if (_cpu._cpuH.CC8() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case  9: if (_cpu._cpuH.CC9() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 10: if (_cpu._cpuH.CCA() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 11: if (_cpu._cpuH.CCB() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 12: if (_cpu._cpuH.CCC() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 13: if (_cpu._cpuH.CCD() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 14: if (_cpu._cpuH.CCE() != 0) _cpu.Z.pc += dsp8 * 2; break;
+                    case 15: if (_cpu._cpuH.CCF() != 0) _cpu.Z.pc += dsp8 * 2; break;
             }
-            change_pc16bew(Z.pc);
+            change_pc16bew(_cpu.Z.pc);
         }
      };
     
@@ -7711,7 +7705,7 @@ public class z8000ops {
      dbjnz   rbd,dsp7
      flags:  ------
      ******************************************/
-     static OpcodePtr ZF_dddd_0dsp7 = new OpcodePtr() {
+     public OpcodePtr ZF_dddd_0dsp7 = new OpcodePtr() {
         @Override
         public void handler() {
             throw new UnsupportedOperationException("unsupported");
@@ -7729,16 +7723,16 @@ public class z8000ops {
      djnz	 rd,dsp7
      flags:  ------
      ******************************************/
-     static OpcodePtr ZF_dddd_1dsp7 = new OpcodePtr() {
+     public OpcodePtr ZF_dddd_1dsp7 = new OpcodePtr() {
         @Override
         public void handler() {
             //throw new UnsupportedOperationException("unsupported");
-            GET_DST(OP0,NIB1);
-            GET_DSP7();
-            RW(dst,  RW(dst)-1);
-            if (RW(dst) != 0) {
-                    Z.pc = Z.pc - 2 * dsp7;
-                    change_pc16bew(Z.pc);
+            _cpu._cpuH.GET_DST(OP0,NIB1);
+            _cpu._cpuH.GET_DSP7();
+            _cpu._cpuH.RW(dst,  _cpu._cpuH.RW(dst)-1);
+            if (_cpu._cpuH.RW(dst) != 0) {
+                    _cpu.Z.pc = _cpu.Z.pc - 2 * dsp7;
+                    change_pc16bew(_cpu.Z.pc);
             }
         }
      };

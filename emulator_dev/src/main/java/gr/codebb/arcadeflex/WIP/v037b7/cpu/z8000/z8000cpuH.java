@@ -1,9 +1,6 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.Z;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.pRB;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.pRW;
-import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.pRL;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000.z8000_Regs;
 
 public class z8000cpuH {
@@ -31,12 +28,12 @@ public class z8000cpuH {
  *****************************************************************************/
 
 /*TODO*////* pointers to the registers inside the Z8000_Regs struct Z */
-    public static int RB(int n){   return pRB(n); }
-    public static void RB(int n, int m) { pRB(n, m); }
-    public static int RW(int n) { return pRW(n); }
-    public static void RW(int n, int m) { pRW(n, m); }
-    public static int RL(int n){ return pRL(n); }
-    public static void RL(int n, int m) { pRL(n, m); }
+    public int RB(int n){   return _cpu.pRB(n); }
+    public void RB(int n, int m) { _cpu.pRB(n, m); }
+    public int RW(int n) { return _cpu.pRW(n); }
+    public void RW(int n, int m) { _cpu.pRW(n, m); }
+    public int RL(int n){ return _cpu.pRL(n); }
+    public void RL(int n, int m) { _cpu.pRL(n, m); }
 /*TODO*///#define RQ(n)   (*pRQ[n])
 
     /* the register used as stack pointer */
@@ -100,61 +97,61 @@ public class z8000cpuH {
     public static final int S32 = 0x80000000;
 
     /* get a single flag bit 0/1 */
-    public static int GET_C(){ return((Z.fcw >> 7) & 1); }
-    public static int GET_Z(){ return((Z.fcw >> 6) & 1); }
-    public static int GET_S(){ return((Z.fcw >> 5) & 1); }
-    public static int GET_PV(){ return((Z.fcw >> 4) & 1); }
-    public static int GET_DA(){ return((Z.fcw >> 3) & 1); }
-    public static int GET_H(){ return((Z.fcw >> 2) & 1); }
+    public int GET_C(){ return((_cpu.Z.fcw >> 7) & 1); }
+    public int GET_Z(){ return((_cpu.Z.fcw >> 6) & 1); }
+    public int GET_S(){ return((_cpu.Z.fcw >> 5) & 1); }
+    public int GET_PV(){ return((_cpu.Z.fcw >> 4) & 1); }
+    public int GET_DA(){ return((_cpu.Z.fcw >> 3) & 1); }
+    public int GET_H(){ return((_cpu.Z.fcw >> 2) & 1); }
 
 /*TODO*////* clear a single flag bit */
 /*TODO*///#define CLR_C       FCW &= ~F_C
-    public static void CLR_Z(){     Z.fcw &= ~F_Z; }
+    public void CLR_Z(){     _cpu.Z.fcw &= ~F_Z; }
 /*TODO*///#define CLR_S		FCW &= ~F_S
 /*TODO*///#define CLR_P		FCW &= ~F_PV
 /*TODO*///#define CLR_V		FCW &= ~F_PV
-    public static void CLR_DA(){    Z.fcw &= ~F_DA; }
+    public void CLR_DA(){    _cpu.Z.fcw &= ~F_DA; }
 /*TODO*///#define CLR_H		FCW &= ~F_H
 
     /* clear a flag bit combination */
-    public static void CLR_CZS(){       Z.fcw &= ~(F_C|F_Z|F_S); }
-/*TODO*///#define CLR_CZSP	FCW &= ~(F_C|F_Z|F_S|F_PV)
-    public static void CLR_CZSV(){	Z.fcw &= ~(F_C|F_Z|F_S|F_PV); }
-    public static void CLR_CZSVH(){	Z.fcw &= ~(F_C|F_Z|F_S|F_PV|F_H); }
-    public static void CLR_ZS(){        Z.fcw &= ~(F_Z|F_S); }
-    public static void CLR_ZSV(){ 	Z.fcw &= ~(F_Z|F_S|F_PV); }
-/*TODO*///#define CLR_ZSP 	FCW &= ~(F_Z|F_S|F_PV)
+    public void CLR_CZS(){       _cpu.Z.fcw &= ~(F_C|F_Z|F_S); }
+    public void CLR_CZSP(){      _cpu.Z.fcw &= ~(F_C|F_Z|F_S|F_PV); }
+    public void CLR_CZSV(){	_cpu.Z.fcw &= ~(F_C|F_Z|F_S|F_PV); }
+    public void CLR_CZSVH(){	_cpu.Z.fcw &= ~(F_C|F_Z|F_S|F_PV|F_H); }
+    public void CLR_ZS(){        _cpu.Z.fcw &= ~(F_Z|F_S); }
+    public void CLR_ZSV(){ 	_cpu.Z.fcw &= ~(F_Z|F_S|F_PV); }
+    public void CLR_ZSP(){ 	_cpu.Z.fcw &= ~(F_Z|F_S|F_PV); }
 
     /* set a single flag bit */
-    public static void SET_C(){ Z.fcw |= F_C; }
-    public static void SET_Z(){ Z.fcw |= F_Z; }
-    public static void SET_S(){ Z.fcw |= F_S; }
-    public static void SET_P(){ Z.fcw |= F_PV; }
-    public static void SET_V(){	Z.fcw |= F_PV; }
-    public static void SET_DA(){Z.fcw |= F_DA; }
-    public static void SET_H(){	Z.fcw |= F_H; }
+    public void SET_C(){ _cpu.Z.fcw |= F_C; }
+    public void SET_Z(){ _cpu.Z.fcw |= F_Z; }
+    public void SET_S(){ _cpu.Z.fcw |= F_S; }
+    public void SET_P(){ _cpu.Z.fcw |= F_PV; }
+    public void SET_V(){ _cpu.Z.fcw |= F_PV; }
+    public void SET_DA(){_cpu.Z.fcw |= F_DA; }
+    public void SET_H(){ _cpu.Z.fcw |= F_H; }
 
 /*TODO*////* set a flag bit combination */
 /*TODO*///#define SET_SC      FCW |= F_C | F_S
 
     /* check condition codes */
-    public static int CC0(){ return (0); } 						/* always false */
-    public static int CC1(){ return GET_PV()^GET_S(); }				/* less than */
-    public static int CC2(){ return (GET_Z()|(GET_PV()^GET_S())); }		/* less than or equal */
-    public static int CC3(){ return (GET_Z()|GET_C()); }				/* unsigned less than or equal */
-    public static int CC4(){ return GET_PV(); }						/* parity even / overflow */
-    public static int CC5(){ return GET_S(); }						/* minus (signed) */
-    public static int CC6(){ return GET_Z(); }						/* zero / equal */
-    public static int CC7(){ return GET_C(); }						/* carry / unsigned less than */
+    public int CC0(){ return (0); } 						/* always false */
+    public int CC1(){ return GET_PV()^GET_S(); }				/* less than */
+    public int CC2(){ return (GET_Z()|(GET_PV()^GET_S())); }		/* less than or equal */
+    public int CC3(){ return (GET_Z()|GET_C()); }				/* unsigned less than or equal */
+    public int CC4(){ return GET_PV(); }						/* parity even / overflow */
+    public int CC5(){ return GET_S(); }						/* minus (signed) */
+    public int CC6(){ return GET_Z(); }						/* zero / equal */
+    public int CC7(){ return GET_C(); }						/* carry / unsigned less than */
 
-    public static int CC8(){ return (1); } 						/* always true */
-    public static int CC9(){ return (GET_PV()^GET_S())!=0?0:1; } 			/* greater than or equal */
-    public static int CCA(){ return (GET_Z()|(GET_PV()^GET_S()))!=0?0:1; } 	/* greater than */
-    public static int CCB(){ return (GET_Z()|GET_C())!=0?0:1; }				/* unsigned greater than */
-    public static int CCC(){ return GET_PV()!=0?0:1; } 					/* parity odd / no overflow */
-    public static int CCD(){ return GET_S()!=0?0:1; }						/* plus (not signed) */
-    public static int CCE(){ return GET_Z()!=0?0:1; }						/* not zero / not equal */
-    public static int CCF(){ return GET_C()!=0?0:1; }						/* not carry / unsigned greater than */
+    public int CC8(){ return (1); } 						/* always true */
+    public int CC9(){ return (GET_PV()^GET_S())!=0?0:1; } 			/* greater than or equal */
+    public int CCA(){ return (GET_Z()|(GET_PV()^GET_S()))!=0?0:1; } 	/* greater than */
+    public int CCB(){ return (GET_Z()|GET_C())!=0?0:1; }				/* unsigned greater than */
+    public int CCC(){ return GET_PV()!=0?0:1; } 					/* parity odd / no overflow */
+    public int CCD(){ return GET_S()!=0?0:1; }						/* plus (not signed) */
+    public int CCE(){ return GET_Z()!=0?0:1; }						/* not zero / not equal */
+    public int CCF(){ return GET_C()!=0?0:1; }						/* not carry / unsigned greater than */
 
     /* get data from the opcode words */
     /* o is the opcode word offset	  */
@@ -162,26 +159,26 @@ public class z8000cpuH {
     public static int cc;
     public static int bit;
     
-    public static void GET_BIT(int o){      /*UINT16*/ bit = (1 << (Z.op[o] & 15)) & 0xffff; }
-    public static void GET_CCC(int o, int s){	/*UINT8*/ cc = ((Z.op[o] >> (s)) & 15)&0xff; }
+    public void GET_BIT(int o){      /*UINT16*/ bit = (1 << (_cpu.Z.op[o] & 15)) & 0xffff; }
+    public void GET_CCC(int o, int s){	/*UINT8*/ cc = ((_cpu.Z.op[o] >> (s)) & 15)&0xff; }
     
     public static int dst;
     public static int src;
     public static int i4p1;
     public static int imm8;
     
-    public static void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((Z.op[o] >> (s)) & 15) & 0xf; }
-    public static void GET_SRC(int o, int s){	/*UINT8*/ src = (Z.op[o] >> (s)) & 15; }
+    public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >> (s)) & 15) & 0xf; }
+    public void GET_SRC(int o, int s){	/*UINT8*/ src = (_cpu.Z.op[o] >> (s)) & 15; }
 /*TODO*///#define GET_IDX(o,s)	UINT8 idx = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_CNT(o,s)	INT8 cnt = (Z.op[o] >> (s)) & 15
 /*TODO*///#define GET_IMM4(o,s)	UINT8 imm4 = (Z.op[o] >> (s)) & 15
 
-    public static void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = ((Z.op[o] >> (s)) & 15) + 1; }
+    public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = ((_cpu.Z.op[o] >> (s)) & 15) + 1; }
 /*TODO*///#define GET_IMM1(o,s)	UINT8 imm1 = (Z.op[o] >> (s)) & 2
 /*TODO*///#define GET_IMM2(o,s)	UINT8 imm2 = (Z.op[o] >> (s)) & 3
 /*TODO*///#define GET_IMM3(o,s)	UINT8 imm3 = (Z.op[o] >> (s)) & 7
 
-    public static void GET_IMM8(int o){ 	/*UINT8*/ imm8 = Z.op[o] & 0xff; }
+    public void GET_IMM8(int o){ 	/*UINT8*/ imm8 = _cpu.Z.op[o] & 0xff; }
 
     public static int imm16;
     public static int dsp7;
@@ -189,12 +186,18 @@ public class z8000cpuH {
     public static int addr;
     public static int imm32;
     
-    public static void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (Z.op[o])&0xffff; }
-    public static void GET_IMM32(){		/*UINT32*/ imm32 = Z.op[2] + (Z.op[1] << 16); }
-    public static void GET_DSP7(){		/*UINT8*/ dsp7 = (Z.op[0] & 127)&0xff; }
-    public static void GET_DSP8(){		/*INT8*/ dsp8 = (Z.op[0]) & 0xff; }
+    public void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (_cpu.Z.op[o])&0xffff; }
+    public void GET_IMM32(){		/*UINT32*/ imm32 = _cpu.Z.op[2] + (_cpu.Z.op[1] << 16); }
+    public void GET_DSP7(){		/*UINT8*/ dsp7 = (_cpu.Z.op[0] & 127)&0xff; }
+    public void GET_DSP8(){		/*INT8*/ dsp8 = (_cpu.Z.op[0]) & 0xff; }
 /*TODO*///#define GET_DSP16		UINT16 dsp16 = PC + (INT16)Z.op[1]
-    public static void GET_ADDR(int o){ 	/*UINT16*/ addr = Z.op[o]; }
+    public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o]; }
+
+    private z8000 _cpu;
+    
+    public z8000cpuH(z8000 aThis) {
+        _cpu=aThis;
+    }
 
     /* structure for the opcode definition table */
     public static class Z8000_init {

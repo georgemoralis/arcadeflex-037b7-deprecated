@@ -40,9 +40,11 @@ import static gr.codebb.arcadeflex.old.mame.memoryH.cpu_readop16;
 
 public class z8000  extends cpu_interface {
     
-    public static int[] z8000_ICount = new int[1];
+    public int[] z8000_ICount = new int[1];
     
-    //private z8000ops _opcodes = null;
+    public z8000ops _opcodes = null;
+    public z8000cpuH _cpuH = null;
+    public z8000tbl _tbl = null;
     
     public z8000() {
         cpu_num = CPU_Z8000;
@@ -62,7 +64,9 @@ public class z8000  extends cpu_interface {
         abitsmin = ABITS_MIN_16;
         icount = z8000_ICount;
         
-        //_opcodes = new z8000ops(this);
+        _opcodes = new z8000ops(this);
+        _cpuH = new z8000cpuH(this);
+        _tbl = new z8000tbl(this);
     }
 
 
@@ -222,20 +226,17 @@ public class z8000  extends cpu_interface {
 /*TODO*///	};
 
 	/* opcode execution table */
-	public static Z8000_exec[] z8000_exec = null;
+	public Z8000_exec[] z8000_exec = null;
 
-    private void z8000_deinit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-        public static class z8000_reg_file {
+   
+        public class z8000_reg_file {
 	    int[] /*UINT8*/   B=new int[16]; /* RL0,RH0,RL1,RH1...RL7,RH7 */
 	    int[] /*UINT16*/  W=new int[16]; /* R0,R1,R2...R15 */
 	    int[] /*UINT32*/  L=new int[8];  /* RR0,RR2,RR4..RR14 */
 	    int[] /*UINT64*/  Q=new int[4];  /* RQ0,RQ4,..RQ12 */
 	};
 	
-	public static class z8000_Regs {
+	public class z8000_Regs {
 	    int[]  op = new int[4];      /* opcodes/data of current instruction */
             int	ppc;		/* previous program counter */
 	    int  pc;         /* program counter */
@@ -255,10 +256,10 @@ public class z8000  extends cpu_interface {
 
 	
 	/* current CPU context */
-	public static z8000_Regs Z;
+	public z8000_Regs Z=new z8000_Regs();
 	
 	/* zero, sign and parity flags for logical byte operations */
-	public static int[] z8000_zsp=new int[256];
+	public int[] z8000_zsp=new int[256];
 
 /*TODO*///	/* conversion table for Z8000 DAB opcode */
 /*TODO*///	
@@ -320,101 +321,101 @@ public class z8000  extends cpu_interface {
 /*TODO*///	#else	/* MSB_FIRST */
 	
 	    /* pointers to byte (8bit) registers */
-		public static int pRB(int _val)
+		public int pRB(int _val)
 		{
                     switch (_val){
 			case 0:
-                            return (Z.regs.B[ 0]);
+                            return (Z.regs.B[ 0]&0xff);
                         case 1:
-                            return (Z.regs.B[ 2]);
+                            return (Z.regs.B[ 2]&0xff);
                         case 2:
-                            return (Z.regs.B[ 4]);
+                            return (Z.regs.B[ 4]&0xff);
                         case 3:
-                            return (Z.regs.B[ 6]);
+                            return (Z.regs.B[ 6]&0xff);
 			case 4:
-                            return (Z.regs.B[ 8]);
+                            return (Z.regs.B[ 8]&0xff);
                         case 5:
-                            return (Z.regs.B[10]);
+                            return (Z.regs.B[10]&0xff);
                         case 6:
-                            return (Z.regs.B[12]);
+                            return (Z.regs.B[12]&0xff);
                         case 7:
-                            return (Z.regs.B[14]);
+                            return (Z.regs.B[14]&0xff);
 			case 8:
-                            return (Z.regs.B[ 1]);
+                            return (Z.regs.B[ 1]&0xff);
                         case 9:
-                            return (Z.regs.B[ 3]);
+                            return (Z.regs.B[ 3]&0xff);
                         case 10:
-                            return (Z.regs.B[ 5]);
+                            return (Z.regs.B[ 5]&0xff);
                         case 11:
-                            return (Z.regs.B[ 7]);
+                            return (Z.regs.B[ 7]&0xff);
 			case 12:
-                            return (Z.regs.B[ 9]);
+                            return (Z.regs.B[ 9]&0xff);
                         case 13:
-                            return (Z.regs.B[11]);
+                            return (Z.regs.B[11]&0xff);
                         case 14:
-                            return (Z.regs.B[13]);
+                            return (Z.regs.B[13]&0xff);
                         case 15:
-                            return (Z.regs.B[15]);
+                            return (Z.regs.B[15]&0xff);
                         default:
                             return 0;
                     }
 		};
                 
-                public static void pRB(int _pos, int _val)
+                public void pRB(int _pos, int _val)
 		{
                     switch (_pos){
                         case 0:
-                            Z.regs.B[ 0] = _val & 0xFFFF;
+                            Z.regs.B[ 0] = _val & 0xFF;
                             break;
                         case 1:
-                            Z.regs.B[ 2] = _val & 0xFFFF;
+                            Z.regs.B[ 2] = _val & 0xFF;
                             break;
                         case 2:
-                            Z.regs.B[ 4] = _val & 0xFFFF;
+                            Z.regs.B[ 4] = _val & 0xFF;
                             break;
                         case 3:
-                            Z.regs.B[ 6] = _val & 0xFFFF;
+                            Z.regs.B[ 6] = _val & 0xFF;
                             break;
                         case 4:
-                            Z.regs.B[ 8] = _val & 0xFFFF;
+                            Z.regs.B[ 8] = _val & 0xFF;
                             break;
                         case 5:
-                            Z.regs.B[ 10] = _val & 0xFFFF;
+                            Z.regs.B[ 10] = _val & 0xFF;
                             break;
                         case 6:
-                            Z.regs.B[ 12] = _val & 0xFFFF;
+                            Z.regs.B[ 12] = _val & 0xFF;
                             break;
                         case 7:
-                            Z.regs.B[ 14] = _val & 0xFFFF;
+                            Z.regs.B[ 14] = _val & 0xFF;
                             break;
                         case 8:
-                            Z.regs.B[ 1] = _val & 0xFFFF;
+                            Z.regs.B[ 1] = _val & 0xFF;
                             break;
                         case 9:
-                            Z.regs.B[ 3] = _val & 0xFFFF;
+                            Z.regs.B[ 3] = _val & 0xFF;
                             break;
                         case 10:
-                            Z.regs.B[ 5] = _val & 0xFFFF;
+                            Z.regs.B[ 5] = _val & 0xFF;
                             break;
                         case 11:
-                            Z.regs.B[ 7] = _val & 0xFFFF;
+                            Z.regs.B[ 7] = _val & 0xFF;
                             break;
                         case 12:
-                            Z.regs.B[ 9] = _val & 0xFFFF;
+                            Z.regs.B[ 9] = _val & 0xFF;
                             break;
                         case 13:
-                            Z.regs.B[ 11] = _val & 0xFFFF;
+                            Z.regs.B[ 11] = _val & 0xFF;
                             break;
                         case 14:
-                            Z.regs.B[ 13] = _val & 0xFFFF;
+                            Z.regs.B[ 13] = _val & 0xFF;
                             break;
                         default:
-                            Z.regs.B[ 15] = _val & 0xFFFF;
+                            Z.regs.B[ 15] = _val & 0xFF;
                             break;
                     }
 	    };
 	
-                public static int pRW(int _val)
+                public int pRW(int _val)
 		{
                     switch (_val){
                         case 0:
@@ -453,7 +454,7 @@ public class z8000  extends cpu_interface {
                     }
 	    };
             
-            public static void pRW(int _pos, int _val)
+            public void pRW(int _pos, int _val)
 		{
                     switch (_pos){
                         case 0:
@@ -516,7 +517,7 @@ public class z8000  extends cpu_interface {
 /*TODO*///		};
 	
 		/* pointers to long (32bit) registers */
-		public static int pRL(int _val)
+		public int pRL(int _val)
 		{
                     switch (_val){
                         case 0:
@@ -556,7 +557,7 @@ public class z8000  extends cpu_interface {
                     return 0;
 		};
 
-                public static void pRL(int _pos, int _val)
+                public void pRL(int _pos, int _val)
 		{
                     switch (_pos){
                         case 0:
@@ -611,23 +612,23 @@ public class z8000  extends cpu_interface {
 	    return res;
 	}
 	
-        public static int RDMEM_B(int addr)
+        public int RDMEM_B(int addr)
 	{
 		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
 	}
 	
-	public static int RDMEM_W(int addr)
+	public int RDMEM_W(int addr)
 	{
 		addr &= ~1;
-		return cpu_readmem16bew_word(addr & 0xffff);
+		return (cpu_readmem16bew_word(addr & 0xffff) & 0xffff);
 	}
 	
-	public static int RDMEM_L(int addr)
+	public int RDMEM_L(int addr)
 	{
 		int result;
 		addr &= ~1;
 		result = cpu_readmem16bew_word(addr & 0xffff) << 16;
-		return result + cpu_readmem16bew_word((addr + 2) & 0xffff);
+		return (result + cpu_readmem16bew_word((addr + 2) & 0xffff) & 0xffffffff);
 	}
 	
 /*TODO*///	INLINE void WRMEM_B(UINT16 addr, UINT8 value)
@@ -635,10 +636,10 @@ public class z8000  extends cpu_interface {
 /*TODO*///		cpu_writemem16bew(addr, value);
 /*TODO*///	}
 	
-	public static void WRMEM_W(int addr, int value)
+	public void WRMEM_W(int addr, int value)
 	{
 		addr &= ~1;
-		cpu_writemem16bew_word(addr & 0xffff, value);
+		cpu_writemem16bew_word(addr, value& 0xffff);
 	}
 	
 /*TODO*///	INLINE void WRMEM_L(UINT16 addr, UINT32 value)
@@ -780,6 +781,7 @@ public class z8000  extends cpu_interface {
 	{
             
                 System.out.println("INTERRUPT method not implemented!!!!");
+                throw new UnsupportedOperationException("unsupported");
 /*TODO*///	    UINT16 fcw = FCW;
 /*TODO*///	
 /*TODO*///	    if ((IRQ_REQ & Z8000_NVI) != 0)
@@ -879,9 +881,15 @@ public class z8000  extends cpu_interface {
 	public void z8000_reset(Object param)
 	{
             System.out.println("z8000_reset");
-	    z8000_init();
+	    _tbl.z8000_init();
 /*TODO*///            memset(&Z, 0, sizeof(z8000_Regs));
-            //Z = new z8000_Regs();
+            irqcallbacksPtr _tmpIRQ = null;
+            if (Z!=null){
+                _tmpIRQ = Z.irq_callback;
+            }
+                
+            Z = new z8000_Regs();
+            Z.irq_callback=_tmpIRQ;
             Z.fcw = RDMEM_W( 2 ); /* get reset FCW */
             Z.pc = RDMEM_W( 4 ); /* get reset PC  */
             change_pc16bew(Z.pc & 0xffff);
@@ -889,7 +897,7 @@ public class z8000  extends cpu_interface {
 	
 	public void z8000_exit()
 	{
-		z8000_deinit();
+		_tbl.z8000_deinit();
 	}
 	
 	public int z8000_execute(int cycles)
@@ -1103,6 +1111,7 @@ public class z8000  extends cpu_interface {
 	
 	public void z8000_set_irq_callback(irqcallbacksPtr callback)
 	{
+            System.out.println("z8000_set_irq_callback="+callback);
 		Z.irq_callback = callback;
 	}
 	

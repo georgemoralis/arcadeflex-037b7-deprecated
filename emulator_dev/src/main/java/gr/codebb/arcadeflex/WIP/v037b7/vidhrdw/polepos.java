@@ -7,9 +7,8 @@ package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_alloc;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_free;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.copyscrollbitmap;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.TRANSPARENCY_COLOR;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.TRANSPARENCY_NONE;
-import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.TRANSPARENCY_PEN;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.drawgfxzoom;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.rectangle;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.inptport.readinputport;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
@@ -17,8 +16,10 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.COMBINE_WORD;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.COMBINE_WORD_MEM;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
+import gr.codebb.arcadeflex.common.SubArrays.UShortArray;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
+import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 
 public class polepos {
 
@@ -365,64 +366,67 @@ public class polepos {
         copyscrollbitmap(bitmap, view_bitmap, 1, x, 0, null, clip, TRANSPARENCY_NONE, 0);
     }
 
-    /*TODO*///	
-/*TODO*///	static void draw_road(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		int dx = 1, dy = (bitmap.line[1] - bitmap.line[0]) * 8 / bitmap.depth;
-/*TODO*///		int sx = 0, sy = 128, temp;
-/*TODO*///	
-/*TODO*///		/* adjust our parameters for the current orientation */
-/*TODO*///		if (Machine.orientation)
-/*TODO*///		{
-/*TODO*///			if (Machine.orientation & ORIENTATION_SWAP_XY)
-/*TODO*///			{
-/*TODO*///				temp = sx; sx = sy; sy = temp;
-/*TODO*///				temp = dx; dx = dy; dy = temp;
-/*TODO*///			}
-/*TODO*///			if (Machine.orientation & ORIENTATION_FLIP_X)
-/*TODO*///			{
-/*TODO*///				sx = bitmap.width - 1 - sx;
-/*TODO*///				if (!(Machine.orientation & ORIENTATION_SWAP_XY)) dx = -dx;
-/*TODO*///				else dy = -dy;
-/*TODO*///			}
-/*TODO*///			if (Machine.orientation & ORIENTATION_FLIP_Y)
-/*TODO*///			{
-/*TODO*///				sy = bitmap.height - 1 - sy;
-/*TODO*///				if (Machine.orientation & ORIENTATION_SWAP_XY) dx = -dx;
-/*TODO*///				else dy = -dy;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* 8-bit case */
-/*TODO*///		if (bitmap.depth == 8)
-/*TODO*///			draw_road_core_8(bitmap, sx, sy, dx, dy);
-/*TODO*///		else
+    	
+	static void draw_road(osd_bitmap bitmap)
+	{
+		int dx = 1, dy = (bitmap.line[1].offset - bitmap.line[0].offset) * 8 / bitmap.depth;
+		int sx = 0, sy = 128, temp;
+	
+		/* adjust our parameters for the current orientation */
+		if (Machine.orientation != 0)
+		{
+			if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0)
+			{
+				temp = sx; sx = sy; sy = temp;
+				temp = dx; dx = dy; dy = temp;
+			}
+			if ((Machine.orientation & ORIENTATION_FLIP_X) != 0)
+			{
+				sx = bitmap.width - 1 - sx;
+				if ((Machine.orientation & ORIENTATION_SWAP_XY)==0) dx = -dx;
+				else dy = -dy;
+			}
+			if ((Machine.orientation & ORIENTATION_FLIP_Y) != 0)
+			{
+				sy = bitmap.height - 1 - sy;
+				if ((Machine.orientation & ORIENTATION_SWAP_XY)!=0) dx = -dx;
+				else dy = -dy;
+			}
+		}
+	
+		/* 8-bit case */
+		if (bitmap.depth == 8){
+                    //System.out.println("draw_road_core_8");
+			draw_road_core_8(bitmap, sx, sy, dx, dy);
+                } else {
+                    System.out.println("draw_road_core_16");
 /*TODO*///			draw_road_core_16(bitmap, sx, sy, dx, dy);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void draw_sprites(struct osd_bitmap *bitmap)
-/*TODO*///	{
-/*TODO*///		UINT16 *posmem = (UINT16 *)&polepos_sprite_memory[0x700];
-/*TODO*///		UINT16 *sizmem = (UINT16 *)&polepos_sprite_memory[0xf00];
-/*TODO*///		int i;
-/*TODO*///	
-/*TODO*///		for (i = 0; i < 64; i++, posmem += 2, sizmem += 2)
-/*TODO*///		{
-/*TODO*///			const struct GfxElement *gfx = Machine.gfx[(sizmem[0] & 0x8000) ? 3 : 2];
-/*TODO*///			int vpos = (~posmem[0] & 0x1ff) + 4;
-/*TODO*///			int hpos = (posmem[1] & 0x3ff) - 0x40;
-/*TODO*///			int vsize = ((sizmem[0] >> 8) & 0x3f) + 1;
-/*TODO*///			int hsize = ((sizmem[1] >> 8) & 0x3f) + 1;
-/*TODO*///			int code = sizmem[0] & 0x7f;
-/*TODO*///			int hflip = sizmem[0] & 0x80;
-/*TODO*///			int color = sizmem[1] & 0x3f;
-/*TODO*///	
-/*TODO*///			if (vpos >= 128) color |= 0x40;
-/*TODO*///			drawgfxzoom(bitmap, gfx,
-/*TODO*///					 code, color, hflip, 0, hpos, vpos,
-/*TODO*///					 &Machine.visible_area, TRANSPARENCY_COLOR, 0, hsize << 11, vsize << 11);
-/*TODO*///		}
-/*TODO*///	}
+                }
+	}
+	
+	static void draw_sprites(osd_bitmap bitmap)
+	{
+		UShortArray posmem = new UShortArray(polepos_sprite_memory, 0x700);
+		UShortArray sizmem = new UShortArray(polepos_sprite_memory, 0xf00);
+		int i;
+	
+		for (i = 0; i < 64; i++, posmem.offset+=2, sizmem.offset+=2 )
+		{
+			GfxElement gfx = Machine.gfx[(sizmem.read(0) & 0x8000)!=0 ? 3 : 2];
+			int vpos = (~posmem.read(0) & 0x1ff) + 4;
+			int hpos = (posmem.read(1) & 0x3ff) - 0x40;
+			int vsize = ((sizmem.read(0) >> 8) & 0x3f) + 1;
+			int hsize = ((sizmem.read(1) >> 8) & 0x3f) + 1;
+			int code = sizmem.read(0) & 0x7f;
+			int hflip = sizmem.read(0) & 0x80;
+			int color = sizmem.read(1) & 0x3f;
+	
+			if (vpos >= 128) color |= 0x40;
+			drawgfxzoom(bitmap, gfx,
+					 code, color, hflip, 0, hpos, vpos,
+					 Machine.visible_area, TRANSPARENCY_COLOR, 0, hsize << 11, vsize << 11);
+		}
+	}
 
     static void draw_alpha(osd_bitmap bitmap) {
         int x, y, offs, in;
@@ -479,9 +483,9 @@ public class polepos {
     public static VhUpdatePtr polepos_vh_screenrefresh = new VhUpdatePtr() {
         public void handler(osd_bitmap bitmap, int full_refresh) {
             draw_view(bitmap);
-            /*TODO*///		draw_road(bitmap);
-/*TODO*///		draw_sprites(bitmap);
-		draw_alpha(bitmap);
+            draw_road(bitmap);
+            draw_sprites(bitmap);
+            draw_alpha(bitmap);
         }
     };
 
@@ -582,4 +586,81 @@ public class polepos {
 /*TODO*///	}
 /*TODO*///	
 /*TODO*///	#endif
+    
+    	
+	/***************************************************************************
+	
+	  Road drawing routine
+	
+	***************************************************************************/
+	
+	static void draw_road_core_8(osd_bitmap bitmap, int sx, int sy, int dx, int dy)
+	{
+		UBytePtr base = new UBytePtr(bitmap.line[sy], sx);
+		int x, y, i;
+	
+		/* loop over the lower half of the screen */
+		for (y = 128; y < 256; y++, base.inc(dy) )
+		{
+			int xoffs, yoffs, roadpal;
+			UShortArray colortable;
+			UBytePtr dest;
+	
+			/* first add the vertical position modifier and the vertical scroll */
+			yoffs = ((polepos_vertical_position_modifier[y] + road_vscroll) >> 2) & 0x3fe;
+	
+			/* then use that as a lookup into the road memory */
+			roadpal = polepos_road_memory.READ_WORD(yoffs) & 15;
+	
+			/* this becomes the palette base for the scanline */
+			colortable = new UShortArray(Machine.remapped_colortable, 0x1000 + (roadpal << 6));
+	
+			/* now fetch the horizontal scroll offset for this scanline */
+			xoffs = polepos_road_memory.READ_WORD(0x700 + (y & 0x7f) * 2) & 0x3ff;
+	
+			/* the road is drawn in 8-pixel chunks, so round downward and adjust the base */
+			/* note that we assume there is at least 8 pixels of slop on the left/right */
+			dest = new UBytePtr(base, - (xoffs & 7) * dx);
+			xoffs &= ~7;
+	
+			/* loop over 8-pixel chunks */
+			for (x = 0; x < 256 / 8 + 1; x++, xoffs += 8)
+			{
+				/* if the 0x200 bit of the xoffset is set, a special pin on the custom */
+				/* chip is set and the /CE and /OE for the road chips is disabled */
+				if ((xoffs & 0x200) != 0)
+				{
+					/* in this case, it looks like we just fill with 0 */
+					for (i = 0; i < 8; i++, dest.inc(dx) )
+						dest.write(0, colortable.read(0));
+				}
+	
+				/* otherwise, we clock in the bits and compute the road value */
+				else
+				{
+					/* the road ROM offset comes from the current scanline and the X offset */
+					int romoffs = ((y & 0x07f) << 6) + ((xoffs & 0x1ff) >> 3);
+	
+					/* fetch the current data from the road ROMs */
+					int control = road_control.read(romoffs);
+					int bits1 = road_bits1.read(romoffs);
+					int bits2 = road_bits2.read((romoffs & 0xfff) | ((romoffs >> 1) & 0x800));
+	
+					/* extract the road value and the carry-in bit */
+					int roadval = control & 0x3f;
+					int carin = control >> 7;
+	
+					/* draw this 8-pixel chunk */
+					for (i = 0; i < 8; i++, dest.inc(dx), bits1 <<= 1, bits2 <<= 1)
+					{
+						int bits = ((bits1 >> 7) & 1) + ((bits2 >> 6) & 2);
+						if (carin==0 && bits!=0) bits++;
+						dest.write(0, colortable.read(roadval & 0x3f));
+						roadval += bits;
+					}
+				}
+			}
+		}
+	}
+
 }

@@ -65,6 +65,7 @@ public class polepos {
      */
     public static InitMachinePtr polepos_init_machine = new InitMachinePtr() {
         public void handler() {
+            System.out.println("polepos_init_machine");
             /* reset all the interrupt states */
             z80_irq_enabled = z8002_1_nvi_enabled = z8002_2_nvi_enabled = 0;
 
@@ -118,6 +119,8 @@ public class polepos {
         public void handler(int offset, int data) {
             int which = (offset / 2) + 1;
 
+            System.out.println("which ="+which+" data="+data);
+            
             if (which == cpu_getactivecpu()) {
                 if (which == 1) {
                     z8002_1_nvi_enabled = data & 1;
@@ -134,7 +137,9 @@ public class polepos {
 
     public static InterruptPtr polepos_z8002_1_interrupt = new InterruptPtr() {
         public int handler() {
+            
             if (z8002_1_nvi_enabled != 0) {
+                System.out.println("polepos_z8002_1_interrupt "+z8002_1_nvi_enabled);
                 cpu_set_irq_line(1, 0, ASSERT_LINE);
             }
 
@@ -144,7 +149,9 @@ public class polepos {
 
     public static InterruptPtr polepos_z8002_2_interrupt = new InterruptPtr() {
         public int handler() {
+            
             if (z8002_2_nvi_enabled != 0) {
+                System.out.println("polepos_z8002_2_interrupt "+z8002_2_nvi_enabled);
                 cpu_set_irq_line(2, 0, ASSERT_LINE);
             }
 
