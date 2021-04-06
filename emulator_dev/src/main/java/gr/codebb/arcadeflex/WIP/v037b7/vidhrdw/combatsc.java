@@ -27,6 +27,7 @@ import static gr.codebb.arcadeflex.common.libc.cstring.memcpy;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
 
 public class combatsc {
 
@@ -477,12 +478,12 @@ public class combatsc {
 
                 if (data == 0x1f) {
                     cpu_setbank(1, new UBytePtr(page, 0x20000 + 0x4000 * (data & 1)));
-/*TODO*///                    cpu_setbankhandler_r(1, combasc_io_r);/* IO RAM & Video Registers */
-/*TODO*///                    cpu_setbankhandler_w(1, combasc_io_w);
+                    cpu_setbankhandler_r(1, combasc_io_r);/* IO RAM & Video Registers */
+                    cpu_setbankhandler_w(1, combasc_io_w);
                 } else {
-/*TODO*///                    cpu_setbankhandler_r(1, MRA_BANK1);
+                    cpu_setbankhandler_r(1, MRA_BANK1);
                     /* banked ROM */
-/*TODO*///                    cpu_setbankhandler_w(1, MWA_ROM);
+                    cpu_setbankhandler_w(1, MWA_ROM);
                 }
             }
         }
