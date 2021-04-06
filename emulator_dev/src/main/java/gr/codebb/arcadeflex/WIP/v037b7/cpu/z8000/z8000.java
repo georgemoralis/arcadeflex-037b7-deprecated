@@ -638,7 +638,7 @@ public class z8000  extends cpu_interface {
 	public static void WRMEM_W(int addr, int value)
 	{
 		addr &= ~1;
-		cpu_writemem16bew_word(addr, value);
+		cpu_writemem16bew_word(addr & 0xffff, value);
 	}
 	
 /*TODO*///	INLINE void WRMEM_L(UINT16 addr, UINT32 value)
@@ -884,7 +884,7 @@ public class z8000  extends cpu_interface {
             //Z = new z8000_Regs();
             Z.fcw = RDMEM_W( 2 ); /* get reset FCW */
             Z.pc = RDMEM_W( 4 ); /* get reset PC  */
-            change_pc16bew(Z.pc);
+            change_pc16bew(Z.pc & 0xffff);
 	}
 	
 	public void z8000_exit()
@@ -900,12 +900,14 @@ public class z8000  extends cpu_interface {
 	    do
 	    {
 	        /* any interrupt request pending? */
+                if (Z.irq_req != 0)
+                    System.out.println(Z.irq_req);
 	        if (IRQ_REQ(Z) != 0)
 				Interrupt();
 	
 /*TODO*///			CALL_MAME_DEBUG;
 	
-			if ((IRQ_REQ(Z) & Z8000_HALT) != 0)
+		if ((IRQ_REQ(Z) & Z8000_HALT) != 0)
 	        {
 	            z8000_ICount[0] = 0;
 	        }
