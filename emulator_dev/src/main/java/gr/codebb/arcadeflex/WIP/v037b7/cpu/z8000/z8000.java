@@ -226,17 +226,17 @@ public class z8000  extends cpu_interface {
 /*TODO*///	};
 
 	/* opcode execution table */
-	public Z8000_exec[] z8000_exec = null;
+	public static Z8000_exec[] z8000_exec = null;
 
    
-        public class z8000_reg_file {
+        public static class z8000_reg_file {
 	    int[] /*UINT8*/   B=new int[16]; /* RL0,RH0,RL1,RH1...RL7,RH7 */
 	    int[] /*UINT16*/  W=new int[16]; /* R0,R1,R2...R15 */
 	    int[] /*UINT32*/  L=new int[8];  /* RR0,RR2,RR4..RR14 */
 	    int[] /*UINT64*/  Q=new int[4];  /* RQ0,RQ4,..RQ12 */
 	};
 	
-	public class z8000_Regs {
+	public static class z8000_Regs {
 	    int[]  op = new int[4];      /* opcodes/data of current instruction */
             int	ppc;		/* previous program counter */
 	    int  pc;         /* program counter */
@@ -256,10 +256,10 @@ public class z8000  extends cpu_interface {
 
 	
 	/* current CPU context */
-	public z8000_Regs Z=new z8000_Regs();
+	public static z8000_Regs Z=new z8000_Regs();
 	
 	/* zero, sign and parity flags for logical byte operations */
-	public int[] z8000_zsp=new int[256];
+	public static int[] z8000_zsp=new int[256];
 
 /*TODO*///	/* conversion table for Z8000 DAB opcode */
 /*TODO*///	
@@ -597,16 +597,89 @@ public class z8000  extends cpu_interface {
 		};
 /*TODO*///	#endif
 /*TODO*///	
-/*TODO*///	/* pointers to quad word (64bit) registers */
-/*TODO*///	static UINT64   *pRQ[16] = {
-/*TODO*///	    &Z.regs.Q[ 0],&Z.regs.Q[ 0],&Z.regs.Q[ 0],&Z.regs.Q[ 0],
-/*TODO*///	    &Z.regs.Q[ 1],&Z.regs.Q[ 1],&Z.regs.Q[ 1],&Z.regs.Q[ 1],
-/*TODO*///	    &Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],&Z.regs.Q[ 2],
-/*TODO*///	    &Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3],&Z.regs.Q[ 3]};
+	/* pointers to quad word (64bit) registers */
+        public int pRQ(int _val)
+        {
+            switch (_val){
+                case 0:
+                    return Z.regs.Q[ 0];
+                case 1:
+                    return Z.regs.Q[ 0];
+                case 2:
+                    return Z.regs.Q[ 0];
+                case 3:
+                    return Z.regs.Q[ 0];
+                case 4:
+                    return Z.regs.Q[ 1];
+                case 5:
+                    return Z.regs.Q[ 1];
+                case 6:
+                    return Z.regs.Q[ 1];
+                case 7:
+                    return Z.regs.Q[ 1];
+                case 8:
+                    return Z.regs.Q[ 2];
+                case 9:
+                    return Z.regs.Q[ 2];
+                case 10:
+                    return Z.regs.Q[ 2];
+                case 11:
+                    return Z.regs.Q[ 2];
+                case 12:
+                    return Z.regs.Q[ 3];
+                case 13:
+                    return Z.regs.Q[ 3];
+                case 14:
+                    return Z.regs.Q[ 3];
+                case 15:
+                    return Z.regs.Q[ 3];
+                default:
+                    return 0;
+            }
+        };
+        
+        public void pRQ(int pos, int _val)
+        {
+            switch (pos){
+                case 0:
+                    Z.regs.Q[ 0]=_val;
+                case 1:
+                    Z.regs.Q[ 0]=_val;
+                case 2:
+                    Z.regs.Q[ 0]=_val;
+                case 3:
+                    Z.regs.Q[ 0]=_val;
+                case 4:
+                    Z.regs.Q[ 1]=_val;
+                case 5:
+                    Z.regs.Q[ 1]=_val;
+                case 6:
+                    Z.regs.Q[ 1]=_val;
+                case 7:
+                    Z.regs.Q[ 1]=_val;
+                case 8:
+                    Z.regs.Q[ 2]=_val;
+                case 9:
+                    Z.regs.Q[ 2]=_val;
+                case 10:
+                    Z.regs.Q[ 2]=_val;
+                case 11:
+                    Z.regs.Q[ 2]=_val;
+                case 12:
+                    Z.regs.Q[ 3]=_val;
+                case 13:
+                    Z.regs.Q[ 3]=_val;
+                case 14:
+                    Z.regs.Q[ 3]=_val;
+                case 15:
+                    Z.regs.Q[ 3]=_val;
+                
+            }
+        };
 	
 	public int RDOP()
 	{
-            
+            Z.pc &= 0xffff;
             int res = cpu_readop16(Z.pc & 0xffff);
 	    Z.pc += 2;
 	    return res;
@@ -631,10 +704,10 @@ public class z8000  extends cpu_interface {
 		return (result + cpu_readmem16bew_word((addr + 2) & 0xffff) & 0xffffffff);
 	}
 	
-/*TODO*///	INLINE void WRMEM_B(UINT16 addr, UINT8 value)
-/*TODO*///	{
-/*TODO*///		cpu_writemem16bew(addr, value);
-/*TODO*///	}
+	public void WRMEM_B(int addr, int value)
+	{
+		cpu_writemem16bew(addr&0xffff, value&0xff);
+	}
 	
 	public void WRMEM_W(int addr, int value)
 	{
@@ -642,13 +715,13 @@ public class z8000  extends cpu_interface {
 		cpu_writemem16bew_word(addr, value& 0xffff);
 	}
 	
-/*TODO*///	INLINE void WRMEM_L(UINT16 addr, UINT32 value)
-/*TODO*///	{
-/*TODO*///		addr &= ~1;
-/*TODO*///		cpu_writemem16bew_word(addr, value >> 16);
-/*TODO*///		cpu_writemem16bew_word((UINT16)(addr + 2), value & 0xffff);
-/*TODO*///	}
-/*TODO*///	
+	public void WRMEM_L(int addr, int value)
+	{
+		addr &= ~1;
+		cpu_writemem16bew_word(addr, value >> 16);
+		cpu_writemem16bew_word((addr + 2), value & 0xffff);
+	}
+	
 /*TODO*///	INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
 /*TODO*///	{
 /*TODO*///		if( mode == 0 )
@@ -703,20 +776,20 @@ public class z8000  extends cpu_interface {
 /*TODO*///			/* how to handle MMU writes? */
 /*TODO*///	    }
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	INLINE void WRPORT_W(int mode, UINT16 addr, UINT16 value)
-/*TODO*///	{
-/*TODO*///		if( mode == 0 )
-/*TODO*///		{
-/*TODO*///			cpu_writeport((UINT16)(addr),value & 0xff);
-/*TODO*///			cpu_writeport((UINT16)(addr+1),(value >> 8) & 0xff);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			/* how to handle MMU writes? */
-/*TODO*///	    }
-/*TODO*///	}
-/*TODO*///	
+	
+	public void WRPORT_W(int mode, int addr, int value)
+	{
+		if( mode == 0 )
+		{
+			cpu_writeport((addr & 0xffff),value & 0xff);
+			cpu_writeport((addr+1)&0xffff,(value >> 8) & 0xff);
+		}
+		else
+		{
+			/* how to handle MMU writes? */
+	    }
+	}
+	
 /*TODO*///	INLINE void WRPORT_L(int mode, UINT16 addr, UINT32 value)
 /*TODO*///	{
 /*TODO*///		if( mode == 0 )
@@ -883,15 +956,17 @@ public class z8000  extends cpu_interface {
             System.out.println("z8000_reset");
 	    _tbl.z8000_init();
 /*TODO*///            memset(&Z, 0, sizeof(z8000_Regs));
-            irqcallbacksPtr _tmpIRQ = null;
+            Z = new z8000_Regs();
+            /*irqcallbacksPtr _tmpIRQ = null;
             if (Z!=null){
                 _tmpIRQ = Z.irq_callback;
             }
                 
             Z = new z8000_Regs();
-            Z.irq_callback=_tmpIRQ;
-            Z.fcw = RDMEM_W( 2 ); /* get reset FCW */
-            Z.pc = RDMEM_W( 4 ); /* get reset PC  */
+            Z.irq_callback=_tmpIRQ;*/
+            
+            Z.fcw = RDMEM_W( 2 )&0xffff; /* get reset FCW */
+            Z.pc = RDMEM_W( 4 )&0xffff; /* get reset PC  */
             change_pc16bew(Z.pc & 0xffff);
 	}
 	
@@ -899,6 +974,8 @@ public class z8000  extends cpu_interface {
 	{
 		_tbl.z8000_deinit();
 	}
+        
+        public int _lastOpcode=0;
 	
 	public int z8000_execute(int cycles)
 	{
@@ -932,7 +1009,8 @@ public class z8000  extends cpu_interface {
 	
 	            z8000_ICount[0] -= exec.cycles;
 	            (exec.opcode).handler();
-	
+                    
+                    _lastOpcode=Z.op[0];
 	        }
 	    } while (z8000_ICount[0] > 0);
 	
@@ -953,13 +1031,13 @@ public class z8000  extends cpu_interface {
 		if (src != null)
 		{
 			Z = (z8000_Regs)src;
-			change_pc16bew(Z.pc);
+			change_pc16bew(Z.pc&0xffff);
 		}
 	}
 	
 	public int z8000_get_pc()
 	{
-	    return Z.pc;
+	    return (Z.pc & 0xffff);
 	}
 	
 /*TODO*///	void z8000_set_pc(unsigned val)

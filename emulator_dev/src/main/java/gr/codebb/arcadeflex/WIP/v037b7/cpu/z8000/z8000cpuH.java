@@ -34,7 +34,8 @@ public class z8000cpuH {
     public void RW(int n, int m) { _cpu.pRW(n, m); }
     public int RL(int n){ return _cpu.pRL(n); }
     public void RL(int n, int m) { _cpu.pRL(n, m); }
-/*TODO*///#define RQ(n)   (*pRQ[n])
+    public int RQ(int n){   return _cpu.pRQ(n); }
+    public void RQ(int n, int m){   _cpu.pRQ(n, m); }
 
     /* the register used as stack pointer */
     public static int SP      = 15;
@@ -64,7 +65,7 @@ public class z8000cpuH {
 /*TODO*////* bits of the FCW */
 /*TODO*///#define F_SEG	0x8000				/* segmented mode (Z8001 only) */
 /*TODO*///#define F_S_N	0x4000				/* system / normal mode */
-/*TODO*///#define F_EPU	0x2000				/* extension processor unit? */
+    public static final int F_EPU	= 0x2000;				/* extension processor unit? */
 /*TODO*///#define F_NVIE	0x1000				/* non vectored interrupt enable */
 /*TODO*///#define F_VIE	0x0800				/* vectored interrupt enable */
 /*TODO*///#define F_10	0x0400				/* unused */
@@ -109,7 +110,7 @@ public class z8000cpuH {
     public void CLR_Z(){     _cpu.Z.fcw &= ~F_Z; }
 /*TODO*///#define CLR_S		FCW &= ~F_S
 /*TODO*///#define CLR_P		FCW &= ~F_PV
-/*TODO*///#define CLR_V		FCW &= ~F_PV
+    public void CLR_V(){    _cpu.Z.fcw &= ~F_PV; }
     public void CLR_DA(){    _cpu.Z.fcw &= ~F_DA; }
 /*TODO*///#define CLR_H		FCW &= ~F_H
 
@@ -162,36 +163,38 @@ public class z8000cpuH {
     public void GET_BIT(int o){      /*UINT16*/ bit = (1 << (_cpu.Z.op[o] & 15)) & 0xffff; }
     public void GET_CCC(int o, int s){	/*UINT8*/ cc = ((_cpu.Z.op[o] >> (s)) & 15)&0xff; }
     
-    public static int dst;
-    public static int src;
-    public static int i4p1;
-    public static int imm8;
+    public int dst;
+    public int src;
+    public int i4p1;
+    public int imm8;
+    public int cnt;
+    public int imm4;
     
-    public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >> (s)) & 15) & 0xf; }
-    public void GET_SRC(int o, int s){	/*UINT8*/ src = (_cpu.Z.op[o] >> (s)) & 15; }
+    public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
+    public void GET_SRC(int o, int s){	/*UINT8*/ src = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
 /*TODO*///#define GET_IDX(o,s)	UINT8 idx = (Z.op[o] >> (s)) & 15
-/*TODO*///#define GET_CNT(o,s)	INT8 cnt = (Z.op[o] >> (s)) & 15
-/*TODO*///#define GET_IMM4(o,s)	UINT8 imm4 = (Z.op[o] >> (s)) & 15
+    public void GET_CNT(int o, int s){	/*UINT8*/ cnt = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
+    public void GET_IMM4(int o, int s){ /*UINT8*/ imm4 = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
 
-    public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = ((_cpu.Z.op[o] >> (s)) & 15) + 1; }
+    public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = (((_cpu.Z.op[o] >> (s)) & 15) + 1) & 0xff; }
 /*TODO*///#define GET_IMM1(o,s)	UINT8 imm1 = (Z.op[o] >> (s)) & 2
 /*TODO*///#define GET_IMM2(o,s)	UINT8 imm2 = (Z.op[o] >> (s)) & 3
 /*TODO*///#define GET_IMM3(o,s)	UINT8 imm3 = (Z.op[o] >> (s)) & 7
 
     public void GET_IMM8(int o){ 	/*UINT8*/ imm8 = _cpu.Z.op[o] & 0xff; }
 
-    public static int imm16;
-    public static int dsp7;
-    public static int dsp8;
-    public static int addr;
-    public static int imm32;
+    public int imm16;
+    public int dsp7;
+    public int dsp8;
+    public int addr;
+    public int imm32;
     
     public void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (_cpu.Z.op[o])&0xffff; }
     public void GET_IMM32(){		/*UINT32*/ imm32 = _cpu.Z.op[2] + (_cpu.Z.op[1] << 16); }
     public void GET_DSP7(){		/*UINT8*/ dsp7 = (_cpu.Z.op[0] & 127)&0xff; }
     public void GET_DSP8(){		/*INT8*/ dsp8 = (_cpu.Z.op[0]) & 0xff; }
 /*TODO*///#define GET_DSP16		UINT16 dsp16 = PC + (INT16)Z.op[1]
-    public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o]; }
+    public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o] & 0xffff; }
 
     private z8000 _cpu;
     

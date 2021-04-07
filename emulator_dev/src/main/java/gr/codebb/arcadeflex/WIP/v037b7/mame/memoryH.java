@@ -455,7 +455,7 @@ public class memoryH {
     }
 
     public static void change_pc16bew(int pc) {
-        change_pc_generic(pc, ABITS2_16BEW, ABITS_MIN_16BEW, 0, cpu_setOPbase16bew);
+        change_pc_generic(pc&0xffff, ABITS2_16BEW, ABITS_MIN_16BEW, 0, cpu_setOPbase16bew);
     }
 /*TODO*///#define change_pc16lew(pc)	 change_pc_generic(pc, ABITS2_16LEW, ABITS_MIN_16LEW, 0, cpu_setOPbase16lew)
     public static void change_pc20(int pc) {

@@ -63,101 +63,102 @@ public class polepos {
      */
     public static VhConvertColorPromPtr polepos_vh_convert_color_prom = new VhConvertColorPromPtr() {
         public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
-            int i, j;
-
-            /**
-             * *****************************************************
-             * Color PROMs Sheet 15B: middle, 136014-137,138,139 Inputs: MUX0
-             * ... MUX3, ALPHA/BACK, SPRITE/BACK, 128V, COMPBLANK
-             *
-             * Note that we only decode the lower 128 colors because the upper
-             * 128 are all black and used during the horizontal and vertical
-             * blanking periods.
-             * *****************************************************
-             */
-            int p_ptr = 0;
-            for (i = 0; i < 128; i++) {
-                int bit0, bit1, bit2, bit3;
-
-                /* Sheet 15B: 136014-0137 red component */
-                bit0 = (color_prom.read(0x000 + i) >> 0) & 1;
-                bit1 = (color_prom.read(0x000 + i) >> 1) & 1;
-                bit2 = (color_prom.read(0x000 + i) >> 2) & 1;
-                bit3 = (color_prom.read(0x000 + i) >> 3) & 1;
-                palette[p_ptr] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-
-                /* Sheet 15B: 136014-0138 green component */
-                bit0 = (color_prom.read(0x100 + i) >> 0) & 1;
-                bit1 = (color_prom.read(0x100 + i) >> 1) & 1;
-                bit2 = (color_prom.read(0x100 + i) >> 2) & 1;
-                bit3 = (color_prom.read(0x100 + i) >> 3) & 1;
-                palette[p_ptr] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-
-                /* Sheet 15B: 136014-0139 blue component */
-                bit0 = (color_prom.read(0x200 + i) >> 0) & 1;
-                bit1 = (color_prom.read(0x200 + i) >> 1) & 1;
-                bit2 = (color_prom.read(0x200 + i) >> 2) & 1;
-                bit3 = (color_prom.read(0x200 + i) >> 3) & 1;
-                palette[p_ptr] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
-            }
-
-            /**
-             * *****************************************************
-             * Alpha colors (colors 0x000-0x1ff) Sheet 15B: top left, 136014-140
-             * Inputs: SHFT0, SHFT1 and CHA8* ... CHA13*
-             * *****************************************************
-             */
-            for (i = 0; i < 64 * 4; i++) {
-                int color = color_prom.read(0x300 + i);
-                colortable[0x0000 + i] = (color != 15) ? (char) (0x020 + color) : 0;
-                colortable[0x0100 + i] = (color != 15) ? (char) (0x060 + color) : 0;
-            }
-
-            /**
-             * *****************************************************
-             * View colors (colors 0x200-0x3ff) Sheet 13A: left, 136014-141
-             * Inputs: SHFT2, SHFT3 and CHA8 ... CHA13
-             * *****************************************************
-             */
-            for (i = 0; i < 64 * 4; i++) {
-                int color = color_prom.read(0x400 + i);
-                colortable[0x0200 + i] = (char) (0x000 + color);
-                colortable[0x0300 + i] = (char) (0x040 + color);
-            }
-
-            /**
-             * *****************************************************
-             * Sprite colors (colors 0x400-0xbff) Sheet 14B: right, 136014-146
-             * Inputs: CUSTOM0 ... CUSTOM3 and DATA0 ... DATA5
-             * *****************************************************
-             */
-            for (i = 0; i < 64 * 16; i++) {
-                int color = color_prom.read(0xc00 + i);
-                colortable[0x0400 + i] = (color != 15) ? (char) (0x010 + color) : 0;
-                colortable[0x0800 + i] = (color != 15) ? (char) (0x050 + color) : 0;
-            }
-
-            /**
-             * *****************************************************
-             * Road colors (colors 0xc00-0x13ff) Sheet 13A: bottom left,
-             * 136014-145 Inputs: R1 ... R6 and CHA0 ... CHA3
-             * *****************************************************
-             */
-            for (i = 0; i < 64 * 16; i++) {
-                int color = color_prom.read(0x800 + i);
-                colortable[0x0c00 + i] = (char) (0x000 + color);
-                colortable[0x1000 + i] = (char) (0x040 + color);
-            }
-
-            /* 136014-142, 136014-143, 136014-144 Vertical position modifiers */
-            for (i = 0; i < 256; i++) {
-                j = color_prom.read(0x500 + i) + (color_prom.read(0x600 + i) << 4) + (color_prom.read(0x700 + i) << 8);
-                polepos_vertical_position_modifier[i] = (char) j;
-            }
-
-            road_control = new UBytePtr(color_prom, 0x2000);
-            road_bits1 = new UBytePtr(color_prom, 0x4000);
-            road_bits2 = new UBytePtr(color_prom, 0x6000);
+                int i, j;
+                int _palette = 0;
+	
+		/*******************************************************
+		 * Color PROMs
+		 * Sheet 15B: middle, 136014-137,138,139
+		 * Inputs: MUX0 ... MUX3, ALPHA/BACK, SPRITE/BACK, 128V, COMPBLANK
+		 *
+		 * Note that we only decode the lower 128 colors because
+		 * the upper 128 are all black and used during the
+		 * horizontal and vertical blanking periods.
+		 *******************************************************/
+		for (i = 0; i < 128; i++)
+		{
+			int bit0,bit1,bit2,bit3;
+	
+			/* Sheet 15B: 136014-0137 red component */
+			bit0 = (color_prom.read(0x000 + i)>> 0) & 1;
+			bit1 = (color_prom.read(0x000 + i)>> 1) & 1;
+			bit2 = (color_prom.read(0x000 + i)>> 2) & 1;
+			bit3 = (color_prom.read(0x000 + i)>> 3) & 1;
+			palette[_palette++] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
+	
+			/* Sheet 15B: 136014-0138 green component */
+			bit0 = (color_prom.read(0x100 + i)>> 0) & 1;
+			bit1 = (color_prom.read(0x100 + i)>> 1) & 1;
+			bit2 = (color_prom.read(0x100 + i)>> 2) & 1;
+			bit3 = (color_prom.read(0x100 + i)>> 3) & 1;
+			palette[_palette++] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
+	
+			/* Sheet 15B: 136014-0139 blue component */
+			bit0 = (color_prom.read(0x200 + i)>> 0) & 1;
+			bit1 = (color_prom.read(0x200 + i)>> 1) & 1;
+			bit2 = (color_prom.read(0x200 + i)>> 2) & 1;
+			bit3 = (color_prom.read(0x200 + i)>> 3) & 1;
+			palette[_palette++] = (char) (0x0e * bit0 + 0x1f * bit1 + 0x43 * bit2 + 0x8f * bit3);
+		}
+	
+		/*******************************************************
+		 * Alpha colors (colors 0x000-0x1ff)
+		 * Sheet 15B: top left, 136014-140
+		 * Inputs: SHFT0, SHFT1 and CHA8* ... CHA13*
+		 *******************************************************/
+		for (i = 0; i < 64*4; i++)
+		{
+			int color = color_prom.read(0x300 + i);
+			colortable[0x0000 + i] = (char) ((color != 15) ? (0x020 + color) : 0);
+			colortable[0x0100 + i] = (char) ((color != 15) ? (0x060 + color) : 0);
+		}
+	
+		/*******************************************************
+		 * View colors (colors 0x200-0x3ff)
+		 * Sheet 13A: left, 136014-141
+		 * Inputs: SHFT2, SHFT3 and CHA8 ... CHA13
+		 *******************************************************/
+		for (i = 0; i < 64*4; i++)
+		{
+			int color = color_prom.read(0x400 + i);
+			colortable[0x0200 + i] = (char) (0x000 + color);
+			colortable[0x0300 + i] = (char) (0x040 + color);
+		}
+	
+		/*******************************************************
+		 * Sprite colors (colors 0x400-0xbff)
+		 * Sheet 14B: right, 136014-146
+		 * Inputs: CUSTOM0 ... CUSTOM3 and DATA0 ... DATA5
+		 *******************************************************/
+		for (i = 0; i < 64*16; i++)
+		{
+			int color = color_prom.read(0xc00 + i);
+			colortable[0x0400 + i] = (char) ((color != 15) ? (0x010 + color) : 0);
+			colortable[0x0800 + i] = (char) ((color != 15) ? (0x050 + color) : 0);
+		}
+	
+		/*******************************************************
+		 * Road colors (colors 0xc00-0x13ff)
+		 * Sheet 13A: bottom left, 136014-145
+		 * Inputs: R1 ... R6 and CHA0 ... CHA3
+		 *******************************************************/
+		for (i = 0; i < 64*16; i++)
+		{
+			int color = color_prom.read(0x800 + i);
+			colortable[0x0c00 + i] = (char) (0x000 + color);
+			colortable[0x1000 + i] = (char) (0x040 + color);
+		}
+	
+		/* 136014-142, 136014-143, 136014-144 Vertical position modifiers */
+		for (i = 0; i < 256; i++)
+		{
+			j = color_prom.read(0x500 + i)+ (color_prom.read(0x600 + i)<< 4) + (color_prom.read(0x700 + i)<< 8);
+			polepos_vertical_position_modifier[i] = (char) j;
+		}
+	
+		road_control = new UBytePtr(color_prom, 0x2000);
+		road_bits1 = new UBytePtr(color_prom, 0x4000);
+		road_bits2 = new UBytePtr(color_prom, 0x6000);
         }
     };
     /**
@@ -406,8 +407,8 @@ public class polepos {
 	
 	static void draw_sprites(osd_bitmap bitmap)
 	{
-		UShortArray posmem = new UShortArray(polepos_sprite_memory, 0x700);
-		UShortArray sizmem = new UShortArray(polepos_sprite_memory, 0xf00);
+		UShortPtr posmem = new UShortPtr(polepos_sprite_memory, 0x700);
+		UShortPtr sizmem = new UShortPtr(polepos_sprite_memory, 0xf00);
 		int i;
 	
 		for (i = 0; i < 64; i++, posmem.offset+=2, sizmem.offset+=2 )
