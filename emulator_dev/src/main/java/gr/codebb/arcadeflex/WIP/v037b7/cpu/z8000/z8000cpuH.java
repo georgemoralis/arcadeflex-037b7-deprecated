@@ -38,16 +38,20 @@ public class z8000cpuH {
     public void RQ(int n, int m){   _cpu.pRQ(n, m); }
 
     /* the register used as stack pointer */
-    public static int SP      = 15;
+    public int SP      = 15;
 
 /*TODO*////* programm status */
 /*TODO*///#define PPC     Z.ppc
 /*TODO*///#define PC      Z.pc
-/*TODO*///#define PSAP    Z.psap
+    public int PSAP() { return _cpu.Z.psap; }
+    public void PSAP(int _v) { _cpu.Z.psap=_v; }
 /*TODO*///#define FCW     Z.fcw
-/*TODO*///#define REFRESH Z.refresh
-/*TODO*///#define NSP 	Z.nsp
-    public static int IRQ_REQ(z8000_Regs Z) { return Z.irq_req; }
+    public int REFRESH() { return _cpu.Z.refresh; }
+    public void REFRESH(int _v) { _cpu.Z.refresh=_v; }
+    public int NSP() { return	_cpu.Z.nsp; }
+    public void NSP(int _v) { _cpu.Z.nsp=_v; }
+    public int IRQ_REQ() { return _cpu.Z.irq_req; }
+    public void IRQ_REQ(int _irq) { _cpu.Z.irq_req=_irq; }
 /*TODO*///#define IRQ_SRV Z.irq_srv
 /*TODO*///#define IRQ_VEC Z.irq_vec
 /*TODO*///
@@ -64,10 +68,10 @@ public class z8000cpuH {
 /*TODO*///
 /*TODO*////* bits of the FCW */
 /*TODO*///#define F_SEG	0x8000				/* segmented mode (Z8001 only) */
-/*TODO*///#define F_S_N	0x4000				/* system / normal mode */
+    public static final int F_S_N	= 0x4000;				/* system / normal mode */
     public static final int F_EPU	= 0x2000;				/* extension processor unit? */
-/*TODO*///#define F_NVIE	0x1000				/* non vectored interrupt enable */
-/*TODO*///#define F_VIE	0x0800				/* vectored interrupt enable */
+    public static final int F_NVIE	= 0x1000;				/* non vectored interrupt enable */
+    public static final int F_VIE	= 0x0800;				/* vectored interrupt enable */
 /*TODO*///#define F_10	0x0400				/* unused */
 /*TODO*///#define F_9 	0x0200				/* unused */
 /*TODO*///#define F_8 	0x0100				/* unused */
@@ -157,8 +161,8 @@ public class z8000cpuH {
     /* get data from the opcode words */
     /* o is the opcode word offset	  */
     /* s is a nibble shift factor	  */
-    public static int cc;
-    public static int bit;
+    public int cc;
+    public int bit;
     
     public void GET_BIT(int o){      /*UINT16*/ bit = (1 << (_cpu.Z.op[o] & 15)) & 0xffff; }
     public void GET_CCC(int o, int s){	/*UINT8*/ cc = ((_cpu.Z.op[o] >> (s)) & 15)&0xff; }
@@ -169,17 +173,20 @@ public class z8000cpuH {
     public int imm8;
     public int cnt;
     public int imm4;
+    public int imm3;
+    public int imm2;
+    public int idx;
     
     public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
     public void GET_SRC(int o, int s){	/*UINT8*/ src = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
-/*TODO*///#define GET_IDX(o,s)	UINT8 idx = (Z.op[o] >> (s)) & 15
+    public void GET_IDX(int o, int s){	/*UINT8*/ idx = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
     public void GET_CNT(int o, int s){	/*UINT8*/ cnt = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
     public void GET_IMM4(int o, int s){ /*UINT8*/ imm4 = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
 
     public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = (((_cpu.Z.op[o] >> (s)) & 15) + 1) & 0xff; }
 /*TODO*///#define GET_IMM1(o,s)	UINT8 imm1 = (Z.op[o] >> (s)) & 2
-/*TODO*///#define GET_IMM2(o,s)	UINT8 imm2 = (Z.op[o] >> (s)) & 3
-/*TODO*///#define GET_IMM3(o,s)	UINT8 imm3 = (Z.op[o] >> (s)) & 7
+    public void GET_IMM2(int o, int s){	/*UINT8*/ imm2 = ((_cpu.Z.op[o] >> (s)) & 3) & 0xff; }
+    public void GET_IMM3(int o, int s){	/*UINT8*/ imm3 = ((_cpu.Z.op[o] >> (s)) & 7) & 0xff; }
 
     public void GET_IMM8(int o){ 	/*UINT8*/ imm8 = _cpu.Z.op[o] & 0xff; }
 

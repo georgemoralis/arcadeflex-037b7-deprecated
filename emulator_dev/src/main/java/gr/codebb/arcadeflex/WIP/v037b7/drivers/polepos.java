@@ -186,7 +186,7 @@ public class polepos
 		new MemoryWriteAddress( 0xa000, 0xafff, polepos_view_w, polepos_view_memory ),		/* Background memory */
 		new MemoryWriteAddress( 0xc000, 0xc001, polepos_view_hscroll_w ),						/* Background horz scroll position */
 		new MemoryWriteAddress( 0xc100, 0xc101, polepos_road_vscroll_w ),						/* Road vertical position */
-		new MemoryWriteAddress( -1 )													  		/* end of table */
+		new MemoryWriteAddress( -1 )
 	};
 	
 	

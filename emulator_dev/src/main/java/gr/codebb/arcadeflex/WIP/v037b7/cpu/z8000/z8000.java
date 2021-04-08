@@ -148,7 +148,8 @@ public class z8000  extends cpu_interface {
 
     @Override
     public void set_irq_line(int irqline, int linestate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        z8000_set_irq_line(irqline, linestate);
     }
 
     @Override
@@ -679,15 +680,18 @@ public class z8000  extends cpu_interface {
 	
 	public int RDOP()
 	{
-            Z.pc &= 0xffff;
-            int res = cpu_readop16(Z.pc & 0xffff);
+            //if ((Z.pc == 0xffff)/* || (Z.pc == 0xfffe)*/)
+            //    Z.pc = 0;
+            
+            int res = cpu_readop16(Z.pc /*& 0xffff*/);
 	    Z.pc += 2;
+            
 	    return res;
 	}
 	
         public int RDMEM_B(int addr)
 	{
-		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
+		return (cpu_readmem16bew(addr /*& 0xffff*/) & 0xff);
 	}
 	
 	public int RDMEM_W(int addr)
@@ -700,13 +704,13 @@ public class z8000  extends cpu_interface {
 	{
 		int result;
 		addr &= ~1;
-		result = cpu_readmem16bew_word(addr & 0xffff) << 16;
-		return (result + cpu_readmem16bew_word((addr + 2) & 0xffff) & 0xffffffff);
+		result = cpu_readmem16bew_word(addr /*& 0xffff*/) << 16;
+		return (result + cpu_readmem16bew_word((addr + 2) /*& 0xffff*/) & 0xffffffff);
 	}
 	
 	public void WRMEM_B(int addr, int value)
 	{
-		cpu_writemem16bew(addr&0xffff, value&0xff);
+		cpu_writemem16bew(addr/*&0xffff*/, value&0xff);
 	}
 	
 	public void WRMEM_W(int addr, int value)
@@ -719,7 +723,7 @@ public class z8000  extends cpu_interface {
 	{
 		addr &= ~1;
 		cpu_writemem16bew_word(addr, value >> 16);
-		cpu_writemem16bew_word((addr + 2), value & 0xffff);
+		cpu_writemem16bew_word((addr + 2), value /*& 0xffff*/);
 	}
 	
 /*TODO*///	INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
@@ -781,8 +785,8 @@ public class z8000  extends cpu_interface {
 	{
 		if( mode == 0 )
 		{
-			cpu_writeport((addr & 0xffff),value & 0xff);
-			cpu_writeport((addr+1)&0xffff,(value >> 8) & 0xff);
+			cpu_writeport((addr /*& 0xffff*/),value & 0xff);
+			cpu_writeport((addr+1)/*&0xffff*/,(value >> 8) & 0xff);
 		}
 		else
 		{
@@ -965,10 +969,14 @@ public class z8000  extends cpu_interface {
             Z = new z8000_Regs();
             Z.irq_callback=_tmpIRQ;*/
             
-            Z.fcw = RDMEM_W( 2 )&0xffff; /* get reset FCW */
-            Z.pc = RDMEM_W( 4 )&0xffff; /* get reset PC  */
-            change_pc16bew(Z.pc & 0xffff);
+            Z.fcw = RDMEM_W( 2 )/*&0xffff*/; /* get reset FCW */
+            Z.pc = RDMEM_W( 4 )/*&0xffff*/; /* get reset PC  */
+            int _i=Z.pc;
+            change_pc16bew(_i /*& 0xffff*/);
+            Z.pc=_i;
 	}
+        
+        private String _kkStr;
 	
 	public void z8000_exit()
 	{
@@ -987,12 +995,12 @@ public class z8000  extends cpu_interface {
 	        /* any interrupt request pending? */
                 if (Z.irq_req != 0)
                     System.out.println(Z.irq_req);
-	        if (IRQ_REQ(Z) != 0)
+	        if (_cpuH.IRQ_REQ() != 0)
 				Interrupt();
 	
 /*TODO*///			CALL_MAME_DEBUG;
 	
-		if ((IRQ_REQ(Z) & Z8000_HALT) != 0)
+		if ((_cpuH.IRQ_REQ() & Z8000_HALT) != 0)
 	        {
 	            z8000_ICount[0] = 0;
 	        }
@@ -1000,6 +1008,8 @@ public class z8000  extends cpu_interface {
 	        {
 	            Z8000_exec exec;
 	            Z.op[0] = RDOP();
+                    _kkStr="opcode="+z8000_exec[Z.op[0]].dasm;
+                    //System.out.println(_kkStr);
 	            exec = z8000_exec[Z.op[0]];
 	
 	            if (exec.size > 1)
@@ -1031,13 +1041,15 @@ public class z8000  extends cpu_interface {
 		if (src != null)
 		{
 			Z = (z8000_Regs)src;
-			change_pc16bew(Z.pc&0xffff);
+                        int _i=Z.pc;
+			change_pc16bew(_i/*&0xffff*/);
+                        Z.pc=_i;
 		}
 	}
 	
 	public int z8000_get_pc()
 	{
-	    return (Z.pc & 0xffff);
+	    return (Z.pc /*& 0xffff*/);
 	}
 	
 /*TODO*///	void z8000_set_pc(unsigned val)
@@ -1155,41 +1167,42 @@ public class z8000  extends cpu_interface {
 /*TODO*///			IRQ_VEC = NMI;
 /*TODO*///		}
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	void z8000_set_irq_line(int irqline, int state)
-/*TODO*///	{
-/*TODO*///		Z.irq_state[irqline] = state;
-/*TODO*///		if (irqline == 0)
-/*TODO*///		{
-/*TODO*///			if (state == CLEAR_LINE)
-/*TODO*///			{
-/*TODO*///				if (!(FCW & F_NVIE))
-/*TODO*///					IRQ_REQ &= ~Z8000_NVI;
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				if ((FCW & F_NVIE) != 0)
-/*TODO*///					IRQ_REQ |= Z8000_NVI;
-/*TODO*///	        }
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if (state == CLEAR_LINE)
-/*TODO*///			{
-/*TODO*///				if (!(FCW & F_VIE))
-/*TODO*///					IRQ_REQ &= ~Z8000_VI;
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				if ((FCW & F_VIE) != 0)
-/*TODO*///					IRQ_REQ |= Z8000_VI;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
+	
+	public void z8000_set_irq_line(int irqline, int state)
+	{
+            System.out.println(">>>>>>>>>>>>>>>>z8000_set_irq_line!!!!");
+		Z.irq_state[irqline] = state;
+		if (irqline == 0)
+		{
+			if (state == CLEAR_LINE)
+			{
+				if ((Z.fcw & F_NVIE)==0)
+					_cpuH.IRQ_REQ( _cpuH.IRQ_REQ() & ~Z8000_NVI);
+			}
+			else
+			{
+				if ((Z.fcw & F_NVIE) != 0)
+					_cpuH.IRQ_REQ( _cpuH.IRQ_REQ() | Z8000_NVI);
+                        }
+		}
+		else
+		{
+			if (state == CLEAR_LINE)
+			{
+				if ((Z.fcw & F_VIE)==0)
+					_cpuH.IRQ_REQ( _cpuH.IRQ_REQ() & ~Z8000_VI );
+			}
+			else
+			{
+				if ((Z.fcw & F_VIE) != 0)
+					_cpuH.IRQ_REQ( _cpuH.IRQ_REQ() | Z8000_VI );
+			}
+		}
+	}
 	
 	public void z8000_set_irq_callback(irqcallbacksPtr callback)
 	{
-            System.out.println("z8000_set_irq_callback="+callback);
+            //System.out.println("z8000_set_irq_callback="+callback);
 		Z.irq_callback = callback;
 	}
 	
@@ -1206,7 +1219,7 @@ public class z8000  extends cpu_interface {
 /*TODO*///	    buffer[which][0] = '\0';
 		if( context == null )
 			r = Z;
-	
+	System.out.println("REGNUM: "+regnum);
 	    switch( regnum )
 		{
 			case CPU_INFO_NAME: return "Z8002";

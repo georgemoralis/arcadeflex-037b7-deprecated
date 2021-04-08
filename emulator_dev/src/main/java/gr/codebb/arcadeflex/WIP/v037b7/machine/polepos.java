@@ -92,7 +92,7 @@ public class polepos {
 		timer_set(cpu_getscanlinetime(0), 0, z80_interrupt);
 	} };
 	
-	static timer_callback z80_interrupt = new timer_callback() {
+	public static timer_callback z80_interrupt = new timer_callback() {
             @Override
             public void handler(int scanline) {
                 cpu_set_irq_line(0, 0, ((scanline & 64) == 0) ? ASSERT_LINE : CLEAR_LINE);
@@ -112,6 +112,8 @@ public class polepos {
 	{
 		int which = (offset / 2) + 1;
 	
+                System.out.println("polepos_z8002_nvi_enable_w ["+which+"]="+data);
+                        
 		if (which == cpu_getactivecpu())
 		{
 			if (which == 1)
@@ -125,6 +127,7 @@ public class polepos {
 	
 	public static InterruptPtr polepos_z8002_1_interrupt = new InterruptPtr() { public int handler() 
 	{
+            //System.out.println("polepos_z8002_1_interrupt");
 		if (z8002_1_nvi_enabled != 0)
 			cpu_set_irq_line(1, 0, ASSERT_LINE);
 	
@@ -133,6 +136,7 @@ public class polepos {
 	
 	public static InterruptPtr polepos_z8002_2_interrupt = new InterruptPtr() { public int handler() 
 	{
+            //System.out.println("polepos_z8002_2_interrupt");
 		if (z8002_2_nvi_enabled != 0)
 			cpu_set_irq_line(2, 0, ASSERT_LINE);
 	
@@ -141,6 +145,7 @@ public class polepos {
 	
 	public static WriteHandlerPtr polepos_z8002_enable_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
+            System.out.println("polepos_z8002_enable_w ["+offset+"]="+data);
 		if ((data & 1) != 0)
 			cpu_set_reset_line(offset + 1, CLEAR_LINE);
 		else
