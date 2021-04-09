@@ -94,7 +94,7 @@ public class meadows {
                 return 1;
             }
 
-/*TODO*///            overlay_create(deadeye_artwork, 2, Machine.drv.total_colors - 2);
+            overlay_create(deadeye_artwork, 2, Machine.drv.total_colors - 2);
             return 0;
         }
     };
@@ -105,7 +105,7 @@ public class meadows {
                 return 1;
             }
 
-/*TODO*///            overlay_create(gypsyjug_artwork, 2, Machine.drv.total_colors - 2);
+            overlay_create(gypsyjug_artwork, 2, Machine.drv.total_colors - 2);
             return 0;
         }
     };

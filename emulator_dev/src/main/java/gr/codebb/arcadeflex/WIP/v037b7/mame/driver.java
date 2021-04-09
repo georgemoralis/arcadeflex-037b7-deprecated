@@ -164,6 +164,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meteor.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers._8080bw.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.geebee.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.safarir.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.redalert.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warpwarp.*;
 
 public class driver {
 
@@ -408,21 +410,16 @@ public class driver {
         /* Namco games (plus some intruders on similar hardware) */
         driver_geebee,	/* [1978] Namco */
         driver_geebeeg,	/* [1978] Gremlin */
-        /*TODO*/
-        // driver_bombbee,	/* [1979] Namco */
-        /*TODO*/
-        // driver_cutieq,	/* (c) 1979 Namco */
+        driver_bombbee,	/* [1979] Namco */
+        driver_cutieq,	/* (c) 1979 Namco */
         driver_navalone,	/* (c) 1980 Namco */
         driver_kaitei,	/* [1980] K.K. Tokki */
         driver_kaitein,	/* [1980] Namco */
         driver_sos,		/* [1980] Namco */
         driver_tankbatt, /* (c) 1980 Namco */
-        /*TODO*/
-        // driver_warpwarp,	/* (c) 1981 Namco */
-        /*TODO*/
-        // driver_warpwarr,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
-        /*TODO*/
-        // driver_warpwar2,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
+        driver_warpwarp,	/* (c) 1981 Namco */
+        driver_warpwarr,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
+        driver_warpwar2,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
 
         /* Libble Rabble board (first Japanese game using a 68000) */
         /*TODO*/
@@ -857,8 +854,7 @@ public class driver {
         /*TODO*/
         /// *TODO*///TESTDRIVER( greenber,
 
-        /*TODO*/
-        // driver_redalert,	/* (c) 1981 + "GDI presents" */
+        driver_redalert,	/* (c) 1981 + "GDI presents" */
 
         /* M62 */
         driver_kungfum, /* (c) 1984 */
