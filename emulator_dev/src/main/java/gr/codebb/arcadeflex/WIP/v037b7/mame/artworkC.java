@@ -665,12 +665,13 @@ public class artworkC {
 /*TODO*///	}
 /*TODO*///
 /*TODO*///}
-/*TODO*///
-/*TODO*///static void load_png_fit(const char *filename, unsigned int start_pen, unsigned int max_pens, struct artwork_info **a)
-/*TODO*///{
-/*TODO*///	load_png(filename, start_pen, max_pens, Machine->scrbitmap->width, Machine->scrbitmap->height, a);
-/*TODO*///}
-/*TODO*///
+
+    static void load_png_fit(String filename, int start_pen, int max_pens, artwork_info a)
+    {
+/*TODO*///            load_png(filename, start_pen, max_pens, Machine.scrbitmap.width, Machine.scrbitmap.height, a);
+        System.out.println("load_png_fit NOT IMPLEMENTED!!!!");
+    }
+
     /**
      * *******************************************************************
      * backdrop_refresh
@@ -1122,71 +1123,71 @@ public class artworkC {
 /*TODO*///		memcpy (palette, artwork_overlay->orig_palette, 3 * artwork_overlay->num_pens_used);
 /*TODO*///	return 1;
 /*TODO*///}
-/*TODO*///
-/*TODO*///void overlay_load(const char *filename, unsigned int start_pen, unsigned int max_pens)
-/*TODO*///{
-/*TODO*///	int width, height;
-/*TODO*///
-/*TODO*///	/* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
-/*TODO*///	   the same way as before */
-/*TODO*///
-/*TODO*///	width = Machine->scrbitmap->width;
-/*TODO*///	height = Machine->scrbitmap->height;
-/*TODO*///
-/*TODO*///	if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///	{
-/*TODO*///		int temp;
-/*TODO*///
-/*TODO*///		temp = height;
-/*TODO*///		height = width;
-/*TODO*///		width = temp;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	load_png_fit(filename, start_pen, max_pens, &artwork_overlay);
-/*TODO*///
-/*TODO*///	if (artwork_overlay)
-/*TODO*///	{
-/*TODO*///		if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == 0)
-/*TODO*///		{
-/*TODO*///			artwork_kill();
-/*TODO*///			logerror("Not enough memory for artwork!\n");
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
-/*TODO*///void backdrop_load(const char *filename, unsigned int start_pen, unsigned int max_pens)
-/*TODO*///{
-/*TODO*///	int width, height;
-/*TODO*///
-/*TODO*///	/* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
-/*TODO*///	   the same way as before */
-/*TODO*///
-/*TODO*///	load_png_fit(filename, start_pen, max_pens, &artwork_backdrop);
-/*TODO*///
-/*TODO*///	if (artwork_backdrop)
-/*TODO*///	{
-/*TODO*///		width = artwork_backdrop->artwork->width;
-/*TODO*///		height = artwork_backdrop->artwork->height;
-/*TODO*///
-/*TODO*///		if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///		{
-/*TODO*///			int temp;
-/*TODO*///
-/*TODO*///			temp = height;
-/*TODO*///			height = width;
-/*TODO*///			width = temp;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == 0)
-/*TODO*///		{
-/*TODO*///			artwork_kill();
-/*TODO*///			logerror("Not enough memory for artwork!\n");
-/*TODO*///			return;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///}
-/*TODO*///
+
+    public static void overlay_load(String filename, int start_pen, int max_pens)
+    {
+            int width, height;
+
+            /* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
+               the same way as before */
+
+            width = Machine.scrbitmap.width;
+            height = Machine.scrbitmap.height;
+
+            if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0)
+            {
+                    int temp;
+
+                    temp = height;
+                    height = width;
+                    width = temp;
+            }
+
+            load_png_fit(filename, start_pen, max_pens, artwork_overlay);
+
+            if (artwork_overlay != null)
+            {
+                    if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == null)
+                    {
+                            artwork_kill();
+                            logerror("Not enough memory for artwork!\n");
+                            return;
+                    }
+            }
+    }
+
+    public static void backdrop_load(String filename, int start_pen, int max_pens)
+    {
+            int width, height;
+
+            /* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
+               the same way as before */
+
+            load_png_fit(filename, start_pen, max_pens, artwork_backdrop);
+
+            if (artwork_backdrop != null)
+            {
+                    width = artwork_backdrop.artwork.width;
+                    height = artwork_backdrop.artwork.height;
+
+                    if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0)
+                    {
+                            int temp;
+
+                            temp = height;
+                            height = width;
+                            width = temp;
+                    }
+
+                    if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == null)
+                    {
+                            artwork_kill();
+                            logerror("Not enough memory for artwork!\n");
+                            return;
+                    }
+            }
+    }
+
 /*TODO*///void artwork_load(struct artwork_info **a, const char *filename, unsigned int start_pen, unsigned int max_pens)
 /*TODO*///{
 /*TODO*///	load_png_fit(filename, start_pen, max_pens, a);
