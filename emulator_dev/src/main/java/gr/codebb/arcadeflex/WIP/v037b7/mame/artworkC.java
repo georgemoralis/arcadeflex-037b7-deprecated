@@ -6,10 +6,13 @@ package gr.codebb.arcadeflex.WIP.v037b7.mame;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_alloc;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_free;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.options;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.palette_change_color;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.palette_recalc;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.pngH.png_info;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.ORIENTATION_SWAP_XY;
@@ -18,6 +21,7 @@ import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.VIDEO_MODIFIES_PALETTE;
 import static gr.codebb.arcadeflex.old.arcadeflex.video.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.VIDEO_TYPE_VECTOR;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.copyrozbitmap;
 
 public class artworkC {
 
@@ -163,10 +167,10 @@ public class artworkC {
     static void merge_cmy(artwork_info a, osd_bitmap source, osd_bitmap source_alpha, int sx, int sy) {
         int c1, c2, m1, m2, y1, y2, pen1, pen2, max, alpha;
         int x, y, w, h;
-        osd_bitmap dest, dest_alpha;
+        //osd_bitmap dest, dest_alpha;
 
-        dest = a.orig_artwork;
-        dest_alpha = a.alpha;
+        //dest = a.orig_artwork;
+        //dest_alpha = a.alpha;
 
         if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) {
             w = source.height;
@@ -178,7 +182,7 @@ public class artworkC {
 
         for (y = 0; y < h; y++) {
             for (x = 0; x < w; x++) {
-                pen1 = read_pixel.handler(dest, sx + x, sy + y);
+                pen1 = read_pixel.handler(a.orig_artwork, sx + x, sy + y);
 
                 c1 = 0xff - a.u8_orig_palette[3 * pen1];
                 m1 = 0xff - a.u8_orig_palette[3 * pen1 + 1];
@@ -197,9 +201,9 @@ public class artworkC {
                 }
 
                 alpha = Math.min(0xff, read_pixel.handler(source_alpha, x, y)
-                        + read_pixel.handler(dest_alpha, sx + x, sy + y));
-                plot_pixel.handler(dest, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
-                plot_pixel.handler(dest_alpha, sx + x, sy + y, alpha);
+                        + read_pixel.handler(a.alpha, sx + x, sy + y));
+                plot_pixel.handler(a.orig_artwork, sx + x, sy + y, get_new_pen(a, 0xff - c2, 0xff - m2, 0xff - y2, alpha));
+                plot_pixel.handler(a.alpha, sx + x, sy + y, alpha);
             }
         }
     }
@@ -408,15 +412,17 @@ public class artworkC {
      */
     static void load_palette(artwork_info a, char[] palette) {
         int i;
-
+        
         /* Load colors into the palette */
         if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
+            
             for (i = 0; i < a.num_pens_used; i++) {
                 palette_change_color(i + a.start_pen, palette[i * 3], palette[i * 3 + 1], palette[i * 3 + 2]);
             }
 
             palette_recalc();
         }
+        
     }
 
     /*TODO*///
@@ -586,90 +592,90 @@ public class artworkC {
 /*TODO*///	free (p->image);
 /*TODO*///	return 1;
 /*TODO*///}
-/*TODO*///
-/*TODO*////*********************************************************************
-/*TODO*///  load_png
-/*TODO*///
-/*TODO*///  This is what loads your backdrop in from disk.
-/*TODO*///  start_pen = the first pen available for the backdrop to use
-/*TODO*///  max_pens = the number of pens the backdrop can use
-/*TODO*///  So, for example, suppose you want to load "dotron.png", have it
-/*TODO*///  start with color 192, and only use 48 pens.  You would call
-/*TODO*///  backdrop = backdrop_load("dotron.png",192,48);
-/*TODO*/// *********************************************************************/
-/*TODO*///
-/*TODO*///static void load_png(const char *filename, unsigned int start_pen, unsigned int max_pens,
-/*TODO*///					 int width, int height, struct artwork_info **a)
-/*TODO*///{
-/*TODO*///	struct osd_bitmap *picture = 0, *alpha = 0;
-/*TODO*///	struct png_info p;
-/*TODO*///	int scalex, scaley;
-/*TODO*///
-/*TODO*///	/* If the user turned artwork off, bail */
-/*TODO*///	if (!options.use_artwork) return;
-/*TODO*///
-/*TODO*///	if (!decode_png(filename, &picture, &alpha, &p))
-/*TODO*///		return;
-/*TODO*///
-/*TODO*///	allocate_artwork_mem(width, height, a);
-/*TODO*///
-/*TODO*///	if (*a==NULL)
-/*TODO*///		return;
-/*TODO*///
-/*TODO*///	(*a)->start_pen = start_pen;
-/*TODO*///
-/*TODO*///	(*a)->num_pens_used = p.num_palette;
-/*TODO*///	(*a)->num_pens_trans = p.num_trans;
-/*TODO*///	(*a)->orig_palette = p.palette;
-/*TODO*///	(*a)->transparency = p.trans;
-/*TODO*///
-/*TODO*///	/* Make sure we don't have too many colors */
-/*TODO*///	if ((*a)->num_pens_used > max_pens)
-/*TODO*///	{
-/*TODO*///		logerror("Too many colors in artwork.\n");
-/*TODO*///		logerror("Colors found: %d  Max Allowed: %d\n",
-/*TODO*///				 (*a)->num_pens_used,max_pens);
-/*TODO*///		artwork_free(a);
-/*TODO*///		bitmap_free(picture);
-/*TODO*///		return;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* Scale the original picture to be the same size as the visible area */
-/*TODO*///	scalex = 0x10000 * picture->width  / (*a)->orig_artwork->width;
-/*TODO*///	scaley = 0x10000 * picture->height / (*a)->orig_artwork->height;
-/*TODO*///
-/*TODO*///	if (Machine->orientation & ORIENTATION_SWAP_XY)
-/*TODO*///	{
-/*TODO*///		int tmp;
-/*TODO*///		tmp = scalex;
-/*TODO*///		scalex = scaley;
-/*TODO*///		scaley = tmp;
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	copyrozbitmap((*a)->orig_artwork, picture, 0, 0, scalex, 0, 0, scaley, 0, 0, TRANSPARENCY_NONE, 0, 0);
-/*TODO*///	/* We don't need the original any more */
-/*TODO*///	bitmap_free(picture);
-/*TODO*///
-/*TODO*///	if (alpha)
-/*TODO*///	{
-/*TODO*///		copyrozbitmap((*a)->alpha, alpha, 0, 0, scalex, 0, 0, scaley, 0, 0, TRANSPARENCY_NONE, 0, 0);
-/*TODO*///		bitmap_free(alpha);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///	/* If the game uses dynamic colors, we assume that it's safe
-/*TODO*///	   to init the palette and remap the colors now */
-/*TODO*///	if (Machine->drv->video_attributes & VIDEO_MODIFIES_PALETTE)
-/*TODO*///	{
-/*TODO*///		load_palette(*a,(*a)->orig_palette);
-/*TODO*///		backdrop_refresh(*a);
-/*TODO*///	}
-/*TODO*///
-/*TODO*///}
+
+    /*********************************************************************
+      load_png
+
+      This is what loads your backdrop in from disk.
+      start_pen = the first pen available for the backdrop to use
+      max_pens = the number of pens the backdrop can use
+      So, for example, suppose you want to load "dotron.png", have it
+      start with color 192, and only use 48 pens.  You would call
+      backdrop = backdrop_load("dotron.png",192,48);
+     *********************************************************************/
+
+    static void load_png(String filename, int start_pen, int max_pens,
+                                             int width, int height, artwork_info a)
+    {
+            osd_bitmap picture = null, alpha = null;
+            png_info p=new png_info();
+            int scalex, scaley;
+
+            /* If the user turned artwork off, bail */
+            if (options.use_artwork==0) return;
+
+/*TODO*///            if (!decode_png(filename, &picture, &alpha, &p))
+/*TODO*///                    return;
+            System.out.println("decode_png NOT IMPLEMENTED!!!!");
+            
+            a = allocate_artwork_mem(width, height);
+
+            if (a==null)
+                    return;
+
+            (a).start_pen = start_pen;
+
+            (a).num_pens_used = p.num_palette;
+            (a).num_pens_trans = p.num_trans;
+            (a).u8_orig_palette = p.palette;
+            (a).u8_transparency = p.trans;
+
+            /* Make sure we don't have too many colors */
+            if ((a).num_pens_used > max_pens)
+            {
+                    logerror("Too many colors in artwork.\n");
+                    logerror("Colors found: %d  Max Allowed: %d\n",
+                                     (a).num_pens_used,max_pens);
+                    artwork_free(a);
+                    bitmap_free(picture);
+                    return;
+            }
+
+            /* Scale the original picture to be the same size as the visible area */
+            scalex = 0x10000 * picture.width  / (a).orig_artwork.width;
+            scaley = 0x10000 * picture.height / (a).orig_artwork.height;
+
+            if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0)
+            {
+                    int tmp;
+                    tmp = scalex;
+                    scalex = scaley;
+                    scaley = tmp;
+            }
+
+            copyrozbitmap((a).orig_artwork, picture, 0, 0, scalex, 0, 0, scaley, 0, null, TRANSPARENCY_NONE, 0, 0);
+            /* We don't need the original any more */
+            bitmap_free(picture);
+
+            if (alpha != null)
+            {
+                    copyrozbitmap((a).alpha, alpha, 0, 0, scalex, 0, 0, scaley, 0, null, TRANSPARENCY_NONE, 0, 0);
+                    bitmap_free(alpha);
+            }
+
+            /* If the game uses dynamic colors, we assume that it's safe
+               to init the palette and remap the colors now */
+            if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0)
+            {
+                    load_palette(a,(a).u8_orig_palette);
+                    backdrop_refresh(a);
+            }
+
+    }
 
     static void load_png_fit(String filename, int start_pen, int max_pens, artwork_info a)
     {
-/*TODO*///            load_png(filename, start_pen, max_pens, Machine.scrbitmap.width, Machine.scrbitmap.height, a);
-        System.out.println("load_png_fit NOT IMPLEMENTED!!!!");
+        load_png(filename, start_pen, max_pens, Machine.scrbitmap.width, Machine.scrbitmap.height, a);
     }
 
     /**
@@ -832,9 +838,9 @@ public class artworkC {
                 int black = Machine.pens[0];
 
                 for (j = 0; j < height; j++) {
-                    dst = dest.line[j];
-                    src = source.line[j];
-                    ovr = artwork_overlay.artwork.line[j];
+                    dst = new UBytePtr(dest.line[j]);
+                    src = new UBytePtr(source.line[j]);
+                    ovr = new UBytePtr(artwork_overlay.artwork.line[j]);
                     for (i = width; i > 0; i--) {
                         if (src.read() != black) {
                             dst.write(ovr.read());
@@ -1188,11 +1194,11 @@ public class artworkC {
             }
     }
 
-/*TODO*///void artwork_load(struct artwork_info **a, const char *filename, unsigned int start_pen, unsigned int max_pens)
-/*TODO*///{
-/*TODO*///	load_png_fit(filename, start_pen, max_pens, a);
-/*TODO*///}
-/*TODO*///
+    public static void artwork_load(artwork_info a, String filename, int start_pen, int max_pens)
+    {
+            load_png_fit(filename, start_pen, max_pens, a);
+    }
+
 /*TODO*///void artwork_load_size(struct artwork_info **a, const char *filename, unsigned int start_pen, unsigned int max_pens,
 /*TODO*///					   int width, int height)
 /*TODO*///{
@@ -1253,12 +1259,12 @@ public class artworkC {
         int width, height;
 
         artwork_overlay = allocate_artwork_mem(Machine.scrbitmap.width, Machine.scrbitmap.height);
-
+        
         if (artwork_overlay == null) {
             System.out.println("is null");
             return;
         }
-
+        
         /* replace the real display with a fake one, this way drivers can access Machine->scrbitmap
 	   the same way as before */
         width = Machine.scrbitmap.width;
@@ -1271,16 +1277,18 @@ public class artworkC {
             height = width;
             width = temp;
         }
-
+        
+        
         if ((artwork_real_scrbitmap = bitmap_alloc(width, height)) == null) {
             artwork_kill();
             logerror("Not enough memory for artwork!\n");
             return;
         }
-
+                
         artwork_overlay.start_pen = start_pen;
 
         if (Machine.scrbitmap.depth == 8) {
+            
             if ((artwork_overlay.u8_orig_palette = new char[256 * 3]) == null) {
                 logerror("Not enough memory for overlay!\n");
                 artwork_kill();
@@ -1316,8 +1324,10 @@ public class artworkC {
 /*TODO*///		fillbitmap (artwork_overlay.orig_artwork, white_pen, 0);
 /*TODO*///		fillbitmap (artwork_overlay.alpha, 0, 0);
         }
+        
         int ae_ptr = 0;
         while (ae[ae_ptr].box.min_x >= 0) {
+            
             int alpha = ae[ae_ptr].alpha;
 
             if (alpha == OVERLAY_DEFAULT_OPACITY) {
@@ -1325,6 +1335,7 @@ public class artworkC {
             }
 
             pen = get_new_pen(artwork_overlay, ae[ae_ptr].red, ae[ae_ptr].green, ae[ae_ptr].blue, alpha);
+            
             if (ae[ae_ptr].box.max_y < 0) /* disk */ {
                 int r = ae[ae_ptr].box.max_x;
                 disk_type = ae[ae_ptr].box.max_y;
@@ -1373,25 +1384,30 @@ public class artworkC {
 /*TODO*///
 /*TODO*///			}
             } else {
+                
                 if ((box = bitmap_alloc(ae[ae_ptr].box.max_x - ae[ae_ptr].box.min_x + 1,
                         ae[ae_ptr].box.max_y - ae[ae_ptr].box.min_y + 1)) == null) {
                     logerror("Not enough memory for artwork!\n");
                     artwork_kill();
                     return;
                 }
+                
                 if ((box_alpha = bitmap_alloc(ae[ae_ptr].box.max_x - ae[ae_ptr].box.min_x + 1,
                         ae[ae_ptr].box.max_y - ae[ae_ptr].box.min_y + 1)) == null) {
                     logerror("Not enough memory for artwork!\n");
                     artwork_kill();
                     return;
                 }
+                
                 fillbitmap(box, pen, null);
                 fillbitmap(box_alpha, alpha, null);
                 merge_cmy(artwork_overlay, box, box_alpha, ae[ae_ptr].box.min_x, ae[ae_ptr].box.min_y);
                 bitmap_free(box);
                 bitmap_free(box_alpha);
+                
             }
             ae_ptr++;
+            
         }
 
         /* Make sure we don't have too many colors */
@@ -1402,15 +1418,16 @@ public class artworkC {
             artwork_kill();
             return;
         }
-
+        
         if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
             load_palette(artwork_overlay, artwork_overlay.u8_orig_palette);
             backdrop_refresh(artwork_overlay);
         }
-
+        
         if ((Machine.drv.video_attributes & VIDEO_MODIFIES_PALETTE) != 0) {
-            overlay_remap();
+            overlay_remap();            
         }
+        
     }
 
     /*TODO*///int artwork_get_size_info(const char *file_name, struct artwork_size_info *a)

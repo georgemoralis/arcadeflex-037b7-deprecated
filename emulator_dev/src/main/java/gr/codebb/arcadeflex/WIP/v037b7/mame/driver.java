@@ -162,6 +162,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.cloak.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.phoenix.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.meteor.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers._8080bw.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.geebee.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.safarir.*;
 
 public class driver {
 
@@ -393,8 +395,7 @@ public class driver {
         // driver_cclimbr2,	/* (c) 1988 (Japan) */
 
         /* "Phoenix hardware" (and variations) games */
-        /*TODO*/
-        // driver_safarir,	/* Shin Nihon Kikaku (SNK) */
+        driver_safarir,	/* Shin Nihon Kikaku (SNK) */
         driver_phoenix,	/* (c) 1980 Amstar */
         driver_phoenixa,	/* (c) 1980 Amstar + Centuri license */
         driver_phoenixt,	/* (c) 1980 Taito */
@@ -405,22 +406,16 @@ public class driver {
         driver_pleiadce,	/* (c) 1981 Centuri + Tehkan */
 
         /* Namco games (plus some intruders on similar hardware) */
-        /*TODO*/
-        // driver_geebee,	/* [1978] Namco */
-        /*TODO*/
-        // driver_geebeeg,	/* [1978] Gremlin */
+        driver_geebee,	/* [1978] Namco */
+        driver_geebeeg,	/* [1978] Gremlin */
         /*TODO*/
         // driver_bombbee,	/* [1979] Namco */
         /*TODO*/
         // driver_cutieq,	/* (c) 1979 Namco */
-        /*TODO*/
-        // driver_navalone,	/* (c) 1980 Namco */
-        /*TODO*/
-        // driver_kaitei,	/* [1980] K.K. Tokki */
-        /*TODO*/
-        // driver_kaitein,	/* [1980] Namco */
-        /*TODO*/
-        // driver_sos,		/* [1980] Namco */
+        driver_navalone,	/* (c) 1980 Namco */
+        driver_kaitei,	/* [1980] K.K. Tokki */
+        driver_kaitein,	/* [1980] Namco */
+        driver_sos,		/* [1980] Namco */
         driver_tankbatt, /* (c) 1980 Namco */
         /*TODO*/
         // driver_warpwarp,	/* (c) 1981 Namco */

@@ -40,6 +40,7 @@ import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 import static gr.codebb.arcadeflex.common.libc.cstring.*;
 import static gr.codebb.arcadeflex.v037b7.mame.sndintrfH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.artworkC.*;
 
 public class videopin
 {
@@ -171,7 +172,7 @@ public class videopin
 		memcpy(game_colortable,videopin_colortable,videopin_colortable.length);
 	
 		// Get Artwork
-/*TODO*///		artwork_load(videopin_backdrop, "videopin.png", 2, Machine.drv.total_colors - 2);
+		artwork_load(videopin_backdrop, "videopin.png", 2, Machine.drv.total_colors - 2);
 		if (videopin_backdrop != null)
 		{
 			memcpy (new UBytePtr(game_palette, 3*videopin_backdrop.start_pen), videopin_backdrop.u8_orig_palette,

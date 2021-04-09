@@ -259,7 +259,7 @@ public class _8080bw {
 
             			start_pen = 2;
 			max_pens = Machine.drv.total_colors-start_pen;
-            			switch (artwork_type)
+            		switch (artwork_type)
 			{
 			case SIMPLE_OVERLAY:
 				overlay_create(init_artwork, start_pen, max_pens);
@@ -282,8 +282,10 @@ public class _8080bw {
             }
 
             if (use_tmpbitmap != 0) {
+                System.out.println("A");
                 plot_pixel_p = plot_pixel_8080_tmpbitmap;
             } else {
+                System.out.println("B");
                 plot_pixel_p = plot_pixel_8080;
             }
 

@@ -20,7 +20,7 @@ public class blit {
 
         /* while (true)
             {*/
-        for (int i = 0; i < Machine.scrbitmap.height; i++) {
+        for (int i = 0; i < Machine.scrbitmap.height-1; i++) {
             System.arraycopy(Machine.scrbitmap.line[i].memory, Machine.scrbitmap.line[i].offset, back_buffer, i * Machine.scrbitmap.width, Machine.scrbitmap.width);
         }
 

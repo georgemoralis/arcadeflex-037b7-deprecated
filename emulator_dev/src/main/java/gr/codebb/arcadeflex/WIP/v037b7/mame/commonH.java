@@ -106,7 +106,7 @@ public class commonH {
 
     /* These are for nibble-wide ROMs, can be used with code or data */
     public static void ROM_LOAD_NIB_LOW(String name, int offset, int length, int crc) {
-        arload.add(new RomModule(name, offset, (length) | ROMFLAG_NIBBLE, crc));
+        arload.add(new RomModule(name, offset, (length) | ROMFLAG_NIBBLE, 0));
     }
 
     public static void ROM_LOAD_NIB_HIGH(String name, int offset, int length, int crc) {

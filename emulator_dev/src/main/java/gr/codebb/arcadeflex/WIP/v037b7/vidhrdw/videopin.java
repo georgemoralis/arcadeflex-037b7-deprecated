@@ -210,7 +210,7 @@ public class videopin
 	
 		if (videopin_backdrop != null)
 		{
-/*TODO*///			backdrop_refresh (videopin_backdrop);
+			backdrop_refresh (videopin_backdrop);
 			copybitmap(tmpbitmap,videopin_backdrop.artwork,0,0,0,0,Machine.visible_area,TRANSPARENCY_NONE,0);
 		}
 	
