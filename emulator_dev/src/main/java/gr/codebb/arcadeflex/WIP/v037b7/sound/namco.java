@@ -528,7 +528,7 @@ public class namco extends snd_interface {
         public void handler(int offset, int data) {
             /* update the streams */
             stream_update(stream, 0);
-            System.out.println("Escribo "+data);
+            //System.out.println("Escribo "+data);
 
             namco_wavedata.write(offset, data);
         }

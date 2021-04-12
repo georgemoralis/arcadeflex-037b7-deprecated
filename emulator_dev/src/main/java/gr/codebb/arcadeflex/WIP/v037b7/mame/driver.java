@@ -169,6 +169,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warpwarp.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starcrus.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.stactics.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.wardner.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skykid.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.baraduke.*;
 
 public class driver {
 
@@ -443,14 +445,10 @@ public class driver {
         driver_pacland2, /* (c) 1984 */
         driver_pacland3, /* (c) 1984 */
         driver_paclandm, /* (c) 1984 Midway */
-        /*TODO*/
-        // driver_drgnbstr,	/* (c) 1984 */
-        /*TODO*/
-        // driver_skykid,	/* (c) 1985 */
-        /*TODO*/
-        // driver_baraduke,	/* (c) 1985 */
-        /*TODO*/
-        // driver_metrocrs,	/* (c) 1985 */
+        driver_drgnbstr,	/* (c) 1984 */
+        driver_skykid,	/* (c) 1985 */
+        driver_baraduke,	/* (c) 1985 */
+        driver_metrocrs,	/* (c) 1985 */
 
         /* Namco System 86 games */
         /*TODO*/
