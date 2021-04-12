@@ -49,6 +49,8 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.m6800.m6808;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8085.i8085;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8085.i8080;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8085.i8085H.*;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.tms32010.tms32010;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.tms32010.tms32010H.*;
 
 public class cpuintrf {
 
@@ -340,7 +342,7 @@ public class cpuintrf {
                 new Dummy_cpu(),//CPU0(TMS99105A,tms99105a,1,  0,1.00,TMS99105A_NONE,    -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
                 //new Dummy_cpu(),//CPU0(TMS99110A,tms99110a,1,  0,1.00,TMS99110A_NONE,    -1,			   -1,			   16bew, 0,16,BE,2, 6,16BEW),
                 new z8000(),//CPU0(Z8000,    z8000,	 2,  0,1.00,Z8000_INT_NONE,    Z8000_NVI,	   Z8000_NMI,	   16bew, 0,16,BE,2, 6,16BEW),
-                new Dummy_cpu(),//CPU3(TMS320C10,tms320c10,2,  0,1.00,TMS320C10_INT_NONE,-1,			   -1,			   16,	 -1,16,BE,2, 4,16	),
+                new tms32010(),//CPU3(TMS320C10,tms320c10,2,  0,1.00,TMS320C10_INT_NONE,-1,			   -1,			   16,	 -1,16,BE,2, 4,16	),
                 new Dummy_cpu(),//CPU3(CCPU,	   ccpu,	 2,  0,1.00,0,				   -1,			   -1,			   16,	  0,15,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU0(PDP1,	   pdp1,	 0,  0,1.00,0,				   -1,			   -1,			   16,	  0,18,LE,1, 3,16	),
                 new Dummy_cpu(),//CPU3(ADSP2100, adsp2100, 4,  0,1.00,ADSP2100_INT_NONE, -1,			   -1,			   16lew,-1,14,LE,2, 4,16LEW),
@@ -1786,14 +1788,22 @@ public class cpuintrf {
                             break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_TMS320C10)
-/*TODO*///			case CPU_TMS320C10:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case TMS320C10_ACTIVE_INT:	irq_line = 0; LOG(("TMS32010 INT\n")); break;
-/*TODO*///				case TMS320C10_ACTIVE_BIO:	irq_line = 1; LOG(("TMS32010 BIO\n")); break;
-/*TODO*///				default:					irq_line = 0; LOG(("TMS32010 unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
+			case CPU_TMS320C10:
+                            switch (num)
+                            {
+				case TMS320C10_ACTIVE_INT:	
+                                    irq_line = 0; 
+                                    //LOG(("TMS32010 INT\n")); 
+                                    break;
+				case TMS320C10_ACTIVE_BIO:	
+                                    irq_line = 1; 
+                                    //LOG(("TMS32010 BIO\n")); 
+                                    break;
+				default:					
+                                    irq_line = 0; 
+                                    //LOG(("TMS32010 unknown\n"));
+                            }
+                            break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_ADSP2100)
 /*TODO*///			case CPU_ADSP2100:

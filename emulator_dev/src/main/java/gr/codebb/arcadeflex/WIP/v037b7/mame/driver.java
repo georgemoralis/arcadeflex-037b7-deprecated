@@ -166,6 +166,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.geebee.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.safarir.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.redalert.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.warpwarp.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.starcrus.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.stactics.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.wardner.*;
 
 public class driver {
 
@@ -1191,12 +1194,9 @@ public class driver {
         // driver_hishouza,	/* TP-007 (c) 1987 Taito Corporation (Japan) */
         /*TODO*/
         // driver_fsharkbt,	/* bootleg */
-        /*TODO*/
-        // driver_wardner,	/* TP-009 (c) 1987 Taito Corporation Japan (World) */
-        /*TODO*/
-        // driver_pyros,		/* TP-009 (c) 1987 Taito America Corporation (US) */
-        /*TODO*/
-        // driver_wardnerj,	/* TP-009 (c) 1987 Taito Corporation (Japan) */
+        driver_wardner,	/* TP-009 (c) 1987 Taito Corporation Japan (World) */
+        driver_pyros,		/* TP-009 (c) 1987 Taito America Corporation (US) */
+        driver_wardnerj,	/* TP-009 (c) 1987 Taito Corporation (Japan) */
         /*TODO*/
         // driver_twincobr,	/* TP-011 (c) 1987 Taito Corporation (World) */
         /*TODO*/
@@ -3344,13 +3344,11 @@ public class driver {
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*/
         // driver_spiders2,	/* (c) 1981 Sigma Ent. Inc. */
-        /*TODO*/
-        // driver_stactics,	/* [1981 Sega] */
+        driver_stactics,	/* [1981 Sega] */
         /*TODO*/
         // driver_exterm,	/* (c) 1989 Premier Technology - a Gottlieb game */
 
-        /*TODO*/
-        // driver_starcrus,	/* [1977 Ramtek] */
+        driver_starcrus,	/* [1977 Ramtek] */
 
         /*TODO*/
         /// *TODO*///TESTDRIVER( dlair,
