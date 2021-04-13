@@ -748,20 +748,20 @@ public class mixer {
                     samples_to_generate--;
                 }
             } /* if we're stereo center, mix to both channels */ else {
-                throw new UnsupportedOperationException("unsupported");
-                /*TODO*///				while (source < source_end && samples_to_generate > 0)
-/*TODO*///				{
-/*TODO*///					INT32 mixing_value = (*source * mixing_volume) >> 8;
-/*TODO*///					left_accum[output_pos] += mixing_value;
-/*TODO*///					right_accum[output_pos] += mixing_value;
-/*TODO*///
-/*TODO*///					input_frac += step_size;
-/*TODO*///					source += input_frac >> FRACTION_BITS;
-/*TODO*///					input_frac &= FRACTION_MASK;
-/*TODO*///
-/*TODO*///					output_pos = (output_pos + 1) & ACCUMULATOR_MASK;
-/*TODO*///					samples_to_generate--;
-/*TODO*///				}
+/*TODO*///                throw new UnsupportedOperationException("unsupported");
+                		while (source.offset < source_end && samples_to_generate > 0)
+				{
+					int mixing_value = (source.read() * mixing_volume) >> 8;
+					left_accum[output_pos] += mixing_value;
+					right_accum[output_pos] += mixing_value;
+
+					input_frac += step_size;
+					source.inc( input_frac >> FRACTION_BITS );
+					input_frac &= FRACTION_MASK;
+
+					output_pos = (output_pos + 1) & ACCUMULATOR_MASK;
+					samples_to_generate--;
+				}
             }
 
             /* handle the end case */

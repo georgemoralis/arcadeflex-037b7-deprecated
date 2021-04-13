@@ -171,6 +171,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.stactics.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.wardner.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skykid.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.baraduke.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos86.*;
 
 public class driver {
 
@@ -451,22 +452,14 @@ public class driver {
         driver_metrocrs,	/* (c) 1985 */
 
         /* Namco System 86 games */
-        /*TODO*/
-        // driver_hopmappy,	/* (c) 1986 */
-        /*TODO*/
-        // driver_skykiddx,	/* (c) 1986 */
-        /*TODO*/
-        // driver_skykiddo,	/* (c) 1986 */
-        /*TODO*/
-        // driver_roishtar,	/* (c) 1986 */
-        /*TODO*/
-        // driver_genpeitd,	/* (c) 1986 */
-        /*TODO*/
-        // driver_rthunder,	/* (c) 1986 new version */
-        /*TODO*/
-        // driver_rthundro,	/* (c) 1986 old version */
-        /*TODO*/
-        // driver_wndrmomo,	/* (c) 1987 */
+        driver_hopmappy,	/* (c) 1986 */
+        driver_skykiddx,	/* (c) 1986 */
+        driver_skykiddo,	/* (c) 1986 */
+        driver_roishtar,	/* (c) 1986 */
+        driver_genpeitd,	/* (c) 1986 */
+        driver_rthunder,	/* (c) 1986 new version */
+        driver_rthundro,	/* (c) 1986 old version */
+        driver_wndrmomo,	/* (c) 1987 */
 
         /* Namco System 1 games */
         driver_shadowld, /* (c) 1987 */

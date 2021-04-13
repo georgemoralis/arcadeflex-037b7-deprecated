@@ -257,7 +257,7 @@ public class z8000  extends cpu_interface {
 
 	
 	/* current CPU context */
-	public static z8000_Regs Z=new z8000_Regs();
+	public z8000_Regs Z=new z8000_Regs();
 	
 	/* zero, sign and parity flags for logical byte operations */
 	public static int[] z8000_zsp=new int[256];
@@ -984,6 +984,7 @@ public class z8000  extends cpu_interface {
 	}
         
         public int _lastOpcode=0;
+        public boolean _bTrace=false;
 	
 	public int z8000_execute(int cycles)
 	{
@@ -1009,7 +1010,9 @@ public class z8000  extends cpu_interface {
 	            Z8000_exec exec;
 	            Z.op[0] = RDOP();
                     _kkStr="opcode="+z8000_exec[Z.op[0]].dasm;
-                    //System.out.println(_kkStr);
+                    if (_bTrace){
+                        //System.out.println(_kkStr);
+                    }
 	            exec = z8000_exec[Z.op[0]];
 	
 	            if (exec.size > 1)
