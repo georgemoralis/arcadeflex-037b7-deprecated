@@ -554,7 +554,7 @@ public class z8000tbl {
 
     public void z8000_init()
     {
-        System.out.println("z8000_init");
+        //System.out.println("z8000_init");
         int i;
     	Z8000_init init;
     
@@ -608,7 +608,7 @@ public class z8000tbl {
     			_cpu.z8000_exec[i].dasm	 = init.dasm;
     		}
     	}
-        System.out.println("END z8000_init");
+        //System.out.println("END z8000_init");
     }
 
     public void z8000_deinit()

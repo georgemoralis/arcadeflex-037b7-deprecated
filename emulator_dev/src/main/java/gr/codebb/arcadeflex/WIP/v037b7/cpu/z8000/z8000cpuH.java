@@ -194,7 +194,7 @@ public class z8000cpuH {
 
     public int imm16;
     public int dsp7;
-    public int dsp8;
+    public byte dsp8;
     public int addr;
     public int imm32;
     public int dsp16;
@@ -202,7 +202,7 @@ public class z8000cpuH {
     public void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (_cpu.Z.op[o])&0xffff; }
     public void GET_IMM32(){		/*UINT32*/ imm32 = _cpu.Z.op[2] + (_cpu.Z.op[1] << 16); }
     public void GET_DSP7(){		/*UINT8*/ dsp7 = (_cpu.Z.op[0] & 127)&0xff; }
-    public void GET_DSP8(){		/*INT8*/ dsp8 = (_cpu.Z.op[0]) & 0xfff; }
+    public void GET_DSP8(){		/*INT8*/ dsp8 = (byte)(_cpu.Z.op[0]); }
     public void GET_DSP16(){		/*UINT16*/ dsp16 = ((_cpu.Z.pc + _cpu.Z.op[1]) & 0xffff); }
     public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o] & 0xffff; }
 

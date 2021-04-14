@@ -681,20 +681,21 @@ public class z8000  extends cpu_interface {
 	
 	public int RDOP()
 	{
-            if ((Z.pc == 0xffff)/* || (Z.pc == 0xfffe)*/)
-                Z.pc = 0;
+            ///if ((Z.pc == 0xffff)/* || (Z.pc == 0xfffe)*/)
+            //    Z.pc = 0;
             
             int res = cpu_readop16(Z.pc & 0xffff);
-	    Z.pc += 2;
+	    //Z.pc = (Z.pc & 0xffff) + 2;
             
-            Z.pc &= 0xffff;
+            //Z.pc &= 0xffff;
+            Z.pc += 2;
             
 	    return res;
 	}
 	
         public int RDMEM_B(int addr)
 	{
-		return (cpu_readmem16bew(addr /*& 0xffff*/) & 0xff);
+		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
 	}
 	
 	public int RDMEM_W(int addr)
@@ -718,7 +719,7 @@ public class z8000  extends cpu_interface {
 	
 	public void WRMEM_W(int addr, int value)
 	{
-		addr &= ~1;
+		addr = (addr & 0xffff) & ~1;
 		cpu_writemem16bew_word(addr&0xffff, value& 0xffff);
 	}
 	
@@ -962,7 +963,7 @@ public class z8000  extends cpu_interface {
 	
 	public void z8000_reset(Object param)
 	{
-            System.out.println("z8000_reset");
+            //System.out.println("z8000_reset");
 	    _tbl.z8000_init();
 /*TODO*///            memset(&Z, 0, sizeof(z8000_Regs));
             Z = new z8000_Regs();
