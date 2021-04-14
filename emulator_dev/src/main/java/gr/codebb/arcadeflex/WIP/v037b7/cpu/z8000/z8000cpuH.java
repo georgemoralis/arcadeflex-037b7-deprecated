@@ -51,20 +51,22 @@ public class z8000cpuH {
     public int NSP() { return	_cpu.Z.nsp; }
     public void NSP(int _v) { _cpu.Z.nsp=_v; }
     public int IRQ_REQ() { return _cpu.Z.irq_req; }
-    public void IRQ_REQ(int _irq) { _cpu.Z.irq_req=_irq; }
-/*TODO*///#define IRQ_SRV Z.irq_srv
-/*TODO*///#define IRQ_VEC Z.irq_vec
+    public void IRQ_REQ(int _irq) { _cpu.Z.irq_req=_irq; /*System.out.println("SET "+_irq);*/ }
+    public int IRQ_SRV(){ return _cpu.Z.irq_srv; }
+    public void IRQ_SRV(int _v){ _cpu.Z.irq_srv=_v; }
+    public int IRQ_VEC(){ return _cpu.Z.irq_vec; }
+    public void IRQ_VEC(int _v){ _cpu.Z.irq_vec=_v; }
 /*TODO*///
 /*TODO*////* these vectors are based on PSAP */
 /*TODO*///#define RST 	(Z.psap + 0x0000)	/* start up FCW and PC */
 /*TODO*///#define EPU 	(Z.psap + 0x0004)	/* extension processor unit? trap */
-/*TODO*///#define TRAP	(Z.psap + 0x0008)	/* privilege violation trap */
-/*TODO*///#define SYSCALL (Z.psap + 0x000c)	/* system call SC */
-/*TODO*///#define SEGTRAP (Z.psap + 0x0010)	/* segment trap */
-/*TODO*///#define NMI 	(Z.psap + 0x0014)	/* non maskable interrupt */
-/*TODO*///#define NVI 	(Z.psap + 0x0018)	/* non vectored interrupt */
+    public int TRAP(){ return	(_cpu.Z.psap + 0x0008); }	/* privilege violation trap */
+    public int SYSCALL(){ return	(_cpu.Z.psap + 0x000c); }	/* system call SC */
+    public int SEGTRAP(){ return	(_cpu.Z.psap + 0x0010); }	/* segment trap */
+    public int NMI(){ return	(_cpu.Z.psap + 0x0014); }	/* non maskable interrupt */
+    public int NVI(){ return	(_cpu.Z.psap + 0x0018); }	/* non vectored interrupt */
 /*TODO*///#define VI		(Z.psap + 0x001c)	/* vectored interrupt */
-/*TODO*///#define VEC00	(Z.psap + 0x001e)	/* vector n PC value */
+    public int VEC00(){ return	(_cpu.Z.psap + 0x001e); }	/* vector n PC value */
 /*TODO*///
 /*TODO*////* bits of the FCW */
 /*TODO*///#define F_SEG	0x8000				/* segmented mode (Z8001 only) */
@@ -195,12 +197,13 @@ public class z8000cpuH {
     public int dsp8;
     public int addr;
     public int imm32;
+    public int dsp16;
     
     public void GET_IMM16(int o){	/*UINT16 imm16 =*/ imm16 = (_cpu.Z.op[o])&0xffff; }
     public void GET_IMM32(){		/*UINT32*/ imm32 = _cpu.Z.op[2] + (_cpu.Z.op[1] << 16); }
     public void GET_DSP7(){		/*UINT8*/ dsp7 = (_cpu.Z.op[0] & 127)&0xff; }
-    public void GET_DSP8(){		/*INT8*/ dsp8 = (_cpu.Z.op[0]) & 0xff; }
-/*TODO*///#define GET_DSP16		UINT16 dsp16 = PC + (INT16)Z.op[1]
+    public void GET_DSP8(){		/*INT8*/ dsp8 = (_cpu.Z.op[0]) & 0xfff; }
+    public void GET_DSP16(){		/*UINT16*/ dsp16 = ((_cpu.Z.pc + _cpu.Z.op[1]) & 0xffff); }
     public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o] & 0xffff; }
 
     private z8000 _cpu;

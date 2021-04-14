@@ -112,7 +112,7 @@ public class polepos {
 	{
 		int which = (offset / 2) + 1;
 	
-                System.out.println("polepos_z8002_nvi_enable_w ["+which+"]="+data);
+                //System.out.println("polepos_z8002_nvi_enable_w ["+which+"]="+data);
                         
 		if (which == cpu_getactivecpu())
 		{
@@ -145,7 +145,7 @@ public class polepos {
 	
 	public static WriteHandlerPtr polepos_z8002_enable_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 	{
-            System.out.println("polepos_z8002_enable_w ["+offset+"]="+data);
+            //System.out.println("polepos_z8002_enable_w ["+offset+"]="+data);
 		if ((data & 1) != 0)
 			cpu_set_reset_line(offset + 1, CLEAR_LINE);
 		else
