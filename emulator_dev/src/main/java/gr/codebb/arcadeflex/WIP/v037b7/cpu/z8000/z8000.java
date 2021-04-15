@@ -30,6 +30,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000H.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000cpuH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.z8000.z8000tbl.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_getactivecpu;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memory.*;
@@ -990,7 +991,7 @@ public class z8000  extends cpu_interface {
 	}
         
         public int _lastOpcode=0;
-        public boolean _bTrace=false;
+        public boolean _bTrace=true;
 	
 	public int z8000_execute(int cycles)
 	{
@@ -1016,7 +1017,7 @@ public class z8000  extends cpu_interface {
 	            Z8000_exec exec;
 	            Z.op[0] = RDOP();
                     _kkStr="opcode="+z8000_exec[Z.op[0]].dasm;
-                    if (_bTrace){
+                    if (_bTrace && cpu_getactivecpu()==2){
                         //System.out.println(_kkStr);
                     }
 	            exec = z8000_exec[Z.op[0]];
