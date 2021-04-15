@@ -696,13 +696,13 @@ public class z8000  extends cpu_interface {
 	
         public int RDMEM_B(int addr)
 	{
-		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
+		return (cpu_readmem16bew(addr & 0xffff));
 	}
 	
 	public int RDMEM_W(int addr)
 	{
 		addr &= ~1;
-		return (cpu_readmem16bew_word(addr & 0xffff) & 0xffff);
+		return (cpu_readmem16bew_word(addr & 0xffff));
 	}
 	
 	public int RDMEM_L(int addr)
@@ -710,7 +710,7 @@ public class z8000  extends cpu_interface {
 		int result;
 		addr &= ~1;
 		result = cpu_readmem16bew_word(addr & 0xffff) << 16;
-		return (result + cpu_readmem16bew_word((addr + 2) & 0xffff) & 0xffffffff);
+		return (result + cpu_readmem16bew_word(((addr& 0xffff) + 2) ));
 	}
 	
 	public void WRMEM_B(int addr, int value)
@@ -728,7 +728,7 @@ public class z8000  extends cpu_interface {
 	{
 		addr &= ~1;
 		cpu_writemem16bew_word(addr&0xffff, value >> 16);
-		cpu_writemem16bew_word((addr + 2)&0xffff, value /*& 0xffff*/);
+		cpu_writemem16bew_word((addr + 2)&0xffff, value & 0xffff);
 	}
 	
 /*TODO*///	INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
@@ -743,21 +743,21 @@ public class z8000  extends cpu_interface {
 /*TODO*///			return 0x00;
 /*TODO*///		}
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	INLINE UINT16 RDPORT_W(int mode, UINT16 addr)
-/*TODO*///	{
-/*TODO*///		if( mode == 0 )
-/*TODO*///		{
-/*TODO*///			return cpu_readport((UINT16)(addr)) +
-/*TODO*///				  (cpu_readport((UINT16)(addr+1)) << 8);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			/* how to handle MMU reads? */
-/*TODO*///			return 0x0000;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
+	
+	public int RDPORT_W(int mode, int addr)
+	{
+		if( mode == 0 )
+		{
+			return cpu_readport((addr&0xffff)) +
+				  (cpu_readport((addr+1)&0xffff) << 8);
+		}
+		else
+		{
+			/* how to handle MMU reads? */
+			return 0x0000;
+		}
+	}
+	
 /*TODO*///	INLINE UINT32 RDPORT_L(int mode, UINT16 addr)
 /*TODO*///	{
 /*TODO*///		if( mode == 0 )
@@ -790,8 +790,8 @@ public class z8000  extends cpu_interface {
 	{
 		if( mode == 0 )
 		{
-			cpu_writeport((addr /*& 0xffff*/),value & 0xff);
-			cpu_writeport((addr+1)/*&0xffff*/,(value >> 8) & 0xff);
+			cpu_writeport((addr)&0xffff,value & 0xff);
+			cpu_writeport((addr+1)&0xffff,(value >> 8) & 0xff);
 		}
 		else
 		{
@@ -1017,7 +1017,7 @@ public class z8000  extends cpu_interface {
 	            Z8000_exec exec;
 	            Z.op[0] = RDOP();
                     _kkStr="opcode="+z8000_exec[Z.op[0]].dasm;
-                    if (_bTrace && cpu_getactivecpu()==2){
+                    if (_bTrace && cpu_getactivecpu()==1){
                         //System.out.println(_kkStr);
                     }
 	            exec = z8000_exec[Z.op[0]];

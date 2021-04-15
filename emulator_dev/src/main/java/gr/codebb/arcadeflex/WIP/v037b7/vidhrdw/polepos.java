@@ -1,7 +1,3 @@
-/*
- * ported to v0.37b7
- * using automatic conversion tool v0.01
- */
 package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.common.bitmap_alloc;
@@ -15,56 +11,64 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.COMBINE_WORD;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.COMBINE_WORD_MEM;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
+import gr.codebb.arcadeflex.common.PtrLib;
 import static gr.codebb.arcadeflex.common.PtrLib.*;
 import gr.codebb.arcadeflex.common.SubArrays.UShortArray;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.drawgfx;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
 
-public class polepos {
-
-    public static UBytePtr polepos_view_memory = new UBytePtr();
-    public static UBytePtr polepos_road_memory = new UBytePtr();
-    public static UBytePtr polepos_sprite_memory = new UBytePtr();
-    public static UBytePtr polepos_alpha_memory = new UBytePtr();
-
-    /* modified vertical position built from three nibbles (12 bit)
+public class polepos
+{
+	
+	public static UBytePtr polepos_view_memory=new UBytePtr();
+	public static UBytePtr polepos_road_memory=new UBytePtr();
+	public static UBytePtr polepos_sprite_memory=new UBytePtr();
+	public static UBytePtr polepos_alpha_memory=new UBytePtr();
+	
+	/* modified vertical position built from three nibbles (12 bit)
 	 * of ROMs 136014-142, 136014-143, 136014-144
 	 * The value RVP (road vertical position, lower 12 bits) is added
 	 * to this value and the upper 10 bits of the result are used to
 	 * address the playfield video memory (AB0 - AB9).
-     */
-    static char[] polepos_vertical_position_modifier = new char[256];
-
-    static char view_hscroll;
-    static char road_vscroll;
-
-    public static UBytePtr road_control;
-    public static UBytePtr road_bits1;
-    public static UBytePtr road_bits2;
-
-    static osd_bitmap view_bitmap;
-    static char[] /*UINT8*/ u8_view_dirty;
-
-    /**
-     * *************************************************************************
-     *
-     * Convert the color PROMs into a more useable format.
-     *
-     * Pole Position has three 256x4 palette PROMs (one per gun) and a lot ;-)
-     * of 256x4 lookup table PROMs. The palette PROMs are connected to the RGB
-     * output this way:
-     *
-     * bit 3 -- 220 ohm resistor -- RED/GREEN/BLUE -- 470 ohm resistor --
-     * RED/GREEN/BLUE -- 1 kohm resistor -- RED/GREEN/BLUE bit 0 -- 2.2kohm
-     * resistor -- RED/GREEN/BLUE
-     *
-     **************************************************************************
-     */
-    public static VhConvertColorPromPtr polepos_vh_convert_color_prom = new VhConvertColorPromPtr() {
-        public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
+	 */
+	static int[] polepos_vertical_position_modifier=new int[256];
+	
+	static int view_hscroll;
+	static int road_vscroll;
+	
+	public static UBytePtr road_control=new UBytePtr();
+	public static UBytePtr road_bits1=new UBytePtr();
+	public static UBytePtr road_bits2=new UBytePtr();
+	
+	static osd_bitmap view_bitmap;
+	static UBytePtr view_dirty=new UBytePtr();
+	
+	
+	//static void draw_road_core_8(struct osd_bitmap *bitmap, int sx, int sy, int dx, int dy);
+	//static void draw_road_core_16(struct osd_bitmap *bitmap, int sx, int sy, int dx, int dy);
+	
+	
+	/***************************************************************************
+	
+	  Convert the color PROMs into a more useable format.
+	
+	  Pole Position has three 256x4 palette PROMs (one per gun)
+	  and a lot ;-) of 256x4 lookup table PROMs.
+	  The palette PROMs are connected to the RGB output this way:
+	
+	  bit 3 -- 220 ohm resistor  -- RED/GREEN/BLUE
+			-- 470 ohm resistor  -- RED/GREEN/BLUE
+			-- 1  kohm resistor  -- RED/GREEN/BLUE
+	  bit 0 -- 2.2kohm resistor  -- RED/GREEN/BLUE
+	
+	***************************************************************************/
+	
+	public static VhConvertColorPromPtr polepos_vh_convert_color_prom = new VhConvertColorPromPtr() {
+            @Override
+            public void handler(char[] palette, char[] colortable, UBytePtr color_prom) {
                 int i, j;
-                int _palette = 0;
+                int _palette=0;
 	
 		/*******************************************************
 		 * Color PROMs
@@ -153,221 +157,206 @@ public class polepos {
 		for (i = 0; i < 256; i++)
 		{
 			j = color_prom.read(0x500 + i)+ (color_prom.read(0x600 + i)<< 4) + (color_prom.read(0x700 + i)<< 8);
-			polepos_vertical_position_modifier[i] = (char) j;
+			polepos_vertical_position_modifier[i] = j;
 		}
 	
 		road_control = new UBytePtr(color_prom, 0x2000);
 		road_bits1 = new UBytePtr(color_prom, 0x4000);
 		road_bits2 = new UBytePtr(color_prom, 0x6000);
-        }
-    };
-    /**
-     * *************************************************************************
-     *
-     * Video initialization/shutdown
-     *
-     **************************************************************************
-     */
-
-    public static VhStartPtr polepos_vh_start = new VhStartPtr() {
-        public int handler() {
-            /* allocate view bitmap */
-            view_bitmap = bitmap_alloc(64 * 8, 16 * 8);
-
-            /* allocate view dirty buffer */
-            u8_view_dirty = new char[64 * 16];
-
-            return 0;
-        }
-    };
-
-    public static VhStopPtr polepos_vh_stop = new VhStopPtr() {
-        public void handler() {
-            bitmap_free(view_bitmap);
-            u8_view_dirty = null;
-        }
-    };
-
-    /**
-     * *************************************************************************
-     *
-     * Sprite memory
-     *
-     **************************************************************************
-     */
-    public static ReadHandlerPtr polepos_sprite_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_sprite_memory.READ_WORD(offset);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_sprite_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            COMBINE_WORD_MEM(polepos_sprite_memory, offset, data);
-        }
-    };
-
-    public static ReadHandlerPtr polepos_z80_sprite_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_sprite_r.handler(offset << 1) & 0xff;
-        }
-    };
-
-    public static WriteHandlerPtr polepos_z80_sprite_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            polepos_sprite_w.handler(offset << 1, data | 0xff000000);
-        }
-    };
-
-    /**
-     * *************************************************************************
-     *
-     * Road memory
-     *
-     **************************************************************************
-     */
-    public static ReadHandlerPtr polepos_road_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_road_memory.READ_WORD(offset);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_road_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            COMBINE_WORD_MEM(polepos_road_memory, offset, data);
-        }
-    };
-
-    public static ReadHandlerPtr polepos_z80_road_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_road_r.handler(offset << 1) & 0xff;
-        }
-    };
-
-    public static WriteHandlerPtr polepos_z80_road_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            polepos_road_w.handler(offset << 1, data | 0xff000000);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_road_vscroll_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            road_vscroll = (char) data;
-        }
-    };
-
-    /**
-     * *************************************************************************
-     *
-     * View memory
-     *
-     **************************************************************************
-     */
-    public static ReadHandlerPtr polepos_view_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_view_memory.READ_WORD(offset);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_view_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            int oldword = polepos_view_memory.READ_WORD(offset);
-            int newword = COMBINE_WORD(oldword, data);
-            if (oldword != newword) {
-                polepos_view_memory.WRITE_WORD(offset, newword);
-                if (offset < 0x800) {
-                    u8_view_dirty[offset / 2] = 1;
-                }
             }
-        }
-    };
-
-    public static ReadHandlerPtr polepos_z80_view_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_view_r.handler(offset << 1) & 0xff;
-        }
-    };
-
-    public static WriteHandlerPtr polepos_z80_view_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            polepos_view_w.handler(offset << 1, data | 0xff000000);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_view_hscroll_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            view_hscroll = (char) data;
-        }
-    };
-
-    /**
-     * *************************************************************************
-     *
-     * Alpha memory
-     *
-     **************************************************************************
-     */
-    public static ReadHandlerPtr polepos_alpha_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_alpha_memory.READ_WORD(offset);
-        }
-    };
-
-    public static WriteHandlerPtr polepos_alpha_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            int oldword = polepos_alpha_memory.READ_WORD(offset);
-            int newword = COMBINE_WORD(oldword, data);
-            if (oldword != newword) {
-                polepos_alpha_memory.WRITE_WORD(offset, newword);
-            }
-        }
-    };
-
-    public static ReadHandlerPtr polepos_z80_alpha_r = new ReadHandlerPtr() {
-        public int handler(int offset) {
-            return polepos_alpha_r.handler(offset << 1) & 0xff;
-        }
-    };
-
-    public static WriteHandlerPtr polepos_z80_alpha_w = new WriteHandlerPtr() {
-        public void handler(int offset, int data) {
-            polepos_alpha_w.handler(offset << 1, data | 0xff000000);
-        }
-    };
-
-    /**
-     * *************************************************************************
-     *
-     * Internal draw routines
-     *
-     **************************************************************************
-     */
-    static void draw_view(osd_bitmap bitmap) {
-        rectangle clip = new rectangle(Machine.visible_area);
-        int y, offs;
-        int x[] = new int[1];
-        /* look for dirty tiles */
-        for (x[0] = offs = 0; x[0] < 64; x[0]++) {
-            for (y = 0; y < 16; y++, offs++) {
-                if (u8_view_dirty[offs] != 0) {
-                    int word = polepos_view_memory.READ_WORD(offs * 2);
-                    int code = (word & 0xff) | ((word >> 6) & 0x100);
-                    int color = (word >> 8) & 0x3f;
-
-                    drawgfx(view_bitmap, Machine.gfx[1], code, color,
-                            0, 0, 8 * x[0], 8 * y, null, TRANSPARENCY_NONE, 0);
-                    u8_view_dirty[offs] = 0;
-                }
-            }
-        }
-
-        /* copy the bitmap */
-        x[0] = -view_hscroll;
-        clip.max_y = 127;
-        copyscrollbitmap(bitmap, view_bitmap, 1, x, 0, null, clip, TRANSPARENCY_NONE, 0);
-    }
-
-    	
+        };
+        
+	
+	/***************************************************************************
+	
+	  Video initialization/shutdown
+	
+	***************************************************************************/
+	
+	public static VhStartPtr polepos_vh_start = new VhStartPtr() { public int handler() 
+	{
+		/* allocate view bitmap */
+		view_bitmap = bitmap_alloc(64*8, 16*8);
+		if (view_bitmap==null)
+			return 1;
+	
+		/* allocate view dirty buffer */
+		view_dirty = new UBytePtr(64*16);
+		if (view_dirty==null)
+		{
+			bitmap_free(view_bitmap);
+			return 1;
+		}
+	
+		return 0;
+	} };
+	
+	public static VhStopPtr polepos_vh_stop = new VhStopPtr() { public void handler() 
+	{
+		bitmap_free(view_bitmap);
+		view_dirty=null;
+	} };
+	
+	
+	/***************************************************************************
+	
+	  Sprite memory
+	
+	***************************************************************************/
+	
+	public static ReadHandlerPtr polepos_sprite_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_sprite_memory.READ_WORD(offset);
+	} };
+	
+	public static WriteHandlerPtr polepos_sprite_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		COMBINE_WORD_MEM(polepos_sprite_memory, offset, data);
+	} };
+	
+	public static ReadHandlerPtr polepos_z80_sprite_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_sprite_r.handler(offset << 1) & 0xff;
+	} };
+	
+	public static WriteHandlerPtr polepos_z80_sprite_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		polepos_sprite_w.handler(offset << 1, data | 0xff000000);
+	} };
+	
+	
+	/***************************************************************************
+	
+	  Road memory
+	
+	***************************************************************************/
+	
+	public static ReadHandlerPtr polepos_road_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_road_memory.READ_WORD(offset);
+	} };
+	
+	public static WriteHandlerPtr polepos_road_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		COMBINE_WORD_MEM(polepos_road_memory,offset, data);
+	} };
+	
+	public static ReadHandlerPtr polepos_z80_road_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_road_r.handler(offset << 1) & 0xff;
+	} };
+	
+	public static WriteHandlerPtr polepos_z80_road_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		polepos_road_w.handler(offset << 1, data | 0xff000000);
+	} };
+	
+	public static WriteHandlerPtr polepos_road_vscroll_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		road_vscroll = data;
+	} };
+	
+	
+	/***************************************************************************
+	
+	  View memory
+	
+	***************************************************************************/
+	
+	public static ReadHandlerPtr polepos_view_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_view_memory.READ_WORD(offset);
+	} };
+	
+	public static WriteHandlerPtr polepos_view_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		int oldword = polepos_view_memory.READ_WORD(offset);
+		int newword = COMBINE_WORD(oldword, data);
+		if (oldword != newword)
+		{
+			polepos_view_memory.WRITE_WORD(offset, newword);
+			if (offset < 0x800)
+				view_dirty.write(offset / 2, 1);
+		}
+	} };
+	
+	public static ReadHandlerPtr polepos_z80_view_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_view_r.handler(offset << 1) & 0xff;
+	} };
+	
+	public static WriteHandlerPtr polepos_z80_view_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		polepos_view_w.handler(offset << 1, data | 0xff000000);
+	} };
+	
+	public static WriteHandlerPtr polepos_view_hscroll_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		view_hscroll = data;
+	} };
+	
+	
+	/***************************************************************************
+	
+	  Alpha memory
+	
+	***************************************************************************/
+	
+	public static ReadHandlerPtr polepos_alpha_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_alpha_memory.READ_WORD(offset);
+	} };
+	
+	public static WriteHandlerPtr polepos_alpha_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		int oldword = polepos_alpha_memory.READ_WORD(offset);
+		int newword = COMBINE_WORD(oldword, data);
+		if (oldword != newword)
+			polepos_alpha_memory.WRITE_WORD(offset, newword);
+	} };
+	
+	public static ReadHandlerPtr polepos_z80_alpha_r  = new ReadHandlerPtr() { public int handler(int offset)
+	{
+		return polepos_alpha_r.handler(offset << 1) & 0xff;
+	} };
+	
+	public static WriteHandlerPtr polepos_z80_alpha_w = new WriteHandlerPtr() {public void handler(int offset, int data)
+	{
+		polepos_alpha_w.handler(offset << 1, data | 0xff000000);
+	} };
+	
+	
+	/***************************************************************************
+	
+	  Internal draw routines
+	
+	***************************************************************************/
+	
+	static void draw_view(osd_bitmap bitmap)
+	{
+		rectangle clip = new rectangle(Machine.visible_area);
+		int x, y, offs;
+	
+		/* look for dirty tiles */
+		for (x = offs = 0; x < 64; x++)
+			for (y = 0; y < 16; y++, offs++)
+				if (view_dirty.read(offs) != 0)
+				{
+					int word = polepos_view_memory.READ_WORD(offs * 2);
+					int code = (word & 0xff) | ((word >> 6) & 0x100);
+					int color = (word >> 8) & 0x3f;
+	
+					drawgfx(view_bitmap, Machine.gfx[1], code, color,
+							0, 0, 8*x, 8*y, null, TRANSPARENCY_NONE, 0);
+					view_dirty.write(offs, 0);
+				}
+	
+		/* copy the bitmap */
+		x = -view_hscroll;
+		clip.max_y = 127;
+		copyscrollbitmap(bitmap, view_bitmap, 1, new int[]{x}, 0, null, clip, TRANSPARENCY_NONE, 0);
+	}
+	
 	static void draw_road(osd_bitmap bitmap)
 	{
 		int dx = 1, dy = (bitmap.line[1].offset - bitmap.line[0].offset) * 8 / bitmap.depth;
@@ -390,17 +379,15 @@ public class polepos {
 			if ((Machine.orientation & ORIENTATION_FLIP_Y) != 0)
 			{
 				sy = bitmap.height - 1 - sy;
-				if ((Machine.orientation & ORIENTATION_SWAP_XY)!=0) dx = -dx;
+				if ((Machine.orientation & ORIENTATION_SWAP_XY) != 0) dx = -dx;
 				else dy = -dy;
 			}
 		}
 	
 		/* 8-bit case */
 		if (bitmap.depth == 8){
-                    //System.out.println("draw_road_core_8");
 			draw_road_core_8(bitmap, sx, sy, dx, dy);
                 } else {
-                    System.out.println("draw_road_core_16");
 /*TODO*///			draw_road_core_16(bitmap, sx, sy, dx, dy);
                 }
 	}
@@ -411,7 +398,7 @@ public class polepos {
 		UShortPtr sizmem = new UShortPtr(polepos_sprite_memory, 0xf00);
 		int i;
 	
-		for (i = 0; i < 64; i++, posmem.offset+=2, sizmem.offset+=2 )
+		for (i = 0; i < 64; i++, posmem.inc(2), sizmem.inc(2))
 		{
 			GfxElement gfx = Machine.gfx[(sizmem.read(0) & 0x8000)!=0 ? 3 : 2];
 			int vpos = (~posmem.read(0) & 0x1ff) + 4;
@@ -428,95 +415,161 @@ public class polepos {
 					 Machine.visible_area, TRANSPARENCY_COLOR, 0, hsize << 11, vsize << 11);
 		}
 	}
-
-    static void draw_alpha(osd_bitmap bitmap) {
-        int x, y, offs, in;
-
-        for (y = offs = 0; y < 32; y++) {
-            for (x = 0; x < 32; x++, offs++) {
-                int word = polepos_alpha_memory.READ_WORD(offs * 2);
-                int code = (word & 0xff) | ((word >> 6) & 0x100);
-                int color = (word >> 8) & 0x3f;
-                /* 6 bits color */
-
-                if (y >= 16) {
-                    color |= 0x40;
-                }
-                drawgfx(bitmap, Machine.gfx[0],
-                        code, color, 0, 0, 8 * x, 8 * y,
-                        Machine.visible_area, TRANSPARENCY_COLOR, 0);
-            }
-        }
-
-        /* Now draw the shift if selected on the fake dipswitch */
-        in = readinputport(0);
-
-        if ((in & 8) != 0) {
-            if ((in & 2) == 0) {
-                /* L */
-                drawgfx(bitmap, Machine.gfx[0],
-                        0x15, 0, 0, 0, 30 * 8 - 1, 29 * 8,
-                        Machine.visible_area, TRANSPARENCY_PEN, 0);
-                /* O */
-                drawgfx(bitmap, Machine.gfx[0],
-                        0x18, 0, 0, 0, 31 * 8 - 1, 29 * 8,
-                        Machine.visible_area, TRANSPARENCY_PEN, 0);
-            } else {
-                /* H */
-                drawgfx(bitmap, Machine.gfx[0],
-                        0x11, 0, 0, 0, 30 * 8 - 1, 29 * 8,
-                        Machine.visible_area, TRANSPARENCY_PEN, 0);
-                /* I */
-                drawgfx(bitmap, Machine.gfx[0],
-                        0x12, 0, 0, 0, 31 * 8 - 1, 29 * 8,
-                        Machine.visible_area, TRANSPARENCY_PEN, 0);
-            }
-        }
-    }
-
-    /**
-     * *************************************************************************
-     *
-     * Master refresh routine
-     *
-     **************************************************************************
-     */
-    public static VhUpdatePtr polepos_vh_screenrefresh = new VhUpdatePtr() {
-        public void handler(osd_bitmap bitmap, int full_refresh) {
-            draw_view(bitmap);
-            draw_road(bitmap);
-            draw_sprites(bitmap);
-            draw_alpha(bitmap);
-        }
-    };
-
-    /*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Road drawing generators
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	
+	
+	static void draw_alpha(osd_bitmap bitmap)
+	{
+		int x, y, offs, in;
+	
+		for (y = offs = 0; y < 32; y++)
+			for (x = 0; x < 32; x++, offs++)
+			{
+				int word = polepos_alpha_memory.READ_WORD(offs * 2);
+				int code = (word & 0xff) | ((word >> 6) & 0x100);
+				int color = (word >> 8) & 0x3f;	/* 6 bits color */
+	
+				if (y >= 16) color |= 0x40;
+				drawgfx(bitmap, Machine.gfx[0],
+						 code, color, 0, 0, 8*x, 8*y,
+						 Machine.visible_area, TRANSPARENCY_COLOR, 0);
+			}
+	
+		/* Now draw the shift if selected on the fake dipswitch */
+		in = readinputport( 0 );
+	
+		if ((in & 8) != 0) {
+			if ( ( in & 2 ) == 0 ) {
+				/* L */
+				drawgfx(bitmap, Machine.gfx[0],
+						 0x15, 0, 0, 0, 30*8-1, 29*8,
+						 Machine.visible_area, TRANSPARENCY_PEN, 0);
+				/* O */
+				drawgfx(bitmap, Machine.gfx[0],
+						 0x18, 0, 0, 0, 31*8-1, 29*8,
+						 Machine.visible_area, TRANSPARENCY_PEN, 0);
+			} else {
+				/* H */
+				drawgfx(bitmap, Machine.gfx[0],
+						 0x11, 0, 0, 0, 30*8-1, 29*8,
+						 Machine.visible_area, TRANSPARENCY_PEN, 0);
+				/* I */
+				drawgfx(bitmap, Machine.gfx[0],
+						 0x12, 0, 0, 0, 31*8-1, 29*8,
+						 Machine.visible_area, TRANSPARENCY_PEN, 0);
+			}
+		}
+	}
+	
+	
+	/***************************************************************************
+	
+	  Master refresh routine
+	
+	***************************************************************************/
+	
+	public static VhUpdatePtr polepos_vh_screenrefresh = new VhUpdatePtr() { public void handler(osd_bitmap bitmap,int full_refresh) 
+	{
+		draw_view(bitmap);
+		draw_road(bitmap);
+		draw_sprites(bitmap);
+		draw_alpha(bitmap);
+	} };
+	
+	
+	/***************************************************************************
+	
+	  Road drawing generators
+	
+	***************************************************************************/
+	
 /*TODO*///	#define ROAD_CORE_INCLUDE
-/*TODO*///	
+	
 /*TODO*///	#define NAME draw_road_core_8
 /*TODO*///	#define TYPE UINT8
 /*TODO*///	#undef TYPE
 /*TODO*///	#undef NAME
-/*TODO*///	
+	
 /*TODO*///	#define NAME draw_road_core_16
 /*TODO*///	#define TYPE UINT16
 /*TODO*///	#undef TYPE
 /*TODO*///	#undef NAME
-/*TODO*///	
+	
 /*TODO*///	#else
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Road drawing routine
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	
+	
+	/***************************************************************************
+	
+	  Road drawing routine
+	
+	***************************************************************************/
+    	static void draw_road_core_8(osd_bitmap bitmap, int sx, int sy, int dx, int dy)
+    	{
+    		UBytePtr base = new UBytePtr(bitmap.line[sy], sx);
+                //base.offset=sx;
+    		int x, y, i;
+    	
+    		/* loop over the lower half of the screen */
+    		for (y = 128; y < 256; y++, base.inc(dy))
+    		{
+    			int xoffs, yoffs, roadpal;
+    			UShortArray colortable;
+    			UBytePtr dest;
+    	
+    			/* first add the vertical position modifier and the vertical scroll */
+    			yoffs = ((polepos_vertical_position_modifier[y] + road_vscroll) >> 2) & 0x3fe;
+    	
+    			/* then use that as a lookup into the road memory */
+    			roadpal = polepos_road_memory.READ_WORD(yoffs) & 15;
+    	
+    			/* this becomes the palette base for the scanline */
+    			colortable = new UShortArray(Machine.remapped_colortable, 0x1000 + (roadpal << 6));
+    	
+    			/* now fetch the horizontal scroll offset for this scanline */
+    			xoffs = polepos_road_memory.READ_WORD(0x700 + (y & 0x7f) * 2) & 0x3ff;
+    	
+    			/* the road is drawn in 8-pixel chunks, so round downward and adjust the base */
+    			/* note that we assume there is at least 8 pixels of slop on the left/right */
+    			dest = new UBytePtr(base, - (xoffs & 7) * dx);
+    			xoffs &= ~7;
+    	
+    			/* loop over 8-pixel chunks */
+    			for (x = 0; x < 256 / 8 + 1; x++, xoffs += 8)
+    			{
+    				/* if the 0x200 bit of the xoffset is set, a special pin on the custom */
+    				/* chip is set and the /CE and /OE for the road chips is disabled */
+    				if ((xoffs & 0x200) != 0)
+    				{
+    					/* in this case, it looks like we just fill with 0 */
+    					for (i = 0; i < 8; i++, dest.inc(dx))
+    						dest.write( colortable.read(0) );
+    				}
+    	
+    				/* otherwise, we clock in the bits and compute the road value */
+    				else
+    				{
+    					/* the road ROM offset comes from the current scanline and the X offset */
+    					int romoffs = ((y & 0x07f) << 6) + ((xoffs & 0x1ff) >> 3);
+    	
+    					/* fetch the current data from the road ROMs */
+    					int control = road_control.read(romoffs);
+    					int bits1 = road_bits1.read(romoffs);
+    					int bits2 = road_bits2.read((romoffs & 0xfff) | ((romoffs >> 1) & 0x800));
+    	
+    					/* extract the road value and the carry-in bit */
+    					int roadval = control & 0x3f;
+    					int carin = control >> 7;
+    	
+    					/* draw this 8-pixel chunk */
+    					for (i = 0; i < 8; i++, dest.inc(dx), bits1 <<= 1, bits2 <<= 1)
+    					{
+    						int bits = ((bits1 >> 7) & 1) + ((bits2 >> 6) & 2);
+    						if (carin==0 && bits!=0) bits++;
+    						dest.write(colortable.read(roadval & 0x3f));
+    						roadval += bits;
+    					}
+    				}
+    			}
+    		}
+    	}
+        
 /*TODO*///	static void NAME(struct osd_bitmap *bitmap, int sx, int sy, int dx, int dy)
 /*TODO*///	{
 /*TODO*///		TYPE *base = &((TYPE *)bitmap.line[sy])[sx];
@@ -585,83 +638,6 @@ public class polepos {
 /*TODO*///			}
 /*TODO*///		}
 /*TODO*///	}
-/*TODO*///	
+	
 /*TODO*///	#endif
-    
-    	
-	/***************************************************************************
-	
-	  Road drawing routine
-	
-	***************************************************************************/
-	
-	static void draw_road_core_8(osd_bitmap bitmap, int sx, int sy, int dx, int dy)
-	{
-		UBytePtr base = new UBytePtr(bitmap.line[sy], sx);
-		int x, y, i;
-	
-		/* loop over the lower half of the screen */
-		for (y = 128; y < 256; y++, base.inc(dy) )
-		{
-			int xoffs, yoffs, roadpal;
-			UShortArray colortable;
-			UBytePtr dest;
-	
-			/* first add the vertical position modifier and the vertical scroll */
-			yoffs = ((polepos_vertical_position_modifier[y] + road_vscroll) >> 2) & 0x3fe;
-	
-			/* then use that as a lookup into the road memory */
-			roadpal = polepos_road_memory.READ_WORD(yoffs) & 15;
-	
-			/* this becomes the palette base for the scanline */
-			colortable = new UShortArray(Machine.remapped_colortable, 0x1000 + (roadpal << 6));
-	
-			/* now fetch the horizontal scroll offset for this scanline */
-			xoffs = polepos_road_memory.READ_WORD(0x700 + (y & 0x7f) * 2) & 0x3ff;
-	
-			/* the road is drawn in 8-pixel chunks, so round downward and adjust the base */
-			/* note that we assume there is at least 8 pixels of slop on the left/right */
-			dest = new UBytePtr(base, - (xoffs & 7) * dx);
-			xoffs &= ~7;
-	
-			/* loop over 8-pixel chunks */
-			for (x = 0; x < 256 / 8 + 1; x++, xoffs += 8)
-			{
-				/* if the 0x200 bit of the xoffset is set, a special pin on the custom */
-				/* chip is set and the /CE and /OE for the road chips is disabled */
-				if ((xoffs & 0x200) != 0)
-				{
-					/* in this case, it looks like we just fill with 0 */
-					for (i = 0; i < 8; i++, dest.inc(dx) )
-						dest.write(0, colortable.read(0));
-				}
-	
-				/* otherwise, we clock in the bits and compute the road value */
-				else
-				{
-					/* the road ROM offset comes from the current scanline and the X offset */
-					int romoffs = ((y & 0x07f) << 6) + ((xoffs & 0x1ff) >> 3);
-	
-					/* fetch the current data from the road ROMs */
-					int control = road_control.read(romoffs);
-					int bits1 = road_bits1.read(romoffs);
-					int bits2 = road_bits2.read((romoffs & 0xfff) | ((romoffs >> 1) & 0x800));
-	
-					/* extract the road value and the carry-in bit */
-					int roadval = control & 0x3f;
-					int carin = control >> 7;
-	
-					/* draw this 8-pixel chunk */
-					for (i = 0; i < 8; i++, dest.inc(dx), bits1 <<= 1, bits2 <<= 1)
-					{
-						int bits = ((bits1 >> 7) & 1) + ((bits2 >> 6) & 2);
-						if (carin==0 && bits!=0) bits++;
-						dest.write(0, colortable.read(roadval & 0x3f));
-						roadval += bits;
-					}
-				}
-			}
-		}
-	}
-
 }

@@ -296,6 +296,10 @@ public class PtrLib {
             memory[offset + 1] = (char) ((value >> 8) & 0xFF);
             offset += bsize;
         }
+        
+        public void inc(int count) {
+            offset += count * bsize;
+        }
     }
 
     /**
