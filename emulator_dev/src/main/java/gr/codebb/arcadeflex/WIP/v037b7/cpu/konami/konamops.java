@@ -8,7 +8,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konami.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konamtbl.*;
 
 public class konamops {
-/*TODO*///static void illegal( void )
+
+    /*TODO*///static void illegal( void )
 /*TODO*///#else
 /*TODO*///INLINE void illegal( void )
 /*TODO*///#endif
@@ -605,13 +606,12 @@ public class konamops {
 /*TODO*///	change_pc(PCD);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $3A ABX inherent ----- */
-/*TODO*///INLINE void abx( void )
-/*TODO*///{
-/*TODO*///	X += B;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $3B RTI inherent ##### */
+    public static opcode abx = new opcode() {
+        public void handler() {
+            konami.x = (konami.x + konami.b) & 0xFFFF;
+        }
+    };
+    /*TODO*////* $3B RTI inherent ##### */
 /*TODO*///INLINE void rti( void )
 /*TODO*///{
 /*TODO*///	PULLBYTE(CC);
@@ -720,7 +720,7 @@ public class konamops {
 /*TODO*///#pragma mark ____4x____
 /*TODO*///#endif
 /*TODO*///
-   public static opcode nega = new opcode() {
+    public static opcode nega = new opcode() {
         public void handler() {
             int r;
             r = -konami.a & 0xFFFF;
@@ -878,83 +878,73 @@ public class konamops {
 
         }
     };
-/*TODO*///
-/*TODO*////* $59 ROLB inherent -**** */
-/*TODO*///INLINE void rolb( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = B;
-/*TODO*///	r = CC & CC_C;
-/*TODO*///	r |= t << 1;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(t,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $5A DECB inherent -***- */
-/*TODO*///INLINE void decb( void )
-/*TODO*///{
-/*TODO*///	--B;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_FLAGS8D(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $5B ILLEGAL */
-/*TODO*///
-/*TODO*////* $5C INCB inherent -***- */
-/*TODO*///INLINE void incb( void )
-/*TODO*///{
-/*TODO*///	++B;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_FLAGS8I(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $5D TSTB inherent -**0- */
-/*TODO*///INLINE void tstb( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $5E ILLEGAL */
-/*TODO*///
-/*TODO*////* $5F CLRB inherent -0100 */
-/*TODO*///INLINE void clrb( void )
-/*TODO*///{
-/*TODO*///	B = 0;
-/*TODO*///	CLR_NZVC; SEZ;
-/*TODO*///}
-/*TODO*///
-/*TODO*///#if macintosh
-/*TODO*///#pragma mark ____6x____
-/*TODO*///#endif
-/*TODO*///
-/*TODO*////* $60 NEG indexed ?**** */
-/*TODO*///INLINE void neg_ix( void )
-/*TODO*///{
-/*TODO*///	UINT16 r,t;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = -t;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(0,t,r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $61 ILLEGAL */
-/*TODO*///
-/*TODO*////* $62 ILLEGAL */
-/*TODO*///
-/*TODO*////* $63 COM indexed -**01 */
-/*TODO*///INLINE void com_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = ~RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(t);
-/*TODO*///	SEC;
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
+
+    public static opcode rolb = new opcode() {
+        public void handler() {
+            int t, r;
+            t = konami.b & 0xFFFF;
+            r = konami.cc & CC_C;
+            r = (r | t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode decb = new opcode() {
+        public void handler() {
+            konami.b = (konami.b - 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8D(konami.b);
+        }
+    };
+
+    public static opcode incb = new opcode() {
+        public void handler() {
+            konami.b = (konami.b + 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8I(konami.b);
+        }
+    };
+
+    public static opcode tstb = new opcode() {
+        public void handler() {
+            CLR_NZVC();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode clrb = new opcode() {
+        public void handler() {
+            konami.b = 0;
+            CLR_NZVC();
+            SEZ();
+        }
+    };
+
+    public static opcode neg_ix = new opcode() {
+        public void handler() {
+            int r, t;
+            t = RM(ea) & 0xFFFF;
+            r = -t & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(0, t, r);
+            WM(ea, r);
+        }
+    };
+
+    public static opcode com_ix = new opcode() {
+        public void handler() {
+            int t;
+            t = RM(ea) & 0xFF;
+            t = ~t & 0xFF;
+            CLR_NZV();
+            SET_NZ8(t);
+            SEC();
+            WM(ea, t);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $64 LSR indexed -0*-* */
 /*TODO*///INLINE void lsr_ix( void )
 /*TODO*///{
@@ -1051,48 +1041,47 @@ public class konamops {
 /*TODO*///	change_pc(PCD);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $6F CLR indexed -0100 */
-/*TODO*///INLINE void clr_ix( void )
-/*TODO*///{
-/*TODO*///	WM(EAD,0);
-/*TODO*///	CLR_NZVC; SEZ;
-/*TODO*///}
-/*TODO*///
-/*TODO*///#if macintosh
-/*TODO*///#pragma mark ____7x____
-/*TODO*///#endif
-/*TODO*///
-/*TODO*////* $70 NEG extended ?**** */
-/*TODO*///INLINE void neg_ex( void )
-/*TODO*///{
-/*TODO*///	UINT16 r,t;
-/*TODO*///	EXTBYTE(t); r=-t;
-/*TODO*///	CLR_NZVC; SET_FLAGS8(0,t,r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $71 ILLEGAL */
-/*TODO*///
-/*TODO*////* $72 ILLEGAL */
-/*TODO*///
-/*TODO*////* $73 COM extended -**01 */
-/*TODO*///INLINE void com_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); t = ~t;
-/*TODO*///	CLR_NZV; SET_NZ8(t); SEC;
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $74 LSR extended -0*-* */
-/*TODO*///INLINE void lsr_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); CLR_NZC; CC |= (t & CC_C);
-/*TODO*///	t>>=1; SET_Z8(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
+    public static opcode clr_ix = new opcode() {
+        public void handler() {
+            WM(ea, 0);
+            CLR_NZVC();
+            SEZ();
+        }
+    };
+
+    public static opcode neg_ex = new opcode() {
+        public void handler() {
+            int/*UINT16*/ r, t;
+            t = EXTBYTE() & 0xFFFF;
+            r = -t & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(0, t, r);
+            WM(ea, r & 0xFF);
+        }
+    };
+
+    public static opcode com_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE();
+            t = ~t & 0xFF;
+            CLR_NZV();
+            SET_NZ8(t);
+            SEC();
+            WM(ea, t);
+        }
+    };
+
+    public static opcode lsr_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE() & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            t = (t >>> 1) & 0XFF;
+            SET_Z8(t);
+            WM(ea, t);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $75 ILLEGAL */
 /*TODO*///
 /*TODO*////* $76 ROR extended -**-* */
@@ -2690,53 +2679,51 @@ public class konamops {
 /*TODO*///	D = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $f4 ANDB extended -**0- */
-/*TODO*///INLINE void andb_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t);
-/*TODO*///	B &= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $f5 BITB extended -**0- */
-/*TODO*///INLINE void bitb_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	EXTBYTE(t);
-/*TODO*///	r = B & t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $f6 LDB extended -**0- */
-/*TODO*///INLINE void ldb_ex( void )
-/*TODO*///{
-/*TODO*///	EXTBYTE(B);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $f7 STB extended -**0- */
-/*TODO*///INLINE void stb_ex( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///	EXTENDED;
-/*TODO*///	WM(EAD,B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $f8 EORB extended -**0- */
-/*TODO*///INLINE void eorb_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t);
-/*TODO*///	B ^= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode andb_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE();
+            konami.b = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode bitb_ex = new opcode() {
+        public void handler() {
+            int t, r;
+            t = EXTBYTE();
+            r = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+        }
+    };
+
+    public static opcode ldb_ex = new opcode() {
+        public void handler() {
+            konami.b = EXTBYTE();
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode stb_ex = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ8(konami.b);
+            EXTENDED();
+            WM(ea, konami.b);
+        }
+    };
+
+    public static opcode eorb_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE();
+            konami.b = (konami.b ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $f9 ADCB extended ***** */
 /*TODO*///INLINE void adcb_ex( void )
 /*TODO*///{
