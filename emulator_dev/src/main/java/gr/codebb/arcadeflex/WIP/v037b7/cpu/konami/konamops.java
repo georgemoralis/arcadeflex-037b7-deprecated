@@ -2328,16 +2328,15 @@ public class konamops {
 /*TODO*///	D = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $d4 ANDB direct -**0- */
-/*TODO*///INLINE void andb_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	B &= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode andb_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            konami.b = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $d5 BITB direct -**0- */
 /*TODO*///INLINE void bitb_di( void )
 /*TODO*///{
@@ -2348,33 +2347,34 @@ public class konamops {
 /*TODO*///	SET_NZ8(r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $d6 LDB direct -**0- */
-/*TODO*///INLINE void ldb_di( void )
-/*TODO*///{
-/*TODO*///	DIRBYTE(B);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $d7 STB direct -**0- */
-/*TODO*///INLINE void stb_di( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///	DIRECT;
-/*TODO*///	WM(EAD,B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $d8 EORB direct -**0- */
-/*TODO*///INLINE void eorb_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	B ^= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode ldb_di = new opcode() {
+        public void handler() {
+            konami.b = DIRBYTE() & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode stb_di = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ8(konami.b);
+            DIRECT();
+            WM(ea, konami.b);
+        }
+    };
+
+    public static opcode eorb_di = new opcode() {
+        public void handler() {
+            int/*UINT8*/ t;
+            t = DIRBYTE() & 0xFF;
+            konami.b = (konami.b ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    /*TODO*///
 /*TODO*////* $d9 ADCB direct ***** */
 /*TODO*///INLINE void adcb_di( void )
 /*TODO*///{
@@ -2387,46 +2387,46 @@ public class konamops {
 /*TODO*///	B = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $dA ORB direct -**0- */
-/*TODO*///INLINE void orb_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	B |= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $dB ADDB direct ***** */
-/*TODO*///INLINE void addb_di( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	r = B + t;
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	SET_H(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $dC LDD direct -**0- */
-/*TODO*///INLINE void ldd_di( void )
-/*TODO*///{
-/*TODO*///	DIRWORD(pD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $dD STD direct -**0- */
-/*TODO*///INLINE void std_di( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
-/*TODO*///    DIRECT;
-/*TODO*///	WM16(EAD,&pD);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $dE LDU (LDS) direct -**0- */
+    public static opcode orb_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            konami.b = (konami.b | t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode addb_di = new opcode() {
+        public void handler() {
+            int t, r;
+            t = DIRBYTE() & 0xFFFF;
+            r = (konami.b + t) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.b, t, r);
+            SET_H(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode ldd_di = new opcode() {
+        public void handler() {
+            int temp = DIRWORD();
+            setDreg(temp);
+            CLR_NZV();
+            SET_NZ16(getDreg());
+        }
+    };
+
+    public static opcode std_di = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ16(getDreg());
+            DIRECT();
+            WM16(ea, getDreg());
+        }
+    };
+
+    /*TODO*////* $dE LDU (LDS) direct -**0- */
 /*TODO*///INLINE void ldu_di( void )
 /*TODO*///{
 /*TODO*///	DIRWORD(pU);
@@ -2511,14 +2511,15 @@ public class konamops {
 /*TODO*///	D = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $e4 ANDB indexed -**0- */
-/*TODO*///INLINE void andb_ix( void )
-/*TODO*///{
-/*TODO*///	B &= RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode andb_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            konami.b = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $e5 BITB indexed -**0- */
 /*TODO*///INLINE void bitb_ix( void )
 /*TODO*///{
@@ -2528,78 +2529,82 @@ public class konamops {
 /*TODO*///	SET_NZ8(r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $e6 LDB indexed -**0- */
-/*TODO*///INLINE void ldb_ix( void )
-/*TODO*///{
-/*TODO*///	B = RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $e7 STB indexed -**0- */
-/*TODO*///INLINE void stb_ix( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///	WM(EAD,B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $e8 EORB indexed -**0- */
-/*TODO*///INLINE void eorb_ix( void )
-/*TODO*///{
-/*TODO*///	B ^= RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $e9 ADCB indexed ***** */
-/*TODO*///INLINE void adcb_ix( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = B + t + (CC & CC_C);
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	SET_H(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $eA ORB indexed -**0- */
-/*TODO*///INLINE void orb_ix( void )
-/*TODO*///{
-/*TODO*///	B |= RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $eb ADDB indexed ***** */
-/*TODO*///INLINE void addb_ix( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = B + t;
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	SET_H(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $ec LDD indexed -**0- */
-/*TODO*///INLINE void ldd_ix( void )
-/*TODO*///{
-/*TODO*///	D=RM16(EAD);
-/*TODO*///	CLR_NZV; SET_NZ16(D);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $eD STD indexed -**0- */
-/*TODO*///INLINE void std_ix( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
-/*TODO*///	WM16(EAD,&pD);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $eE LDU (LDS) indexed -**0- */
+    public static opcode ldb_ix = new opcode() {
+        public void handler() {
+            konami.b = RM(ea) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode stb_ix = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ8(konami.b);
+            WM(ea, konami.b);
+        }
+    };
+
+    public static opcode eorb_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            konami.b = (konami.b ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode adcb_ix = new opcode() {
+        public void handler() {
+            int t, r;
+            t = RM(ea) & 0xFFFF;
+            r = (konami.b + t + (konami.cc & CC_C)) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.b, t, r);
+            SET_H(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode orb_ix = new opcode() {
+        public void handler() {
+            int t;
+            t = RM(ea) & 0xFF;
+            konami.b = (konami.b | t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode addb_ix = new opcode() {
+        public void handler() {
+            int t, r;
+            t = RM(ea) & 0xFFFF;
+            r = (konami.b + t) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.b, t, r);
+            SET_H(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode ldd_ix = new opcode() {
+        public void handler() {
+            int temp = RM16(ea) & 0xFFFF;
+            setDreg(temp);
+            CLR_NZV();
+            SET_NZ16(getDreg());
+        }
+    };
+
+    public static opcode std_ix = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ16(getDreg());
+            WM16(ea, getDreg());
+        }
+    };
+    /*TODO*////* $eE LDU (LDS) indexed -**0- */
 /*TODO*///INLINE void ldu_ix( void )
 /*TODO*///{
 /*TODO*///	U=RM16(EAD);
