@@ -1,751 +1,754 @@
-/***************************************************************************
-
-TODO:
-- implement shadows properly
-
-
-
-                      Emulated
-                         |
-                  board #|year    CPU      tiles        sprites  priority palette    other
-                    -----|---- ------- ------------- ------------- ------ ------ ----------------
-Hyper Crash         GX401 1985
-Twinbee             GX412*1985   68000           GX400
-Yie Ar Kung Fu      GX407*1985    6809
-Gradius / Nemesis   GX456*1985   68000           GX400
-Shao-lins Road      GX477*1985    6809
-Jail Break          GX507*1986 KONAMI-1          005849
-Finalizer           GX523*1985 KONAMI-1          005885
-Konami's Ping Pong  GX555*1985     Z80
-Iron Horse          GX560*1986    6809           005885
-Konami GT           GX561*1985   68000           GX400
-Green Beret         GX577*1985     Z80           005849
-Galactic Warriors   GX578*1985   68000           GX400
-Salamander          GX587*1986   68000           GX400
-WEC Le Mans 24      GX602*1986 2x68000
-BAW / Black Panther GX604 1987   68000           GX400                    007593
-Combat School /     GX611*1987    6309           007121(x2)               007327
-  Boot Camp
-Rock 'n Rage /      GX620*1986    6309 007342        007420               007327
-  Koi no Hotrock
-Mr Kabuki/Mr Goemon GX621*1986     Z80           005849
-Jackal              GX631*1986    6809?          005885(x2)
-Contra / Gryzor     GX633*1987    6809?          007121(x2)               007593
-Flak Attack         GX669*1987    6309           007121                   007327 007452
-Devil World / Dark  GX687*1987 2x68000           TWIN16
-  Adventure / Majuu no Oukoku
-Double Dribble      GX690*1986  3x6809           005885(x2)               007327 007452
-Kitten Kaboodle /   GX712+1988                   GX400                    007593 051550
-  Nyan Nyan Panic
-Chequered Flag      GX717*1988  052001               051960 051937(x2)           051316(x2) (zoom/rotation) 051733 (protection)
-Fast Lane           GX752*1987    6309           007121                          051733 (protection) 007801
-Hot Chase           GX763*1988 2x68000                                           051316(x3) (zoom/rotation) 007634 007635 007558 007557
-Rack 'Em Up /       GX765*1987    6309 007342        007420               007327 007324
-  The Hustler
-Haunted Castle      GX768*1988  052001           007121(x2)               007327
-Ajax / Typhoon      GX770*1987   6309+ 052109 051962 051960 051937  PROM  007327 051316 (zoom/rotation)
-                                052001
-Labyrinth Runner    GX771*1987    6309           007121                   007593 051733 (protection) 051550
-Super Contra        GX775*1988  052001 052109 051962 051960 051937  PROM  007327
-Battlantis          GX777*1987    6309 007342        007420               007327 007324
-Vulcan Venture /    GX785*1988 2x68000           TWIN16
-  Gradius 2
-City Bomber         GX787+1987   68000           GX400                    007593 051550
-Over Drive          GX789 1990
-Hyper Crash         GX790 1987
-Blades of Steel     GX797*1987    6309 007342        007420               007327 051733 (protection)
-The Main Event      GX799*1988    6309 052109 051962 051960 051937  PROM
-Missing in Action   GX808*1989   68000 052109 051962 051960 051937  PROM
-Missing in Action J GX808*1989 2x68000           TWIN16
-Crime Fighters      GX821*1989  052526 052109 051962 051960 051937  PROM
-Special Project Y   GX857*1989    6309 052109 051962 051960 051937  PROM         052591 (protection)
-'88 Games           GX861*1988  052001 052109 051962 051960 051937  PROM         051316 (zoom/rotation)
-Final Round /       GX870*1988 1x68000           TWIN16?
-  Hard Puncher
-Thunder Cross       GX873*1988  052001 052109 051962 051960 051937  PROM  007327 052591 (protection)
-Aliens              GX875*1990  052526 052109 051962 051960 051937  PROM
-Gang Busters        GX878*1988  052526 052109 051962 051960 051937  PROM
-Devastators         GX890*1988    6309 052109 051962 051960 051937  PROM         007324 051733 (protection)
-Bottom of the Ninth GX891*1989    6809 052109 051962 051960 051937  PROM         051316 (zoom/rotation)
-Cue Brick           GX903*1989 2x68000           TWIN16
-Punk Shot           GX907*1990   68000 052109 051962 051960 051937 053251
-Ultraman            GX910*1991   68000 ------ ------ 051960 051937  PROM         051316(x3) (zoom/rotation) 051550
-Surprise Attack     GX911*1990  053248 052109 051962 053245 053244 053251
-Lightning Fighters /GX939*1990   68000 052109 051962 053245 053244 053251
-  Trigon
-Gradius 3           GX945*1989 2x68000 052109 051962 051960 051937  PROM
-Parodius            GX955*1990  053248 052109 051962 053245 053244 053251
-TMNT                GX963*1989   68000 052109 051962 051960 051937  PROM
-Block Hole          GX973*1989  052526 052109 051962 051960 051937  PROM
-Escape Kids         GX975 1991  053248 052109 051962 053247 053246 053251        053252 - same board as Vendetta
-Rollergames         GX999*1991  053248 ------ ------ 053245 053244               051316 (zoom/rotation) 053252
-Bells & Whistles /  GX060*1991   68000 052109 051962 053245 053244 053251        054000 (collision)
-  Detana!! Twin Bee
-Golfing Greats      GX061*1991   68000 052109 051962 053245 053244 053251        053936 (3D)
-TMNT 2              GX063*1991   68000 052109 051962 053245 053244 053251        053990
-Sunset Riders       GX064*1991   68000 052109 051962 053245 053244 053251        054358
-X-Men               GX065*1992   68000 052109 051962 053247 053246 053251
-XEXEX               GX067*1991   68000 054157 054156 053247 053246 053251        054338 054539
-Asterix             GX068+1992   68000 054157 054156 053245 053244 053251        054358
-G.I. Joe            GX069+1992   68000 054157 054156 053247 053246 053251        054539
-The Simpsons        GX072*1991  053248 052109 051962 053247 053246 053251
-Thunder Cross 2     GX073*1991   68000 052109 051962 051960 051937 053251        054000 (collision)
-Vendetta /          GX081*1991  053248 052109 051962 053247 053246 053251        054000 (collision)
-  Crime Fighters 2
-Premier Soccer      GX101 1993   68000 052109 051962 053245 053244 053251        053936 (3D)
-Hexion              GX122+1992     Z80                                           052591 (protection) 053252
-Entapous /          GX123+1993   68000 054157 054156 055673 053246               053252 054000 055555
-  Gaiapolis
-Mystic Warrior      GX128 1993
-Cowboys of Moo Mesa GX151 1993   68000 054157 054156 053247 053246               053252 054338 053990
-Violent Storm       GX168+1993   68000 054157 054156 055673 053246               054338 054539(x2) 055550 055555
-Bucky 'O Hare       GX173+1992   68000 054157 054156 053247 053246 053251        054338 054539
-Potrio              GX174 1992
-Lethal Enforcers    GX191 1992    6309 054157(x2) 054156 053245 053244(x2)       054000 054539 054906
-Metamorphic Force   GX224 1993
-Martial Champion    GX234+1993   68000 054157 054156 055673 053246               053252 054338 054539 055555 053990 054986 054573
-Run and Gun         GX247+1993   68000               055673 053246               053253(x2)
-Polygonet CommandersGX305 1993   68020                                           056230?063936?054539?054986?
-
-
-Notes:
-- Old games use 051961 instead of 052109, it is an earlier version functionally
-  equivalent (maybe 052109 had bugs fixed). The list always shows 052109 because
-  the two are exchangeable and 052109's are found also on original boards whose
-  schematics show a 051961.
-
-
-
-Status of the ROM tests in the emulated games:
-
-Ajax / Typhoon      pass
-Super Contra        pass
-The Main Event      pass
-Missing in Action   pass
-Crime Fighters      pass
-Special Project Y   pass
-Konami 88           pass
-Thunder Cross       pass
-Aliens              pass
-Gang Busters        pass
-Devastators         pass
-Bottom of the Ninth pass
-Punk Shot           pass
-Surprise Attack     fails D05-6 (052109) because it uses mirror addresses to
-                    select banks, and supporting those addresses breaks the
-                    normal game ;-(
-Lightning Fighters  pass
-Gradius 3           pass
-Parodius            pass
-TMNT                pass
-Block Hole          pass
-Rollergames         pass
-Bells & Whistles    pass
-Golfing Greats      fails B05..B10 (053936)
-TMNT 2              pass
-Sunset Riders       pass
-X-Men               fails 1F (054544)
-The Simpsons        pass
-Thunder Cross 2     pass
-Vendetta            pass
-Xexex               pass
-
-
-THE FOLLOWING INFORMATION IS PRELIMINARY AND INACCURATE. DON'T RELY ON IT.
-
-
-007121
-------
-This is an interesting beast. Many games use two of these in pair.
-It manages sprites and two 32x32 tilemaps. The tilemaps can be joined to form
-a single 64x32 one, or one of them can be moved to the side of screen, giving
-a high score display suitable for vertical games.
-The chip also generates clock and interrupt signals suitable for a 6809.
-It uses 0x2000 bytes of RAM for the tilemaps and sprites, and an additional
-0x100 bytes, maybe for scroll RAM and line buffers. The maximum addressable
-ROM is 0x80000 bytes (addressed 16 bits at a time).
-Two 256x4 lookup PROMs are also used to increase the color combinations.
-All tilemap / sprite priority handling is done internally and the chip exports
-7 bits of color code, composed of 2 bits of palette bank, 1 bit indicating tile
-or sprite, and 4 bits of ROM data remapped through the PROM.
-
-inputs:
-- address lines (A0-A13)
-- data lines (DB0-DB7)
-- misc interface stuff
-- data from the gfx ROMs (RDL0-RDL7, RDU0-RDU7)
-- data from the tile lookup PROMs (VCD0-VCD3)
-- data from the sprite lookup PROMs (OCD0-OCD3)
-
-outputs:
-- address lines for tilemap RAM (AX0-AX12)
-- data lines for tilemap RAM (VO0-VO7)
-- address lines for the small RAM (FA0-FA7)
-- data lines for the small RAM (FD0-FD7)
-- address lines for the gfx ROMs (R0-R17)
-- address lines for the tile lookup PROMs (VCF0-VCF3, VCB0-VCB3)
-- address lines for the sprite lookup PROMs (OCB0-OCB3, OCF0-OCF3)
-- NNMI, NIRQ, NFIR, NE, NQ for the main CPU
-- misc interface stuff
-- color code to be output on screen (COA0-COA6)
-
-
-control registers
-000:          scroll x (low 8 bits)
-001: -------x scroll x (high bit)
-     ------x- enable rowscroll? (combasc)
-     ----x--- this probably selects an alternate screen layout used in combat
-              school where tilemap #2 is overlayed on front and doesn't scroll.
-              The 32 lines of the front layer can be individually turned on or
-              off using the second 32 bytes of scroll RAM.
-002:          scroll y
-003: -------x bit 13 of the tile code
-     ------x- unknown (contra)
-     -----x-- might be sprite / tilemap priority (0 = sprites have priority)
-              (combat school, contra, haunted castle(0/1), labyrunr)
-     ----x--- selects sprite buffer (and makes a copy to a private buffer?)
-     ---x---- screen layout selector:
-              when this is set, 5 columns are added on the left of the screen
-              (that means 5 rows at the top for vertical games), and the
-              rightmost 2 columns are chopped away.
-              Tilemap #2 is used to display the 5 additional columns on the
-              left. The rest of tilemap #2 is not used and can be used as work
-              RAM by the program.
-              The visible area becomes 280x224.
-              Note that labyrunr changes this at runtime, setting it during
-              gameplay and resetting it on the title screen and crosshatch.
-     --x----- might be sprite / tilemap priority (0 = sprites have priority)
-              (combat school, contra, haunted castle(0/1), labyrunr)
-     -x------ Chops away the leftmost and rightmost columns, switching the
-              visible area from 256 to 240 pixels. This is used by combasc on
-              the scrolling stages, and by labyrunr on the title screen.
-              At first I thought that this enabled an extra bank of 0x40
-              sprites, needed by combasc, but labyrunr proves that this is not
-              the case
-     x------- unknown (contra)
-004: ----xxxx bits 9-12 of the tile code. Only the bits enabled by the following
-              mask are actually used, and replace the ones selected by register
-			  005.
-     xxxx---- mask enabling the above bits
-005: selects where in the attribute byte to pick bits 9-12 of the tile code,
-     output to pins R12-R15. The bit of the attribute byte to use is the
-     specified bit (0-3) + 3, that is one of bits 3-6. Bit 7 is hardcoded as
-     bit 8 of the code. Bits 0-2 are used for the color, however note that
-     some games (combat school, flak attack, maybe fast lane) use bit 3 as well,
-     and indeed there are 4 lines going to the color lookup PROM, so there has
-     to be a way to select this.
-     ------xx attribute bit to use for tile code bit  9
-     ----xx-- attribute bit to use for tile code bit 10
-     --xx---- attribute bit to use for tile code bit 11
-     xx------ attribute bit to use for tile code bit 12
-006: ----xxxx select additional effect for bits 3-6 of the tile attribute (the
-              same ones indexed by register 005). Note that an attribute bit
-              can therefore be used at the same time to be BOTH a tile code bit
-              and an additional effect.
-     -------x bit 3 of attribute is bit 3 of color (combasc, fastlane, flkatck)
-	 ------x- bit 4 of attribute is tile flip X (assumption - no game uses this)
-     -----x-- bit 5 of attribute is tile flip Y (flkatck)
-     ----x--- bit 6 of attribute is tile priority over sprites (combasc, hcastle,
-              labyrunr)
-              Note that hcastle sets this bit for layer 0, and bit 6 of the
-              attribute is also used as bit 12 of the tile code, however that
-              bit is ALWAYS set thoughout the game.
-              combasc uses the bit inthe "graduation" scene during attract mode,
-              to place soldiers behind the stand.
-              Use in labyrunr has not been investigated yet.
-     --xx---- palette bank (both tiles and sprites, see contra)
-007: -------x nmi enable
-     ------x- irq enable
-     -----x-- firq enable (probably)
-     ----x--- flip screen
-     ---x---- unknown (contra, labyrunr)
-
-
-
-007342
-------
-The 007342 manages 2 64x32 scrolling tilemaps with 8x8 characters, and
-optionally generates timing clocks and interrupt signals. It uses 0x2000
-bytes of RAM, plus 0x0200 bytes for scrolling, and a variable amount of ROM.
-It cannot read the ROMs.
-
-control registers
-000: ------x- INT control
-     ---x---- flip screen (TODO: doesn't work with thehustl)
-001: Used for banking in Rock'n'Rage
-002: -------x MSB of x scroll 1
-     ------x- MSB of x scroll 2
-     ---xxx-- layer 1 row/column scroll control
-              000 = disabled
-			  010 = unknown (bladestl shootout between periods)
-              011 = 32 columns (Blades of Steel)
-              101 = 256 rows (Battlantis, Rock 'n Rage)
-     x------- enable sprite wraparound from bottom to top (see Blades of Steel
-              high score table)
-003: x scroll 1
-004: y scroll 1
-005: x scroll 2
-006: y scroll 2
-007: not used
-
-
-007420
-------
-Sprite generator. 8 bytes per sprite with zoom. It uses 0x200 bytes of RAM,
-and a variable amount of ROM. Nothing is known about its external interface.
-
-
-
-052109/051962
--------------
-These work in pair.
-The 052109 manages 3 64x32 scrolling tilemaps with 8x8 characters, and
-optionally generates timing clocks and interrupt signals. It uses 0x4000
-bytes of RAM, and a variable amount of ROM. It cannot read the ROMs:
-instead, it exports 21 bits (16 from the tilemap RAM + 3 for the character
-raster line + 2 additional ones for ROM banking) and these are externally
-used to generate the address of the required data on the ROM; the output of
-the ROMs is sent to the 051962, along with a color code. In theory you could
-have any combination of bits in the tilemap RAM, as long as they add to 16.
-In practice, all the games supported so far standardize on the same format
-which uses 3 bits for the color code and 13 bits for the character code.
-The 051962 multiplexes the data of the three layers and converts it into
-palette indexes and transparency bits which will be mixed later in the video
-chain.
-Priority is handled externally: these chips only generate the tilemaps, they
-don't mix them.
-Both chips are interfaced with the main CPU. When the RMRD pin is asserted,
-the CPU can read the gfx ROM data. This is done by telling the 052109 which
-dword to read (this is a combination of some banking registers, and the CPU
-address lines), and then reading it from the 051962.
-
-052109 inputs:
-- address lines (AB0-AB15, AB13-AB15 seem to have a different function)
-- data lines (DB0-DB7)
-- misc interface stuff
-
-052109 outputs:
-- address lines for the private RAM (RA0-RA12)
-- data lines for the private RAM (VD0-VD15)
-- NMI, IRQ, FIRQ for the main CPU
-- misc interface stuff
-- ROM bank selector (CAB1-CAB2)
-- character "code" (VC0-VC10)
-- character "color" (COL0-COL7); used foc color but also bank switching and tile
-  flipping. Exact meaning depends on externl connections. All evidence indicates
-  that COL2 and COL3 select the tile bank, and are replaced with the low 2 bits
-  from the bank register. The top 2 bits of the register go to CAB1-CAB2.
-  However, this DOES NOT WORK with Gradius III. "color" seems to pass through
-  unaltered.
-- layer A horizontal scroll (ZA1H-ZA4H)
-- layer B horizontal scroll (ZB1H-ZB4H)
-- ????? (BEN)
-
-051962 inputs:
-- gfx data from the ROMs (VC0-VC31)
-- color code (COL0-COL7); only COL4-COL7 seem to really be used for color; COL0
-  is tile flip X.
-- layer A horizontal scroll (ZA1H-ZA4H)
-- layer B horizontal scroll (ZB1H-ZB4H)
-- let main CPU read the gfx ROMs (RMRD)
-- address lines to be used with RMRD (AB0-AB1)
-- data lines to be used with RMRD (DB0-DB7)
-- ????? (BEN)
-- misc interface stuff
-
-051962 outputs:
-- FIX layer palette index (DFI0-DFI7)
-- FIX layer transparency (NFIC)
-- A layer palette index (DSA0-DSAD); DSAA-DSAD seem to be unused
-- A layer transparency (NSAC)
-- B layer palette index (DSB0-DSBD); DSBA-DSBD seem to be unused
-- B layer transparency (NSBC)
-- misc interface stuff
-
-
-052109 memory layout:
-0000-07ff: layer FIX tilemap (attributes)
-0800-0fff: layer A tilemap (attributes)
-1000-1fff: layer B tilemap (attributes)
-180c-1833: A y scroll
-1a00-1bff: A x scroll
-1c00     : ?
-1c80     : row/column scroll control
-           ------xx layer A row scroll
-                    00 = disabled
-                    01 = disabled? (gradius3, vendetta)
-                    10 = 32 lines
-                    11 = 256 lines
-           -----x-- layer A column scroll
-                    0 = disabled
-                    1 = 64 (actually 40) columns
-           ---xx--- layer B row scroll
-           --x----- layer B column scroll
-           surpratk sets this register to 70 during the second boss. There is
-           nothing obviously wrong so it's not clear what should happen.
-1d00     : bits 0 & 1 might enable NMI and FIRQ, not sure
-         : bit 2 = IRQ enable
-1d80     : ROM bank selector bits 0-3 = bank 0 bits 4-7 = bank 1
-1e00     : ROM subbank selector for ROM testing
-1e80     : bit 0 = flip screen (applies to tilemaps only, not sprites)
-         : bit 1 = set by crimfght, mainevt, surpratk, xmen, mia, punkshot, thndrx2, spy
-         :         it seems to enable tile flip X, however flip X is handled by the
-         :         051962 and it is not hardwired to a specific tile attribute.
-         :         Note that xmen, punkshot and thndrx2 set the bit but the current
-         :         drivers don't use flip X and seem to work fine.
-         : bit 2 = enables tile flip Y when bit 1 of the tile attribute is set
-1f00     : ROM bank selector bits 0-3 = bank 2 bits 4-7 = bank 3
-2000-27ff: layer FIX tilemap (code)
-2800-2fff: layer A tilemap (code)
-3000-37ff: layer B tilemap (code)
-3800-3807: nothing here, so the chip can share address space with a 051937
-380c-3833: B y scroll
-3a00-3bff: B x scroll
-3c00-3fff: nothing here, so the chip can share address space with a 051960
-3d80     : mirror of 1d80, but ONLY during ROM test (surpratk)
-3e00     : mirror of 1e00, but ONLY during ROM test (surpratk)
-3f00     : mirror of 1f00, but ONLY during ROM test (surpratk)
-EXTRA ADDRESSING SPACE USED BY X-MEN:
-4000-47ff: layer FIX tilemap (code high bits)
-4800-4fff: layer A tilemap (code high bits)
-5000-57ff: layer B tilemap (code high bits)
-
-The main CPU doesn't have direct acces to the RAM used by the 052109, it has
-to through the chip.
-
-
-
-051960/051937
--------------
-Sprite generators. Designed to work in pair. The 051960 manages the sprite
-list and produces and address that is fed to the gfx ROMs. The data from the
-ROMs is sent to the 051937, along with color code and other stuff from the
-051960. The 051937 outputs up to 12 bits of palette index, plus "shadow" and
-transparency information.
-Both chips are interfaced to the main CPU, through 8-bit data buses and 11
-bits of address space. The 051937 sits in the range 000-007, while the 051960
-in the range 400-7ff (all RAM). The main CPU can read the gfx ROM data though
-the 051937 data bus, while the 051960 provides the address lines.
-The 051960 is designed to directly address 1MB of ROM space, since it produces
-18 address lines that go to two 16-bit wide ROMs (the 051937 has a 32-bit data
-bus to the ROMs). However, the addressing space can be increased by using one
-or more of the "color attribute" bits of the sprites as bank selectors.
-Moreover a few games store the gfx data in the ROMs in a format different from
-the one expected by the 051960, and use external logic to reorder the address
-lines.
-The 051960 can also genenrate IRQ, FIRQ and NMI signals.
-
-memory map:
-000-007 is for the 051937, but also seen by the 051960
-400-7ff is 051960 only
-000     R  bit 0 = unknown, looks like a status flag or something
-                   aliens waits for it to be 0 before starting to copy sprite data
-				   thndrx2 needs it to pulse for the startup checks to succeed
-000     W  bit 0 = irq enable/acknowledge?
-           bit 3 = flip screen (applies to sprites only, not tilemaps)
-           bit 4 = unknown, used by Devastators, TMNT, Aliens, Chequered Flag, maybe others
-                   aliens sets it just after checking bit 0, and before copying
-                   the sprite data
-           bit 5 = enable gfx ROM reading
-001     W  Devastators sets bit 1, function unknown.
-           Ultraman sets the register to 0x0f.
-           None of the other games I tested seem to set this register to other than 0.
-002-003 W  selects the portion of the gfx ROMs to be read.
-004     W  Aliens uses this to select the ROM bank to be read, but Punk Shot
-           and TMNT don't, they use another bit of the registers above. Many
-           other games write to this register before testing.
-           It is possible that bits 2-7 of 003 go to OC0-OC5, and bits 0-1 of
-           004 go to OC6-OC7.
-004-007 R  reads data from the gfx ROMs (32 bits in total). The address of the
-           data is determined by the register above and by the last address
-           accessed on the 051960; plus bank switch bits for larger ROMs.
-           It seems that the data can also be read directly from the 051960
-           address space: 88 Games does this. First it reads 004 and discards
-           the result, then it reads from the 051960 the data at the address
-           it wants. The normal order is the opposite, read from the 051960 at
-           the address you want, discard the result, and fetch the data from
-           004-007.
-400-7ff RW sprite RAM, 8 bytes per sprite
-
-
-
-053245/053244
--------------
-Sprite generators. The 053245 has a 16-bit data bus to the main CPU.
-
-053244 memory map (but the 053245 sees and processes them too):
-000-001 W  global X offset
-002-003 W  global Y offset
-004     W  unknown
-005     W  bit 0 = flip screen X
-           bit 1 = flip screen Y
-           bit 2 = unknown, used by Parodius
-           bit 4 = enable gfx ROM reading
-           bit 5 = unknown, used by Rollergames
-006     W  unknown
-007     W  unknown
-008-009 W  low 16 bits of the ROM address to read
-00a-00b W  high 3 bits of the ROM address to read
-00c-00f R  reads data from the gfx ROMs (32 bits in total). The address of the
-           data is determined by the registers above; plus bank switch bits for
-           larger ROMs.
-
-
-
-053247/053246
--------------
-Sprite generators. Nothing is known about their external interface.
-The sprite RAM format is very similar to the 053245.
-
-053246 memory map (but the 053247 sees and processes them too):
-000-001 W  global X offset
-002-003 W  global Y offset
-004     W  low 8 bits of the ROM address to read
-005     W  bit 0 = flip screen X
-           bit 1 = flip screen Y
-           bit 2 = unknown
-           bit 4 = interrupt enable
-           bit 5 = unknown
-006-007 W  high 16 bits of the ROM address to read
-
-???-??? R  reads data from the gfx ROMs (16 bits in total). The address of the
-           data is determined by the registers above
-
-
-
-051316
-------
-Manages a 32x32 tilemap (16x16 tiles, 512x512 pixels) which can be zoomed,
-distorted and rotated.
-It uses two internal 24 bit counters which are incremented while scanning the
-picture. The coordinates of the pixel in the tilemap that has to be drawn to
-the current beam position are the counters / (2^11).
-The chip doesn't directly generate the color information for the pixel, it
-just generates a 24 bit address (whose top 16 bits are the contents of the
-tilemap RAM), and a "visible" signal. It's up to external circuitry to convert
-the address into a pixel color. Most games seem to use 4bpp graphics, but Ajax
-uses 7bpp.
-If the value in the internal counters is out of the visible range (0..511), it
-is truncated and the corresponding address is still generated, but the "visible"
-signal is not asserted. The external circuitry might ignore that signal and
-still generate the pixel, therefore making the tilemap a continuous playfield
-that wraps around instead of a large sprite.
-
-
-control registers
-000-001 X counter starting value / 256
-002-003 amount to add to the X counter after each horizontal pixel
-004-005 amount to add to the X counter after each line (0 = no rotation)
-006-007 Y counter starting value / 256
-008-009 amount to add to the Y counter after each horizontal pixel (0 = no rotation)
-00a-00b amount to add to the Y counter after each line
-00c-00d ROM bank to read, used during ROM testing
-00e     bit 0 = enable ROM reading (active low). This only makes the chip output the
-                requested address: the ROM is actually read externally, not through
-                the chip's data bus.
-        bit 1 = unknown
-        bit 2 = unknown
-00f     unused
-
-
-
-053251
-------
-Priority encoder.
-
-The chip has inputs for 5 layers (CI0-CI4); only 4 are used (CI1-CI4)
-CI0-CI2 are 9(=5+4) bits inputs, CI3-CI4 8(=4+4) bits
-
-The input connctions change from game to game. E.g. in Simpsons,
-CI0 = grounded (background color)
-CI1 = sprites
-CI2 = FIX
-CI3 = A
-CI4 = B
-
-in lgtnfght:
-CI0 = grounded
-CI1 = sprites
-CI2 = FIX
-CI3 = B
-CI4 = A
-
-there are three 6 bit priority inputs, PR0-PR2
-
-simpsons:
-PR0 = 111111
-PR1 = xxxxx0 x bits coming from the sprite attributes
-PR2 = 111111
-
-lgtnfght:
-PR0 = 111111
-PR1 = 1xx000 x bits coming from the sprite attributes
-PR2 = 111111
-
-also two shadow inputs, SDI0 and SDI1 (from the sprite attributes)
-
-the chip outputs the 11 bit palette index, CO0-CO10, and two shadow bits.
-
-16 internal registers; registers are 6 bits wide (input is D0-D5)
-For the most part, their meaning is unknown
-All registers are write only.
-There must be a way to enable/disable the three external PR inputs.
-Some games initialize the priorities of the sprite & background layers,
-others don't. It isn't clear whether the data written to those registers is
-actually used, since the priority is taken from the external ports.
-
- 0  priority of CI0 (higher = lower priority)
-    punkshot: unused?
-    lgtnfght: unused?
-    simpsons: 3f = 111111
-    xmen:     05 = 000101  default value
-    xmen:     09 = 001001  used to swap CI0 and CI2
- 1  priority of CI1 (higher = lower priority)
-    punkshot: 28 = 101000
-    lgtnfght: unused?
-    simpsons: unused?
-    xmen:     02 = 000010
- 2  priority of CI2 (higher = lower priority)
-    punkshot: 24 = 100100
-    lgtnfght: 24 = 100100
-    simpsons: 04 = 000100
-    xmen:     09 = 001001  default value
-    xmen:     05 = 000101  used to swap CI0 and CI2
- 3  priority of CI3 (higher = lower priority)
-    punkshot: 34 = 110100
-    lgtnfght: 34 = 110100
-    simpsons: 28 = 101000
-    xmen:     00 = 000000
- 4  priority of CI4 (higher = lower priority)
-    punkshot: 2c = 101100  default value
-    punkshot: 3c = 111100  used to swap CI3 and CI4
-    punkshot: 26 = 100110  used to swap CI1 and CI4
-    lgtnfght: 2c = 101100
-    simpsons: 18 = 011000
-    xmen:     fe = 111110
- 5  unknown
-    punkshot: unused?
-    lgtnfght: 2a = 101010
-    simpsons: unused?
-    xmen: unused?
- 6  unknown
-    punkshot: 26 = 100110
-    lgtnfght: 30 = 110000
-    simpsons: 17 = 010111
-    xmen:     03 = 000011 (written after initial tests)
- 7  unknown
-    punkshot: unused?
-    lgtnfght: unused?
-    simpsons: 27 = 100111
-    xmen:     07 = 000111 (written after initial tests)
- 8  unknown
-    punkshot: unused?
-    lgtnfght: unused?
-    simpsons: 37 = 110111
-    xmen:     ff = 111111 (written after initial tests)
- 9  ----xx CI0 palette index base (CO9-CO10)
-    --xx-- CI1 palette index base (CO9-CO10)
-    xx---- CI2 palette index base (CO9-CO10)
-10  ---xxx CI3 palette index base (CO8-CO10)
-    xxx--- CI4 palette index base (CO8-CO10)
-11  unknown
-    punkshot: 00 = 000000
-    lgtnfght: 00 = 000000
-    simpsons: 00 = 000000
-    xmen:     00 = 000000 (written after initial tests)
-12  unknown
-    punkshot: 04 = 000100
-    lgtnfght: 04 = 000100
-    simpsons: 05 = 000101
-    xmen:     05 = 000101
-13  unused
-14  unused
-15  unused
-
-
-054000
-------
-Sort of a protection device, used for collision detection.
-It is passed a few parameters, and returns a boolean telling if collision
-happened. It has no access to gfx data, it only does arithmetical operations
-on the parameters.
-
-Memory map:
-00      unused
-01-03 W A center X
-04    W unknown, needed by thndrx2 to pass the startup check, we use a hack
-05      unused
-06    W A semiaxis X
-07    W A semiaxis Y
-08      unused
-09-0b W A center Y
-0c    W unknown, needed by thndrx2 to pass the startup check, we use a hack
-0d      unused
-0e    W B semiaxis X
-0f    W B semiaxis Y
-10      unused
-11-13 W B center Y
-14      unused
-15-17 W B center X
-18    R 0 = collision, 1 = no collision
-
-
-051733
-------
-Sort of a protection device, used for collision detection, and for
-arithmetical operations.
-It is passed a few parameters, and returns the result.
-
-Memory map(preliminary):
-------------------------
-00-01 W operand 1
-02-03 W operand 2
-
-00-01 R operand 1/operand 2
-02-03 R operand 1%operand 2?
-
-06-07 W Radius
-08-09 W Y pos of obj1
-0a-0b W X pos of obj1
-0c-0d W Y pos of obj2
-0e-0f W X pos of obj2
-13	  W unknown
-
-07	  R collision (0x80 = no, 0x00 = yes)
-
-Other addresses are unknown or unused.
-
-Fast Lane:
-----------
-$9def:
-This routine is called only after a collision.
-(R) 0x0006:	unknown. Only bits 0-3 are used.
-
-Blades of Steel:
-----------------
-$ac2f:
-(R) 0x2f86: unknown. Only uses bit 0.
-
-$a5de:
-writes to 0x2f84-0x2f85, waits a little, and then reads from 0x2f84.
-
-$7af3:
-(R) 0x2f86: unknown. Only uses bit 0.
-
-
-Devastators:
-------------
-$6ce8:
-reads from 0x0006, and only uses bit 1.
-
-***************************************************************************/
+/** *************************************************************************
+ *
+ * TODO:
+ * - implement shadows properly
+ *
+ *
+ *
+ * Emulated
+ * |
+ * board #|year    CPU      tiles        sprites  priority palette    other
+ * -----|---- ------- ------------- ------------- ------ ------ ----------------
+ * Hyper Crash         GX401 1985
+ * Twinbee             GX412*1985   68000           GX400
+ * Yie Ar Kung Fu      GX407*1985    6809
+ * Gradius / Nemesis   GX456*1985   68000           GX400
+ * Shao-lins Road      GX477*1985    6809
+ * Jail Break          GX507*1986 KONAMI-1          005849
+ * Finalizer           GX523*1985 KONAMI-1          005885
+ * Konami's Ping Pong  GX555*1985     Z80
+ * Iron Horse          GX560*1986    6809           005885
+ * Konami GT           GX561*1985   68000           GX400
+ * Green Beret         GX577*1985     Z80           005849
+ * Galactic Warriors   GX578*1985   68000           GX400
+ * Salamander          GX587*1986   68000           GX400
+ * WEC Le Mans 24      GX602*1986 2x68000
+ * BAW / Black Panther GX604 1987   68000           GX400                    007593
+ * Combat School /     GX611*1987    6309           007121(x2)               007327
+ * Boot Camp
+ * Rock 'n Rage /      GX620*1986    6309 007342        007420               007327
+ * Koi no Hotrock
+ * Mr Kabuki/Mr Goemon GX621*1986     Z80           005849
+ * Jackal              GX631*1986    6809?          005885(x2)
+ * Contra / Gryzor     GX633*1987    6809?          007121(x2)               007593
+ * Flak Attack         GX669*1987    6309           007121                   007327 007452
+ * Devil World / Dark  GX687*1987 2x68000           TWIN16
+ * Adventure / Majuu no Oukoku
+ * Double Dribble      GX690*1986  3x6809           005885(x2)               007327 007452
+ * Kitten Kaboodle /   GX712+1988                   GX400                    007593 051550
+ * Nyan Nyan Panic
+ * Chequered Flag      GX717*1988  052001               051960 051937(x2)           051316(x2) (zoom/rotation) 051733 (protection)
+ * Fast Lane           GX752*1987    6309           007121                          051733 (protection) 007801
+ * Hot Chase           GX763*1988 2x68000                                           051316(x3) (zoom/rotation) 007634 007635 007558 007557
+ * Rack 'Em Up /       GX765*1987    6309 007342        007420               007327 007324
+ * The Hustler
+ * Haunted Castle      GX768*1988  052001           007121(x2)               007327
+ * Ajax / Typhoon      GX770*1987   6309+ 052109 051962 051960 051937  PROM  007327 051316 (zoom/rotation)
+ * 052001
+ * Labyrinth Runner    GX771*1987    6309           007121                   007593 051733 (protection) 051550
+ * Super Contra        GX775*1988  052001 052109 051962 051960 051937  PROM  007327
+ * Battlantis          GX777*1987    6309 007342        007420               007327 007324
+ * Vulcan Venture /    GX785*1988 2x68000           TWIN16
+ * Gradius 2
+ * City Bomber         GX787+1987   68000           GX400                    007593 051550
+ * Over Drive          GX789 1990
+ * Hyper Crash         GX790 1987
+ * Blades of Steel     GX797*1987    6309 007342        007420               007327 051733 (protection)
+ * The Main Event      GX799*1988    6309 052109 051962 051960 051937  PROM
+ * Missing in Action   GX808*1989   68000 052109 051962 051960 051937  PROM
+ * Missing in Action J GX808*1989 2x68000           TWIN16
+ * Crime Fighters      GX821*1989  052526 052109 051962 051960 051937  PROM
+ * Special Project Y   GX857*1989    6309 052109 051962 051960 051937  PROM         052591 (protection)
+ * '88 Games           GX861*1988  052001 052109 051962 051960 051937  PROM         051316 (zoom/rotation)
+ * Final Round /       GX870*1988 1x68000           TWIN16?
+ * Hard Puncher
+ * Thunder Cross       GX873*1988  052001 052109 051962 051960 051937  PROM  007327 052591 (protection)
+ * Aliens              GX875*1990  052526 052109 051962 051960 051937  PROM
+ * Gang Busters        GX878*1988  052526 052109 051962 051960 051937  PROM
+ * Devastators         GX890*1988    6309 052109 051962 051960 051937  PROM         007324 051733 (protection)
+ * Bottom of the Ninth GX891*1989    6809 052109 051962 051960 051937  PROM         051316 (zoom/rotation)
+ * Cue Brick           GX903*1989 2x68000           TWIN16
+ * Punk Shot           GX907*1990   68000 052109 051962 051960 051937 053251
+ * Ultraman            GX910*1991   68000 ------ ------ 051960 051937  PROM         051316(x3) (zoom/rotation) 051550
+ * Surprise Attack     GX911*1990  053248 052109 051962 053245 053244 053251
+ * Lightning Fighters /GX939*1990   68000 052109 051962 053245 053244 053251
+ * Trigon
+ * Gradius 3           GX945*1989 2x68000 052109 051962 051960 051937  PROM
+ * Parodius            GX955*1990  053248 052109 051962 053245 053244 053251
+ * TMNT                GX963*1989   68000 052109 051962 051960 051937  PROM
+ * Block Hole          GX973*1989  052526 052109 051962 051960 051937  PROM
+ * Escape Kids         GX975 1991  053248 052109 051962 053247 053246 053251        053252 - same board as Vendetta
+ * Rollergames         GX999*1991  053248 ------ ------ 053245 053244               051316 (zoom/rotation) 053252
+ * Bells & Whistles /  GX060*1991   68000 052109 051962 053245 053244 053251        054000 (collision)
+ * Detana!! Twin Bee
+ * Golfing Greats      GX061*1991   68000 052109 051962 053245 053244 053251        053936 (3D)
+ * TMNT 2              GX063*1991   68000 052109 051962 053245 053244 053251        053990
+ * Sunset Riders       GX064*1991   68000 052109 051962 053245 053244 053251        054358
+ * X-Men               GX065*1992   68000 052109 051962 053247 053246 053251
+ * XEXEX               GX067*1991   68000 054157 054156 053247 053246 053251        054338 054539
+ * Asterix             GX068+1992   68000 054157 054156 053245 053244 053251        054358
+ * G.I. Joe            GX069+1992   68000 054157 054156 053247 053246 053251        054539
+ * The Simpsons        GX072*1991  053248 052109 051962 053247 053246 053251
+ * Thunder Cross 2     GX073*1991   68000 052109 051962 051960 051937 053251        054000 (collision)
+ * Vendetta /          GX081*1991  053248 052109 051962 053247 053246 053251        054000 (collision)
+ * Crime Fighters 2
+ * Premier Soccer      GX101 1993   68000 052109 051962 053245 053244 053251        053936 (3D)
+ * Hexion              GX122+1992     Z80                                           052591 (protection) 053252
+ * Entapous /          GX123+1993   68000 054157 054156 055673 053246               053252 054000 055555
+ * Gaiapolis
+ * Mystic Warrior      GX128 1993
+ * Cowboys of Moo Mesa GX151 1993   68000 054157 054156 053247 053246               053252 054338 053990
+ * Violent Storm       GX168+1993   68000 054157 054156 055673 053246               054338 054539(x2) 055550 055555
+ * Bucky 'O Hare       GX173+1992   68000 054157 054156 053247 053246 053251        054338 054539
+ * Potrio              GX174 1992
+ * Lethal Enforcers    GX191 1992    6309 054157(x2) 054156 053245 053244(x2)       054000 054539 054906
+ * Metamorphic Force   GX224 1993
+ * Martial Champion    GX234+1993   68000 054157 054156 055673 053246               053252 054338 054539 055555 053990 054986 054573
+ * Run and Gun         GX247+1993   68000               055673 053246               053253(x2)
+ * Polygonet CommandersGX305 1993   68020                                           056230?063936?054539?054986?
+ *
+ *
+ * Notes:
+ * - Old games use 051961 instead of 052109, it is an earlier version functionally
+ * equivalent (maybe 052109 had bugs fixed). The list always shows 052109 because
+ * the two are exchangeable and 052109's are found also on original boards whose
+ * schematics show a 051961.
+ *
+ *
+ *
+ * Status of the ROM tests in the emulated games:
+ *
+ * Ajax / Typhoon      pass
+ * Super Contra        pass
+ * The Main Event      pass
+ * Missing in Action   pass
+ * Crime Fighters      pass
+ * Special Project Y   pass
+ * Konami 88           pass
+ * Thunder Cross       pass
+ * Aliens              pass
+ * Gang Busters        pass
+ * Devastators         pass
+ * Bottom of the Ninth pass
+ * Punk Shot           pass
+ * Surprise Attack     fails D05-6 (052109) because it uses mirror addresses to
+ * select banks, and supporting those addresses breaks the
+ * normal game ;-(
+ * Lightning Fighters  pass
+ * Gradius 3           pass
+ * Parodius            pass
+ * TMNT                pass
+ * Block Hole          pass
+ * Rollergames         pass
+ * Bells & Whistles    pass
+ * Golfing Greats      fails B05..B10 (053936)
+ * TMNT 2              pass
+ * Sunset Riders       pass
+ * X-Men               fails 1F (054544)
+ * The Simpsons        pass
+ * Thunder Cross 2     pass
+ * Vendetta            pass
+ * Xexex               pass
+ *
+ *
+ * THE FOLLOWING INFORMATION IS PRELIMINARY AND INACCURATE. DON'T RELY ON IT.
+ *
+ *
+ * 007121
+ * ------
+ * This is an interesting beast. Many games use two of these in pair.
+ * It manages sprites and two 32x32 tilemaps. The tilemaps can be joined to form
+ * a single 64x32 one, or one of them can be moved to the side of screen, giving
+ * a high score display suitable for vertical games.
+ * The chip also generates clock and interrupt signals suitable for a 6809.
+ * It uses 0x2000 bytes of RAM for the tilemaps and sprites, and an additional
+ * 0x100 bytes, maybe for scroll RAM and line buffers. The maximum addressable
+ * ROM is 0x80000 bytes (addressed 16 bits at a time).
+ * Two 256x4 lookup PROMs are also used to increase the color combinations.
+ * All tilemap / sprite priority handling is done internally and the chip exports
+ * 7 bits of color code, composed of 2 bits of palette bank, 1 bit indicating tile
+ * or sprite, and 4 bits of ROM data remapped through the PROM.
+ *
+ * inputs:
+ * - address lines (A0-A13)
+ * - data lines (DB0-DB7)
+ * - misc interface stuff
+ * - data from the gfx ROMs (RDL0-RDL7, RDU0-RDU7)
+ * - data from the tile lookup PROMs (VCD0-VCD3)
+ * - data from the sprite lookup PROMs (OCD0-OCD3)
+ *
+ * outputs:
+ * - address lines for tilemap RAM (AX0-AX12)
+ * - data lines for tilemap RAM (VO0-VO7)
+ * - address lines for the small RAM (FA0-FA7)
+ * - data lines for the small RAM (FD0-FD7)
+ * - address lines for the gfx ROMs (R0-R17)
+ * - address lines for the tile lookup PROMs (VCF0-VCF3, VCB0-VCB3)
+ * - address lines for the sprite lookup PROMs (OCB0-OCB3, OCF0-OCF3)
+ * - NNMI, NIRQ, NFIR, NE, NQ for the main CPU
+ * - misc interface stuff
+ * - color code to be output on screen (COA0-COA6)
+ *
+ *
+ * control registers
+ * 000:          scroll x (low 8 bits)
+ * 001: -------x scroll x (high bit)
+ * ------x- enable rowscroll? (combasc)
+ * ----x--- this probably selects an alternate screen layout used in combat
+ * school where tilemap #2 is overlayed on front and doesn't scroll.
+ * The 32 lines of the front layer can be individually turned on or
+ * off using the second 32 bytes of scroll RAM.
+ * 002:          scroll y
+ * 003: -------x bit 13 of the tile code
+ * ------x- unknown (contra)
+ * -----x-- might be sprite / tilemap priority (0 = sprites have priority)
+ * (combat school, contra, haunted castle(0/1), labyrunr)
+ * ----x--- selects sprite buffer (and makes a copy to a private buffer?)
+ * ---x---- screen layout selector:
+ * when this is set, 5 columns are added on the left of the screen
+ * (that means 5 rows at the top for vertical games), and the
+ * rightmost 2 columns are chopped away.
+ * Tilemap #2 is used to display the 5 additional columns on the
+ * left. The rest of tilemap #2 is not used and can be used as work
+ * RAM by the program.
+ * The visible area becomes 280x224.
+ * Note that labyrunr changes this at runtime, setting it during
+ * gameplay and resetting it on the title screen and crosshatch.
+ * --x----- might be sprite / tilemap priority (0 = sprites have priority)
+ * (combat school, contra, haunted castle(0/1), labyrunr)
+ * -x------ Chops away the leftmost and rightmost columns, switching the
+ * visible area from 256 to 240 pixels. This is used by combasc on
+ * the scrolling stages, and by labyrunr on the title screen.
+ * At first I thought that this enabled an extra bank of 0x40
+ * sprites, needed by combasc, but labyrunr proves that this is not
+ * the case
+ * x------- unknown (contra)
+ * 004: ----xxxx bits 9-12 of the tile code. Only the bits enabled by the following
+ * mask are actually used, and replace the ones selected by register
+ * 005.
+ * xxxx---- mask enabling the above bits
+ * 005: selects where in the attribute byte to pick bits 9-12 of the tile code,
+ * output to pins R12-R15. The bit of the attribute byte to use is the
+ * specified bit (0-3) + 3, that is one of bits 3-6. Bit 7 is hardcoded as
+ * bit 8 of the code. Bits 0-2 are used for the color, however note that
+ * some games (combat school, flak attack, maybe fast lane) use bit 3 as well,
+ * and indeed there are 4 lines going to the color lookup PROM, so there has
+ * to be a way to select this.
+ * ------xx attribute bit to use for tile code bit  9
+ * ----xx-- attribute bit to use for tile code bit 10
+ * --xx---- attribute bit to use for tile code bit 11
+ * xx------ attribute bit to use for tile code bit 12
+ * 006: ----xxxx select additional effect for bits 3-6 of the tile attribute (the
+ * same ones indexed by register 005). Note that an attribute bit
+ * can therefore be used at the same time to be BOTH a tile code bit
+ * and an additional effect.
+ * -------x bit 3 of attribute is bit 3 of color (combasc, fastlane, flkatck)
+ * ------x- bit 4 of attribute is tile flip X (assumption - no game uses this)
+ * -----x-- bit 5 of attribute is tile flip Y (flkatck)
+ * ----x--- bit 6 of attribute is tile priority over sprites (combasc, hcastle,
+ * labyrunr)
+ * Note that hcastle sets this bit for layer 0, and bit 6 of the
+ * attribute is also used as bit 12 of the tile code, however that
+ * bit is ALWAYS set thoughout the game.
+ * combasc uses the bit inthe "graduation" scene during attract mode,
+ * to place soldiers behind the stand.
+ * Use in labyrunr has not been investigated yet.
+ * --xx---- palette bank (both tiles and sprites, see contra)
+ * 007: -------x nmi enable
+ * ------x- irq enable
+ * -----x-- firq enable (probably)
+ * ----x--- flip screen
+ * ---x---- unknown (contra, labyrunr)
+ *
+ *
+ *
+ * 007342
+ * ------
+ * The 007342 manages 2 64x32 scrolling tilemaps with 8x8 characters, and
+ * optionally generates timing clocks and interrupt signals. It uses 0x2000
+ * bytes of RAM, plus 0x0200 bytes for scrolling, and a variable amount of ROM.
+ * It cannot read the ROMs.
+ *
+ * control registers
+ * 000: ------x- INT control
+ * ---x---- flip screen (TODO: doesn't work with thehustl)
+ * 001: Used for banking in Rock'n'Rage
+ * 002: -------x MSB of x scroll 1
+ * ------x- MSB of x scroll 2
+ * ---xxx-- layer 1 row/column scroll control
+ * 000 = disabled
+ * 010 = unknown (bladestl shootout between periods)
+ * 011 = 32 columns (Blades of Steel)
+ * 101 = 256 rows (Battlantis, Rock 'n Rage)
+ * x------- enable sprite wraparound from bottom to top (see Blades of Steel
+ * high score table)
+ * 003: x scroll 1
+ * 004: y scroll 1
+ * 005: x scroll 2
+ * 006: y scroll 2
+ * 007: not used
+ *
+ *
+ * 007420
+ * ------
+ * Sprite generator. 8 bytes per sprite with zoom. It uses 0x200 bytes of RAM,
+ * and a variable amount of ROM. Nothing is known about its external interface.
+ *
+ *
+ *
+ * 052109/051962
+ * -------------
+ * These work in pair.
+ * The 052109 manages 3 64x32 scrolling tilemaps with 8x8 characters, and
+ * optionally generates timing clocks and interrupt signals. It uses 0x4000
+ * bytes of RAM, and a variable amount of ROM. It cannot read the ROMs:
+ * instead, it exports 21 bits (16 from the tilemap RAM + 3 for the character
+ * raster line + 2 additional ones for ROM banking) and these are externally
+ * used to generate the address of the required data on the ROM; the output of
+ * the ROMs is sent to the 051962, along with a color code. In theory you could
+ * have any combination of bits in the tilemap RAM, as long as they add to 16.
+ * In practice, all the games supported so far standardize on the same format
+ * which uses 3 bits for the color code and 13 bits for the character code.
+ * The 051962 multiplexes the data of the three layers and converts it into
+ * palette indexes and transparency bits which will be mixed later in the video
+ * chain.
+ * Priority is handled externally: these chips only generate the tilemaps, they
+ * don't mix them.
+ * Both chips are interfaced with the main CPU. When the RMRD pin is asserted,
+ * the CPU can read the gfx ROM data. This is done by telling the 052109 which
+ * dword to read (this is a combination of some banking registers, and the CPU
+ * address lines), and then reading it from the 051962.
+ *
+ * 052109 inputs:
+ * - address lines (AB0-AB15, AB13-AB15 seem to have a different function)
+ * - data lines (DB0-DB7)
+ * - misc interface stuff
+ *
+ * 052109 outputs:
+ * - address lines for the private RAM (RA0-RA12)
+ * - data lines for the private RAM (VD0-VD15)
+ * - NMI, IRQ, FIRQ for the main CPU
+ * - misc interface stuff
+ * - ROM bank selector (CAB1-CAB2)
+ * - character "code" (VC0-VC10)
+ * - character "color" (COL0-COL7); used foc color but also bank switching and tile
+ * flipping. Exact meaning depends on externl connections. All evidence indicates
+ * that COL2 and COL3 select the tile bank, and are replaced with the low 2 bits
+ * from the bank register. The top 2 bits of the register go to CAB1-CAB2.
+ * However, this DOES NOT WORK with Gradius III. "color" seems to pass through
+ * unaltered.
+ * - layer A horizontal scroll (ZA1H-ZA4H)
+ * - layer B horizontal scroll (ZB1H-ZB4H)
+ * - ????? (BEN)
+ *
+ * 051962 inputs:
+ * - gfx data from the ROMs (VC0-VC31)
+ * - color code (COL0-COL7); only COL4-COL7 seem to really be used for color; COL0
+ * is tile flip X.
+ * - layer A horizontal scroll (ZA1H-ZA4H)
+ * - layer B horizontal scroll (ZB1H-ZB4H)
+ * - let main CPU read the gfx ROMs (RMRD)
+ * - address lines to be used with RMRD (AB0-AB1)
+ * - data lines to be used with RMRD (DB0-DB7)
+ * - ????? (BEN)
+ * - misc interface stuff
+ *
+ * 051962 outputs:
+ * - FIX layer palette index (DFI0-DFI7)
+ * - FIX layer transparency (NFIC)
+ * - A layer palette index (DSA0-DSAD); DSAA-DSAD seem to be unused
+ * - A layer transparency (NSAC)
+ * - B layer palette index (DSB0-DSBD); DSBA-DSBD seem to be unused
+ * - B layer transparency (NSBC)
+ * - misc interface stuff
+ *
+ *
+ * 052109 memory layout:
+ * 0000-07ff: layer FIX tilemap (attributes)
+ * 0800-0fff: layer A tilemap (attributes)
+ * 1000-1fff: layer B tilemap (attributes)
+ * 180c-1833: A y scroll
+ * 1a00-1bff: A x scroll
+ * 1c00     : ?
+ * 1c80     : row/column scroll control
+ * ------xx layer A row scroll
+ * 00 = disabled
+ * 01 = disabled? (gradius3, vendetta)
+ * 10 = 32 lines
+ * 11 = 256 lines
+ * -----x-- layer A column scroll
+ * 0 = disabled
+ * 1 = 64 (actually 40) columns
+ * ---xx--- layer B row scroll
+ * --x----- layer B column scroll
+ * surpratk sets this register to 70 during the second boss. There is
+ * nothing obviously wrong so it's not clear what should happen.
+ * 1d00     : bits 0 & 1 might enable NMI and FIRQ, not sure
+ * : bit 2 = IRQ enable
+ * 1d80     : ROM bank selector bits 0-3 = bank 0 bits 4-7 = bank 1
+ * 1e00     : ROM subbank selector for ROM testing
+ * 1e80     : bit 0 = flip screen (applies to tilemaps only, not sprites)
+ * : bit 1 = set by crimfght, mainevt, surpratk, xmen, mia, punkshot, thndrx2, spy
+ * :         it seems to enable tile flip X, however flip X is handled by the
+ * :         051962 and it is not hardwired to a specific tile attribute.
+ * :         Note that xmen, punkshot and thndrx2 set the bit but the current
+ * :         drivers don't use flip X and seem to work fine.
+ * : bit 2 = enables tile flip Y when bit 1 of the tile attribute is set
+ * 1f00     : ROM bank selector bits 0-3 = bank 2 bits 4-7 = bank 3
+ * 2000-27ff: layer FIX tilemap (code)
+ * 2800-2fff: layer A tilemap (code)
+ * 3000-37ff: layer B tilemap (code)
+ * 3800-3807: nothing here, so the chip can share address space with a 051937
+ * 380c-3833: B y scroll
+ * 3a00-3bff: B x scroll
+ * 3c00-3fff: nothing here, so the chip can share address space with a 051960
+ * 3d80     : mirror of 1d80, but ONLY during ROM test (surpratk)
+ * 3e00     : mirror of 1e00, but ONLY during ROM test (surpratk)
+ * 3f00     : mirror of 1f00, but ONLY during ROM test (surpratk)
+ * EXTRA ADDRESSING SPACE USED BY X-MEN:
+ * 4000-47ff: layer FIX tilemap (code high bits)
+ * 4800-4fff: layer A tilemap (code high bits)
+ * 5000-57ff: layer B tilemap (code high bits)
+ *
+ * The main CPU doesn't have direct acces to the RAM used by the 052109, it has
+ * to through the chip.
+ *
+ *
+ *
+ * 051960/051937
+ * -------------
+ * Sprite generators. Designed to work in pair. The 051960 manages the sprite
+ * list and produces and address that is fed to the gfx ROMs. The data from the
+ * ROMs is sent to the 051937, along with color code and other stuff from the
+ * 051960. The 051937 outputs up to 12 bits of palette index, plus "shadow" and
+ * transparency information.
+ * Both chips are interfaced to the main CPU, through 8-bit data buses and 11
+ * bits of address space. The 051937 sits in the range 000-007, while the 051960
+ * in the range 400-7ff (all RAM). The main CPU can read the gfx ROM data though
+ * the 051937 data bus, while the 051960 provides the address lines.
+ * The 051960 is designed to directly address 1MB of ROM space, since it produces
+ * 18 address lines that go to two 16-bit wide ROMs (the 051937 has a 32-bit data
+ * bus to the ROMs). However, the addressing space can be increased by using one
+ * or more of the "color attribute" bits of the sprites as bank selectors.
+ * Moreover a few games store the gfx data in the ROMs in a format different from
+ * the one expected by the 051960, and use external logic to reorder the address
+ * lines.
+ * The 051960 can also genenrate IRQ, FIRQ and NMI signals.
+ *
+ * memory map:
+ * 000-007 is for the 051937, but also seen by the 051960
+ * 400-7ff is 051960 only
+ * 000     R  bit 0 = unknown, looks like a status flag or something
+ * aliens waits for it to be 0 before starting to copy sprite data
+ * thndrx2 needs it to pulse for the startup checks to succeed
+ * 000     W  bit 0 = irq enable/acknowledge?
+ * bit 3 = flip screen (applies to sprites only, not tilemaps)
+ * bit 4 = unknown, used by Devastators, TMNT, Aliens, Chequered Flag, maybe others
+ * aliens sets it just after checking bit 0, and before copying
+ * the sprite data
+ * bit 5 = enable gfx ROM reading
+ * 001     W  Devastators sets bit 1, function unknown.
+ * Ultraman sets the register to 0x0f.
+ * None of the other games I tested seem to set this register to other than 0.
+ * 002-003 W  selects the portion of the gfx ROMs to be read.
+ * 004     W  Aliens uses this to select the ROM bank to be read, but Punk Shot
+ * and TMNT don't, they use another bit of the registers above. Many
+ * other games write to this register before testing.
+ * It is possible that bits 2-7 of 003 go to OC0-OC5, and bits 0-1 of
+ * 004 go to OC6-OC7.
+ * 004-007 R  reads data from the gfx ROMs (32 bits in total). The address of the
+ * data is determined by the register above and by the last address
+ * accessed on the 051960; plus bank switch bits for larger ROMs.
+ * It seems that the data can also be read directly from the 051960
+ * address space: 88 Games does this. First it reads 004 and discards
+ * the result, then it reads from the 051960 the data at the address
+ * it wants. The normal order is the opposite, read from the 051960 at
+ * the address you want, discard the result, and fetch the data from
+ * 004-007.
+ * 400-7ff RW sprite RAM, 8 bytes per sprite
+ *
+ *
+ *
+ * 053245/053244
+ * -------------
+ * Sprite generators. The 053245 has a 16-bit data bus to the main CPU.
+ *
+ * 053244 memory map (but the 053245 sees and processes them too):
+ * 000-001 W  global X offset
+ * 002-003 W  global Y offset
+ * 004     W  unknown
+ * 005     W  bit 0 = flip screen X
+ * bit 1 = flip screen Y
+ * bit 2 = unknown, used by Parodius
+ * bit 4 = enable gfx ROM reading
+ * bit 5 = unknown, used by Rollergames
+ * 006     W  unknown
+ * 007     W  unknown
+ * 008-009 W  low 16 bits of the ROM address to read
+ * 00a-00b W  high 3 bits of the ROM address to read
+ * 00c-00f R  reads data from the gfx ROMs (32 bits in total). The address of the
+ * data is determined by the registers above; plus bank switch bits for
+ * larger ROMs.
+ *
+ *
+ *
+ * 053247/053246
+ * -------------
+ * Sprite generators. Nothing is known about their external interface.
+ * The sprite RAM format is very similar to the 053245.
+ *
+ * 053246 memory map (but the 053247 sees and processes them too):
+ * 000-001 W  global X offset
+ * 002-003 W  global Y offset
+ * 004     W  low 8 bits of the ROM address to read
+ * 005     W  bit 0 = flip screen X
+ * bit 1 = flip screen Y
+ * bit 2 = unknown
+ * bit 4 = interrupt enable
+ * bit 5 = unknown
+ * 006-007 W  high 16 bits of the ROM address to read
+ *
+ * ???-??? R  reads data from the gfx ROMs (16 bits in total). The address of the
+ * data is determined by the registers above
+ *
+ *
+ *
+ * 051316
+ * ------
+ * Manages a 32x32 tilemap (16x16 tiles, 512x512 pixels) which can be zoomed,
+ * distorted and rotated.
+ * It uses two internal 24 bit counters which are incremented while scanning the
+ * picture. The coordinates of the pixel in the tilemap that has to be drawn to
+ * the current beam position are the counters / (2^11).
+ * The chip doesn't directly generate the color information for the pixel, it
+ * just generates a 24 bit address (whose top 16 bits are the contents of the
+ * tilemap RAM), and a "visible" signal. It's up to external circuitry to convert
+ * the address into a pixel color. Most games seem to use 4bpp graphics, but Ajax
+ * uses 7bpp.
+ * If the value in the internal counters is out of the visible range (0..511), it
+ * is truncated and the corresponding address is still generated, but the "visible"
+ * signal is not asserted. The external circuitry might ignore that signal and
+ * still generate the pixel, therefore making the tilemap a continuous playfield
+ * that wraps around instead of a large sprite.
+ *
+ *
+ * control registers
+ * 000-001 X counter starting value / 256
+ * 002-003 amount to add to the X counter after each horizontal pixel
+ * 004-005 amount to add to the X counter after each line (0 = no rotation)
+ * 006-007 Y counter starting value / 256
+ * 008-009 amount to add to the Y counter after each horizontal pixel (0 = no rotation)
+ * 00a-00b amount to add to the Y counter after each line
+ * 00c-00d ROM bank to read, used during ROM testing
+ * 00e     bit 0 = enable ROM reading (active low). This only makes the chip output the
+ * requested address: the ROM is actually read externally, not through
+ * the chip's data bus.
+ * bit 1 = unknown
+ * bit 2 = unknown
+ * 00f     unused
+ *
+ *
+ *
+ * 053251
+ * ------
+ * Priority encoder.
+ *
+ * The chip has inputs for 5 layers (CI0-CI4); only 4 are used (CI1-CI4)
+ * CI0-CI2 are 9(=5+4) bits inputs, CI3-CI4 8(=4+4) bits
+ *
+ * The input connctions change from game to game. E.g. in Simpsons,
+ * CI0 = grounded (background color)
+ * CI1 = sprites
+ * CI2 = FIX
+ * CI3 = A
+ * CI4 = B
+ *
+ * in lgtnfght:
+ * CI0 = grounded
+ * CI1 = sprites
+ * CI2 = FIX
+ * CI3 = B
+ * CI4 = A
+ *
+ * there are three 6 bit priority inputs, PR0-PR2
+ *
+ * simpsons:
+ * PR0 = 111111
+ * PR1 = xxxxx0 x bits coming from the sprite attributes
+ * PR2 = 111111
+ *
+ * lgtnfght:
+ * PR0 = 111111
+ * PR1 = 1xx000 x bits coming from the sprite attributes
+ * PR2 = 111111
+ *
+ * also two shadow inputs, SDI0 and SDI1 (from the sprite attributes)
+ *
+ * the chip outputs the 11 bit palette index, CO0-CO10, and two shadow bits.
+ *
+ * 16 internal registers; registers are 6 bits wide (input is D0-D5)
+ * For the most part, their meaning is unknown
+ * All registers are write only.
+ * There must be a way to enable/disable the three external PR inputs.
+ * Some games initialize the priorities of the sprite & background layers,
+ * others don't. It isn't clear whether the data written to those registers is
+ * actually used, since the priority is taken from the external ports.
+ *
+ * 0  priority of CI0 (higher = lower priority)
+ * punkshot: unused?
+ * lgtnfght: unused?
+ * simpsons: 3f = 111111
+ * xmen:     05 = 000101  default value
+ * xmen:     09 = 001001  used to swap CI0 and CI2
+ * 1  priority of CI1 (higher = lower priority)
+ * punkshot: 28 = 101000
+ * lgtnfght: unused?
+ * simpsons: unused?
+ * xmen:     02 = 000010
+ * 2  priority of CI2 (higher = lower priority)
+ * punkshot: 24 = 100100
+ * lgtnfght: 24 = 100100
+ * simpsons: 04 = 000100
+ * xmen:     09 = 001001  default value
+ * xmen:     05 = 000101  used to swap CI0 and CI2
+ * 3  priority of CI3 (higher = lower priority)
+ * punkshot: 34 = 110100
+ * lgtnfght: 34 = 110100
+ * simpsons: 28 = 101000
+ * xmen:     00 = 000000
+ * 4  priority of CI4 (higher = lower priority)
+ * punkshot: 2c = 101100  default value
+ * punkshot: 3c = 111100  used to swap CI3 and CI4
+ * punkshot: 26 = 100110  used to swap CI1 and CI4
+ * lgtnfght: 2c = 101100
+ * simpsons: 18 = 011000
+ * xmen:     fe = 111110
+ * 5  unknown
+ * punkshot: unused?
+ * lgtnfght: 2a = 101010
+ * simpsons: unused?
+ * xmen: unused?
+ * 6  unknown
+ * punkshot: 26 = 100110
+ * lgtnfght: 30 = 110000
+ * simpsons: 17 = 010111
+ * xmen:     03 = 000011 (written after initial tests)
+ * 7  unknown
+ * punkshot: unused?
+ * lgtnfght: unused?
+ * simpsons: 27 = 100111
+ * xmen:     07 = 000111 (written after initial tests)
+ * 8  unknown
+ * punkshot: unused?
+ * lgtnfght: unused?
+ * simpsons: 37 = 110111
+ * xmen:     ff = 111111 (written after initial tests)
+ * 9  ----xx CI0 palette index base (CO9-CO10)
+ * --xx-- CI1 palette index base (CO9-CO10)
+ * xx---- CI2 palette index base (CO9-CO10)
+ * 10  ---xxx CI3 palette index base (CO8-CO10)
+ * xxx--- CI4 palette index base (CO8-CO10)
+ * 11  unknown
+ * punkshot: 00 = 000000
+ * lgtnfght: 00 = 000000
+ * simpsons: 00 = 000000
+ * xmen:     00 = 000000 (written after initial tests)
+ * 12  unknown
+ * punkshot: 04 = 000100
+ * lgtnfght: 04 = 000100
+ * simpsons: 05 = 000101
+ * xmen:     05 = 000101
+ * 13  unused
+ * 14  unused
+ * 15  unused
+ *
+ *
+ * 054000
+ * ------
+ * Sort of a protection device, used for collision detection.
+ * It is passed a few parameters, and returns a boolean telling if collision
+ * happened. It has no access to gfx data, it only does arithmetical operations
+ * on the parameters.
+ *
+ * Memory map:
+ * 00      unused
+ * 01-03 W A center X
+ * 04    W unknown, needed by thndrx2 to pass the startup check, we use a hack
+ * 05      unused
+ * 06    W A semiaxis X
+ * 07    W A semiaxis Y
+ * 08      unused
+ * 09-0b W A center Y
+ * 0c    W unknown, needed by thndrx2 to pass the startup check, we use a hack
+ * 0d      unused
+ * 0e    W B semiaxis X
+ * 0f    W B semiaxis Y
+ * 10      unused
+ * 11-13 W B center Y
+ * 14      unused
+ * 15-17 W B center X
+ * 18    R 0 = collision, 1 = no collision
+ *
+ *
+ * 051733
+ * ------
+ * Sort of a protection device, used for collision detection, and for
+ * arithmetical operations.
+ * It is passed a few parameters, and returns the result.
+ *
+ * Memory map(preliminary):
+ * ------------------------
+ * 00-01 W operand 1
+ * 02-03 W operand 2
+ *
+ * 00-01 R operand 1/operand 2
+ * 02-03 R operand 1%operand 2?
+ *
+ * 06-07 W Radius
+ * 08-09 W Y pos of obj1
+ * 0a-0b W X pos of obj1
+ * 0c-0d W Y pos of obj2
+ * 0e-0f W X pos of obj2
+ * 13	  W unknown
+ *
+ * 07	  R collision (0x80 = no, 0x00 = yes)
+ *
+ * Other addresses are unknown or unused.
+ *
+ * Fast Lane:
+ * ----------
+ * $9def:
+ * This routine is called only after a collision.
+ * (R) 0x0006:	unknown. Only bits 0-3 are used.
+ *
+ * Blades of Steel:
+ * ----------------
+ * $ac2f:
+ * (R) 0x2f86: unknown. Only uses bit 0.
+ *
+ * $a5de:
+ * writes to 0x2f84-0x2f85, waits a little, and then reads from 0x2f84.
+ *
+ * $7af3:
+ * (R) 0x2f86: unknown. Only uses bit 0.
+ *
+ *
+ * Devastators:
+ * ------------
+ * $6ce8:
+ * reads from 0x0006, and only uses bit 1.
+ *
+ ************************************************************************** */
 
 /*
  * ported to v0.37b7
  * using automatic conversion tool v0.01
- */ 
+ */
 package gr.codebb.arcadeflex.WIP.v037b7.vidhrdw;
 
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_get_pc;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_getcurrentframe;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.CLEAR_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.pdrawgfx;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapC.*;
@@ -753,64 +756,64 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapH.*;
 import gr.codebb.arcadeflex.common.PtrLib.UBytePtr;
 import static gr.codebb.arcadeflex.old.mame.drawgfx.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.mameH.MAX_GFX_ELEMENTS;
 import static gr.codebb.arcadeflex.v037b7.common.fucPtr.*;
 import gr.codebb.arcadeflex.WIP.v037b7.mame.osdependH.osd_bitmap;
 import static gr.codebb.arcadeflex.common.libc.cstring.memset;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.palette.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.paletteH.*;
+import gr.codebb.arcadeflex.common.PtrLib.UShortPtr;
+import gr.codebb.arcadeflex.common.SubArrays.UShortArray;
+import static gr.codebb.arcadeflex.common.libc.expressions.NOT;
+import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.sizeof;
+import static gr.codebb.arcadeflex.old.arcadeflex.osdepend.logerror;
+import static gr.codebb.arcadeflex.old.mame.common.memory_region;
+import static gr.codebb.arcadeflex.old.mame.common.memory_region_length;
 
-public class konamiic
-{
+public class konamiic {
 
-    /*TODO*///	#define VERBOSE 0
-/*TODO*///	/*
-/*TODO*///		This recursive function doesn't use additional memory
-/*TODO*///		(it could be easily converted into an iterative one).
-/*TODO*///		It's called shuffle because it mimics the shuffling of a deck of cards.
-/*TODO*///	*/
-/*TODO*///	static void shuffle(UINT16 *buf,int len)
-/*TODO*///	{
-/*TODO*///		int i;
-/*TODO*///		UINT16 t;
-/*TODO*///	
-/*TODO*///		if (len == 2) return;
-/*TODO*///	
-/*TODO*///		if (len % 4) exit(1);   /* must not happen */
-/*TODO*///	
-/*TODO*///		len /= 2;
-/*TODO*///	
-/*TODO*///		for (i = 0;i < len/2;i++)
-/*TODO*///		{
-/*TODO*///			t = buf[len/2 + i];
-/*TODO*///			buf[len/2 + i] = buf[len + i];
-/*TODO*///			buf[len + i] = t;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		shuffle(buf,len);
-/*TODO*///		shuffle(buf + len,len);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/* helper function to join two 16-bit ROMs and form a 32-bit data stream */
-/*TODO*///	void konami_rom_deinterleave_2(int mem_region)
-/*TODO*///	{
-/*TODO*///		shuffle((UINT16 *)memory_region(mem_region),memory_region_length(mem_region)/2);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	/* helper function to join four 16-bit ROMs and form a 64-bit data stream */
-/*TODO*///	void konami_rom_deinterleave_4(int mem_region)
-/*TODO*///	{
-/*TODO*///		konami_rom_deinterleave_2(mem_region);
-/*TODO*///		konami_rom_deinterleave_2(mem_region);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
+    /*
+     This recursive function doesn't use additional memory
+     (it could be easily converted into an iterative one).
+     It's called shuffle because it mimics the shuffling of a deck of cards.
+     */
+    static void shuffle(UShortPtr buf, int len) {
+        int i;
+        char t;
+
+        if (len == 2) {
+            return;
+        }
+
+        if ((len % 4) != 0) {
+            throw new UnsupportedOperationException("Error in shuffle konamicc");
+        }
+        /* must not happen */
+
+        len /= 2;
+
+        for (i = 0; i < len / 2; i++) {
+            t = buf.read(len / 2 + i);
+            buf.write(len / 2 + i, buf.read(len + i));
+            buf.write(len + i, t);
+        }
+
+        shuffle(buf, len);
+        shuffle(new UShortPtr(buf, len * 2), len);//len*2 ??
+    }
+
+
+    /* helper function to join two 16-bit ROMs and form a 32-bit data stream */
+    public static void konami_rom_deinterleave_2(int mem_region) {
+        shuffle(new UShortPtr(memory_region(mem_region).memory, memory_region(mem_region).offset), memory_region_length(mem_region) / 2);
+    }
+
+    /* helper function to join four 16-bit ROMs and form a 64-bit data stream */
+    public static void konami_rom_deinterleave_4(int mem_region) {
+        konami_rom_deinterleave_2(mem_region);
+        konami_rom_deinterleave_2(mem_region);
+    }
+    
     public static final int MAX_K007121 = 2;
 
     public static /*unsigned*/ char[][] K007121_ctrlram = new char[MAX_K007121][8];
@@ -877,11 +880,10 @@ public class konamiic
             offs[4] = 0x04;
             trans = TRANSPARENCY_COLOR;
             /* when using priority buffer, draw front to back */
- /*if (pri_mask != -1)
-			{
-				source.offset += (num-1)*inc;
-				inc = -inc;
-			}*/
+            if (pri_mask != -1) {
+                source.offset += (num - 1) * inc;
+                inc = -inc;
+            }
         }
 
         for (i = 0; i < num; i++) {
@@ -954,37 +956,39 @@ public class konamiic
                         ey = yflip != 0 ? (height - 1 - y) : y;
 
                         if (flipscreen != 0) {
-                            if (pri_mask != -1)
-								pdrawgfx(bitmap,gfx,
-									number + x_offset[ex] + y_offset[ey],
-									color,
-									xflip!=0?0:1,yflip!=0?0:1,
-									248-(sx+x*8),248-(sy+y*8),
-									Machine.visible_area,trans,0,
-									pri_mask);
-							else
-                            drawgfx(bitmap, gfx,
-                                    number + x_offset[ex] + y_offset[ey],
-                                    color,
-                                    xflip!=0?0:1, yflip!=0?0:1,
-                                    248 - (sx + x * 8), 248 - (sy + y * 8),
-                                    Machine.visible_area, trans, 0);
+                            if (pri_mask != -1) {
+                                pdrawgfx(bitmap, gfx,
+                                        number + x_offset[ex] + y_offset[ey],
+                                        color,
+                                        xflip != 0 ? 0 : 1, yflip != 0 ? 0 : 1,
+                                        248 - (sx + x * 8), 248 - (sy + y * 8),
+                                        Machine.visible_area, trans, 0,
+                                        pri_mask);
+                            } else {
+                                drawgfx(bitmap, gfx,
+                                        number + x_offset[ex] + y_offset[ey],
+                                        color,
+                                        xflip != 0 ? 0 : 1, yflip != 0 ? 0 : 1,
+                                        248 - (sx + x * 8), 248 - (sy + y * 8),
+                                        Machine.visible_area, trans, 0);
+                            }
                         } else {
-                            /*if (pri_mask != -1)
-								pdrawgfx(bitmap,gfx,
-									number + x_offset[ex] + y_offset[ey],
-									color,
-									xflip,yflip,
-									global_x_offset+sx+x*8,sy+y*8,
-									Machine.visible_area,trans,0,
-									pri_mask);
-							else*/
-                            drawgfx(bitmap, gfx,
-                                    number + x_offset[ex] + y_offset[ey],
-                                    color,
-                                    xflip, yflip,
-                                    global_x_offset + sx + x * 8, sy + y * 8,
-                                    Machine.visible_area, trans, 0);
+                            if (pri_mask != -1) {
+                                pdrawgfx(bitmap, gfx,
+                                        number + x_offset[ex] + y_offset[ey],
+                                        color,
+                                        xflip, yflip,
+                                        global_x_offset + sx + x * 8, sy + y * 8,
+                                        Machine.visible_area, trans, 0,
+                                        pri_mask);
+                            } else {
+                                drawgfx(bitmap, gfx,
+                                        number + x_offset[ex] + y_offset[ey],
+                                        color,
+                                        xflip, yflip,
+                                        global_x_offset + sx + x * 8, sy + y * 8,
+                                        Machine.visible_area, trans, 0);
+                            }
                         }
                     }
                 }
@@ -1498,636 +1502,556 @@ public class konamiic
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	
-/*TODO*///	static int K052109_memory_region;
-/*TODO*///	static int K052109_gfxnum;
-/*TODO*///	static void (*K052109_callback)(int tilemap,int bank,int *code,int *color);
-/*TODO*///	static UBytePtr K052109_ram;
-/*TODO*///	static UBytePtr K052109_videoram_F,*K052109_videoram2_F,*K052109_colorram_F;
-/*TODO*///	static UBytePtr K052109_videoram_A,*K052109_videoram2_A,*K052109_colorram_A;
-/*TODO*///	static UBytePtr K052109_videoram_B,*K052109_videoram2_B,*K052109_colorram_B;
-/*TODO*///	static unsigned char K052109_charrombank[4];
-/*TODO*///	static int has_extra_video_ram;
-/*TODO*///	static int K052109_RMRD_line;
-/*TODO*///	static int K052109_tileflip_enable;
-/*TODO*///	static int K052109_irq_enabled;
-/*TODO*///	static unsigned char K052109_romsubbank,K052109_scrollctrl;
-/*TODO*///	static struct tilemap *K052109_tilemap[3];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Callbacks for the TileMap code
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	
-/*TODO*///	/*
-/*TODO*///	  data format:
-/*TODO*///	  video RAM    xxxxxxxx  tile number (low 8 bits)
-/*TODO*///	  color RAM    xxxx----  depends on external connections (usually color and banking)
-/*TODO*///	  color RAM    ----xx--  bank select (0-3): these bits are replaced with the 2
-/*TODO*///	                         bottom bits of the bank register before being placed on
-/*TODO*///	                         the output pins. The other two bits of the bank register are
-/*TODO*///	                         placed on the CAB1 and CAB2 output pins.
-/*TODO*///	  color RAM    ------xx  depends on external connections (usually banking, flip)
-/*TODO*///	*/
-/*TODO*///	
-/*TODO*///	static void tilemap0_preupdate(void)
-/*TODO*///	{
-/*TODO*///		colorram = K052109_colorram_F;
-/*TODO*///		videoram1 = K052109_videoram_F;
-/*TODO*///		videoram2 = K052109_videoram2_F;
-/*TODO*///		layer = 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void tilemap1_preupdate(void)
-/*TODO*///	{
-/*TODO*///		colorram = K052109_colorram_A;
-/*TODO*///		videoram1 = K052109_videoram_A;
-/*TODO*///		videoram2 = K052109_videoram2_A;
-/*TODO*///		layer = 1;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	static void tilemap2_preupdate(void)
-/*TODO*///	{
-/*TODO*///		colorram = K052109_colorram_B;
-/*TODO*///		videoram1 = K052109_videoram_B;
-/*TODO*///		videoram2 = K052109_videoram2_B;
-/*TODO*///		layer = 2;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static GetTileInfoPtr K052109_get_tile_info = new GetTileInfoPtr() { public void handler(int tile_index) 
-/*TODO*///	{
-/*TODO*///		int flipy = 0;
-/*TODO*///		int code = videoram1[tile_index] + 256 * videoram2[tile_index];
-/*TODO*///		int color = colorram.read(tile_index);
-/*TODO*///		int bank = K052109_charrombank[(color & 0x0c) >> 2];
-/*TODO*///	if (has_extra_video_ram != 0) bank = (color & 0x0c) >> 2;	/* kludge for X-Men */
-/*TODO*///		color = (color & 0xf3) | ((bank & 0x03) << 2);
-/*TODO*///		bank >>= 2;
-/*TODO*///	
-/*TODO*///		flipy = color & 0x02;
-/*TODO*///	
-/*TODO*///		tile_info.flags = 0;
-/*TODO*///	
-/*TODO*///		(*K052109_callback)(layer,bank,&code,&color);
-/*TODO*///	
-/*TODO*///		SET_TILE_INFO(K052109_gfxnum,code,color);
-/*TODO*///	
-/*TODO*///		/* if the callback set flip X but it is not enabled, turn it off */
-/*TODO*///		if (!(K052109_tileflip_enable & 1)) tile_info.flags &= ~TILE_FLIPX;
-/*TODO*///	
-/*TODO*///		/* if flip Y is enabled and the attribute but is set, turn it on */
-/*TODO*///		if (flipy && (K052109_tileflip_enable & 2)) tile_info.flags |= TILE_FLIPY;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	int K052109_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int plane3,
-/*TODO*///			void (*callback)(int tilemap,int bank,int *code,int *color))
-/*TODO*///	{
-/*TODO*///		int gfx_index;
-/*TODO*///		static GfxLayout charlayout = new GfxLayout
-/*TODO*///		(
-/*TODO*///			8,8,
-/*TODO*///			0,				/* filled in later */
-/*TODO*///			4,
-/*TODO*///			new int[] { 0, 0, 0, 0 },	/* filled in later */
-/*TODO*///			new int[] { 0, 1, 2, 3, 4, 5, 6, 7 },
-/*TODO*///			new int[] { 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32 },
-/*TODO*///			32*8
-/*TODO*///		);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* find first empty slot to decode gfx */
-/*TODO*///		for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-/*TODO*///			if (Machine.gfx[gfx_index] == 0)
-/*TODO*///				break;
-/*TODO*///		if (gfx_index == MAX_GFX_ELEMENTS)
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		/* tweak the structure for the number of tiles we have */
-/*TODO*///		charlayout.total = memory_region_length(gfx_memory_region) / 32;
-/*TODO*///		charlayout.planeoffset[0] = plane3 * 8;
-/*TODO*///		charlayout.planeoffset[1] = plane2 * 8;
-/*TODO*///		charlayout.planeoffset[2] = plane1 * 8;
-/*TODO*///		charlayout.planeoffset[3] = plane0 * 8;
-/*TODO*///	
-/*TODO*///		/* decode the graphics */
-/*TODO*///		Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region),&charlayout);
-/*TODO*///		if (!Machine.gfx[gfx_index])
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		/* set the color information */
-/*TODO*///		Machine.gfx[gfx_index].colortable = Machine.remapped_colortable;
-/*TODO*///		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
-/*TODO*///	
-/*TODO*///		K052109_memory_region = gfx_memory_region;
-/*TODO*///		K052109_gfxnum = gfx_index;
-/*TODO*///		K052109_callback = callback;
-/*TODO*///		K052109_RMRD_line = CLEAR_LINE;
-/*TODO*///	
-/*TODO*///		has_extra_video_ram = 0;
-/*TODO*///	
-/*TODO*///		K052109_tilemap[0] = tilemap_create(K052109_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,32);
-/*TODO*///		K052109_tilemap[1] = tilemap_create(K052109_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,32);
-/*TODO*///		K052109_tilemap[2] = tilemap_create(K052109_get_tile_info,tilemap_scan_rows,TILEMAP_TRANSPARENT,8,8,64,32);
-/*TODO*///	
-/*TODO*///		K052109_ram = malloc(0x6000);
-/*TODO*///	
-/*TODO*///		if (!K052109_ram || !K052109_tilemap[0] || !K052109_tilemap[1] || !K052109_tilemap[2])
-/*TODO*///		{
-/*TODO*///			K052109_vh_stop();
-/*TODO*///			return 1;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		memset(K052109_ram,0,0x6000);
-/*TODO*///	
-/*TODO*///		K052109_colorram_F = &K052109_ram[0x0000];
-/*TODO*///		K052109_colorram_A = &K052109_ram[0x0800];
-/*TODO*///		K052109_colorram_B = &K052109_ram[0x1000];
-/*TODO*///		K052109_videoram_F = &K052109_ram[0x2000];
-/*TODO*///		K052109_videoram_A = &K052109_ram[0x2800];
-/*TODO*///		K052109_videoram_B = &K052109_ram[0x3000];
-/*TODO*///		K052109_videoram2_F = &K052109_ram[0x4000];
-/*TODO*///		K052109_videoram2_A = &K052109_ram[0x4800];
-/*TODO*///		K052109_videoram2_B = &K052109_ram[0x5000];
-/*TODO*///	
-/*TODO*///		K052109_tilemap[0].transparent_pen = 0;
-/*TODO*///		K052109_tilemap[1].transparent_pen = 0;
-/*TODO*///		K052109_tilemap[2].transparent_pen = 0;
-/*TODO*///	
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static VhStopPtr K052109_vh_stop = new VhStopPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		free(K052109_ram);
-/*TODO*///		K052109_ram = 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K052109_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		if (K052109_RMRD_line == CLEAR_LINE)
-/*TODO*///		{
-/*TODO*///			if ((offset & 0x1fff) >= 0x1800)
-/*TODO*///			{
-/*TODO*///				if (offset >= 0x180c && offset < 0x1834)
-/*TODO*///				{	/* A y scroll */	}
-/*TODO*///				else if (offset >= 0x1a00 && offset < 0x1c00)
-/*TODO*///				{	/* A x scroll */	}
-/*TODO*///				else if (offset == 0x1d00)
-/*TODO*///				{	/* read for bitwise operations before writing */	}
-/*TODO*///				else if (offset >= 0x380c && offset < 0x3834)
-/*TODO*///				{	/* B y scroll */	}
-/*TODO*///				else if (offset >= 0x3a00 && offset < 0x3c00)
-/*TODO*///				{	/* B x scroll */	}
-/*TODO*///				else
-/*TODO*///	logerror("%04x: read from unknown 052109 address %04x\n",cpu_get_pc(),offset);
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			return K052109_ram[offset];
-/*TODO*///		}
-/*TODO*///		else	/* Punk Shot and TMNT read from 0000-1fff, Aliens from 2000-3fff */
-/*TODO*///		{
-/*TODO*///			int code = (offset & 0x1fff) >> 5;
-/*TODO*///			int color = K052109_romsubbank;
-/*TODO*///			int bank = K052109_charrombank[(color & 0x0c) >> 2] >> 2;   /* discard low bits (TMNT) */
-/*TODO*///			int addr;
-/*TODO*///	
-/*TODO*///	if (has_extra_video_ram != 0) code |= color << 8;	/* kludge for X-Men */
-/*TODO*///	else
-/*TODO*///			(*K052109_callback)(0,bank,&code,&color);
-/*TODO*///	
-/*TODO*///			addr = (code << 5) + (offset & 0x1f);
-/*TODO*///			addr &= memory_region_length(K052109_memory_region)-1;
-/*TODO*///	
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%04x: off%04x sub%02x (bnk%x) adr%06x",cpu_get_pc(),offset,K052109_romsubbank,bank,addr);
-/*TODO*///	#endif
-/*TODO*///	
-/*TODO*///			return memory_region(K052109_memory_region)[addr];
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K052109_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		if ((offset & 0x1fff) < 0x1800) /* tilemap RAM */
-/*TODO*///		{
-/*TODO*///			if (K052109_ram[offset] != data)
-/*TODO*///			{
-/*TODO*///				if (offset >= 0x4000) has_extra_video_ram = 1;  /* kludge for X-Men */
-/*TODO*///				K052109_ram[offset] = data;
-/*TODO*///				tilemap_mark_tile_dirty(K052109_tilemap[(offset & 0x1800) >> 11],offset & 0x7ff);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else	/* control registers */
-/*TODO*///		{
-/*TODO*///			K052109_ram[offset] = data;
-/*TODO*///	
-/*TODO*///			if (offset >= 0x180c && offset < 0x1834)
-/*TODO*///			{	/* A y scroll */	}
-/*TODO*///			else if (offset >= 0x1a00 && offset < 0x1c00)
-/*TODO*///			{	/* A x scroll */	}
-/*TODO*///			else if (offset == 0x1c80)
-/*TODO*///			{
-/*TODO*///	if (K052109_scrollctrl != data)
-/*TODO*///	{
-/*TODO*///	#if 0
-/*TODO*///	usrintf_showmessage("scrollcontrol = %02x",data);
-/*TODO*///	#endif
-/*TODO*///	logerror("%04x: rowscrollcontrol = %02x\n",cpu_get_pc(),data);
-/*TODO*///				K052109_scrollctrl = data;
-/*TODO*///	}
-/*TODO*///			}
-/*TODO*///			else if (offset == 0x1d00)
-/*TODO*///			{
-/*TODO*///	#if VERBOSE
-/*TODO*///	logerror("%04x: 052109 register 1d00 = %02x\n",cpu_get_pc(),data);
-/*TODO*///	#endif
-/*TODO*///				/* bit 2 = irq enable */
-/*TODO*///				/* the custom chip can also generate NMI and FIRQ, for use with a 6809 */
-/*TODO*///				K052109_irq_enabled = data & 0x04;
-/*TODO*///			}
-/*TODO*///			else if (offset == 0x1d80)
-/*TODO*///			{
-/*TODO*///				int dirty = 0;
-/*TODO*///	
-/*TODO*///				if (K052109_charrombank[0] != (data & 0x0f)) dirty |= 1;
-/*TODO*///				if (K052109_charrombank[1] != ((data >> 4) & 0x0f)) dirty |= 2;
-/*TODO*///				if (dirty != 0)
-/*TODO*///				{
-/*TODO*///					int i;
-/*TODO*///	
-/*TODO*///					K052109_charrombank[0] = data & 0x0f;
-/*TODO*///					K052109_charrombank[1] = (data >> 4) & 0x0f;
-/*TODO*///	
-/*TODO*///					for (i = 0;i < 0x1800;i++)
-/*TODO*///					{
-/*TODO*///						int bank = (K052109_ram[i]&0x0c) >> 2;
-/*TODO*///						if ((bank == 0 && (dirty & 1)) || (bank == 1 && dirty & 2))
-/*TODO*///						{
-/*TODO*///							tilemap_mark_tile_dirty(K052109_tilemap[(i & 0x1800) >> 11],i & 0x7ff);
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else if (offset == 0x1e00)
-/*TODO*///			{
-/*TODO*///	logerror("%04x: 052109 register 1e00 = %02x\n",cpu_get_pc(),data);
-/*TODO*///				K052109_romsubbank = data;
-/*TODO*///			}
-/*TODO*///			else if (offset == 0x1e80)
-/*TODO*///			{
-/*TODO*///	if ((data & 0xfe)) logerror("%04x: 052109 register 1e80 = %02x\n",cpu_get_pc(),data);
-/*TODO*///				tilemap_set_flip(K052109_tilemap[0],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
-/*TODO*///				tilemap_set_flip(K052109_tilemap[1],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
-/*TODO*///				tilemap_set_flip(K052109_tilemap[2],(data & 1) ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
-/*TODO*///				if (K052109_tileflip_enable != ((data & 0x06) >> 1))
-/*TODO*///				{
-/*TODO*///					K052109_tileflip_enable = ((data & 0x06) >> 1);
-/*TODO*///	
-/*TODO*///					tilemap_mark_all_tiles_dirty(K052109_tilemap[0]);
-/*TODO*///					tilemap_mark_all_tiles_dirty(K052109_tilemap[1]);
-/*TODO*///					tilemap_mark_all_tiles_dirty(K052109_tilemap[2]);
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else if (offset == 0x1f00)
-/*TODO*///			{
-/*TODO*///				int dirty = 0;
-/*TODO*///	
-/*TODO*///				if (K052109_charrombank[2] != (data & 0x0f)) dirty |= 1;
-/*TODO*///				if (K052109_charrombank[3] != ((data >> 4) & 0x0f)) dirty |= 2;
-/*TODO*///				if (dirty != 0)
-/*TODO*///				{
-/*TODO*///					int i;
-/*TODO*///	
-/*TODO*///					K052109_charrombank[2] = data & 0x0f;
-/*TODO*///					K052109_charrombank[3] = (data >> 4) & 0x0f;
-/*TODO*///	
-/*TODO*///					for (i = 0;i < 0x1800;i++)
-/*TODO*///					{
-/*TODO*///						int bank = (K052109_ram[i] & 0x0c) >> 2;
-/*TODO*///						if ((bank == 2 && (dirty & 1)) || (bank == 3 && dirty & 2))
-/*TODO*///							tilemap_mark_tile_dirty(K052109_tilemap[(i & 0x1800) >> 11],i & 0x7ff);
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else if (offset >= 0x380c && offset < 0x3834)
-/*TODO*///			{	/* B y scroll */	}
-/*TODO*///			else if (offset >= 0x3a00 && offset < 0x3c00)
-/*TODO*///			{	/* B x scroll */	}
-/*TODO*///			else
-/*TODO*///	logerror("%04x: write %02x to unknown 052109 address %04x\n",cpu_get_pc(),data,offset);
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	void K052109_set_RMRD_line(int state)
-/*TODO*///	{
-/*TODO*///		K052109_RMRD_line = state;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void K052109_tilemap_update(void)
-/*TODO*///	{
-/*TODO*///	#if 0
-/*TODO*///	{
-/*TODO*///	usrintf_showmessage("%x %x %x %x",
-/*TODO*///		K052109_charrombank[0],
-/*TODO*///		K052109_charrombank[1],
-/*TODO*///		K052109_charrombank[2],
-/*TODO*///		K052109_charrombank[3]);
-/*TODO*///	}
-/*TODO*///	#endif
-/*TODO*///		if ((K052109_scrollctrl & 0x03) == 0x02)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x1a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[1],256);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[1],1);
-/*TODO*///			yscroll = K052109_ram[0x180c];
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[1],0,yscroll);
-/*TODO*///			for (offs = 0;offs < 256;offs++)
-/*TODO*///			{
-/*TODO*///				xscroll = scrollram[2*(offs&0xfff8)+0] + 256 * scrollram[2*(offs&0xfff8)+1];
-/*TODO*///				xscroll -= 6;
-/*TODO*///				tilemap_set_scrollx(K052109_tilemap[1],(offs+yscroll)&0xff,xscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else if ((K052109_scrollctrl & 0x03) == 0x03)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x1a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[1],256);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[1],1);
-/*TODO*///			yscroll = K052109_ram[0x180c];
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[1],0,yscroll);
-/*TODO*///			for (offs = 0;offs < 256;offs++)
-/*TODO*///			{
-/*TODO*///				xscroll = scrollram[2*offs+0] + 256 * scrollram[2*offs+1];
-/*TODO*///				xscroll -= 6;
-/*TODO*///				tilemap_set_scrollx(K052109_tilemap[1],(offs+yscroll)&0xff,xscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else if ((K052109_scrollctrl & 0x04) == 0x04)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x1800];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[1],1);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[1],512);
-/*TODO*///			xscroll = K052109_ram[0x1a00] + 256 * K052109_ram[0x1a01];
-/*TODO*///			xscroll -= 6;
-/*TODO*///			tilemap_set_scrollx(K052109_tilemap[1],0,xscroll);
-/*TODO*///			for (offs = 0;offs < 512;offs++)
-/*TODO*///			{
-/*TODO*///				yscroll = scrollram[offs/8];
-/*TODO*///				tilemap_set_scrolly(K052109_tilemap[1],(offs+xscroll)&0x1ff,yscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x1a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[1],1);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[1],1);
-/*TODO*///			xscroll = scrollram[0] + 256 * scrollram[1];
-/*TODO*///			xscroll -= 6;
-/*TODO*///			yscroll = K052109_ram[0x180c];
-/*TODO*///			tilemap_set_scrollx(K052109_tilemap[1],0,xscroll);
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[1],0,yscroll);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		if ((K052109_scrollctrl & 0x18) == 0x10)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x3a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[2],256);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[2],1);
-/*TODO*///			yscroll = K052109_ram[0x380c];
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[2],0,yscroll);
-/*TODO*///			for (offs = 0;offs < 256;offs++)
-/*TODO*///			{
-/*TODO*///				xscroll = scrollram[2*(offs&0xfff8)+0] + 256 * scrollram[2*(offs&0xfff8)+1];
-/*TODO*///				xscroll -= 6;
-/*TODO*///				tilemap_set_scrollx(K052109_tilemap[2],(offs+yscroll)&0xff,xscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else if ((K052109_scrollctrl & 0x18) == 0x18)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x3a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[2],256);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[2],1);
-/*TODO*///			yscroll = K052109_ram[0x380c];
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[2],0,yscroll);
-/*TODO*///			for (offs = 0;offs < 256;offs++)
-/*TODO*///			{
-/*TODO*///				xscroll = scrollram[2*offs+0] + 256 * scrollram[2*offs+1];
-/*TODO*///				xscroll -= 6;
-/*TODO*///				tilemap_set_scrollx(K052109_tilemap[2],(offs+yscroll)&0xff,xscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else if ((K052109_scrollctrl & 0x20) == 0x20)
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll,offs;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x3800];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[2],1);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[2],512);
-/*TODO*///			xscroll = K052109_ram[0x3a00] + 256 * K052109_ram[0x3a01];
-/*TODO*///			xscroll -= 6;
-/*TODO*///			tilemap_set_scrollx(K052109_tilemap[2],0,xscroll);
-/*TODO*///			for (offs = 0;offs < 512;offs++)
-/*TODO*///			{
-/*TODO*///				yscroll = scrollram[offs/8];
-/*TODO*///				tilemap_set_scrolly(K052109_tilemap[2],(offs+xscroll)&0x1ff,yscroll);
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			int xscroll,yscroll;
-/*TODO*///			UBytePtr scrollram = &K052109_ram[0x3a00];
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			tilemap_set_scroll_rows(K052109_tilemap[2],1);
-/*TODO*///			tilemap_set_scroll_cols(K052109_tilemap[2],1);
-/*TODO*///			xscroll = scrollram[0] + 256 * scrollram[1];
-/*TODO*///			xscroll -= 6;
-/*TODO*///			yscroll = K052109_ram[0x380c];
-/*TODO*///			tilemap_set_scrollx(K052109_tilemap[2],0,xscroll);
-/*TODO*///			tilemap_set_scrolly(K052109_tilemap[2],0,yscroll);
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		tilemap0_preupdate(); tilemap_update(K052109_tilemap[0]);
-/*TODO*///		tilemap1_preupdate(); tilemap_update(K052109_tilemap[1]);
-/*TODO*///		tilemap2_preupdate(); tilemap_update(K052109_tilemap[2]);
-/*TODO*///	
-/*TODO*///	#ifdef MAME_DEBUG
-/*TODO*///	if ((K052109_scrollctrl & 0x03) == 0x01 ||
-/*TODO*///			(K052109_scrollctrl & 0x18) == 0x08 ||
-/*TODO*///			((K052109_scrollctrl & 0x04) && (K052109_scrollctrl & 0x03)) ||
-/*TODO*///			((K052109_scrollctrl & 0x20) && (K052109_scrollctrl & 0x18)) ||
-/*TODO*///			(K052109_scrollctrl & 0xc0) != 0)
-/*TODO*///		usrintf_showmessage("scrollcontrol = %02x",K052109_scrollctrl);
-/*TODO*///	#endif
-/*TODO*///	
-/*TODO*///	#if 0
-/*TODO*///	if (keyboard_pressed(KEYCODE_F))
-/*TODO*///	{
-/*TODO*///		FILE *fp;
-/*TODO*///		fp=fopen("TILE.DMP", "w+b");
-/*TODO*///		if (fp != 0)
-/*TODO*///		{
-/*TODO*///			fwrite(K052109_ram, 0x6000, 1, fp);
-/*TODO*///			usrintf_showmessage("saved");
-/*TODO*///			fclose(fp);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	#endif
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K052109_tilemap_draw(struct osd_bitmap *bitmap,int num,int flags)
-/*TODO*///	{
-/*TODO*///		tilemap_draw(bitmap,K052109_tilemap[num],flags);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	int K052109_is_IRQ_enabled(void)
-/*TODO*///	{
-/*TODO*///		return K052109_irq_enabled;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static int K051960_memory_region;
-/*TODO*///	static struct GfxElement *K051960_gfx;
-/*TODO*///	static void (*K051960_callback)(int *code,int *color,int *priority,int *shadow);
-/*TODO*///	static int K051960_romoffset;
-/*TODO*///	static int K051960_spriteflip,K051960_readroms;
-/*TODO*///	static unsigned char K051960_spriterombank[3];
-/*TODO*///	static UBytePtr K051960_ram;
-/*TODO*///	static int K051960_irq_enabled, K051960_nmi_enabled;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	int K051960_vh_start(int gfx_memory_region,int plane0,int plane1,int plane2,int plane3,
-/*TODO*///			void (*callback)(int *code,int *color,int *priority,int *shadow))
-/*TODO*///	{
-/*TODO*///		int gfx_index;
-/*TODO*///		static GfxLayout spritelayout = new GfxLayout
-/*TODO*///		(
-/*TODO*///			16,16,
-/*TODO*///			0,				/* filled in later */
-/*TODO*///			4,
-/*TODO*///			new int[] { 0, 0, 0, 0 },	/* filled in later */
-/*TODO*///			new int[] { 0, 1, 2, 3, 4, 5, 6, 7,
-/*TODO*///					8*32+0, 8*32+1, 8*32+2, 8*32+3, 8*32+4, 8*32+5, 8*32+6, 8*32+7 },
-/*TODO*///			new int[] { 0*32, 1*32, 2*32, 3*32, 4*32, 5*32, 6*32, 7*32,
-/*TODO*///					16*32, 17*32, 18*32, 19*32, 20*32, 21*32, 22*32, 23*32 },
-/*TODO*///			128*8
-/*TODO*///		);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* find first empty slot to decode gfx */
-/*TODO*///		for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-/*TODO*///			if (Machine.gfx[gfx_index] == 0)
-/*TODO*///				break;
-/*TODO*///		if (gfx_index == MAX_GFX_ELEMENTS)
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		/* tweak the structure for the number of tiles we have */
-/*TODO*///		spritelayout.total = memory_region_length(gfx_memory_region) / 128;
-/*TODO*///		spritelayout.planeoffset[0] = plane0 * 8;
-/*TODO*///		spritelayout.planeoffset[1] = plane1 * 8;
-/*TODO*///		spritelayout.planeoffset[2] = plane2 * 8;
-/*TODO*///		spritelayout.planeoffset[3] = plane3 * 8;
-/*TODO*///	
-/*TODO*///		/* decode the graphics */
-/*TODO*///		Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region),&spritelayout);
-/*TODO*///		if (!Machine.gfx[gfx_index])
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		/* set the color information */
-/*TODO*///		Machine.gfx[gfx_index].colortable = Machine.remapped_colortable;
-/*TODO*///		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
-/*TODO*///	
-/*TODO*///		K051960_memory_region = gfx_memory_region;
-/*TODO*///		K051960_gfx = Machine.gfx[gfx_index];
-/*TODO*///		K051960_callback = callback;
-/*TODO*///		K051960_ram = malloc(0x400);
-/*TODO*///		if (!K051960_ram) return 1;
-/*TODO*///		memset(K051960_ram,0,0x400);
-/*TODO*///	
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static VhStopPtr K051960_vh_stop = new VhStopPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		free(K051960_ram);
-/*TODO*///		K051960_ram = 0;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	static int K051960_fetchromdata(int byte)
-/*TODO*///	{
-/*TODO*///		int code,color,pri,shadow,off1,addr;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		addr = K051960_romoffset + (K051960_spriterombank[0] << 8) +
-/*TODO*///				((K051960_spriterombank[1] & 0x03) << 16);
-/*TODO*///		code = (addr & 0x3ffe0) >> 5;
-/*TODO*///		off1 = addr & 0x1f;
-/*TODO*///		color = ((K051960_spriterombank[1] & 0xfc) >> 2) + ((K051960_spriterombank[2] & 0x03) << 6);
-/*TODO*///		pri = 0;
-/*TODO*///		shadow = color & 0x80;
-/*TODO*///		(*K051960_callback)(&code,&color,&pri,&shadow);
-/*TODO*///	
-/*TODO*///		addr = (code << 7) | (off1 << 2) | byte;
-/*TODO*///		addr &= memory_region_length(K051960_memory_region)-1;
-/*TODO*///	
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%04x: addr %06x",cpu_get_pc(),addr);
-/*TODO*///	#endif
-/*TODO*///	
-/*TODO*///		return memory_region(K051960_memory_region)[addr];
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051960_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		if (K051960_readroms != 0)
-/*TODO*///		{
-/*TODO*///			/* the 051960 remembers the last address read and uses it when reading the sprite ROMs */
-/*TODO*///			K051960_romoffset = (offset & 0x3fc) >> 2;
-/*TODO*///			return K051960_fetchromdata(offset & 3);	/* only 88 Games reads the ROMs from here */
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///			return K051960_ram[offset];
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051960_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		K051960_ram[offset] = data;
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051960_word_r  = new ReadHandlerPtr() { public int handler(int offset)
+    public static abstract interface K052109_callbackProcPtr {
+
+        public abstract void handler(int layer, int bank, int[] code, int[] color);
+    }
+
+    public static UBytePtr colorram, videoram1, videoram2;
+    public static int layer;
+
+    static int K052109_memory_region;
+    static int K052109_gfxnum;
+    static K052109_callbackProcPtr K052109_callback;
+    static UBytePtr K052109_ram;
+    static UBytePtr K052109_videoram_F, K052109_videoram2_F, K052109_colorram_F;
+    static UBytePtr K052109_videoram_A, K052109_videoram2_A, K052109_colorram_A;
+    static UBytePtr K052109_videoram_B, K052109_videoram2_B, K052109_colorram_B;
+    static /*unsigned*/ char[] K052109_charrombank = new char[4];
+    static int has_extra_video_ram;
+    static int K052109_RMRD_line;
+    static int K052109_tileflip_enable;
+    static int K052109_irq_enabled;
+    static /*unsigned*/ char K052109_romsubbank, K052109_scrollctrl;
+    static struct_tilemap[] K052109_tilemap = new struct_tilemap[3];
+
+    static void tilemap0_preupdate() {
+        colorram = K052109_colorram_F;
+        videoram1 = K052109_videoram_F;
+        videoram2 = K052109_videoram2_F;
+        layer = 0;
+    }
+
+    static void tilemap1_preupdate() {
+        colorram = K052109_colorram_A;
+        videoram1 = K052109_videoram_A;
+        videoram2 = K052109_videoram2_A;
+        layer = 1;
+    }
+
+    static void tilemap2_preupdate() {
+        colorram = K052109_colorram_B;
+        videoram1 = K052109_videoram_B;
+        videoram2 = K052109_videoram2_B;
+        layer = 2;
+    }
+
+    public static GetTileInfoPtr K052109_get_tile_info = new GetTileInfoPtr() {
+        public void handler(int tile_index) {
+            int flipy = 0;
+            int[] code = new int[1];
+            int[] color = new int[1];
+            code[0] = videoram1.read(tile_index) + 256 * videoram2.read(tile_index);
+            color[0] = colorram.read(tile_index);
+            int bank = K052109_charrombank[(color[0] & 0x0c) >> 2] & 0xFF;
+            if (has_extra_video_ram != 0) {
+                bank = (color[0] & 0x0c) >> 2;
+                /* kludge for X-Men */
+
+            }
+            color[0] = (color[0] & 0xf3) | ((bank & 0x03) << 2);
+            bank >>= 2;
+
+            flipy = color[0] & 0x02;
+
+            tile_info.u32_flags = 0;
+
+            K052109_callback.handler(layer, bank, code, color);///(*K052109_callback)(layer,bank,&code,&color);
+
+            SET_TILE_INFO(K052109_gfxnum, code[0], color[0]);
+
+            /* if the callback set flip X but it is not enabled, turn it off */
+            if ((K052109_tileflip_enable & 1) == 0) {
+                tile_info.u32_flags &= ~TILE_FLIPX;
+            }
+
+            /* if flip Y is enabled and the attribute but is set, turn it on */
+            if (flipy != 0 && (K052109_tileflip_enable & 2) != 0) {
+                tile_info.u32_flags |= TILE_FLIPY;
+            }
+        }
+    };
+
+    public static int K052109_vh_start(int gfx_memory_region, int plane0, int plane1, int plane2, int plane3, K052109_callbackProcPtr callback) {
+        int gfx_index;
+        GfxLayout charlayout = new GfxLayout(
+                8, 8,
+                0, /* filled in later */
+                4,
+                new int[]{0, 0, 0, 0}, /* filled in later */
+                new int[]{0, 1, 2, 3, 4, 5, 6, 7},
+                new int[]{0 * 32, 1 * 32, 2 * 32, 3 * 32, 4 * 32, 5 * 32, 6 * 32, 7 * 32},
+                32 * 8
+        );
+
+
+        /* find first empty slot to decode gfx */
+        for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++) {
+            if (Machine.gfx[gfx_index] == null) {
+                break;
+            }
+        }
+        if (gfx_index == MAX_GFX_ELEMENTS) {
+            return 1;
+        }
+
+        /* tweak the structure for the number of tiles we have */
+        charlayout.total = memory_region_length(gfx_memory_region) / 32;
+        charlayout.planeoffset[0] = plane3 * 8;
+        charlayout.planeoffset[1] = plane2 * 8;
+        charlayout.planeoffset[2] = plane1 * 8;
+        charlayout.planeoffset[3] = plane0 * 8;
+
+        /* decode the graphics */
+        Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region), charlayout);
+        if (Machine.gfx[gfx_index] == null) {
+            return 1;
+        }
+
+        /* set the color information */
+        Machine.gfx[gfx_index].colortable = new UShortArray(Machine.remapped_colortable);
+        Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
+
+        K052109_memory_region = gfx_memory_region;
+        K052109_gfxnum = gfx_index;
+        K052109_callback = callback;
+        K052109_RMRD_line = CLEAR_LINE;
+
+        has_extra_video_ram = 0;
+
+        K052109_tilemap[0] = tilemap_create(K052109_get_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8, 8, 64, 32);
+        K052109_tilemap[1] = tilemap_create(K052109_get_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8, 8, 64, 32);
+        K052109_tilemap[2] = tilemap_create(K052109_get_tile_info, tilemap_scan_rows, TILEMAP_TRANSPARENT, 8, 8, 64, 32);
+
+        K052109_ram = new UBytePtr(0x6000);
+
+        if (K052109_ram == null || K052109_tilemap[0] == null || K052109_tilemap[1] == null || K052109_tilemap[2] == null) {
+            K052109_vh_stop();
+            return 1;
+        }
+
+        for (int i = 0; i < 0x6000; i++) {
+            K052109_ram.write(i, 0);//memset(K052109_ram,0,0x6000);
+        }
+        K052109_colorram_F = new UBytePtr(K052109_ram, 0x0000);
+        K052109_colorram_A = new UBytePtr(K052109_ram, 0x0800);
+        K052109_colorram_B = new UBytePtr(K052109_ram, 0x1000);
+        K052109_videoram_F = new UBytePtr(K052109_ram, 0x2000);
+        K052109_videoram_A = new UBytePtr(K052109_ram, 0x2800);
+        K052109_videoram_B = new UBytePtr(K052109_ram, 0x3000);
+        K052109_videoram2_F = new UBytePtr(K052109_ram, 0x4000);
+        K052109_videoram2_A = new UBytePtr(K052109_ram, 0x4800);
+        K052109_videoram2_B = new UBytePtr(K052109_ram, 0x5000);
+
+        K052109_tilemap[0].transparent_pen = 0;
+        K052109_tilemap[1].transparent_pen = 0;
+        K052109_tilemap[2].transparent_pen = 0;
+
+        return 0;
+    }
+
+    public static void K052109_vh_stop() {
+        K052109_ram = null;
+    }
+    public static ReadHandlerPtr K052109_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            if (K052109_RMRD_line == CLEAR_LINE) {
+                if ((offset & 0x1fff) >= 0x1800) {
+                    if (offset >= 0x180c && offset < 0x1834) {
+                        /* A y scroll */                    } else if (offset >= 0x1a00 && offset < 0x1c00) {
+                        /* A x scroll */                    } else if (offset == 0x1d00) {
+                        /* read for bitwise operations before writing */                    } else if (offset >= 0x380c && offset < 0x3834) {
+                        /* B y scroll */                    } else if (offset >= 0x3a00 && offset < 0x3c00) {
+                        /* B x scroll */                    } else {
+                        logerror("%04x: read from unknown 052109 address %04x\n", cpu_get_pc(), offset);
+                    }
+                }
+
+                return K052109_ram.read(offset);
+            } else /* Punk Shot and TMNT read from 0000-1fff, Aliens from 2000-3fff */ {
+                int[] code = new int[1];
+                int[] color = new int[1];
+                code[0] = (offset & 0x1fff) >> 5;
+                color[0] = K052109_romsubbank;
+                int bank = (K052109_charrombank[(color[0] & 0x0c) >> 2] >> 2) & 0xFF;
+                /* discard low bits (TMNT) */
+
+                int addr;
+
+                if (has_extra_video_ram != 0) {
+                    code[0] |= color[0] << 8;
+                    /* kludge for X-Men */
+
+                } else {
+                    K052109_callback.handler(0, bank, code, color);//(*K052109_callback)(0,bank,&code,&color);
+                }
+                addr = (code[0] << 5) + (offset & 0x1f);
+                addr &= memory_region_length(K052109_memory_region) - 1;
+
+                return memory_region(K052109_memory_region).read(addr);
+            }
+        }
+    };
+    public static WriteHandlerPtr K052109_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            if ((offset & 0x1fff) < 0x1800) /* tilemap RAM */ {
+                if (K052109_ram.read(offset) != data) {
+                    if (offset >= 0x4000) {
+                        has_extra_video_ram = 1;
+                        /* kludge for X-Men */
+
+                    }
+                    K052109_ram.write(offset, data);
+                    tilemap_mark_tile_dirty(K052109_tilemap[(offset & 0x1800) >> 11], offset & 0x7ff);
+                }
+            } else /* control registers */ {
+                K052109_ram.write(offset, data);
+
+                if (offset >= 0x180c && offset < 0x1834) {
+                    /* A y scroll */                } else if (offset >= 0x1a00 && offset < 0x1c00) {
+                    /* A x scroll */                } else if (offset == 0x1c80) {
+                    if (K052109_scrollctrl != data) {
+                        logerror("%04x: rowscrollcontrol = %02x\n", cpu_get_pc(), data);
+                        K052109_scrollctrl = (char) (data & 0xFF);
+                    }
+                } else if (offset == 0x1d00) {
+                    //#if VERBOSE
+                    //if (errorlog) fprintf(errorlog,"%04x: 052109 register 1d00 = %02x\n",cpu_get_pc(),data);
+                    //#endif
+                    /* bit 2 = irq enable */
+ /* the custom chip can also generate NMI and FIRQ, for use with a 6809 */
+                    K052109_irq_enabled = data & 0x04;
+                } else if (offset == 0x1d80) {
+                    int dirty = 0;
+
+                    if (K052109_charrombank[0] != (data & 0x0f)) {
+                        dirty |= 1;
+                    }
+                    if (K052109_charrombank[1] != ((data >> 4) & 0x0f)) {
+                        dirty |= 2;
+                    }
+                    if (dirty != 0) {
+                        int i;
+
+                        K052109_charrombank[0] = (char) ((data & 0x0f) & 0xFF);
+                        K052109_charrombank[1] = (char) (((data >> 4) & 0x0f) & 0xFF);
+
+                        for (i = 0; i < 0x1800; i++) {
+                            int bank = (K052109_ram.read(i) & 0x0c) >> 2;
+                            if ((bank == 0 && (dirty & 1) != 0) || (bank == 1 && (dirty & 2) != 0)) {
+                                tilemap_mark_tile_dirty(K052109_tilemap[(i & 0x1800) >> 11], i & 0x7ff);
+                            }
+                        }
+                    }
+                } else if (offset == 0x1e00) {
+                    logerror("%04x: 052109 register 1e00 = %02x\n", cpu_get_pc(), data);
+                    K052109_romsubbank = (char) (data & 0xFF);
+                } else if (offset == 0x1e80) {
+                    if ((data & 0xfe) != 0) {
+                        logerror("%04x: 052109 register 1e80 = %02x\n", cpu_get_pc(), data);
+                    }
+                    tilemap_set_flip(K052109_tilemap[0], (data & 1) != 0 ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+                    tilemap_set_flip(K052109_tilemap[1], (data & 1) != 0 ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+                    tilemap_set_flip(K052109_tilemap[2], (data & 1) != 0 ? (TILEMAP_FLIPY | TILEMAP_FLIPX) : 0);
+                    if (K052109_tileflip_enable != ((data & 0x06) >> 1)) {
+                        K052109_tileflip_enable = ((data & 0x06) >> 1);
+
+                        tilemap_mark_all_tiles_dirty(K052109_tilemap[0]);
+                        tilemap_mark_all_tiles_dirty(K052109_tilemap[1]);
+                        tilemap_mark_all_tiles_dirty(K052109_tilemap[2]);
+                    }
+                } else if (offset == 0x1f00) {
+                    int dirty = 0;
+
+                    if (K052109_charrombank[2] != (data & 0x0f)) {
+                        dirty |= 1;
+                    }
+                    if (K052109_charrombank[3] != ((data >> 4) & 0x0f)) {
+                        dirty |= 2;
+                    }
+                    if (dirty != 0) {
+                        int i;
+
+                        K052109_charrombank[2] = (char) ((data & 0x0f) & 0xFF);
+                        K052109_charrombank[3] = (char) (((data >> 4) & 0x0f) & 0xFF);
+
+                        for (i = 0; i < 0x1800; i++) {
+                            int bank = (K052109_ram.read(i) & 0x0c) >> 2;
+                            if ((bank == 2 && (dirty & 1) != 0) || (bank == 3 && (dirty & 2) != 0)) {
+                                tilemap_mark_tile_dirty(K052109_tilemap[(i & 0x1800) >> 11], i & 0x7ff);
+                            }
+                        }
+                    }
+                } else if (offset >= 0x380c && offset < 0x3834) {
+                    /* B y scroll */                } else if (offset >= 0x3a00 && offset < 0x3c00) {
+                    /* B x scroll */                } else {
+                    logerror("%04x: write %02x to unknown 052109 address %04x\n", cpu_get_pc(), data, offset);
+                }
+            }
+        }
+    };
+
+    public static void K052109_set_RMRD_line(int state) {
+        K052109_RMRD_line = state;
+    }
+
+    public static void K052109_tilemap_update() {
+
+        if ((K052109_scrollctrl & 0x03) == 0x02) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x1a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[1], 256);
+            tilemap_set_scroll_cols(K052109_tilemap[1], 1);
+            yscroll = K052109_ram.read(0x180c);
+            tilemap_set_scrolly(K052109_tilemap[1], 0, yscroll);
+            for (offs = 0; offs < 256; offs++) {
+                xscroll = scrollram.read(2 * (offs & 0xfff8) + 0) + 256 * scrollram.read(2 * (offs & 0xfff8) + 1);
+                xscroll -= 6;
+                tilemap_set_scrollx(K052109_tilemap[1], (offs + yscroll) & 0xff, xscroll);
+            }
+        } else if ((K052109_scrollctrl & 0x03) == 0x03) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x1a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[1], 256);
+            tilemap_set_scroll_cols(K052109_tilemap[1], 1);
+            yscroll = K052109_ram.read(0x180c);
+            tilemap_set_scrolly(K052109_tilemap[1], 0, yscroll);
+            for (offs = 0; offs < 256; offs++) {
+                xscroll = scrollram.read(2 * offs + 0) + 256 * scrollram.read(2 * offs + 1);
+                xscroll -= 6;
+                tilemap_set_scrollx(K052109_tilemap[1], (offs + yscroll) & 0xff, xscroll);
+            }
+        } else if ((K052109_scrollctrl & 0x04) == 0x04) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x1800);
+
+            tilemap_set_scroll_rows(K052109_tilemap[1], 1);
+            tilemap_set_scroll_cols(K052109_tilemap[1], 512);
+            xscroll = K052109_ram.read(0x1a00) + 256 * K052109_ram.read(0x1a01);
+            xscroll -= 6;
+            tilemap_set_scrollx(K052109_tilemap[1], 0, xscroll);
+            for (offs = 0; offs < 512; offs++) {
+                yscroll = scrollram.read(offs / 8);
+                tilemap_set_scrolly(K052109_tilemap[1], (offs + xscroll) & 0x1ff, yscroll);
+            }
+        } else {
+            int xscroll, yscroll;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x1a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[1], 1);
+            tilemap_set_scroll_cols(K052109_tilemap[1], 1);
+            xscroll = scrollram.read(0) + 256 * scrollram.read(1);
+            xscroll -= 6;
+            yscroll = K052109_ram.read(0x180c);
+            tilemap_set_scrollx(K052109_tilemap[1], 0, xscroll);
+            tilemap_set_scrolly(K052109_tilemap[1], 0, yscroll);
+        }
+
+        if ((K052109_scrollctrl & 0x18) == 0x10) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x3a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[2], 256);
+            tilemap_set_scroll_cols(K052109_tilemap[2], 1);
+            yscroll = K052109_ram.read(0x380c);
+            tilemap_set_scrolly(K052109_tilemap[2], 0, yscroll);
+            for (offs = 0; offs < 256; offs++) {
+                xscroll = scrollram.read(2 * (offs & 0xfff8) + 0) + 256 * scrollram.read(2 * (offs & 0xfff8) + 1);
+                xscroll -= 6;
+                tilemap_set_scrollx(K052109_tilemap[2], (offs + yscroll) & 0xff, xscroll);
+            }
+        } else if ((K052109_scrollctrl & 0x18) == 0x18) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x3a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[2], 256);
+            tilemap_set_scroll_cols(K052109_tilemap[2], 1);
+            yscroll = K052109_ram.read(0x380c);
+            tilemap_set_scrolly(K052109_tilemap[2], 0, yscroll);
+            for (offs = 0; offs < 256; offs++) {
+                xscroll = scrollram.read(2 * offs + 0) + 256 * scrollram.read(2 * offs + 1);
+                xscroll -= 6;
+                tilemap_set_scrollx(K052109_tilemap[2], (offs + yscroll) & 0xff, xscroll);
+            }
+        } else if ((K052109_scrollctrl & 0x20) == 0x20) {
+            int xscroll, yscroll, offs;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x3800);
+
+            tilemap_set_scroll_rows(K052109_tilemap[2], 1);
+            tilemap_set_scroll_cols(K052109_tilemap[2], 512);
+            xscroll = K052109_ram.read(0x3a00) + 256 * K052109_ram.read(0x3a01);
+            xscroll -= 6;
+            tilemap_set_scrollx(K052109_tilemap[2], 0, xscroll);
+            for (offs = 0; offs < 512; offs++) {
+                yscroll = scrollram.read(offs / 8);
+                tilemap_set_scrolly(K052109_tilemap[2], (offs + xscroll) & 0x1ff, yscroll);
+            }
+        } else {
+            int xscroll, yscroll;
+            UBytePtr scrollram = new UBytePtr(K052109_ram, 0x3a00);
+
+            tilemap_set_scroll_rows(K052109_tilemap[2], 1);
+            tilemap_set_scroll_cols(K052109_tilemap[2], 1);
+            xscroll = scrollram.read(0) + 256 * scrollram.read(1);
+            xscroll -= 6;
+            yscroll = K052109_ram.read(0x380c);
+            tilemap_set_scrollx(K052109_tilemap[2], 0, xscroll);
+            tilemap_set_scrolly(K052109_tilemap[2], 0, yscroll);
+        }
+
+        tilemap0_preupdate();
+        tilemap_update(K052109_tilemap[0]);
+        tilemap1_preupdate();
+        tilemap_update(K052109_tilemap[1]);
+        tilemap2_preupdate();
+        tilemap_update(K052109_tilemap[2]);
+
+        /*#ifdef MAME_DEBUG
+         if ((K052109_scrollctrl & 0x03) == 0x01 ||
+         (K052109_scrollctrl & 0x18) == 0x08 ||
+         ((K052109_scrollctrl & 0x04) && (K052109_scrollctrl & 0x03)) ||
+         ((K052109_scrollctrl & 0x20) && (K052109_scrollctrl & 0x18)) ||
+         (K052109_scrollctrl & 0xc0) != 0)
+         usrintf_showmessage("scrollcontrol = %02x",K052109_scrollctrl);
+         #endif*/
+    }
+
+    public static void K052109_tilemap_draw(osd_bitmap bitmap, int num, int flags) {
+        tilemap_draw(bitmap, K052109_tilemap[num], flags);
+    }
+
+    public static int K052109_is_IRQ_enabled() {
+        return K052109_irq_enabled;
+    }
+
+    public static abstract interface K051960_callbackProcPtr {
+
+        public abstract void handler(int[] code, int[] color, int[] priority, int[] shadow);
+    }
+
+    static int K051960_memory_region;
+    static GfxElement K051960_gfx;
+    static K051960_callbackProcPtr K051960_callback;//static void (*K051960_callback)(int *code,int *color,int *priority);
+    static int K051960_romoffset;
+    static int K051960_spriteflip, K051960_readroms;
+    static /*unsigned*/ char[] K051960_spriterombank = new char[3];
+    static UBytePtr K051960_ram;
+    static int K051960_irq_enabled, K051960_nmi_enabled;
+
+    public static int K051960_vh_start(int gfx_memory_region, int plane0, int plane1, int plane2, int plane3, K051960_callbackProcPtr callback) {
+        int gfx_index;
+        GfxLayout spritelayout = new GfxLayout(
+                16, 16,
+                0, /* filled in later */
+                4,
+                new int[]{0, 0, 0, 0}, /* filled in later */
+                new int[]{0, 1, 2, 3, 4, 5, 6, 7,
+                    8 * 32 + 0, 8 * 32 + 1, 8 * 32 + 2, 8 * 32 + 3, 8 * 32 + 4, 8 * 32 + 5, 8 * 32 + 6, 8 * 32 + 7},
+                new int[]{0 * 32, 1 * 32, 2 * 32, 3 * 32, 4 * 32, 5 * 32, 6 * 32, 7 * 32,
+                    16 * 32, 17 * 32, 18 * 32, 19 * 32, 20 * 32, 21 * 32, 22 * 32, 23 * 32},
+                128 * 8
+        );
+
+
+        /* find first empty slot to decode gfx */
+        for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++) {
+            if (Machine.gfx[gfx_index] == null) {
+                break;
+            }
+        }
+        if (gfx_index == MAX_GFX_ELEMENTS) {
+            return 1;
+        }
+
+        /* tweak the structure for the number of tiles we have */
+        spritelayout.total = memory_region_length(gfx_memory_region) / 128;
+        spritelayout.planeoffset[0] = plane0 * 8;
+        spritelayout.planeoffset[1] = plane1 * 8;
+        spritelayout.planeoffset[2] = plane2 * 8;
+        spritelayout.planeoffset[3] = plane3 * 8;
+
+        /* decode the graphics */
+        Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region), spritelayout);
+        if (Machine.gfx[gfx_index] == null) {
+            return 1;
+        }
+
+        /* set the color information */
+        Machine.gfx[gfx_index].colortable = new UShortArray(Machine.remapped_colortable);
+        Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / 16;
+
+        K051960_memory_region = gfx_memory_region;
+        K051960_gfx = Machine.gfx[gfx_index];
+        K051960_callback = callback;
+        K051960_ram = new UBytePtr(0x400);
+        if (K051960_ram == null) {
+            return 1;
+        }
+
+        for (int i = 0; i < 0x400; i++) {
+            K051960_ram.write(i, 0);//memset(K051960_ram,0,0x400);
+        }
+        return 0;
+    }
+
+    public static void K051960_vh_stop() {
+        K051960_ram = null;
+    }
+
+    public static int K051960_fetchromdata(int _byte) {
+        int[] code = new int[1];
+        int[] color = new int[1];
+        int[] pri = new int[1];
+        int[] shadow = new int[1];
+        int off1, addr;
+
+        addr = K051960_romoffset + (K051960_spriterombank[0] << 8)
+                + ((K051960_spriterombank[1] & 0x03) << 16);
+        code[0] = (addr & 0x3ffe0) >> 5;
+        off1 = addr & 0x1f;
+        color[0] = ((K051960_spriterombank[1] & 0xfc) >> 2) + ((K051960_spriterombank[2] & 0x03) << 6);
+        pri[0] = 0;
+        shadow[0] = color[0] & 0x80;
+        K051960_callback.handler(code, color, pri, shadow);//(*K051960_callback)(&code,&color,&pri);
+
+        addr = (code[0] << 7) | (off1 << 2) | _byte;
+        addr &= memory_region_length(K051960_memory_region) - 1;
+
+        return memory_region(K051960_memory_region).read(addr);
+    }
+
+    public static ReadHandlerPtr K051960_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            if (K051960_readroms != 0) {
+                /* the 051960 remembers the last address read and uses it when reading the sprite ROMs */
+                K051960_romoffset = (offset & 0x3fc) >> 2;
+                return K051960_fetchromdata(offset & 3);
+                /* only 88 Games reads the ROMs from here */
+
+            } else {
+                return K051960_ram.read(offset);
+            }
+        }
+    };
+    public static WriteHandlerPtr K051960_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            K051960_ram.write(offset, data);
+        }
+    };
+
+    /*TODO*///	public static ReadHandlerPtr K051960_word_r  = new ReadHandlerPtr() { public int handler(int offset)
 /*TODO*///	{
 /*TODO*///		return K051960_r(offset + 1) | (K051960_r(offset) << 8);
 /*TODO*///	} };
@@ -2140,72 +2064,51 @@ public class konamiic
 /*TODO*///			K051960_w(offset + 1,data & 0xff);
 /*TODO*///	} };
 /*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051937_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		if (K051960_readroms && offset >= 4 && offset < 8)
-/*TODO*///		{
-/*TODO*///			return K051960_fetchromdata(offset & 3);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///			if (offset == 0)
-/*TODO*///			{
-/*TODO*///				static int counter;
-/*TODO*///	
-/*TODO*///				/* some games need bit 0 to pulse */
-/*TODO*///				return (counter++) & 1;
-/*TODO*///			}
-/*TODO*///	logerror("%04x: read unknown 051937 address %x\n",cpu_get_pc(),offset);
-/*TODO*///			return 0;
-/*TODO*///		}
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051937_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		if (offset == 0)
-/*TODO*///		{
-/*TODO*///	#ifdef MAME_DEBUG
-/*TODO*///	if ((data & 0xc6) != 0)
-/*TODO*///		usrintf_showmessage("051937 reg 00 = %02x",data);
-/*TODO*///	#endif
-/*TODO*///			/* bit 0 is IRQ enable */
-/*TODO*///			K051960_irq_enabled = (data & 0x01);
-/*TODO*///	
-/*TODO*///			/* bit 1: probably FIRQ enable */
-/*TODO*///	
-/*TODO*///			/* bit 2 is NMI enable */
-/*TODO*///			K051960_nmi_enabled = (data & 0x04);
-/*TODO*///	
-/*TODO*///			/* bit 3 = flip screen */
-/*TODO*///			K051960_spriteflip = data & 0x08;
-/*TODO*///	
-/*TODO*///			/* bit 4 used by Devastators and TMNT, unknown */
-/*TODO*///	
-/*TODO*///			/* bit 5 = enable gfx ROM reading */
-/*TODO*///			K051960_readroms = data & 0x20;
-/*TODO*///	#if VERBOSE
-/*TODO*///	logerror("%04x: write %02x to 051937 address %x\n",cpu_get_pc(),data,offset);
-/*TODO*///	#endif
-/*TODO*///		}
-/*TODO*///		else if (offset == 1)
-/*TODO*///		{
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%04x: write %02x to 051937 address %x",cpu_get_pc(),data,offset);
-/*TODO*///	#endif
-/*TODO*///	logerror("%04x: write %02x to unknown 051937 address %x\n",cpu_get_pc(),data,offset);
-/*TODO*///		}
-/*TODO*///		else if (offset >= 2 && offset < 5)
-/*TODO*///		{
-/*TODO*///			K051960_spriterombank[offset - 2] = data;
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%04x: write %02x to 051937 address %x",cpu_get_pc(),data,offset);
-/*TODO*///	#endif
-/*TODO*///	logerror("%04x: write %02x to unknown 051937 address %x\n",cpu_get_pc(),data,offset);
-/*TODO*///		}
-/*TODO*///	} };
+    static int K051937_counter;
+    public static ReadHandlerPtr K051937_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            if (K051960_readroms != 0 && offset >= 4 && offset < 8) {
+                return K051960_fetchromdata(offset & 3);
+            } else {
+                if (offset == 0) {
+
+
+                    /* some games need bit 0 to pulse */
+                    return (K051937_counter++) & 1;
+                }
+                logerror("%04x: read unknown 051937 address %x\n", cpu_get_pc(), offset);
+                return 0;
+            }
+        }
+    };
+   public static WriteHandlerPtr K051937_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            if (offset == 0) {
+                /* bit 0 is IRQ enable */
+                K051960_irq_enabled = (data & 0x01);
+
+                /* bit 1: probably FIRQ enable */
+
+                /* bit 2 is NMI enable */
+                K051960_nmi_enabled = (data & 0x04);
+
+                /* bit 3 = flip screen */
+                K051960_spriteflip = data & 0x08;
+
+                /* bit 4 used by Devastators and TMNT, unknown */
+
+                /* bit 5 = enable gfx ROM reading */
+                K051960_readroms = data & 0x20;
+//#if VERBOSE
+//if (errorlog) fprintf(errorlog,"%04x: write %02x to 051937 address %x\n",cpu_get_pc(),data,offset);
+//#endif
+            } else if (offset >= 2 && offset < 5) {
+                K051960_spriterombank[offset - 2] = (char) (data & 0xFF);
+            } else {
+                logerror("%04x: write %02x to unknown 051937 address %x\n", cpu_get_pc(), data, offset);
+            }
+        }
+    };
 /*TODO*///	
 /*TODO*///	public static ReadHandlerPtr K051937_word_r  = new ReadHandlerPtr() { public int handler(int offset)
 /*TODO*///	{
@@ -2253,148 +2156,157 @@ public class konamiic
 /*TODO*///	 * Note that Aliens also uses the shadow bit to select the second sprite bank.
 /*TODO*///	 */
 /*TODO*///	
-/*TODO*///	void K051960_sprites_draw(struct osd_bitmap *bitmap,int min_priority,int max_priority)
-/*TODO*///	{
-/*TODO*///	#define NUM_SPRITES 128
-/*TODO*///		int offs,pri_code;
-/*TODO*///		int sortedlist[NUM_SPRITES];
-/*TODO*///	
-/*TODO*///		for (offs = 0;offs < NUM_SPRITES;offs++)
-/*TODO*///			sortedlist[offs] = -1;
-/*TODO*///	
-/*TODO*///		/* prebuild a sorted table */
-/*TODO*///		for (offs = 0;offs < 0x400;offs += 8)
-/*TODO*///		{
-/*TODO*///			if (K051960_ram[offs] & 0x80)
-/*TODO*///			{
-/*TODO*///				if (max_priority == -1)	/* draw front to back when using priority buffer */
-/*TODO*///					sortedlist[(K051960_ram[offs] & 0x7f) ^ 0x7f] = offs;
-/*TODO*///				else
-/*TODO*///					sortedlist[K051960_ram[offs] & 0x7f] = offs;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		for (pri_code = 0;pri_code < NUM_SPRITES;pri_code++)
-/*TODO*///		{
-/*TODO*///			int ox,oy,code,color,pri,shadow,size,w,h,x,y,flipx,flipy,zoomx,zoomy;
-/*TODO*///			/* sprites can be grouped up to 8x8. The draw order is
-/*TODO*///				 0  1  4  5 16 17 20 21
-/*TODO*///				 2  3  6  7 18 19 22 23
-/*TODO*///				 8  9 12 13 24 25 28 29
-/*TODO*///				10 11 14 15 26 27 30 31
-/*TODO*///				32 33 36 37 48 49 52 53
-/*TODO*///				34 35 38 39 50 51 54 55
-/*TODO*///				40 41 44 45 56 57 60 61
-/*TODO*///				42 43 46 47 58 59 62 63
-/*TODO*///			*/
-/*TODO*///			static int xoffset[8] = { 0, 1, 4, 5, 16, 17, 20, 21 };
-/*TODO*///			static int yoffset[8] = { 0, 2, 8, 10, 32, 34, 40, 42 };
-/*TODO*///			static int width[8] =  { 1, 2, 1, 2, 4, 2, 4, 8 };
-/*TODO*///			static int height[8] = { 1, 1, 2, 2, 2, 4, 4, 8 };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			offs = sortedlist[pri_code];
-/*TODO*///			if (offs == -1) continue;
-/*TODO*///	
-/*TODO*///			code = K051960_ram[offs+2] + ((K051960_ram[offs+1] & 0x1f) << 8);
-/*TODO*///			color = K051960_ram[offs+3] & 0xff;
-/*TODO*///			pri = 0;
-/*TODO*///			shadow = color & 0x80;
-/*TODO*///			(*K051960_callback)(&code,&color,&pri,&shadow);
-/*TODO*///	
-/*TODO*///			if (max_priority != -1)
-/*TODO*///				if (pri < min_priority || pri > max_priority) continue;
-/*TODO*///	
-/*TODO*///			size = (K051960_ram[offs+1] & 0xe0) >> 5;
-/*TODO*///			w = width[size];
-/*TODO*///			h = height[size];
-/*TODO*///	
-/*TODO*///			if (w >= 2) code &= ~0x01;
-/*TODO*///			if (h >= 2) code &= ~0x02;
-/*TODO*///			if (w >= 4) code &= ~0x04;
-/*TODO*///			if (h >= 4) code &= ~0x08;
-/*TODO*///			if (w >= 8) code &= ~0x10;
-/*TODO*///			if (h >= 8) code &= ~0x20;
-/*TODO*///	
-/*TODO*///			ox = (256 * K051960_ram[offs+6] + K051960_ram[offs+7]) & 0x01ff;
-/*TODO*///			oy = 256 - ((256 * K051960_ram[offs+4] + K051960_ram[offs+5]) & 0x01ff);
-/*TODO*///			flipx = K051960_ram[offs+6] & 0x02;
-/*TODO*///			flipy = K051960_ram[offs+4] & 0x02;
-/*TODO*///			zoomx = (K051960_ram[offs+6] & 0xfc) >> 2;
-/*TODO*///			zoomy = (K051960_ram[offs+4] & 0xfc) >> 2;
-/*TODO*///			zoomx = 0x10000 / 128 * (128 - zoomx);
-/*TODO*///			zoomy = 0x10000 / 128 * (128 - zoomy);
-/*TODO*///	
-/*TODO*///			if (K051960_spriteflip != 0)
-/*TODO*///			{
-/*TODO*///				ox = 512 - (zoomx * w >> 12) - ox;
-/*TODO*///				oy = 256 - (zoomy * h >> 12) - oy;
-/*TODO*///				flipx = !flipx;
-/*TODO*///				flipy = !flipy;
-/*TODO*///			}
-/*TODO*///	
-/*TODO*///			if (zoomx == 0x10000 && zoomy == 0x10000)
-/*TODO*///			{
-/*TODO*///				int sx,sy;
-/*TODO*///	
-/*TODO*///				for (y = 0;y < h;y++)
-/*TODO*///				{
-/*TODO*///					sy = oy + 16 * y;
-/*TODO*///	
-/*TODO*///					for (x = 0;x < w;x++)
-/*TODO*///					{
-/*TODO*///						int c = code;
-/*TODO*///	
-/*TODO*///						sx = ox + 16 * x;
-/*TODO*///						if (flipx != 0) c += xoffset[(w-1-x)];
-/*TODO*///						else c += xoffset[x];
-/*TODO*///						if (flipy != 0) c += yoffset[(h-1-y)];
-/*TODO*///						else c += yoffset[y];
-/*TODO*///	
-/*TODO*///						/* hack to simulate shadow */
-/*TODO*///						if (shadow != 0)
-/*TODO*///						{
-/*TODO*///							int o = K051960_gfx.colortable[16*color+15];
-/*TODO*///							K051960_gfx.colortable[16*color+15] = palette_transparent_pen;
-/*TODO*///							if (max_priority == -1)
-/*TODO*///								pdrawgfx(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1) ? 0x8001 : 0x0001,pri);
-/*TODO*///							else
-/*TODO*///								drawgfx(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1) ? 0x8001 : 0x0001);
-/*TODO*///							K051960_gfx.colortable[16*color+15] = o;
-/*TODO*///						}
-/*TODO*///						else
-/*TODO*///						{
-/*TODO*///							if (max_priority == -1)
-/*TODO*///								pdrawgfx(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PEN,0,pri);
-/*TODO*///							else
-/*TODO*///								drawgfx(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PEN,0);
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///				}
-/*TODO*///			}
-/*TODO*///			else
-/*TODO*///			{
-/*TODO*///				int sx,sy,zw,zh;
+    public static void K051960_sprites_draw(osd_bitmap bitmap, int min_priority, int max_priority) {
+        int NUM_SPRITES = 128;
+        int offs, pri_code;
+        int[] sortedlist = new int[NUM_SPRITES];
+
+        for (offs = 0; offs < NUM_SPRITES; offs++) {
+            sortedlist[offs] = -1;
+        }
+
+        /* prebuild a sorted table */
+        for (offs = 0; offs < 0x400; offs += 8) {
+            if ((K051960_ram.read(offs) & 0x80) != 0) {
+                if (max_priority == -1) /* draw front to back when using priority buffer */ {
+                    sortedlist[(K051960_ram.read(offs) & 0x7f) ^ 0x7f] = offs;
+                } else {
+                    sortedlist[K051960_ram.read(offs) & 0x7f] = offs;
+                }
+            }
+        }
+        for (pri_code = 0; pri_code < NUM_SPRITES; pri_code++) {
+            int ox, oy, size, w, h, x, y, flipx, flipy, zoomx, zoomy;
+            int[] code = new int[1];
+            int[] color = new int[1];
+            int[] pri = new int[1];
+            int[] shadow = new int[1];
+
+            int xoffset[] = {0, 1, 4, 5, 16, 17, 20, 21};
+            int yoffset[] = {0, 2, 8, 10, 32, 34, 40, 42};
+            int width[] = {1, 2, 1, 2, 4, 2, 4, 8};
+            int height[] = {1, 1, 2, 2, 2, 4, 4, 8};
+
+            offs = sortedlist[pri_code];
+            if (offs == -1) {
+                continue;
+            }
+
+            code[0] = K051960_ram.read(offs + 2) + ((K051960_ram.read(offs + 1) & 0x1f) << 8);
+            color[0] = K051960_ram.read(offs + 3) & 0xff;
+            pri[0] = 0;
+            shadow[0] = color[0] & 0x80;
+            K051960_callback.handler(code, color, pri, shadow);
+
+            if (max_priority != -1) {
+                if (pri[0] < min_priority || pri[0] > max_priority) {
+                    continue;
+                }
+            }
+
+            size = (K051960_ram.read(offs + 1) & 0xe0) >> 5;
+            w = width[size];
+            h = height[size];
+
+            if (w >= 2) {
+                code[0] &= ~0x01;
+            }
+            if (h >= 2) {
+                code[0] &= ~0x02;
+            }
+            if (w >= 4) {
+                code[0] &= ~0x04;
+            }
+            if (h >= 4) {
+                code[0] &= ~0x08;
+            }
+            if (w >= 8) {
+                code[0] &= ~0x10;
+            }
+            if (h >= 8) {
+                code[0] &= ~0x20;
+            }
+
+            ox = (256 * K051960_ram.read(offs + 6) + K051960_ram.read(offs + 7)) & 0x01ff;
+            oy = 256 - ((256 * K051960_ram.read(offs + 4) + K051960_ram.read(offs + 5)) & 0x01ff);
+            flipx = K051960_ram.read(offs + 6) & 0x02;
+            flipy = K051960_ram.read(offs + 4) & 0x02;
+            zoomx = (K051960_ram.read(offs + 6) & 0xfc) >> 2;
+            zoomy = (K051960_ram.read(offs + 4) & 0xfc) >> 2;
+            zoomx = 0x10000 / 128 * (128 - zoomx);
+            zoomy = 0x10000 / 128 * (128 - zoomy);
+
+            if (K051960_spriteflip != 0) {
+                ox = 512 - (zoomx * w >> 12) - ox;
+                oy = 256 - (zoomy * h >> 12) - oy;
+                flipx = NOT(flipx);
+                flipy = NOT(flipy);
+            }
+
+            if (zoomx == 0x10000 && zoomy == 0x10000) {
+                int sx, sy;
+
+                for (y = 0; y < h; y++) {
+                    sy = oy + 16 * y;
+
+                    for (x = 0; x < w; x++) {
+                        int c = code[0];
+
+                        sx = ox + 16 * x;
+                        if (flipx != 0) {
+                            c += xoffset[(w - 1 - x)];
+                        } else {
+                            c += xoffset[x];
+                        }
+                        if (flipy != 0) {
+                            c += yoffset[(h - 1 - y)];
+                        } else {
+                            c += yoffset[y];
+                        }
+
+                        /* hack to simulate shadow */
+                        if (shadow[0] != 0) {
+                            int o = K051960_gfx.colortable.read(16 * color[0] + 15);
+                            K051960_gfx.colortable.write(16 * color[0] + 15, palette_transparent_pen);
+                            if (max_priority == -1) {
+                                pdrawgfx(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001, pri[0]);
+                            } else {
+                                drawgfx(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001);
+                            }
+                            K051960_gfx.colortable.write(16 * color[0] + 15, o);
+                        } else {
+                            if (max_priority == -1) {
+                                pdrawgfx(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PEN, 0, pri[0]);
+                            } else {
+                                drawgfx(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PEN, 0);
+                            }
+                        }
+                    }
+                }
+            } else {
+                System.out.println("unsuppoted sprites zoom");
+            //    throw new UnsupportedOperationException("Unsupported");
+                /*TODO*///				int sx,sy,zw,zh;
 /*TODO*///	
 /*TODO*///				for (y = 0;y < h;y++)
 /*TODO*///				{
@@ -2456,66 +2368,52 @@ public class konamiic
 /*TODO*///						}
 /*TODO*///					}
 /*TODO*///				}
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	#if 0
-/*TODO*///	if (keyboard_pressed(KEYCODE_D))
-/*TODO*///	{
-/*TODO*///		FILE *fp;
-/*TODO*///		fp=fopen("SPRITE.DMP", "w+b");
-/*TODO*///		if (fp != 0)
-/*TODO*///		{
-/*TODO*///			fwrite(K051960_ram, 0x400, 1, fp);
-/*TODO*///			usrintf_showmessage("saved");
-/*TODO*///			fclose(fp);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	#endif
-/*TODO*///	#undef NUM_SPRITES
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051960_mark_sprites_colors(void)
-/*TODO*///	{
-/*TODO*///		int offs,i;
-/*TODO*///	
-/*TODO*///		unsigned short palette_map[512];
-/*TODO*///	
-/*TODO*///		memset (palette_map, 0, sizeof (palette_map));
-/*TODO*///	
-/*TODO*///		/* sprites */
-/*TODO*///		for (offs = 0x400-8;offs >= 0;offs -= 8)
-/*TODO*///		{
-/*TODO*///			if (K051960_ram[offs] & 0x80)
-/*TODO*///			{
-/*TODO*///				int code,color,pri,shadow;
-/*TODO*///	
-/*TODO*///				code = K051960_ram[offs+2] + ((K051960_ram[offs+1] & 0x1f) << 8);
-/*TODO*///				color = (K051960_ram[offs+3] & 0xff);
-/*TODO*///				pri = 0;
-/*TODO*///				shadow = color & 0x80;
-/*TODO*///				(*K051960_callback)(&code,&color,&pri,&shadow);
-/*TODO*///				palette_map[color] |= 0xffff;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		/* now build the final table */
-/*TODO*///		for (i = 0; i < 512; i++)
-/*TODO*///		{
-/*TODO*///			int usage = palette_map[i], j;
-/*TODO*///			if (usage != 0)
-/*TODO*///			{
-/*TODO*///				for (j = 1; j < 16; j++)
-/*TODO*///					if (usage & (1 << j))
-/*TODO*///						palette_used_colors[i * 16 + j] |= PALETTE_COLOR_VISIBLE;
-/*TODO*///			}
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	int K051960_is_IRQ_enabled(void)
-/*TODO*///	{
-/*TODO*///		return K051960_irq_enabled;
-/*TODO*///	}
-/*TODO*///	
+            }
+        }
+    }
+
+    public static void K051960_mark_sprites_colors() {
+        int offs, i;
+
+        /*unsigned short*/ char[] palette_map = new char[512];
+
+        memset(palette_map, 0, sizeof(palette_map));
+
+        /* sprites */
+        for (offs = 0x400 - 8; offs >= 0; offs -= 8) {
+            if ((K051960_ram.read(offs) & 0x80) != 0) {
+                //int code,color,pri;
+                int[] code = new int[1];
+                int[] color = new int[1];
+                int[] pri = new int[1];
+                int[] shadow = new int[1];
+
+                code[0] = K051960_ram.read(offs + 2) + ((K051960_ram.read(offs + 1) & 0x1f) << 8);
+                color[0] = (K051960_ram.read(offs + 3) & 0xff);
+                pri[0] = 0;
+                shadow[0] = color[0] & 0x80;
+                K051960_callback.handler(code, color, pri, shadow);//(*K051960_callback)(&code,&color,&pri);
+                palette_map[color[0]] |= 0xffff;
+            }
+        }
+
+        /* now build the final table */
+        for (i = 0; i < 512; i++) {
+            int usage = palette_map[i], j;
+            if (usage != 0) {
+                for (j = 1; j < 16; j++) {
+                    if ((usage & (1 << j)) != 0) {
+                        palette_used_colors.write(i * 16 + j, palette_used_colors.read(i * 16 + j) | PALETTE_COLOR_VISIBLE);
+                    }
+                }
+            }
+        }
+    }
+
+    public static int K051960_is_IRQ_enabled() {
+        return K051960_irq_enabled;
+    }
+    /*TODO*///	
 /*TODO*///	int K051960_is_NMI_enabled(void)
 /*TODO*///	{
 /*TODO*///		return K051960_nmi_enabled;
@@ -2524,29 +2422,32 @@ public class konamiic
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K052109_051960_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		if (K052109_RMRD_line == CLEAR_LINE)
-/*TODO*///		{
-/*TODO*///			if (offset >= 0x3800 && offset < 0x3808)
-/*TODO*///				return K051937_r(offset - 0x3800);
-/*TODO*///			else if (offset < 0x3c00)
-/*TODO*///				return K052109_r(offset);
-/*TODO*///			else
-/*TODO*///				return K051960_r(offset - 0x3c00);
-/*TODO*///		}
-/*TODO*///		else return K052109_r(offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K052109_051960_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		if (offset >= 0x3800 && offset < 0x3808)
-/*TODO*///			K051937_w(offset - 0x3800,data);
-/*TODO*///		else if (offset < 0x3c00)
-/*TODO*///			K052109_w(offset,data);
-/*TODO*///		else
-/*TODO*///			K051960_w(offset - 0x3c00,data);
-/*TODO*///	} };
+ public static ReadHandlerPtr K052109_051960_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            if (K052109_RMRD_line == CLEAR_LINE) {
+                if (offset >= 0x3800 && offset < 0x3808) {
+                    return K051937_r.handler(offset - 0x3800);
+                } else if (offset < 0x3c00) {
+                    return K052109_r.handler(offset);
+                } else {
+                    return K051960_r.handler(offset - 0x3c00);
+                }
+            } else {
+                return K052109_r.handler(offset);
+            }
+        }
+    };
+    public static WriteHandlerPtr K052109_051960_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            if (offset >= 0x3800 && offset < 0x3808) {
+                K051937_w.handler(offset - 0x3800, data);
+            } else if (offset < 0x3c00) {
+                K052109_w.handler(offset, data);
+            } else {
+                K051960_w.handler(offset - 0x3c00, data);
+            }
+        }
+    };
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	

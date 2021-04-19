@@ -172,6 +172,9 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.wardner.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.skykid.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.baraduke.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos86.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gbusters.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.aliens.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.flkatck.*;
 
 public class driver {
 
@@ -403,30 +406,28 @@ public class driver {
         // driver_cclimbr2,	/* (c) 1988 (Japan) */
 
         /* "Phoenix hardware" (and variations) games */
-        driver_safarir,	/* Shin Nihon Kikaku (SNK) */
-        driver_phoenix,	/* (c) 1980 Amstar */
-        driver_phoenixa,	/* (c) 1980 Amstar + Centuri license */
-        driver_phoenixt,	/* (c) 1980 Taito */
-        driver_phoenix3,	/* bootleg */
-        driver_phoenixc,	/* bootleg */
-        driver_pleiads,	/* (c) 1981 Tehkan */
-        driver_pleiadbl,	/* bootleg */
-        driver_pleiadce,	/* (c) 1981 Centuri + Tehkan */
-
+        driver_safarir, /* Shin Nihon Kikaku (SNK) */
+        driver_phoenix, /* (c) 1980 Amstar */
+        driver_phoenixa, /* (c) 1980 Amstar + Centuri license */
+        driver_phoenixt, /* (c) 1980 Taito */
+        driver_phoenix3, /* bootleg */
+        driver_phoenixc, /* bootleg */
+        driver_pleiads, /* (c) 1981 Tehkan */
+        driver_pleiadbl, /* bootleg */
+        driver_pleiadce, /* (c) 1981 Centuri + Tehkan */
         /* Namco games (plus some intruders on similar hardware) */
-        driver_geebee,	/* [1978] Namco */
-        driver_geebeeg,	/* [1978] Gremlin */
-        driver_bombbee,	/* [1979] Namco */
-        driver_cutieq,	/* (c) 1979 Namco */
-        driver_navalone,	/* (c) 1980 Namco */
-        driver_kaitei,	/* [1980] K.K. Tokki */
-        driver_kaitein,	/* [1980] Namco */
-        driver_sos,		/* [1980] Namco */
+        driver_geebee, /* [1978] Namco */
+        driver_geebeeg, /* [1978] Gremlin */
+        driver_bombbee, /* [1979] Namco */
+        driver_cutieq, /* (c) 1979 Namco */
+        driver_navalone, /* (c) 1980 Namco */
+        driver_kaitei, /* [1980] K.K. Tokki */
+        driver_kaitein, /* [1980] Namco */
+        driver_sos, /* [1980] Namco */
         driver_tankbatt, /* (c) 1980 Namco */
-        driver_warpwarp,	/* (c) 1981 Namco */
-        driver_warpwarr,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
-        driver_warpwar2,	/* (c) 1981 Rock-ola - the high score table says "NAMCO" */
-
+        driver_warpwarp, /* (c) 1981 Namco */
+        driver_warpwarr, /* (c) 1981 Rock-ola - the high score table says "NAMCO" */
+        driver_warpwar2, /* (c) 1981 Rock-ola - the high score table says "NAMCO" */
         /* Libble Rabble board (first Japanese game using a 68000) */
         /*TODO*/
         /// *TODO*///TESTDRIVER( liblrabl,	/* (c) 1983 */
@@ -446,21 +447,19 @@ public class driver {
         driver_pacland2, /* (c) 1984 */
         driver_pacland3, /* (c) 1984 */
         driver_paclandm, /* (c) 1984 Midway */
-        driver_drgnbstr,	/* (c) 1984 */
-        driver_skykid,	/* (c) 1985 */
-        driver_baraduke,	/* (c) 1985 */
-        driver_metrocrs,	/* (c) 1985 */
-
+        driver_drgnbstr, /* (c) 1984 */
+        driver_skykid, /* (c) 1985 */
+        driver_baraduke, /* (c) 1985 */
+        driver_metrocrs, /* (c) 1985 */
         /* Namco System 86 games */
-        driver_hopmappy,	/* (c) 1986 */
-        driver_skykiddx,	/* (c) 1986 */
-        driver_skykiddo,	/* (c) 1986 */
-        driver_roishtar,	/* (c) 1986 */
-        driver_genpeitd,	/* (c) 1986 */
-        driver_rthunder,	/* (c) 1986 new version */
-        driver_rthundro,	/* (c) 1986 old version */
-        driver_wndrmomo,	/* (c) 1987 */
-
+        driver_hopmappy, /* (c) 1986 */
+        driver_skykiddx, /* (c) 1986 */
+        driver_skykiddo, /* (c) 1986 */
+        driver_roishtar, /* (c) 1986 */
+        driver_genpeitd, /* (c) 1986 */
+        driver_rthunder, /* (c) 1986 new version */
+        driver_rthundro, /* (c) 1986 old version */
+        driver_wndrmomo, /* (c) 1987 */
         /* Namco System 1 games */
         driver_shadowld, /* (c) 1987 */
         /*TODO*/
@@ -677,33 +676,33 @@ public class driver {
         driver_pc_cshwk, /* (c) 1989 Rare (Nintendo of America license) */
         driver_pc_moglf, /* (c) 1991 Nintendo */
         /* Midway 8080 b/w games */
-        driver_seawolf,	/* 596 [1976] */
-        driver_gunfight,	/* 597 [1975] */
+        driver_seawolf, /* 596 [1976] */
+        driver_gunfight, /* 597 [1975] */
         /* 603 - Top Gun [1976] */
-        driver_tornbase,	/* 605 [1976] */
-        driver_280zzzap,	/* 610 [1976] */
-        driver_maze,		/* 611 [1976] */
-        driver_boothill,	/* 612 [1977] */
-        driver_checkmat,	/* 615 [1977] */
-        driver_desertgu,	/* 618 [1977] */
-        driver_dplay,		/* 619 [1977] */
-        driver_lagunar,	/* 622 [1977] */
-        driver_gmissile,	/* 623 [1977] */
-        driver_m4,		/* 626 [1977] */
-        driver_clowns,	/* 630 [1978] */
+        driver_tornbase, /* 605 [1976] */
+        driver_280zzzap, /* 610 [1976] */
+        driver_maze, /* 611 [1976] */
+        driver_boothill, /* 612 [1977] */
+        driver_checkmat, /* 615 [1977] */
+        driver_desertgu, /* 618 [1977] */
+        driver_dplay, /* 619 [1977] */
+        driver_lagunar, /* 622 [1977] */
+        driver_gmissile, /* 623 [1977] */
+        driver_m4, /* 626 [1977] */
+        driver_clowns, /* 630 [1978] */
         /* 640 - Space Walk [1978] */
-        driver_einnings,	/* 642 [1978] Midway */
-        driver_shuffle,	/* 643 [1978] */
-        driver_dogpatch,	/* 644 [1977] */
-        driver_spcenctr,	/* 645 (c) 1980 Midway */
-        driver_phantom2,	/* 652 [1979] */
-        driver_bowler,	/* 730 [1978] Midway */
-        driver_invaders,	/* 739 [1979] */
-        driver_blueshrk,	/* 742 [1978] */
-        driver_invad2ct,	/* 851 (c) 1980 Midway */
-        driver_invadpt2,	/* 852 [1980] Taito */
-        driver_invaddlx,	/* 852 [1980] Midway */
-        driver_moonbase,	/* Zeta - Nichibutsu */
+        driver_einnings, /* 642 [1978] Midway */
+        driver_shuffle, /* 643 [1978] */
+        driver_dogpatch, /* 644 [1977] */
+        driver_spcenctr, /* 645 (c) 1980 Midway */
+        driver_phantom2, /* 652 [1979] */
+        driver_bowler, /* 730 [1978] Midway */
+        driver_invaders, /* 739 [1979] */
+        driver_blueshrk, /* 742 [1978] */
+        driver_invad2ct, /* 851 (c) 1980 Midway */
+        driver_invadpt2, /* 852 [1980] Taito */
+        driver_invaddlx, /* 852 [1980] Midway */
+        driver_moonbase, /* Zeta - Nichibutsu */
         /* 870 - Space Invaders Deluxe cocktail */
         driver_earthinv,
         driver_spaceatt,
@@ -715,29 +714,29 @@ public class driver {
         driver_invrvnga,
         driver_galxwars,
         driver_starw,
-        driver_lrescue,	/* LR  (c) 1979 Taito */
-        driver_grescue,	/* bootleg? */
-        driver_desterth,	/* bootleg */
-        driver_cosmicmo,	/* Universal */
-        driver_rollingc,	/* Nichibutsu */
-        driver_sheriff,	/* (c) Nintendo */
-        driver_bandido,	/* (c) Exidy */
-        driver_ozmawars,	/* Shin Nihon Kikaku (SNK) */
-        driver_solfight,	/* bootleg */
-        driver_spaceph,	/* Zilec Games */
-        driver_schaser,	/* RT  Taito */
-        driver_schasrcv,	/* RT  Taito */
-        driver_lupin3,	/* LP  (c) 1980 Taito */
-        driver_helifire,	/* (c) Nintendo */
-        driver_helifira,	/* (c) Nintendo */
+        driver_lrescue, /* LR  (c) 1979 Taito */
+        driver_grescue, /* bootleg? */
+        driver_desterth, /* bootleg */
+        driver_cosmicmo, /* Universal */
+        driver_rollingc, /* Nichibutsu */
+        driver_sheriff, /* (c) Nintendo */
+        driver_bandido, /* (c) Exidy */
+        driver_ozmawars, /* Shin Nihon Kikaku (SNK) */
+        driver_solfight, /* bootleg */
+        driver_spaceph, /* Zilec Games */
+        driver_schaser, /* RT  Taito */
+        driver_schasrcv, /* RT  Taito */
+        driver_lupin3, /* LP  (c) 1980 Taito */
+        driver_helifire, /* (c) Nintendo */
+        driver_helifira, /* (c) Nintendo */
         driver_spacefev,
         driver_sfeverbw,
         driver_spclaser,
         driver_laser,
         driver_spcewarl,
-        driver_polaris,	/* PS  (c) 1980 Taito */
-        driver_polarisa,	/* PS  (c) 1980 Taito */
-        driver_ballbomb,	/* TN  (c) 1980 Taito */
+        driver_polaris, /* PS  (c) 1980 Taito */
+        driver_polarisa, /* PS  (c) 1980 Taito */
+        driver_ballbomb, /* TN  (c) 1980 Taito */
         /*TODO*/
         // driver_m79amb,
         driver_alieninv,
@@ -750,7 +749,6 @@ public class driver {
         driver_yosakdon,
         driver_spceking,
         driver_spcewars,
-
         /* "Midway" Z80 b/w games */
         /*TODO*/
         // driver_astinvad,	/* (c) 1980 Stern */
@@ -848,8 +846,7 @@ public class driver {
         /*TODO*/
         /// *TODO*///TESTDRIVER( greenber,
 
-        driver_redalert,	/* (c) 1981 + "GDI presents" */
-
+        driver_redalert, /* (c) 1981 + "GDI presents" */
         /* M62 */
         driver_kungfum, /* (c) 1984 */
         driver_kungfud, /* (c) 1984 + Data East license */
@@ -1185,9 +1182,9 @@ public class driver {
         // driver_hishouza,	/* TP-007 (c) 1987 Taito Corporation (Japan) */
         /*TODO*/
         // driver_fsharkbt,	/* bootleg */
-        driver_wardner,	/* TP-009 (c) 1987 Taito Corporation Japan (World) */
-        driver_pyros,		/* TP-009 (c) 1987 Taito America Corporation (US) */
-        driver_wardnerj,	/* TP-009 (c) 1987 Taito Corporation (Japan) */
+        driver_wardner, /* TP-009 (c) 1987 Taito Corporation Japan (World) */
+        driver_pyros, /* TP-009 (c) 1987 Taito America Corporation (US) */
+        driver_wardnerj, /* TP-009 (c) 1987 Taito Corporation (Japan) */
         /*TODO*/
         // driver_twincobr,	/* TP-011 (c) 1987 Taito Corporation (World) */
         /*TODO*/
@@ -1321,35 +1318,34 @@ public class driver {
         // TESTDRIVER( guwange,	/* (c) 1999 Atlus/Cave */
 
         /* Williams games */
-        driver_defender,	/* (c) 1980 */
-        driver_defendg,	/* (c) 1980 */
-        driver_defendw,	/* (c) 1980 */
+        driver_defender, /* (c) 1980 */
+        driver_defendg, /* (c) 1980 */
+        driver_defendw, /* (c) 1980 */
         //TESTDRIVER( defndjeu,	/* bootleg */
-        driver_defcmnd,	/* bootleg */
-        driver_defence,	/* bootleg */
+        driver_defcmnd, /* bootleg */
+        driver_defence, /* bootleg */
         driver_mayday,
         driver_maydaya,
-        driver_colony7,	/* (c) 1981 Taito */
-        driver_colony7a,	/* (c) 1981 Taito */
-        driver_stargate,	/* (c) 1981 */
-        driver_robotron,	/* (c) 1982 */        
-        driver_robotryo,	/* (c) 1982 */
-        driver_joust,		/* (c) 1982 */
-        driver_joustr,	/* (c) 1982 */
-        driver_joustwr,	/* (c) 1982 */
-        driver_bubbles,	/* (c) 1982 */
-        driver_bubblesr,	/* (c) 1982 */       
-        driver_splat,		/* (c) 1982 */        
-        driver_sinistar,	/* (c) 1982 */      
-        driver_sinista1,	/* (c) 1982 */       
-        driver_sinista2,	/* (c) 1982 */      
-        driver_blaster,	/* (c) 1983 */
-        driver_mysticm,	/* (c) 1983 */
-        driver_tshoot,	/* (c) 1984 */       
-        driver_inferno,	/* (c) 1984 */       
-        driver_joust2,	/* (c) 1986 */       
-        driver_lottofun,	/* (c) 1987 H.A.R. Management */
-
+        driver_colony7, /* (c) 1981 Taito */
+        driver_colony7a, /* (c) 1981 Taito */
+        driver_stargate, /* (c) 1981 */
+        driver_robotron, /* (c) 1982 */
+        driver_robotryo, /* (c) 1982 */
+        driver_joust, /* (c) 1982 */
+        driver_joustr, /* (c) 1982 */
+        driver_joustwr, /* (c) 1982 */
+        driver_bubbles, /* (c) 1982 */
+        driver_bubblesr, /* (c) 1982 */
+        driver_splat, /* (c) 1982 */
+        driver_sinistar, /* (c) 1982 */
+        driver_sinista1, /* (c) 1982 */
+        driver_sinista2, /* (c) 1982 */
+        driver_blaster, /* (c) 1983 */
+        driver_mysticm, /* (c) 1983 */
+        driver_tshoot, /* (c) 1984 */
+        driver_inferno, /* (c) 1984 */
+        driver_joust2, /* (c) 1986 */
+        driver_lottofun, /* (c) 1987 H.A.R. Management */
         /* Capcom games */
         /* The following is a COMPLETE list of the Capcom games up to 1997, as shown on */
         /* their web site. The list is sorted by production date.                       */
@@ -2283,9 +2279,8 @@ public class driver {
         /*TODO*/
         // driver_rockragj,	/* GX620 (c) 1986 (Japan) */
         /*TODO*/
-        // driver_mx5000,	/* GX669 (c) 1987 */
-        /*TODO*/
-        // driver_flkatck,	/* GX669 (c) 1987 (Japan) */
+        driver_mx5000,	/* GX669 (c) 1987 */
+        driver_flkatck,	/* GX669 (c) 1987 (Japan) */
         /*TODO*/
         // driver_fastlane,	/* GX752 (c) 1987 */
         /*TODO*/
@@ -2343,9 +2338,8 @@ public class driver {
         /*TODO*/
         // driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
         /*TODO*/
-        // driver_gbusters,	/* GX878 (c) 1988 */
-        /*TODO*/
-        // driver_crazycop,	/* GX878 (c) 1988 (Japan) */
+        driver_gbusters, /* GX878 (c) 1988 */
+        driver_crazycop, /* GX878 (c) 1988 (Japan) */
         /*TODO*/
         // driver_crimfght,	/* GX821 (c) 1989 (US) */
         /*TODO*/
@@ -2362,14 +2356,10 @@ public class driver {
         // driver_blockhl,	/* GX973 (c) 1989 */
         /*TODO*/
         // driver_quarth,	/* GX973 (c) 1989 (Japan) */
-        /*TODO*/
-        // driver_aliens,	/* GX875 (c) 1990 (World) */
-        /*TODO*/
-        // driver_aliens2,	/* GX875 (c) 1990 (World) */
-        /*TODO*/
-        // driver_aliensu,	/* GX875 (c) 1990 (US) */
-        /*TODO*/
-        // driver_aliensj,	/* GX875 (c) 1990 (Japan) */
+        driver_aliens,	/* GX875 (c) 1990 (World) */
+        driver_aliens2,	/* GX875 (c) 1990 (World) */
+        driver_aliensu,	/* GX875 (c) 1990 (US) */
+        driver_aliensj,	/* GX875 (c) 1990 (Japan) */
         /*TODO*/
         // driver_surpratk,	/* GX911 (c) 1990 (Japan) */
         /*TODO*/
@@ -2653,8 +2643,8 @@ public class driver {
         /*TODO*/
         // TESTDRIVER( liberat2,
 
-        driver_cloak,		/* (c) 1983 */
-        driver_cloud9,	/* (c) 1983 */
+        driver_cloak, /* (c) 1983 */
+        driver_cloud9, /* (c) 1983 */
         driver_jedi, /* (c) 1984 */
         /* Atari System 1 games */
         /*TODO*/
@@ -2799,7 +2789,7 @@ public class driver {
         /* later SNK games, each game can be identified by PCB code and ROM
     code, the ROM code is the same between versions, and usually based
     upon the Japanese title. */
-        driver_lasso,		/*       'WM' (c) 1982 */	
+        driver_lasso, /*       'WM' (c) 1982 */
         /*TODO*/
         // driver_ikari3,	/* A7007 'IK3'(c) 1989 */
         /*TODO*/
@@ -3335,15 +3325,14 @@ public class driver {
         // driver_spiders,	/* (c) 1981 Sigma Ent. Inc. */
         /*TODO*/
         // driver_spiders2,	/* (c) 1981 Sigma Ent. Inc. */
-        driver_stactics,	/* [1981 Sega] */
+        driver_stactics, /* [1981 Sega] */
         /*TODO*/
         // driver_exterm,	/* (c) 1989 Premier Technology - a Gottlieb game */
 
-        driver_starcrus,	/* [1977 Ramtek] */
-
+        driver_starcrus, /* [1977 Ramtek] */
         /*TODO*/
         /// *TODO*///TESTDRIVER( dlair,
-        driver_meteor,	/* (c) 1981 Venture Line */
+        driver_meteor, /* (c) 1981 Venture Line */
         /*TODO*/
         // driver_aztarac,	/* (c) 1983 Centuri (vector game) */
         driver_mole, /* (c) 1982 Yachiyo Electronics, Ltd. */

@@ -51,6 +51,9 @@ import gr.codebb.arcadeflex.WIP.v037b7.cpu.i8085.i8080;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.i8085.i8085H.*;
 import gr.codebb.arcadeflex.WIP.v037b7.cpu.tms32010.tms32010;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.tms32010.tms32010H.*;
+import gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konami;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konamiH.KONAMI_INT_FIRQ;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konamiH.KONAMI_INT_IRQ;
 
 public class cpuintrf {
 
@@ -323,7 +326,7 @@ public class cpuintrf {
                 new HD63705(),//CPU0(HD63705,  hd63705,  8,  0,1.00,HD63705_INT_NONE,  HD63705_INT_IRQ,-1,			   16,	  0,16,BE,1, 3,16	),
                 new hd6309(),//CPU0(HD6309,   hd6309,	 2,  0,1.00,HD6309_INT_NONE,   HD6309_INT_IRQ, HD6309_INT_NMI, 16,	  0,16,BE,1, 4,16	),
                 new m6809(),//CPU0(M6809,    m6809,	 2,  0,1.00,M6809_INT_NONE,    M6809_INT_IRQ,  M6809_INT_NMI,  16,	  0,16,BE,1, 4,16	),
-                new Dummy_cpu(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 16,	  0,16,BE,1, 4,16	),
+                new konami(),//CPU0(KONAMI,   konami,	 2,  0,1.00,KONAMI_INT_NONE,   KONAMI_INT_IRQ, KONAMI_INT_NMI, 16,	  0,16,BE,1, 4,16	),
                 new Dummy_cpu(),//CPU0(M68000,   m68000,	 8, -1,1.00,MC68000_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(M68010,   m68010,	 8, -1,1.00,MC68010_INT_NONE,  -1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
                 new Dummy_cpu(),//CPU0(M68EC020, m68ec020, 8, -1,1.00,MC68EC020_INT_NONE,-1,			   -1,			   24bew, 0,24,BE,2,10,24BEW),
@@ -1426,45 +1429,43 @@ public class cpuintrf {
                         irq_line = 0;
                         /*LOG(("Z80 IRQ\n"));*/ break;
                     /*TODO*///#if (HAS_8080)
-			case CPU_8080:
-				switch (num)
-				{
-                                    case I8080_INTR:		
-                                        irq_line = 0; 
-                                        //LOG(("I8080 INTR\n")); 
-                                        break;
-                                    default:				
-                                        irq_line = 0; 
-                                        //LOG(("I8080 unknown\n"));
-				}
-				break;
-/*TODO*///#endif
+                    case CPU_8080:
+                        switch (num) {
+                            case I8080_INTR:
+                                irq_line = 0;
+                                //LOG(("I8080 INTR\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("I8080 unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_8085A)
-			case CPU_8085A:
-				switch (num)
-				{
-                                    case I8085_INTR:		
-                                        irq_line = 0; 
-                                        //LOG(("I8085 INTR\n")); 
-                                        break;
-                                    case I8085_RST55:		
-                                        irq_line = 1; 
-                                        //LOG(("I8085 RST55\n")); 
-                                        break;
-                                    case I8085_RST65:		
-                                        irq_line = 2; 
-                                        //LOG(("I8085 RST65\n")); 
-                                        break;
-                                    case I8085_RST75:		
-                                        irq_line = 3; 
-                                        //LOG(("I8085 RST75\n")); 
-                                        break;
-                                    default:				
-                                        irq_line = 0; 
-                                        //LOG(("I8085 unknown\n"));
-				}
-				break;
-/*TODO*///#endif
+                    case CPU_8085A:
+                        switch (num) {
+                            case I8085_INTR:
+                                irq_line = 0;
+                                //LOG(("I8085 INTR\n")); 
+                                break;
+                            case I8085_RST55:
+                                irq_line = 1;
+                                //LOG(("I8085 RST55\n")); 
+                                break;
+                            case I8085_RST65:
+                                irq_line = 2;
+                                //LOG(("I8085 RST65\n")); 
+                                break;
+                            case I8085_RST75:
+                                irq_line = 3;
+                                //LOG(("I8085 RST75\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("I8085 unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
                     case CPU_M6502:
                         irq_line = 0;
                         //LOG(("M6502 IRQ\n"));
@@ -1494,36 +1495,35 @@ public class cpuintrf {
 /*TODO*///			case CPU_M8502: 			irq_line = 0; LOG(("M8502 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_N2A03)
-			case CPU_N2A03: 			
-                            irq_line = 0; 
-                            //LOG(("N2A03 IRQ\n")); 
-                            break;
-/*TODO*///#endif
+                    case CPU_N2A03:
+                        irq_line = 0;
+                        //LOG(("N2A03 IRQ\n")); 
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_M4510)
 /*TODO*///			case CPU_M4510: 			irq_line = 0; LOG(("M4510 IRQ\n")); break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_H6280)
-			case CPU_H6280:
-				switch (num)
-				{
-				case H6280_INT_IRQ1:	
-                                    irq_line = 0; 
-                                    //LOG(("H6280 INT 1\n")); 
-                                    break;
-				case H6280_INT_IRQ2:	
-                                    irq_line = 1; 
-                                    //LOG(("H6280 INT 2\n")); 
-                                    break;
-				case H6280_INT_TIMER:	
-                                    irq_line = 2; 
-                                    //LOG(("H6280 TIMER INT\n")); 
-                                    break;
-				default:				
-                                    irq_line = 0; 
-                                    //LOG(("H6280 unknown\n"));
-				}
-				break;
-/*TODO*///#endif
+                    case CPU_H6280:
+                        switch (num) {
+                            case H6280_INT_IRQ1:
+                                irq_line = 0;
+                                //LOG(("H6280 INT 1\n")); 
+                                break;
+                            case H6280_INT_IRQ2:
+                                irq_line = 1;
+                                //LOG(("H6280 INT 2\n")); 
+                                break;
+                            case H6280_INT_TIMER:
+                                irq_line = 2;
+                                //LOG(("H6280 TIMER INT\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("H6280 unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
                     case CPU_I86:
                         irq_line = 0;
                         //LOG(("I86 IRQ\n"));
@@ -1628,15 +1628,22 @@ public class cpuintrf {
                         break;
                     /*TODO*///#endif
 /*TODO*///#if (HAS_KONAMI)
-/*TODO*///				case CPU_KONAMI:
-/*TODO*///				switch (num)
-/*TODO*///				{
-/*TODO*///				case KONAMI_INT_IRQ:	irq_line = 0; LOG(("KONAMI IRQ\n")); break;
-/*TODO*///				case KONAMI_INT_FIRQ:	irq_line = 1; LOG(("KONAMI FIRQ\n")); break;
-/*TODO*///				default:				irq_line = 0; LOG(("KONAMI unknown\n"));
-/*TODO*///				}
-/*TODO*///				break;
-/*TODO*///#endif
+                    case CPU_KONAMI:
+                        switch (num) {
+                            case KONAMI_INT_IRQ:
+                                irq_line = 0;
+                                //LOG(("KONAMI IRQ\n"));
+                                break;
+                            case KONAMI_INT_FIRQ:
+                                irq_line = 1;
+                                //LOG(("KONAMI FIRQ\n"));
+                                break;
+                            default:
+                                irq_line = 0;
+                                //LOG(("KONAMI unknown\n"));
+                        }
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_M68000)
 /*TODO*///			case CPU_M68000:
 /*TODO*///				switch (num)
@@ -1718,11 +1725,11 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_S2650)
-			case CPU_S2650: 			
-                            irq_line = 0; 
-                            //LOG(("S2650 IRQ\n")); 
-                            break;
-/*TODO*///#endif
+                    case CPU_S2650:
+                        irq_line = 0;
+                        //LOG(("S2650 IRQ\n")); 
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_F8)
 /*TODO*///			case CPU_F8:				irq_line = 0; LOG(("F8 INTR\n")); break;
 /*TODO*///#endif
@@ -1770,41 +1777,39 @@ public class cpuintrf {
 /*TODO*///				break;
 /*TODO*///#endif
 /*TODO*///#if (HAS_Z8000)
-			case CPU_Z8000:
-                            switch (num)
-                            {
-				case Z8000_NVI: 		
-                                    irq_line = 0; 
-                                    //LOG(("Z8000 NVI\n")); 
-                                    break;
-				case Z8000_VI:			
-                                    irq_line = 1; 
-                                    //LOG(("Z8000 VI\n")); 
-                                    break;
-				default:				
-                                    irq_line = 0; 
-                                    //LOG(("Z8000 unknown\n"));
+                    case CPU_Z8000:
+                        switch (num) {
+                            case Z8000_NVI:
+                                irq_line = 0;
+                                //LOG(("Z8000 NVI\n")); 
+                                break;
+                            case Z8000_VI:
+                                irq_line = 1;
+                                //LOG(("Z8000 VI\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("Z8000 unknown\n"));
                             }
-                            break;
-/*TODO*///#endif
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_TMS320C10)
-			case CPU_TMS320C10:
-                            switch (num)
-                            {
-				case TMS320C10_ACTIVE_INT:	
-                                    irq_line = 0; 
-                                    //LOG(("TMS32010 INT\n")); 
-                                    break;
-				case TMS320C10_ACTIVE_BIO:	
-                                    irq_line = 1; 
-                                    //LOG(("TMS32010 BIO\n")); 
-                                    break;
-				default:					
-                                    irq_line = 0; 
-                                    //LOG(("TMS32010 unknown\n"));
+                    case CPU_TMS320C10:
+                        switch (num) {
+                            case TMS320C10_ACTIVE_INT:
+                                irq_line = 0;
+                                //LOG(("TMS32010 INT\n")); 
+                                break;
+                            case TMS320C10_ACTIVE_BIO:
+                                irq_line = 1;
+                                //LOG(("TMS32010 BIO\n")); 
+                                break;
+                            default:
+                                irq_line = 0;
+                            //LOG(("TMS32010 unknown\n"));
                             }
-                            break;
-/*TODO*///#endif
+                        break;
+                    /*TODO*///#endif
 /*TODO*///#if (HAS_ADSP2100)
 /*TODO*///			case CPU_ADSP2100:
 /*TODO*///				switch (num)

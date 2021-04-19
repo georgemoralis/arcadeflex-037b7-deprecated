@@ -44,6 +44,7 @@ import gr.codebb.arcadeflex.v058.sound.vlm5030;
 import gr.codebb.arcadeflex.v037b7.sound.cem3394;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.hc55516;
 import gr.codebb.arcadeflex.WIP.v037b7.sound.nes_apu;
+import gr.codebb.arcadeflex.WIP.v037b7.sound.k007232;
 
 public class sndintrf {
 
@@ -551,31 +552,7 @@ public class sndintrf {
         //	},
         /*TODO*/
         // #endif
-        new Dummy_snd(),
-        /*TODO*/
-        // #if (HAS_K007232)
-        /*TODO*/
-        //    {
-        /*TODO*/
-        //		SOUND_K007232,
-        /*TODO*/
-        //		"007232",
-        /*TODO*/
-        //		K007232_num,
-        /*TODO*/
-        //		0,
-        /*TODO*/
-        //		K007232_sh_start,
-        /*TODO*/
-        //		0,
-        /*TODO*/
-        //		0,
-        /*TODO*/
-        //		0
-        /*TODO*/
-        //	},
-        /*TODO*/
-        // #endif
+        new k007232(),
         new Dummy_snd(),
         /*TODO*/
         // #if (HAS_K051649)
