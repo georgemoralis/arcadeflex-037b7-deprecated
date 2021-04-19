@@ -6,6 +6,7 @@ package gr.codebb.arcadeflex.WIP.v037b7.cpu.konami;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konami.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konamtbl.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.memoryH.change_pc;
 
 public class konamops {
 
@@ -1808,14 +1809,14 @@ public class konamops {
 /*TODO*///	SET_FLAGS16(d,b.d,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $aD JSR indexed ----- */
-/*TODO*///INLINE void jsr_ix( void )
-/*TODO*///{
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PCD=EAD;
-/*TODO*///	change_pc(PCD);
-/*TODO*///}
-/*TODO*///
+    public static opcode jsr_ix = new opcode() {
+        public void handler() {
+            PUSHWORD(konami.pc);
+            konami.pc = ea & 0xFFFF;
+            change_pc(konami.pc);
+        }
+    };
+
     public static opcode ldx_ix = new opcode() {
         public void handler() {
             konami.x = RM16(ea) & 0xFFFF;
@@ -2031,15 +2032,15 @@ public class konamops {
 /*TODO*///	SET_FLAGS16(d,b.d,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $bD JSR extended ----- */
-/*TODO*///INLINE void jsr_ex( void )
-/*TODO*///{
-/*TODO*///	EXTENDED;
-/*TODO*///	PUSHWORD(pPC);
-/*TODO*///	PCD=EAD;
-/*TODO*///	change_pc(PCD);
-/*TODO*///}
-/*TODO*///
+    public static opcode jsr_ex = new opcode() {
+        public void handler() {
+            EXTENDED();
+            PUSHWORD(konami.pc);
+            konami.pc = ea & 0xFFFF;
+            change_pc(konami.pc);
+        }
+    };
+
     public static opcode ldx_ex = new opcode() {
         public void handler() {
             konami.x = EXTWORD() & 0xFFFF;
@@ -2099,18 +2100,19 @@ public class konamops {
         }
     };
 
-    /*TODO*////* $c2 SBCB immediate ?**** */
-/*TODO*///INLINE void sbcb_im( void )
-/*TODO*///{
-/*TODO*///	UINT16	  t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = B - t - (CC & CC_C);
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $c3 ADDD immediate -**** */
+    public static opcode sbcb_im = new opcode() {
+        public void handler() {
+            /*UINT16*/
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.b - t - (konami.cc & CC_C)) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    /*TODO*////* $c3 ADDD immediate -**** */
 /*TODO*///INLINE void addd_im( void )
 /*TODO*///{
 /*TODO*///	UINT32 r,d;
@@ -2169,19 +2171,19 @@ public class konamops {
             SET_NZ8(konami.b);
         }
     };
-    /*TODO*///
-/*TODO*////* $c9 ADCB immediate ***** */
-/*TODO*///INLINE void adcb_im( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = B + t + (CC & CC_C);
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	SET_H(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
+
+    public static opcode adcb_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.b + t + (konami.cc & CC_C)) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.b, t, r);
+            SET_H(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
     public static opcode orb_im = new opcode() {
         public void handler() {
             int t = IMMBYTE() & 0xFF;
@@ -2592,16 +2594,16 @@ public class konamops {
 /*TODO*///	SET_NZ16(U);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $10eE LDS indexed -**0- */
-/*TODO*///INLINE void lds_ix( void )
-/*TODO*///{
-/*TODO*///	S=RM16(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	konami.int_state |= KONAMI_LDS;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $eF STU (STS) indexed -**0- */
+    public static opcode lds_ix = new opcode() {
+        public void handler() {
+            konami.s = RM(ea) & 0xFFFF;
+            CLR_NZV();
+            SET_NZ16(konami.s);
+            konami.int_state |= KONAMI_LDS;
+        }
+    };
+
+    /*TODO*////* $eF STU (STS) indexed -**0- */
 /*TODO*///INLINE void stu_ix( void )
 /*TODO*///{
 /*TODO*///	CLR_NZV;
@@ -2770,16 +2772,16 @@ public class konamops {
 /*TODO*///	SET_NZ16(U);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $10fE LDS extended -**0- */
-/*TODO*///INLINE void lds_ex( void )
-/*TODO*///{
-/*TODO*///	EXTWORD(pS);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(S);
-/*TODO*///	konami.int_state |= KONAMI_LDS;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $fF STU (STS) extended -**0- */
+    public static opcode lds_ex = new opcode() {
+        public void handler() {
+            konami.s = EXTWORD() & 0xFFFF;
+            CLR_NZV();
+            SET_NZ16(konami.s);
+            konami.int_state |= KONAMI_LDS;
+        }
+    };
+
+    /*TODO*////* $fF STU (STS) extended -**0- */
 /*TODO*///INLINE void stu_ex( void )
 /*TODO*///{
 /*TODO*///	CLR_NZV;

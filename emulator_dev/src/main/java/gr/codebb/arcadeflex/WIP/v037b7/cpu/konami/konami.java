@@ -1072,13 +1072,7 @@ public class konami extends cpu_interface {
             throw new UnsupportedOperationException("unsupported opcode");
         }
     };
-    static opcode adcb_im = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
-  
+
 
  
     static opcode addd_di = new opcode() {
@@ -2034,29 +2028,7 @@ public class konami extends cpu_interface {
             throw new UnsupportedOperationException("unsupported opcode");
         }
     };
-    static opcode jsr_ex = new opcode() {
-        public void handler() {
-            EXTENDED();
-            PUSHWORD(konami.pc);
-            konami.pc = ea & 0xFFFF;
-            change_pc(konami.pc);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d jsr_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
 
-        }
-    };
-    static opcode jsr_ix = new opcode() {
-        public void handler() {
-            PUSHWORD(konami.pc);
-            konami.pc = ea & 0xFFFF;
-            change_pc(konami.pc);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d jsr_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
     static opcode lbcc = new opcode() {
         public void handler() {
             LBRANCH((konami.cc & CC_C) == 0);
@@ -2230,19 +2202,7 @@ public class konami extends cpu_interface {
             throw new UnsupportedOperationException("unsupported opcode");
         }
     };
-    static opcode lds_ex = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
-    
-    static opcode lds_ix = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
+
     static opcode ldu_di = new opcode() {
         public void handler() {
             konami.u = DIRWORD();
@@ -2755,12 +2715,7 @@ public class konami extends cpu_interface {
             throw new UnsupportedOperationException("unsupported opcode");
         }
     };
-    static opcode sbcb_im = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
+
     static opcode sbcb_ix = new opcode() {
         public void handler() {
             fclose(konamilog);
