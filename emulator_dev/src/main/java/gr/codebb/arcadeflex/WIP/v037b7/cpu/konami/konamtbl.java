@@ -5,6 +5,7 @@
 package gr.codebb.arcadeflex.WIP.v037b7.cpu.konami;
 
 import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konami.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.cpu.konami.konamops.*;
 
 public class konamtbl {
 
