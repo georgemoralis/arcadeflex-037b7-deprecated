@@ -1167,45 +1167,40 @@ public class konamops {
 /*TODO*///	WM(EAD,0);
 /*TODO*///	CLR_NZVC; SEZ;
 /*TODO*///}
-/*TODO*///
-/*TODO*///
-/*TODO*///#if macintosh
-/*TODO*///#pragma mark ____8x____
-/*TODO*///#endif
-/*TODO*///
-/*TODO*////* $80 SUBA immediate ?**** */
-/*TODO*///INLINE void suba_im( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A - t;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $81 CMPA immediate ?**** */
-/*TODO*///INLINE void cmpa_im( void )
-/*TODO*///{
-/*TODO*///	UINT16	  t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A - t;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $82 SBCA immediate ?**** */
-/*TODO*///INLINE void sbca_im( void )
-/*TODO*///{
-/*TODO*///	UINT16	  t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A - t - (CC & CC_C);
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $83 SUBD (CMPD CMPU) immediate -**** */
+    public static opcode suba_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.a - t) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode cmpa_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.a - t) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.a, t, r);
+        }
+    };
+
+    public static opcode sbca_im = new opcode() {
+        public void handler() {
+            /*UINT16*/
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.a - t - (konami.cc & CC_C)) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    /*TODO*////* $83 SUBD (CMPD CMPU) immediate -**** */
 /*TODO*///INLINE void subd_im( void )
 /*TODO*///{
 /*TODO*///	UINT32 r,d;
@@ -1242,34 +1237,33 @@ public class konamops {
 /*TODO*///	SET_FLAGS16(d,b.d,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $84 ANDA immediate -**0- */
-/*TODO*///INLINE void anda_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	A &= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $85 BITA immediate -**0- */
-/*TODO*///INLINE void bita_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A & t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $86 LDA immediate -**0- */
-/*TODO*///INLINE void lda_im( void )
-/*TODO*///{
-/*TODO*///	IMMBYTE(A);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
+    public static opcode anda_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.a = (konami.a & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode bita_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE();
+            r = (konami.a & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+        }
+    };
+
+    public static opcode lda_im = new opcode() {
+        public void handler() {
+            konami.a = IMMBYTE() & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+    /*TODO*///
 /*TODO*////* is this a legal instruction? */
 /*TODO*////* $87 STA immediate -**0- */
 /*TODO*///INLINE void sta_im( void )
@@ -1280,50 +1274,48 @@ public class konamops {
 /*TODO*///	WM(EAD,A);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $88 EORA immediate -**0- */
-/*TODO*///INLINE void eora_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	A ^= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $89 ADCA immediate ***** */
-/*TODO*///INLINE void adca_im( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A + t + (CC & CC_C);
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	SET_H(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $8A ORA immediate -**0- */
-/*TODO*///INLINE void ora_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	A |= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $8B ADDA immediate ***** */
-/*TODO*///INLINE void adda_im( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = A + t;
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	SET_H(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
+    public static opcode eora_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.a = (konami.a ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode adca_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.a + t + (konami.cc & CC_C)) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.a, t, r);
+            SET_H(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode ora_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.a = (konami.a | t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode adda_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.a + t) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.a, t, r);
+            SET_H(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+    /*TODO*///
 /*TODO*////* $8C CMPX (CMPY CMPS) immediate -**** */
 /*TODO*///INLINE void cmpx_im( void )
 /*TODO*///{
@@ -1370,14 +1362,14 @@ public class konamops {
 /*TODO*///	change_pc(PCD);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $8E LDX (LDY) immediate -**0- */
-/*TODO*///INLINE void ldx_im( void )
-/*TODO*///{
-/*TODO*///	IMMWORD(pX);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(X);
-/*TODO*///}
-/*TODO*///
+    public static opcode ldx_im = new opcode() {
+        public void handler() {
+            konami.x = IMMWORD() & 0xFFFF;
+            CLR_NZV();
+            SET_NZ16(konami.x);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $108E LDY immediate -**0- */
 /*TODO*///INLINE void ldy_im( void )
 /*TODO*///{

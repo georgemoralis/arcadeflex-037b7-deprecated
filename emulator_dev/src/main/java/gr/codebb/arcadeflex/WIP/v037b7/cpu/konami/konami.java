@@ -1043,22 +1043,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode adca_im = new opcode() {
-        public void handler() {
-            /*UINT16*/
-            int t, r;
-            t = IMMBYTE();
-            r = konami.a + t + (konami.cc & CC_C);
-            CLR_HNZVC();
-            SET_FLAGS8(konami.a, t, r);
-            SET_H(konami.a, t, r);
-            konami.a=r&0xFF;
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d adca_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
 
-        }
-    };
     static opcode adca_ix = new opcode() {
         public void handler() {
             /*UINT16*/
@@ -1094,21 +1079,6 @@ public class konami extends cpu_interface {
         }
     };
   
-    static opcode adda_im = new opcode() {
-        public void handler() {
-            /*UINT16*/
-            int t, r;
-            t = IMMBYTE();
-            r = konami.a + t;
-            CLR_HNZVC();
-            SET_FLAGS8(konami.a, t, r);
-            SET_H(konami.a, t, r);
-            konami.a=r&0xFF;
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d adda_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
     static opcode adda_ix = new opcode() {
         public void handler() {
             /*UINT16*/
@@ -1204,19 +1174,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode anda_im = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int t = IMMBYTE();
-            konami.a =(konami.a & t)&0xFF;
-            CLR_NZV();
-            SET_NZ8(konami.a);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d anda_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
+ 
 
 
     static opcode andcc = new opcode() {
@@ -1362,20 +1320,7 @@ public class konami extends cpu_interface {
             throw new UnsupportedOperationException("unsupported opcode");
         }
     };
-    static opcode bita_im = new opcode() {
-        public void handler()//todo recheck
-        {
-            int t, r;
-            t = IMMBYTE();
-            r = konami.a & t;
-            CLR_NZV();
-            SET_NZ8(r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bita_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
+    
     static opcode bita_ix = new opcode() {
         public void handler() {
             /*UINT8*/
@@ -1565,21 +1510,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode cmpa_im = new opcode() {
-        public void handler()//probably ok
-        {
-            /*UINT16*/
-            int t, r;
-            t = IMMBYTE();
-            r = konami.a - t;
-            CLR_NZVC();
-            SET_FLAGS8(konami.a, t, r);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d cmpa_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-
-        }
-    };
+   
     static opcode cmpa_ix = new opcode() {
         public void handler()//probably ok
         {
@@ -2015,19 +1946,7 @@ public class konami extends cpu_interface {
             }
         }
     };
-    static opcode eora_im = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int t = IMMBYTE();
-            konami.a =(konami.a ^ t)&0xFF;
-            CLR_NZV();
-            SET_NZ8(konami.a);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d eora_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
+   
     
     static opcode exg = new opcode() { //todo recheck
         public void handler() {
@@ -2391,17 +2310,6 @@ public class konami extends cpu_interface {
     };
 
 
-    /*OK*/
-    static opcode lda_im = new opcode() {
-        public void handler() {
-            konami.a =(IMMBYTE());
-            CLR_NZV();
-            SET_NZ8(konami.a);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d lda_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
 
 
 
@@ -2493,19 +2401,6 @@ public class konami extends cpu_interface {
         }
     };
 
-
-    static opcode ldx_im = new opcode() {
-        public void handler()//ok
-        {
-            konami.x = IMMWORD();
-            CLR_NZV();
-            SET_NZ16(konami.x);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d ldx_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-
-        }
-    };
     static opcode ldx_ix = new opcode() {
         public void handler() {
             konami.x = RM16(ea);
@@ -2677,19 +2572,6 @@ public class konami extends cpu_interface {
     };
 
 
-    static opcode ora_im = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int t = IMMBYTE();
-            konami.a =(konami.a | t)&0xFF;
-            CLR_NZV();
-            SET_NZ8(konami.a);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d ora_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
     static opcode ora_ix = new opcode() {
         public void handler() {
             konami.a =(konami.a | RM(ea))&0xFF;
@@ -3000,18 +2882,7 @@ public class konami extends cpu_interface {
             }
         }
     };
-    static opcode sbca_im = new opcode() {
-        public void handler() {
-            int t = IMMBYTE();
-            int r = konami.a - t - (konami.cc & CC_C);
-            CLR_NZVC();
-            SET_FLAGS8(konami.a, t, r);
-            konami.a=r&0xFF;
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d sbca_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
+    
     static opcode sbca_ix = new opcode() {
         public void handler() {
             fclose(konamilog);
@@ -3219,21 +3090,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode suba_im = new opcode() {
-        public void handler() {
-            /*UINT16*/
-            int t, r;
-            t = IMMBYTE();
-            r = konami.a - t;
-            CLR_NZVC();
-            SET_FLAGS8(konami.a, t, r);
-            konami.a=r&0xFF;
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d suba_im :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
 
-        }
-    };
     static opcode suba_ix = new opcode() {
         public void handler() {
             /*UINT16*/
