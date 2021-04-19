@@ -1104,16 +1104,18 @@ public class konamops {
 /*TODO*///	WM(EAD,t);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $78 ASL extended ?**** */
-/*TODO*///INLINE void asl_ex( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	EXTBYTE(t); r=t<<1;
-/*TODO*///	CLR_NZVC; SET_FLAGS8(t,t,r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $79 ROL extended -**** */
+    public static opcode asl_ex = new opcode() {
+        public void handler() {
+            int/*UINT16*/ t, r;
+            t = EXTBYTE() & 0xFFFF;
+            r = (t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            WM(ea, r);
+        }
+    };
+
+    /*TODO*////* $79 ROL extended -**** */
 /*TODO*///INLINE void rol_ex( void )
 /*TODO*///{
 /*TODO*///	UINT16 t,r;
@@ -1122,34 +1124,35 @@ public class konamops {
 /*TODO*///	WM(EAD,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $7A DEC extended -***- */
-/*TODO*///INLINE void dec_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); --t;
-/*TODO*///	CLR_NZV; SET_FLAGS8D(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $7B ILLEGAL */
-/*TODO*///
-/*TODO*////* $7C INC extended -***- */
-/*TODO*///INLINE void inc_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); ++t;
-/*TODO*///	CLR_NZV; SET_FLAGS8I(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $7D TST extended -**0- */
-/*TODO*///INLINE void tst_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); CLR_NZV; SET_NZ8(t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $7E JMP extended ----- */
+    public static opcode dec_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE();
+            t = (t - 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8D(t);
+            WM(ea, t);
+        }
+    };
+
+    public static opcode inc_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE();
+            t = (t + 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8I(t);
+            WM(ea, t);
+        }
+    };
+    public static opcode tst_ex = new opcode() {
+        public void handler() {
+            int t;
+            t = EXTBYTE() & 0xFF;
+            CLR_NZVC();
+            SET_NZ8(t);
+        }
+    };
+
+    /*TODO*////* $7E JMP extended ----- */
 /*TODO*///INLINE void jmp_ex( void )
 /*TODO*///{
 /*TODO*///	EXTENDED;
@@ -1476,86 +1479,84 @@ public class konamops {
 /*TODO*///	SET_FLAGS16(U,b.d,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $94 ANDA direct -**0- */
-/*TODO*///INLINE void anda_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	A &= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $95 BITA direct -**0- */
-/*TODO*///INLINE void bita_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	r = A & t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $96 LDA direct -**0- */
-/*TODO*///INLINE void lda_di( void )
-/*TODO*///{
-/*TODO*///	DIRBYTE(A);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $97 STA direct -**0- */
-/*TODO*///INLINE void sta_di( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///	DIRECT;
-/*TODO*///	WM(EAD,A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $98 EORA direct -**0- */
-/*TODO*///INLINE void eora_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	A ^= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $99 ADCA direct ***** */
-/*TODO*///INLINE void adca_di( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	r = A + t + (CC & CC_C);
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	SET_H(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $9A ORA direct -**0- */
-/*TODO*///INLINE void ora_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	A |= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $9B ADDA direct ***** */
-/*TODO*///INLINE void adda_di( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	r = A + t;
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	SET_H(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
+public static opcode anda_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            konami.a = (konami.a & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode bita_di = new opcode() {
+        public void handler() {
+            int t, r;
+            t = DIRBYTE() & 0xFF;
+            r = (konami.a & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+        }
+    };
+
+    public static opcode lda_di = new opcode() {
+        public void handler() {
+            konami.a = DIRBYTE() & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode sta_di = new opcode() {
+        public void handler() {
+            CLR_NZV();
+            SET_NZ8(konami.a);
+            DIRECT();
+            WM(ea, konami.a);
+        }
+    };
+
+    public static opcode eora_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            konami.a = (konami.a ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode adca_di = new opcode() {
+        public void handler() {
+            int/*UINT16*/ t, r;
+            t = DIRBYTE() & 0xFFFF;
+            r = (konami.a + t + (konami.cc & CC_C)) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.a, t, r);
+            SET_H(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode ora_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            konami.a = (konami.a | t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode adda_di = new opcode() {
+        public void handler() {
+            /*UINT16*/
+            int t, r;
+            t = DIRBYTE() & 0xFFFF;
+            r = (konami.a + t) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.a, t, r);
+            SET_H(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
 /*TODO*///
 /*TODO*////* $9C CMPX (CMPY CMPS) direct -**** */
 /*TODO*///INLINE void cmpx_di( void )
