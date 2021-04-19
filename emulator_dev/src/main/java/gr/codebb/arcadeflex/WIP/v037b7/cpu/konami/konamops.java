@@ -720,183 +720,164 @@ public class konamops {
 /*TODO*///#pragma mark ____4x____
 /*TODO*///#endif
 /*TODO*///
-/*TODO*////* $40 NEGA inherent ?**** */
-/*TODO*///INLINE void nega( void )
-/*TODO*///{
-/*TODO*///	UINT16 r;
-/*TODO*///	r = -A;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(0,A,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $41 ILLEGAL */
-/*TODO*///
-/*TODO*////* $42 ILLEGAL */
-/*TODO*///
-/*TODO*////* $43 COMA inherent -**01 */
-/*TODO*///INLINE void coma( void )
-/*TODO*///{
-/*TODO*///	A = ~A;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///	SEC;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $44 LSRA inherent -0*-* */
-/*TODO*///INLINE void lsra( void )
-/*TODO*///{
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (A & CC_C);
-/*TODO*///	A >>= 1;
-/*TODO*///	SET_Z8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $45 ILLEGAL */
-/*TODO*///
-/*TODO*////* $46 RORA inherent -**-* */
-/*TODO*///INLINE void rora( void )
-/*TODO*///{
-/*TODO*///	UINT8 r;
-/*TODO*///	r = (CC & CC_C) << 7;
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (A & CC_C);
-/*TODO*///	r |= A >> 1;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $47 ASRA inherent ?**-* */
-/*TODO*///INLINE void asra( void )
-/*TODO*///{
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (A & CC_C);
-/*TODO*///	A = (A & 0x80) | (A >> 1);
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $48 ASLA inherent ?**** */
-/*TODO*///INLINE void asla( void )
-/*TODO*///{
-/*TODO*///	UINT16 r;
-/*TODO*///	r = A << 1;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(A,A,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $49 ROLA inherent -**** */
-/*TODO*///INLINE void rola( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = A;
-/*TODO*///	r = (CC & CC_C) | (t<<1);
-/*TODO*///	CLR_NZVC; SET_FLAGS8(t,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $4A DECA inherent -***- */
-/*TODO*///INLINE void deca( void )
-/*TODO*///{
-/*TODO*///	--A;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_FLAGS8D(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $4B ILLEGAL */
-/*TODO*///
-/*TODO*////* $4C INCA inherent -***- */
-/*TODO*///INLINE void inca( void )
-/*TODO*///{
-/*TODO*///	++A;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_FLAGS8I(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $4D TSTA inherent -**0- */
-/*TODO*///INLINE void tsta( void )
-/*TODO*///{
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(A);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $4E ILLEGAL */
-/*TODO*///
-/*TODO*////* $4F CLRA inherent -0100 */
-/*TODO*///INLINE void clra( void )
-/*TODO*///{
-/*TODO*///	A = 0;
-/*TODO*///	CLR_NZVC; SEZ;
-/*TODO*///}
-/*TODO*///
-/*TODO*///#if macintosh
-/*TODO*///#pragma mark ____5x____
-/*TODO*///#endif
-/*TODO*///
-/*TODO*////* $50 NEGB inherent ?**** */
-/*TODO*///INLINE void negb( void )
-/*TODO*///{
-/*TODO*///	UINT16 r;
-/*TODO*///	r = -B;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(0,B,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $51 ILLEGAL */
-/*TODO*///
-/*TODO*////* $52 ILLEGAL */
-/*TODO*///
-/*TODO*////* $53 COMB inherent -**01 */
-/*TODO*///INLINE void comb( void )
-/*TODO*///{
-/*TODO*///	B = ~B;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///	SEC;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $54 LSRB inherent -0*-* */
-/*TODO*///INLINE void lsrb( void )
-/*TODO*///{
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (B & CC_C);
-/*TODO*///	B >>= 1;
-/*TODO*///	SET_Z8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $55 ILLEGAL */
-/*TODO*///
-/*TODO*////* $56 RORB inherent -**-* */
-/*TODO*///INLINE void rorb( void )
-/*TODO*///{
-/*TODO*///	UINT8 r;
-/*TODO*///	r = (CC & CC_C) << 7;
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (B & CC_C);
-/*TODO*///	r |= B >> 1;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $57 ASRB inherent ?**-* */
-/*TODO*///INLINE void asrb( void )
-/*TODO*///{
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (B & CC_C);
-/*TODO*///	B= (B & 0x80) | (B >> 1);
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $58 ASLB inherent ?**** */
-/*TODO*///INLINE void aslb( void )
-/*TODO*///{
-/*TODO*///	UINT16 r;
-/*TODO*///	r = B << 1;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(B,B,r);
-/*TODO*///	B = r;
-/*TODO*///}
+   public static opcode nega = new opcode() {
+        public void handler() {
+            int r;
+            r = -konami.a & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(0, konami.a, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode coma = new opcode() {
+        public void handler() {
+            konami.a = ~konami.a & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.a);
+            SEC();
+        }
+    };
+    public static opcode lsra = new opcode() {
+        public void handler() {
+            CLR_NZC();
+            konami.cc |= (konami.a & 0x01);
+            konami.a = (konami.a >>> 1) & 0xFF;
+            SET_Z8(konami.a);
+        }
+    };
+
+    public static opcode rora = new opcode() {
+        public void handler() {
+            int r;
+            r = ((konami.cc & CC_C) << 7) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (konami.a & CC_C);
+            r = (r | konami.a >>> 1) & 0xFF;
+            SET_NZ8(r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode asra = new opcode() {
+        public void handler() {
+            CLR_NZC();
+            konami.cc |= (konami.a & CC_C);
+            konami.a = ((konami.a & 0x80) | (konami.a >>> 1)) & 0xFF;
+            SET_NZ8(konami.a);
+
+        }
+    };
+
+    public static opcode asla = new opcode() {
+        public void handler() {
+            int r = (konami.a << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.a, konami.a, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode rola = new opcode() {
+        public void handler() {
+            int t, r;
+            t = konami.a & 0xFFFF;
+            r = ((konami.cc & CC_C) | t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    public static opcode deca = new opcode() {
+        public void handler() {
+            konami.a = (konami.a - 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8D(konami.a);
+        }
+    };
+
+    public static opcode inca = new opcode() {
+        public void handler() {
+            konami.a = (konami.a + 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8I(konami.a);
+        }
+    };
+
+    public static opcode tsta = new opcode() {
+        public void handler() {
+            CLR_NZVC();
+            SET_NZ8(konami.a);
+        }
+    };
+
+    public static opcode clra = new opcode() {
+        public void handler() {
+            konami.a = 0;
+            CLR_NZVC();
+            SEZ();
+        }
+    };
+
+    public static opcode negb = new opcode() {
+        public void handler() {
+            int r;
+            r = -konami.b & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(0, konami.b, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode comb = new opcode() {
+        public void handler() {
+            konami.b = ~konami.b & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+            SEC();
+        }
+    };
+
+    public static opcode lsrb = new opcode() {
+        public void handler() {
+            CLR_NZC();
+            konami.cc |= (konami.b & CC_C);
+            konami.b = (konami.b >>> 1) & 0xFF;
+            SET_Z8(konami.b);
+        }
+    };
+
+    public static opcode rorb = new opcode() {
+        public void handler() {
+            int r;
+            r = ((konami.cc & CC_C) << 7) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (konami.b & CC_C);
+            r = (r | konami.b >>> 1) & 0xFF;
+            SET_NZ8(r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode asrb = new opcode() {
+        public void handler() {
+            CLR_NZC();
+            konami.cc |= (konami.b & CC_C);
+            konami.b = ((konami.b & 0x80) | (konami.b >>> 1)) & 0xFF;
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode aslb = new opcode() {
+        public void handler() {
+            int r = (konami.b << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.b, konami.b, r);
+            konami.b = r & 0xFF;
+
+        }
+    };
 /*TODO*///
 /*TODO*////* $59 ROLB inherent -**** */
 /*TODO*///INLINE void rolb( void )
