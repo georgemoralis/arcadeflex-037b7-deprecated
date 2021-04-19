@@ -2142,34 +2142,34 @@ public class konamops {
 /*TODO*///	D = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $c4 ANDB immediate -**0- */
-/*TODO*///INLINE void andb_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	B &= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $c5 BITB immediate -**0- */
-/*TODO*///INLINE void bitb_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = B & t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $c6 LDB immediate -**0- */
-/*TODO*///INLINE void ldb_im( void )
-/*TODO*///{
-/*TODO*///	IMMBYTE(B);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode andb_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.b = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode bitb_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFF;
+            r = (konami.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+        }
+    };
+
+    public static opcode ldb_im = new opcode() {
+        public void handler() {
+            konami.b = IMMBYTE() & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    /*TODO*///
 /*TODO*////* is this a legal instruction? */
 /*TODO*////* $c7 STB immediate -**0- */
 /*TODO*///INLINE void stb_im( void )
@@ -2180,16 +2180,15 @@ public class konamops {
 /*TODO*///	WM(EAD,B);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $c8 EORB immediate -**0- */
-/*TODO*///INLINE void eorb_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	B ^= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
+    public static opcode eorb_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.b = (konami.b ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+    /*TODO*///
 /*TODO*////* $c9 ADCB immediate ***** */
 /*TODO*///INLINE void adcb_im( void )
 /*TODO*///{
@@ -2202,36 +2201,36 @@ public class konamops {
 /*TODO*///	B = r;
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $cA ORB immediate -**0- */
-/*TODO*///INLINE void orb_im( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	B |= t;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(B);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $cB ADDB immediate ***** */
-/*TODO*///INLINE void addb_im( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	r = B + t;
-/*TODO*///	CLR_HNZVC;
-/*TODO*///	SET_FLAGS8(B,t,r);
-/*TODO*///	SET_H(B,t,r);
-/*TODO*///	B = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $cC LDD immediate -**0- */
-/*TODO*///INLINE void ldd_im( void )
-/*TODO*///{
-/*TODO*///	IMMWORD(pD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(D);
-/*TODO*///}
-/*TODO*///
+    public static opcode orb_im = new opcode() {
+        public void handler() {
+            int t = IMMBYTE() & 0xFF;
+            konami.b = (konami.b | t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(konami.b);
+        }
+    };
+
+    public static opcode addb_im = new opcode() {
+        public void handler() {
+            int t, r;
+            t = IMMBYTE() & 0xFFFF;
+            r = (konami.b + t) & 0xFFFF;
+            CLR_HNZVC();
+            SET_FLAGS8(konami.b, t, r);
+            SET_H(konami.b, t, r);
+            konami.b = r & 0xFF;
+        }
+    };
+
+    public static opcode ldd_im = new opcode() {
+        public void handler() {
+            int tmp = IMMWORD() & 0xFFFF;
+            setDreg(tmp);
+            CLR_NZV();
+            SET_NZ16(getDreg());
+        }
+    };
+    /*TODO*///
 /*TODO*////* is this a legal instruction? */
 /*TODO*////* $cD STD immediate -**0- */
 /*TODO*///INLINE void std_im( void )
