@@ -1236,62 +1236,7 @@ public class konami extends cpu_interface {
             }
         }
     };
-
-
-    /*OK*/
-    static opcode bcc = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_C) == 0);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bcc :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
-    /*OK*/
-    static opcode bcs = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_C) != 0);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d bcs :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-    /*OK*/
-    static opcode beq = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_Z) != 0);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d beq :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-    static opcode bge = new opcode() {
-        public void handler() {
-            BRANCH(NXORV() == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bge :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    static opcode bgt = new opcode() {
-        public void handler() {
-            BRANCH(!((NXORV() != 0) || ((konami.cc & CC_Z) != 0)));
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bgt :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode bhi = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & (CC_Z | CC_C)) == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bhi :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-
+    
     static opcode bita_ex = new opcode() {
         public void handler() {
             fclose(konamilog);
@@ -1299,92 +1244,8 @@ public class konami extends cpu_interface {
         }
     };
     
-    static opcode bita_ix = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int r;
-            r = konami.a & RM(ea);
-            CLR_NZV();
-            SET_NZ8(r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bita_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
+    
 
-        }
-    };
-    static opcode bitb_di = new opcode() {
-        public void handler() {
-            int t, r;
-            t = DIRBYTE();
-            r = konami.b & t;
-            CLR_NZV();
-            SET_NZ8(r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bitb_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-
-    static opcode bitb_ix = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
-    static opcode ble = new opcode() {
-        public void handler() {
-            BRANCH((NXORV() != 0 || (konami.cc & CC_Z) != 0));
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d ble :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /*OK*/
-    static opcode bls = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & (CC_Z | CC_C)) != 0);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d bls :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-    static opcode blt = new opcode() {
-        public void handler() {
-            BRANCH(NXORV() != 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d blt :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /*OK*/
-    static opcode bmi = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_N) != 0);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bmi :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
-    /*OK*/
-    static opcode bne = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_Z) == 0);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d bne :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-    /*OK*/
-    static opcode bpl = new opcode() {
-        public void handler() {
-            BRANCH((konami.cc & CC_N) == 0);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d bpl :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
     static opcode bra = new opcode() {
         public void handler() {
             /*UINT8*/
@@ -1729,22 +1590,6 @@ public class konami extends cpu_interface {
 
         }
     };
-    /*OK*/
-    static opcode com_di = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int t = DIRBYTE();
-            t = (t ^ 0xFFFFFFFF) & 0xFF;
-            CLR_NZV();
-            SET_NZ8(t);
-            SEC();
-            WM(ea, t);
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d com_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-
 
     static opcode cwai = new opcode() {
         public void handler() {
@@ -1785,18 +1630,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode dec_di = new opcode() {
-        public void handler() {
-            int t = DIRBYTE();
-            t = (t - 1) & 0xFF;
-            CLR_NZV();
-            SET_FLAGS8D(t);
-            WM(ea, t);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d dec_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
+
 
  
  
@@ -1940,137 +1774,12 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode inc_di = new opcode() {
-        public void handler() {
-            int t = DIRBYTE();
-            t = t + 1 & 0xFF;
-            CLR_NZV();
-            SET_FLAGS8I(t);
-            WM(ea, t);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d inc_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
 
-        }
-    };
 
     static opcode jmp_di = new opcode() {
         public void handler() {
             fclose(konamilog);
             throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
-
-
-    static opcode jsr_di = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
-
-    static opcode lbcc = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_C) == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbcc :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /*OK*/
-    static opcode lbcs = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_C) != 0);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbcs :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
-    /*OK*/
-    static opcode lbeq = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_Z) != 0);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbeq :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
-    static opcode lbge = new opcode() {
-        public void handler() {
-            LBRANCH(NXORV() == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d bge :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode lbgt = new opcode() {
-        public void handler() {
-            LBRANCH(!((NXORV() != 0) || ((konami.cc & CC_Z) != 0)));
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbgt :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode lbhi = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & (CC_Z | CC_C)) == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbhi :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /*OK*/
-    static opcode lble = new opcode() {
-        public void handler() {
-            LBRANCH((NXORV() != 0 || (konami.cc & CC_Z) != 0));
-            /*if (konamilog != null) {
-             fprintf(konamilog, "konami#%d lble :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-             }*/
-        }
-    };
-    static opcode lbls = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & (CC_Z | CC_C)) != 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbls :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    static opcode lblt = new opcode() {
-        public void handler() {
-            LBRANCH(NXORV() != 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lblt :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode lbmi = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_N) != 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbmi :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /*OK*/
-    static opcode lbne = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_Z) == 0);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbne :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-        }
-    };
-    static opcode lbpl = new opcode() {
-        public void handler() {
-            LBRANCH((konami.cc & CC_N) == 0);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lbpl :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
         }
     };
     static opcode lbra = new opcode() {
@@ -2132,14 +1841,6 @@ public class konami extends cpu_interface {
             if (konamilog != null) {
                 fprintf(konamilog, "konami#%d ldd_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
             }
-        }
-    };
-
-
-    static opcode lds_di = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
         }
     };
 
@@ -2272,27 +1973,7 @@ public class konami extends cpu_interface {
              }*/
         }
     };
-    static opcode lsr_di = new opcode() {//todo recheck
-        public void handler() {
-            int t = DIRBYTE();
-            CLR_NZC();
-            konami.cc |= t & CC_C;
-            t >>= 1;
-            SET_Z8(t);
-            WM(ea, t);
-            /*UINT8*/
- /*int t = DIRBYTE();
-             CLR_NZC();
-             konami.cc |= (t & CC_C);
-             t = t >> 1 & 0xFF;
-             SET_Z8(t);
-             WM(ea, t);*/
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d lsr_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
 
-        }
-    };
 
 
     static opcode mul = new opcode() {
@@ -2312,19 +1993,7 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode neg_di = new opcode() {
-        public void handler() {
-            int r, t;
-            t = DIRBYTE();
-            r = -t;// & 0xFFFF;
-            CLR_NZVC();
-            SET_FLAGS8(0, t, r);
-            WM(ea, r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d neg_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
+
 
 
     static opcode nop = new opcode() {
@@ -2655,12 +2324,6 @@ public class konami extends cpu_interface {
         }
     };
 
-    static opcode sts_di = new opcode() {
-        public void handler() {
-            fclose(konamilog);
-            throw new UnsupportedOperationException("unsupported opcode");
-        }
-    };
     static opcode sts_ex = new opcode() {
         public void handler() {
             fclose(konamilog);
@@ -2944,81 +2607,8 @@ public class konami extends cpu_interface {
 
         }
     };
-    static opcode tst_di = new opcode() {
-        public void handler() {
-            /*UINT8*/
-            int t = DIRBYTE();
-            CLR_NZV();
-            SET_NZ8(t);
-            /*if (konamilog != null) {
-                fprintf(konamilog, "konami#%d tst_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }*/
-
-        }
-    };
 
 
-
-    static opcode clrd = new opcode() {
-        public void handler() {
-            setDreg(0);
-            CLR_NZVC();
-            SEZ();
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d clrd :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /* 6309 */
-
-    static opcode clrw_ix = new opcode() {
-        public void handler() {
-            int t;//PAIR t;
-            t = 0;
-            WM16(ea, t);
-            CLR_NZVC();
-            SEZ();
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d clrw_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /* 6309 ? */
-
-    static opcode clrw_di = new opcode() {
-        public void handler() {
-            /*PAIR*/
-            int t;
-            t = 0;
-            DIRECT();
-            WM16(ea, t);
-            CLR_NZVC();
-            SEZ();
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d clrw_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /* 6309 ? */
-
-    static opcode clrw_ex = new opcode() {
-        public void handler() {
-            int t;//PAIR t;
-            t = 0;
-            EXTENDED();
-            WM16(ea, t);
-            CLR_NZVC();
-            SEZ();
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d clrw_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-    /* 6309 ? */
 
     static opcode negd = new opcode() {
         public void handler() {
@@ -3289,16 +2879,7 @@ public class konami extends cpu_interface {
     };
     /* 6309 */
 
-    static opcode tstd = new opcode() {
-        public void handler() {
-            CLR_NZV();
-            SET_NZ16(getDreg());
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d tstd :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
 
-        }
-    };
     static opcode tstw_di = new opcode() {
         public void handler() {
             int t;//PAIR t;
