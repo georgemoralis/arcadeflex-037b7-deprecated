@@ -945,21 +945,20 @@ public class konamops {
             WM(ea, t);
         }
     };
-    /*TODO*///
-/*TODO*////* $64 LSR indexed -0*-* */
-/*TODO*///INLINE void lsr_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (t & CC_C);
-/*TODO*///	t>>=1; SET_Z8(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $65 ILLEGAL */
-/*TODO*///
-/*TODO*////* $66 ROR indexed -**-* */
+
+    public static opcode lsr_ix = new opcode() {
+        public void handler() {
+            int t;
+            t = RM(ea) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            t = (t >>> 1) & 0xFF;
+            SET_Z8(t);
+            WM(ea, t);
+        }
+    };
+
+    /*TODO*////* $66 ROR indexed -**-* */
 /*TODO*///INLINE void ror_ix( void )
 /*TODO*///{
 /*TODO*///	UINT8 t,r;
@@ -994,54 +993,54 @@ public class konamops {
 /*TODO*///	WM(EAD,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $69 ROL indexed -**** */
-/*TODO*///INLINE void rol_ix( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = CC & CC_C;
-/*TODO*///	r |= t << 1;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(t,t,r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $6A DEC indexed -***- */
-/*TODO*///INLINE void dec_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = RM(EAD) - 1;
-/*TODO*///	CLR_NZV; SET_FLAGS8D(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $6B ILLEGAL */
-/*TODO*///
-/*TODO*////* $6C INC indexed -***- */
-/*TODO*///INLINE void inc_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = RM(EAD) + 1;
-/*TODO*///	CLR_NZV; SET_FLAGS8I(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $6D TST indexed -**0- */
-/*TODO*///INLINE void tst_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ8(t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $6E JMP indexed ----- */
-/*TODO*///INLINE void jmp_ix( void )
-/*TODO*///{
-/*TODO*///	PCD=EAD;
-/*TODO*///	change_pc(PCD);
-/*TODO*///}
-/*TODO*///
+    public static opcode rol_ix = new opcode() {
+        public void handler() {
+            int t, r;
+            t = RM(ea) & 0xFFFF;
+            r = konami.cc & CC_C;
+            r = (r | t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            WM(ea, r);
+        }
+    };
+
+    public static opcode dec_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            t = (t - 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8D(t);
+            WM(ea, t);
+
+        }
+    };
+
+    public static opcode inc_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            t = (t + 1) & 0xFF;
+            CLR_NZV();
+            SET_FLAGS8I(t);
+            WM(ea, t);
+        }
+    };
+
+    public static opcode tst_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            CLR_NZVC();
+            SET_NZ8(t);
+        }
+    };
+
+    public static opcode jmp_ix = new opcode() {
+        public void handler() {
+            konami.pc = ea & 0xFFFF;
+            change_pc(konami.pc);
+        }
+    };
+
     public static opcode clr_ix = new opcode() {
         public void handler() {
             WM(ea, 0);
@@ -1082,20 +1081,21 @@ public class konamops {
             WM(ea, t);
         }
     };
-    /*TODO*///
-/*TODO*////* $75 ILLEGAL */
-/*TODO*///
-/*TODO*////* $76 ROR extended -**-* */
-/*TODO*///INLINE void ror_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	EXTBYTE(t); r=(CC & CC_C) << 7;
-/*TODO*///	CLR_NZC; CC |= (t & CC_C);
-/*TODO*///	r |= t>>1; SET_NZ8(r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $77 ASR extended ?**-* */
+
+    public static opcode ror_ex = new opcode() {
+        public void handler() {
+            int/*UINT8*/ t, r;
+            t = EXTBYTE() & 0xFF;
+            r = ((konami.cc & CC_C) << 7) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            r = (r | t >>> 1) & 0xFF;
+            SET_NZ8(r);
+            WM(ea, r);
+        }
+    };
+
+    /*TODO*////* $77 ASR extended ?**-* */
 /*TODO*///INLINE void asr_ex( void )
 /*TODO*///{
 /*TODO*///	UINT8 t;
@@ -1153,21 +1153,24 @@ public class konamops {
         }
     };
 
-    /*TODO*////* $7E JMP extended ----- */
-/*TODO*///INLINE void jmp_ex( void )
-/*TODO*///{
-/*TODO*///	EXTENDED;
-/*TODO*///	PCD=EAD;
-/*TODO*///	change_pc(PCD);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $7F CLR extended -0100 */
-/*TODO*///INLINE void clr_ex( void )
-/*TODO*///{
-/*TODO*///	EXTENDED;
-/*TODO*///	WM(EAD,0);
-/*TODO*///	CLR_NZVC; SEZ;
-/*TODO*///}
+    public static opcode jmp_ex = new opcode() {
+        public void handler() {
+            EXTENDED();
+            konami.pc = ea & 0xFFFF;
+            change_pc(konami.pc);
+
+        }
+    };
+
+    public static opcode clr_ex = new opcode() {
+        public void handler() {
+            EXTENDED();
+            WM(ea, 0);
+            CLR_NZVC();
+            SEZ();
+        }
+    };
+
     public static opcode suba_im = new opcode() {
         public void handler() {
             int t, r;
