@@ -22,7 +22,7 @@ import static gr.codebb.arcadeflex.old.arcadeflex.libc_old.printf;
 
 public class i186 extends i86 {
 
-    public static FILE i186log = fopen("i186.log", "w");  //for debug purposes
+    public static FILE i186log = null;//fopen("i186.log", "w");  //for debug purposes
 
     public i186() {
         cpu_num = CPU_I186;

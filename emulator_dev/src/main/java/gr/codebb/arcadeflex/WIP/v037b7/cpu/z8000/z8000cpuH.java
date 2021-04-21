@@ -104,12 +104,12 @@ public class z8000cpuH {
     public static final int S32 = 0x80000000;
 
     /* get a single flag bit 0/1 */
-    public int GET_C(){ return((_cpu.Z.fcw >> 7) & 1); }
-    public int GET_Z(){ return((_cpu.Z.fcw >> 6) & 1); }
-    public int GET_S(){ return((_cpu.Z.fcw >> 5) & 1); }
-    public int GET_PV(){ return((_cpu.Z.fcw >> 4) & 1); }
-    public int GET_DA(){ return((_cpu.Z.fcw >> 3) & 1); }
-    public int GET_H(){ return((_cpu.Z.fcw >> 2) & 1); }
+    public int GET_C(){ return((_cpu.Z.fcw >>> 7) & 1); }
+    public int GET_Z(){ return((_cpu.Z.fcw >>> 6) & 1); }
+    public int GET_S(){ return((_cpu.Z.fcw >>> 5) & 1); }
+    public int GET_PV(){ return((_cpu.Z.fcw >>> 4) & 1); }
+    public int GET_DA(){ return((_cpu.Z.fcw >>> 3) & 1); }
+    public int GET_H(){ return((_cpu.Z.fcw >>> 2) & 1); }
 
 /*TODO*////* clear a single flag bit */
 /*TODO*///#define CLR_C       FCW &= ~F_C
@@ -167,7 +167,7 @@ public class z8000cpuH {
     public int bit;
     
     public void GET_BIT(int o){      /*UINT16*/ bit = (1 << (_cpu.Z.op[o] & 15)) & 0xffff; }
-    public void GET_CCC(int o, int s){	/*UINT8*/ cc = ((_cpu.Z.op[o] >> (s)) & 15)&0xff; }
+    public void GET_CCC(int o, int s){	/*UINT8*/ cc = ((_cpu.Z.op[o] >>> (s)) & 15)&0xff; }
     
     public int dst;
     public int src;
@@ -179,16 +179,16 @@ public class z8000cpuH {
     public int imm2;
     public int idx;
     
-    public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
-    public void GET_SRC(int o, int s){	/*UINT8*/ src = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
-    public void GET_IDX(int o, int s){	/*UINT8*/ idx = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
-    public void GET_CNT(int o, int s){	/*UINT8*/ cnt = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
-    public void GET_IMM4(int o, int s){ /*UINT8*/ imm4 = ((_cpu.Z.op[o] >> (s)) & 15) & 0xff; }
+    public void GET_DST(int o, int s){	/*UINT8 dst =*/ dst=((_cpu.Z.op[o] >>> (s)) & 15) & 0xff; }
+    public void GET_SRC(int o, int s){	/*UINT8*/ src = ((_cpu.Z.op[o] >>> (s)) & 15) & 0xff; }
+    public void GET_IDX(int o, int s){	/*UINT8*/ idx = ((_cpu.Z.op[o] >>> (s)) & 15) & 0xff; }
+    public void GET_CNT(int o, int s){	/*UINT8*/ cnt = ((_cpu.Z.op[o] >>> (s)) & 15) & 0xff; }
+    public void GET_IMM4(int o, int s){ /*UINT8*/ imm4 = ((_cpu.Z.op[o] >>> (s)) & 15) & 0xff; }
 
-    public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = (((_cpu.Z.op[o] >> (s)) & 15) + 1) & 0xff; }
+    public void GET_I4M1(int o, int s){	/*UINT8*/ i4p1 = (((_cpu.Z.op[o] >>> (s)) & 15) + 1) & 0xff; }
 /*TODO*///#define GET_IMM1(o,s)	UINT8 imm1 = (Z.op[o] >> (s)) & 2
-    public void GET_IMM2(int o, int s){	/*UINT8*/ imm2 = ((_cpu.Z.op[o] >> (s)) & 3) & 0xff; }
-    public void GET_IMM3(int o, int s){	/*UINT8*/ imm3 = ((_cpu.Z.op[o] >> (s)) & 7) & 0xff; }
+    public void GET_IMM2(int o, int s){	/*UINT8*/ imm2 = ((_cpu.Z.op[o] >>> (s)) & 3) & 0xff; }
+    public void GET_IMM3(int o, int s){	/*UINT8*/ imm3 = ((_cpu.Z.op[o] >>> (s)) & 7) & 0xff; }
 
     public void GET_IMM8(int o){ 	/*UINT8*/ imm8 = _cpu.Z.op[o] & 0xff; }
 
@@ -203,7 +203,7 @@ public class z8000cpuH {
     public void GET_IMM32(){		/*UINT32*/ imm32 = _cpu.Z.op[2] + (_cpu.Z.op[1] << 16); }
     public void GET_DSP7(){		/*UINT8*/ dsp7 = (_cpu.Z.op[0] & 127)&0xff; }
     public void GET_DSP8(){		/*INT8*/ dsp8 = (byte)(_cpu.Z.op[0]); }
-    public void GET_DSP16(){		/*UINT16*/ dsp16 = ((_cpu.Z.pc + _cpu.Z.op[1]) & 0xffff); }
+    public void GET_DSP16(){		/*UINT16*/ dsp16 = ((_cpu.Z.pc + (short)_cpu.Z.op[1]) & 0xffff); }
     public void GET_ADDR(int o){ 	/*UINT16*/ addr = _cpu.Z.op[o] & 0xffff; }
 
     private z8000 _cpu;

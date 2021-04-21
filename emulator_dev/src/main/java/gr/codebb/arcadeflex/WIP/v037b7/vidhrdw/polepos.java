@@ -388,14 +388,17 @@ public class polepos
 		if (bitmap.depth == 8){
 			draw_road_core_8(bitmap, sx, sy, dx, dy);
                 } else {
+                    System.out.println("draw_road_core_16");
 /*TODO*///			draw_road_core_16(bitmap, sx, sy, dx, dy);
                 }
 	}
 	
 	static void draw_sprites(osd_bitmap bitmap)
 	{
-		UShortPtr posmem = new UShortPtr(polepos_sprite_memory, 0x700);
-		UShortPtr sizmem = new UShortPtr(polepos_sprite_memory, 0xf00);
+		UBytePtr posmem = new UBytePtr(polepos_sprite_memory, 0x700);
+                posmem.offset=0x700;
+		UBytePtr sizmem = new UBytePtr(polepos_sprite_memory, 0xf00);
+                sizmem.offset=0xf00;
 		int i;
 	
 		for (i = 0; i < 64; i++, posmem.inc(2), sizmem.inc(2))

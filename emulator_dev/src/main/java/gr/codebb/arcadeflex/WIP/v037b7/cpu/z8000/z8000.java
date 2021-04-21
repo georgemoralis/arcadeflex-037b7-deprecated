@@ -360,7 +360,7 @@ public class z8000  extends cpu_interface {
                         case 15:
                             return (Z.regs.B[15]&0xff);
                         default:
-                            return 0;
+                            throw new UnsupportedOperationException("unsupported");
                     }
 		};
                 
@@ -412,9 +412,11 @@ public class z8000  extends cpu_interface {
                         case 14:
                             Z.regs.B[ 13] = _val & 0xFF;
                             break;
-                        default:
+                        case 15:
                             Z.regs.B[ 15] = _val & 0xFF;
                             break;
+                        default:
+                            throw new UnsupportedOperationException("unsupported");
                     }
 	    };
 	
@@ -452,8 +454,10 @@ public class z8000  extends cpu_interface {
                             return (Z.regs.W[13] & 0xFFFF);
                         case 14:
                             return (Z.regs.W[14] & 0xFFFF);
-                        default:
+                        case 15:
                             return (Z.regs.W[15] & 0xFFFF);
+                        default:
+                            throw new UnsupportedOperationException("unsupported");
                     }
 	    };
             
@@ -505,9 +509,11 @@ public class z8000  extends cpu_interface {
                         case 14:
                             Z.regs.W[ 14] = _val & 0xFFFF;
                             break;
-                        default:
+                        case 15:
                             Z.regs.W[ 15] = _val & 0xFFFF;
                             break;
+                        default:
+                            throw new UnsupportedOperationException("unsupported");
                     }
 	    };            
 /*TODO*///		/* pointers to word (16bit) registers */
@@ -555,9 +561,11 @@ public class z8000  extends cpu_interface {
                             return Z.regs.L[ 7];
                         case 15:
                             return Z.regs.L[ 7];
+                        default:
+                            throw new UnsupportedOperationException("unsupported");
                     }
                     
-                    return 0;
+                    //return 0;
 		};
 
                 public void pRL(int _pos, int _val)
@@ -565,36 +573,54 @@ public class z8000  extends cpu_interface {
                     switch (_pos){
                         case 0:
                             Z.regs.L[ 0] = _val;
+                            break;
 			case 1:
                             Z.regs.L[ 0] = _val;
+                            break;
                         case 2:
                             Z.regs.L[ 1] = _val;
+                            break;
                         case 3:
                             Z.regs.L[ 1] = _val;
+                            break;
 			case 4:
                             Z.regs.L[ 2] = _val;
+                            break;
                         case 5:
                             Z.regs.L[ 2] = _val;
+                            break;
                         case 6:
                             Z.regs.L[ 3] = _val;
+                            break;
                         case 7:
                             Z.regs.L[ 3] = _val;
+                            break;
 			case 8:
                             Z.regs.L[ 4] = _val;
+                            break;
                         case 9:
                             Z.regs.L[ 4] = _val;
+                            break;
                         case 10:
                             Z.regs.L[ 5] = _val;
+                            break;
                         case 11:
                             Z.regs.L[ 5] = _val;
+                            break;
 			case 12:
                             Z.regs.L[ 6] = _val;
+                            break;
                         case 13:
                             Z.regs.L[ 6] = _val;
+                            break;
                         case 14:
                             Z.regs.L[ 7] = _val;
+                            break;
                         case 15:
                             Z.regs.L[ 7] = _val;
+                            break;
+                        default:
+                            throw new UnsupportedOperationException("unsupported");
                     }
                     
 		};
@@ -637,7 +663,7 @@ public class z8000  extends cpu_interface {
                 case 15:
                     return Z.regs.Q[ 3];
                 default:
-                    return 0;
+                    throw new UnsupportedOperationException("unsupported");
             }
         };
         
@@ -646,37 +672,54 @@ public class z8000  extends cpu_interface {
             switch (pos){
                 case 0:
                     Z.regs.Q[ 0]=_val;
+                    break;
                 case 1:
                     Z.regs.Q[ 0]=_val;
+                    break;
                 case 2:
                     Z.regs.Q[ 0]=_val;
+                    break;
                 case 3:
                     Z.regs.Q[ 0]=_val;
+                    break;
                 case 4:
                     Z.regs.Q[ 1]=_val;
+                    break;
                 case 5:
                     Z.regs.Q[ 1]=_val;
+                    break;
                 case 6:
                     Z.regs.Q[ 1]=_val;
+                    break;
                 case 7:
                     Z.regs.Q[ 1]=_val;
+                    break;
                 case 8:
                     Z.regs.Q[ 2]=_val;
+                    break;
                 case 9:
                     Z.regs.Q[ 2]=_val;
+                    break;
                 case 10:
                     Z.regs.Q[ 2]=_val;
+                    break;
                 case 11:
                     Z.regs.Q[ 2]=_val;
+                    break;
                 case 12:
                     Z.regs.Q[ 3]=_val;
+                    break;
                 case 13:
                     Z.regs.Q[ 3]=_val;
+                    break;
                 case 14:
                     Z.regs.Q[ 3]=_val;
+                    break;
                 case 15:
                     Z.regs.Q[ 3]=_val;
-                
+                    break;
+                default:
+                    throw new UnsupportedOperationException("unsupported");
             }
         };
 	
@@ -696,13 +739,13 @@ public class z8000  extends cpu_interface {
 	
         public int RDMEM_B(int addr)
 	{
-		return (cpu_readmem16bew(addr & 0xffff));
+		return (cpu_readmem16bew(addr & 0xffff) & 0xff);
 	}
 	
 	public int RDMEM_W(int addr)
 	{
 		addr &= ~1;
-		return (cpu_readmem16bew_word(addr & 0xffff));
+		return (cpu_readmem16bew_word(addr & 0xffff) & 0xffff);
 	}
 	
 	public int RDMEM_L(int addr)
@@ -710,7 +753,7 @@ public class z8000  extends cpu_interface {
 		int result;
 		addr &= ~1;
 		result = cpu_readmem16bew_word(addr & 0xffff) << 16;
-		return (result + cpu_readmem16bew_word(((addr& 0xffff) + 2) ));
+		return (result + cpu_readmem16bew_word((addr + 2) & 0xffff) & 0xffffffff);
 	}
 	
 	public void WRMEM_B(int addr, int value)
@@ -728,7 +771,7 @@ public class z8000  extends cpu_interface {
 	{
 		addr &= ~1;
 		cpu_writemem16bew_word(addr&0xffff, value >> 16);
-		cpu_writemem16bew_word((addr + 2)&0xffff, value & 0xffff);
+		cpu_writemem16bew_word((addr + 2)&0xffff, value /*& 0xffff*/);
 	}
 	
 /*TODO*///	INLINE UINT8 RDPORT_B(int mode, UINT16 addr)
@@ -748,7 +791,7 @@ public class z8000  extends cpu_interface {
 	{
 		if( mode == 0 )
 		{
-			return cpu_readport((addr&0xffff)) +
+			return cpu_readport((addr & 0xffff)) +
 				  (cpu_readport((addr+1)&0xffff) << 8);
 		}
 		else
@@ -790,8 +833,8 @@ public class z8000  extends cpu_interface {
 	{
 		if( mode == 0 )
 		{
-			cpu_writeport((addr)&0xffff,value & 0xff);
-			cpu_writeport((addr+1)&0xffff,(value >> 8) & 0xff);
+			cpu_writeport((addr /*& 0xffff*/),value & 0xff);
+			cpu_writeport((addr+1)/*&0xffff*/,(value >> 8) & 0xff);
 		}
 		else
 		{
@@ -976,11 +1019,10 @@ public class z8000  extends cpu_interface {
             Z = new z8000_Regs();
             Z.irq_callback=_tmpIRQ;*/
             
-            Z.fcw = RDMEM_W( 2 )/*&0xffff*/; /* get reset FCW */
-            Z.pc = RDMEM_W( 4 )/*&0xffff*/; /* get reset PC  */
-            int _i=Z.pc;
-            change_pc16bew(_i /*& 0xffff*/);
-            Z.pc=_i;
+            Z.fcw = RDMEM_W( 2 ) & 0xffff; /* get reset FCW */
+            Z.pc = RDMEM_W( 4 ) & 0xffff; /* get reset PC  */
+            change_pc16bew(Z.pc & 0xffff);
+            
 	}
         
         private String _kkStr;
@@ -1017,7 +1059,7 @@ public class z8000  extends cpu_interface {
 	            Z8000_exec exec;
 	            Z.op[0] = RDOP();
                     _kkStr="opcode="+z8000_exec[Z.op[0]].dasm;
-                    if (_bTrace && cpu_getactivecpu()==1){
+                    if (_bTrace && cpu_getactivecpu()==2){
                         //System.out.println(_kkStr);
                     }
 	            exec = z8000_exec[Z.op[0]];
@@ -1051,9 +1093,7 @@ public class z8000  extends cpu_interface {
 		if (src != null)
 		{
 			Z = (z8000_Regs)src;
-                        int _i=Z.pc;
-			change_pc16bew(_i&0xffff);
-                        Z.pc=_i;
+                        change_pc16bew(Z.pc & 0xffff);                        
 		}
 	}
 	
