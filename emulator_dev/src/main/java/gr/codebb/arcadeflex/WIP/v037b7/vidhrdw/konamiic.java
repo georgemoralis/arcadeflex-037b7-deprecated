@@ -813,7 +813,7 @@ public class konamiic {
         konami_rom_deinterleave_2(mem_region);
         konami_rom_deinterleave_2(mem_region);
     }
-    
+
     public static final int MAX_K007121 = 2;
 
     public static /*unsigned*/ char[][] K007121_ctrlram = new char[MAX_K007121][8];
@@ -2081,7 +2081,7 @@ public class konamiic {
             }
         }
     };
-   public static WriteHandlerPtr K051937_w = new WriteHandlerPtr() {
+    public static WriteHandlerPtr K051937_w = new WriteHandlerPtr() {
         public void handler(int offset, int data) {
             if (offset == 0) {
                 /* bit 0 is IRQ enable */
@@ -2089,7 +2089,7 @@ public class konamiic {
 
                 /* bit 1: probably FIRQ enable */
 
-                /* bit 2 is NMI enable */
+ /* bit 2 is NMI enable */
                 K051960_nmi_enabled = (data & 0x04);
 
                 /* bit 3 = flip screen */
@@ -2097,7 +2097,7 @@ public class konamiic {
 
                 /* bit 4 used by Devastators and TMNT, unknown */
 
-                /* bit 5 = enable gfx ROM reading */
+ /* bit 5 = enable gfx ROM reading */
                 K051960_readroms = data & 0x20;
 //#if VERBOSE
 //if (errorlog) fprintf(errorlog,"%04x: write %02x to 051937 address %x\n",cpu_get_pc(),data,offset);
@@ -2109,7 +2109,8 @@ public class konamiic {
             }
         }
     };
-/*TODO*///	
+
+    /*TODO*///	
 /*TODO*///	public static ReadHandlerPtr K051937_word_r  = new ReadHandlerPtr() { public int handler(int offset)
 /*TODO*///	{
 /*TODO*///		return K051937_r(offset + 1) | (K051937_r(offset) << 8);
@@ -2305,7 +2306,7 @@ public class konamiic {
                 }
             } else {
                 System.out.println("unsuppoted sprites zoom");
-            //    throw new UnsupportedOperationException("Unsupported");
+                //    throw new UnsupportedOperationException("Unsupported");
                 /*TODO*///				int sx,sy,zw,zh;
 /*TODO*///	
 /*TODO*///				for (y = 0;y < h;y++)
@@ -2422,7 +2423,7 @@ public class konamiic {
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
- public static ReadHandlerPtr K052109_051960_r = new ReadHandlerPtr() {
+    public static ReadHandlerPtr K052109_051960_r = new ReadHandlerPtr() {
         public int handler(int offset) {
             if (K052109_RMRD_line == CLEAR_LINE) {
                 if (offset >= 0x3800 && offset < 0x3808) {
@@ -2448,7 +2449,8 @@ public class konamiic {
             }
         }
     };
-/*TODO*///	
+
+    /*TODO*///	
 /*TODO*///	
 /*TODO*///	
 /*TODO*///	
@@ -3458,273 +3460,276 @@ public class konamiic {
 /*TODO*///		}
 /*TODO*///	}
 /*TODO*///	
-/*TODO*///	#define MAX_K051316 3
-/*TODO*///	
-/*TODO*///	static int K051316_memory_region[MAX_K051316];
-/*TODO*///	static int K051316_gfxnum[MAX_K051316];
-/*TODO*///	static int K051316_wraparound[MAX_K051316];
-/*TODO*///	static int K051316_offset[MAX_K051316][2];
-/*TODO*///	static int K051316_bpp[MAX_K051316];
-/*TODO*///	static void (*K051316_callback[MAX_K051316])(int *code,int *color);
-/*TODO*///	static UBytePtr K051316_ram[MAX_K051316];
-/*TODO*///	static unsigned char K051316_ctrlram[MAX_K051316][16];
-/*TODO*///	static struct tilemap *K051316_tilemap[MAX_K051316];
-/*TODO*///	static int K051316_chip_selected;
-/*TODO*///	
-/*TODO*///	void K051316_vh_stop(int chip);
-/*TODO*///	
-/*TODO*///	/***************************************************************************
-/*TODO*///	
-/*TODO*///	  Callbacks for the TileMap code
-/*TODO*///	
-/*TODO*///	***************************************************************************/
-/*TODO*///	
-/*TODO*///	static void K051316_preupdate(int chip)
-/*TODO*///	{
-/*TODO*///		K051316_chip_selected = chip;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static GetTileInfoPtr K051316_get_tile_info = new GetTileInfoPtr() { public void handler(int tile_index) 
-/*TODO*///	{
-/*TODO*///		int code = K051316_ram[K051316_chip_selected][tile_index];
-/*TODO*///		int color = K051316_ram[K051316_chip_selected][tile_index + 0x400];
-/*TODO*///	
-/*TODO*///		(*K051316_callback[K051316_chip_selected])(&code,&color);
-/*TODO*///	
-/*TODO*///		SET_TILE_INFO(K051316_gfxnum[K051316_chip_selected],code,color);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	int K051316_vh_start(int chip, int gfx_memory_region,int bpp,
-/*TODO*///			void (*callback)(int *code,int *color))
-/*TODO*///	{
-/*TODO*///		int gfx_index;
-/*TODO*///	
-/*TODO*///	
-/*TODO*///		/* find first empty slot to decode gfx */
-/*TODO*///		for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-/*TODO*///			if (Machine.gfx[gfx_index] == 0)
-/*TODO*///				break;
-/*TODO*///		if (gfx_index == MAX_GFX_ELEMENTS)
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		if (bpp == 4)
-/*TODO*///		{
-/*TODO*///			static GfxLayout charlayout = new GfxLayout
-/*TODO*///			(
-/*TODO*///				16,16,
-/*TODO*///				0,				/* filled in later */
-/*TODO*///				4,
-/*TODO*///				new int[] { 0, 1, 2, 3 },
-/*TODO*///				new int[] { 0*4, 1*4, 2*4, 3*4, 4*4, 5*4, 6*4, 7*4,
-/*TODO*///						8*4, 9*4, 10*4, 11*4, 12*4, 13*4, 14*4, 15*4 },
-/*TODO*///				new int[] { 0*64, 1*64, 2*64, 3*64, 4*64, 5*64, 6*64, 7*64,
-/*TODO*///						8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
-/*TODO*///				128*8
-/*TODO*///			);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			/* tweak the structure for the number of tiles we have */
-/*TODO*///			charlayout.total = memory_region_length(gfx_memory_region) / 128;
-/*TODO*///	
-/*TODO*///			/* decode the graphics */
-/*TODO*///			Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region),&charlayout);
-/*TODO*///		}
-/*TODO*///		else if (bpp == 7)
-/*TODO*///		{
-/*TODO*///			static GfxLayout charlayout = new GfxLayout
-/*TODO*///			(
-/*TODO*///				16,16,
-/*TODO*///				0,				/* filled in later */
-/*TODO*///				7,
-/*TODO*///				new int[] { 1, 2, 3, 4, 5, 6, 7 },
-/*TODO*///				new int[] { 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
-/*TODO*///						8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
-/*TODO*///				new int[] { 0*128, 1*128, 2*128, 3*128, 4*128, 5*128, 6*128, 7*128,
-/*TODO*///						8*128, 9*128, 10*128, 11*128, 12*128, 13*128, 14*128, 15*128 },
-/*TODO*///				256*8
-/*TODO*///			);
-/*TODO*///	
-/*TODO*///	
-/*TODO*///			/* tweak the structure for the number of tiles we have */
-/*TODO*///			charlayout.total = memory_region_length(gfx_memory_region) / 256;
-/*TODO*///	
-/*TODO*///			/* decode the graphics */
-/*TODO*///			Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region),&charlayout);
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///	logerror("K051316_vh_start supports only 4 or 7 bpp\n");
-/*TODO*///			return 1;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		if (!Machine.gfx[gfx_index])
-/*TODO*///			return 1;
-/*TODO*///	
-/*TODO*///		/* set the color information */
-/*TODO*///		Machine.gfx[gfx_index].colortable = Machine.remapped_colortable;
-/*TODO*///		Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / (1 << bpp);
-/*TODO*///	
-/*TODO*///		K051316_memory_region[chip] = gfx_memory_region;
-/*TODO*///		K051316_gfxnum[chip] = gfx_index;
-/*TODO*///		K051316_bpp[chip] = bpp;
-/*TODO*///		K051316_callback[chip] = callback;
-/*TODO*///	
-/*TODO*///		K051316_tilemap[chip] = tilemap_create(K051316_get_tile_info,tilemap_scan_rows,TILEMAP_OPAQUE,16,16,32,32);
-/*TODO*///	
-/*TODO*///		K051316_ram[chip] = malloc(0x800);
-/*TODO*///	
-/*TODO*///		if (!K051316_ram[chip] || !K051316_tilemap[chip])
-/*TODO*///		{
-/*TODO*///			K051316_vh_stop(chip);
-/*TODO*///			return 1;
-/*TODO*///		}
-/*TODO*///	
-/*TODO*///		tilemap_set_clip(K051316_tilemap[chip],0);
-/*TODO*///	
-/*TODO*///		K051316_wraparound[chip] = 0;	/* default = no wraparound */
-/*TODO*///		K051316_offset[chip][0] = K051316_offset[chip][1] = 0;
-/*TODO*///	
-/*TODO*///		return 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	int K051316_vh_start_0(int gfx_memory_region,int bpp,
-/*TODO*///			void (*callback)(int *code,int *color))
-/*TODO*///	{
-/*TODO*///		return K051316_vh_start(0,gfx_memory_region,bpp,callback);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	int K051316_vh_start_1(int gfx_memory_region,int bpp,
-/*TODO*///			void (*callback)(int *code,int *color))
-/*TODO*///	{
-/*TODO*///		return K051316_vh_start(1,gfx_memory_region,bpp,callback);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	int K051316_vh_start_2(int gfx_memory_region,int bpp,
-/*TODO*///			void (*callback)(int *code,int *color))
-/*TODO*///	{
-/*TODO*///		return K051316_vh_start(2,gfx_memory_region,bpp,callback);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void K051316_vh_stop(int chip)
-/*TODO*///	{
-/*TODO*///		free(K051316_ram[chip]);
-/*TODO*///		K051316_ram[chip] = 0;
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static VhStopPtr K051316_vh_stop_0 = new VhStopPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		K051316_vh_stop(0);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStopPtr K051316_vh_stop_1 = new VhStopPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		K051316_vh_stop(1);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static VhStopPtr K051316_vh_stop_2 = new VhStopPtr() { public void handler() 
-/*TODO*///	{
-/*TODO*///		K051316_vh_stop(2);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	int K051316_r(int chip, int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_ram[chip][offset];
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_0_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_r(0, offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_1_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_r(1, offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_2_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_r(2, offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void K051316_w(int chip,int offset,int data)
-/*TODO*///	{
-/*TODO*///		if (K051316_ram[chip][offset] != data)
-/*TODO*///		{
-/*TODO*///			K051316_ram[chip][offset] = data;
-/*TODO*///			tilemap_mark_tile_dirty(K051316_tilemap[chip],offset & 0x3ff);
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051316_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		K051316_w(0,offset,data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051316_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		K051316_w(1,offset,data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051316_2_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		K051316_w(2,offset,data);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	int K051316_rom_r(int chip, int offset)
-/*TODO*///	{
-/*TODO*///		if ((K051316_ctrlram[chip][0x0e] & 0x01) == 0)
-/*TODO*///		{
-/*TODO*///			int addr;
-/*TODO*///	
-/*TODO*///			addr = offset + (K051316_ctrlram[chip][0x0c] << 11) + (K051316_ctrlram[chip][0x0d] << 19);
-/*TODO*///			if (K051316_bpp[chip] <= 4) addr /= 2;
-/*TODO*///			addr &= memory_region_length(K051316_memory_region[chip])-1;
-/*TODO*///	
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%04x: offset %04x addr %04x",cpu_get_pc(),offset,addr);
-/*TODO*///	#endif
-/*TODO*///	
-/*TODO*///			return memory_region(K051316_memory_region[chip])[addr];
-/*TODO*///		}
-/*TODO*///		else
-/*TODO*///		{
-/*TODO*///	logerror("%04x: read 051316 ROM offset %04x but reg 0x0c bit 0 not clear\n",cpu_get_pc(),offset);
-/*TODO*///			return 0;
-/*TODO*///		}
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_rom_0_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_rom_r(0,offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_rom_1_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_rom_r(1,offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	public static ReadHandlerPtr K051316_rom_2_r  = new ReadHandlerPtr() { public int handler(int offset)
-/*TODO*///	{
-/*TODO*///		return K051316_rom_r(2,offset);
-/*TODO*///	} };
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void K051316_ctrl_w(int chip,int offset,int data)
-/*TODO*///	{
-/*TODO*///		K051316_ctrlram[chip][offset] = data;
-/*TODO*///	if (offset >= 0x0c) logerror("%04x: write %02x to 051316 reg %x\n",cpu_get_pc(),data,offset);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	public static WriteHandlerPtr K051316_ctrl_0_w = new WriteHandlerPtr() {public void handler(int offset, int data)
-/*TODO*///	{
-/*TODO*///		K051316_ctrl_w(0,offset,data);
-/*TODO*///	} };
-/*TODO*///	
+    public static abstract interface K051316_callbackProcPtr {
+
+        public abstract void handler(int[] code, int[] color);
+    }
+
+    public static int MAX_K051316 = 3;
+    public static int[] K051316_memory_region = new int[MAX_K051316];
+    static int[] K051316_gfxnum = new int[MAX_K051316];
+    static int[] K051316_wraparound = new int[MAX_K051316];
+    static int[][] K051316_offset = new int[MAX_K051316][];
+    static int[] K051316_bpp = new int[MAX_K051316];
+    static K051316_callbackProcPtr[] K051316_callback = new K051316_callbackProcPtr[MAX_K051316];
+    static UBytePtr[] K051316_ram = new UBytePtr[MAX_K051316];
+    static char[][] K051316_ctrlram = new char[MAX_K051316][];
+    static struct_tilemap[] K051316_tilemap = new struct_tilemap[MAX_K051316];
+    static int K051316_chip_selected;
+
+    static {
+        for (int i = 0; i < 3; i++) {
+            K051316_offset[i] = new int[2];
+        }
+        for (int i = 0; i < 3; i++) {
+            K051316_ctrlram[i] = new char[16];
+        }
+
+    }
+
+    /**
+     * *************************************************************************
+     *
+     * Callbacks for the TileMap code
+     *
+     **************************************************************************
+     */
+    public static void K051316_preupdate(int chip) {
+        K051316_chip_selected = chip;
+    }
+
+    public static GetTileInfoPtr K051316_get_tile_info = new GetTileInfoPtr() {
+        public void handler(int tile_index) {
+            int[] code = new int[1];
+            int[] color = new int[1];
+            code[0] = K051316_ram[K051316_chip_selected].read(tile_index);
+            color[0] = K051316_ram[K051316_chip_selected].read(tile_index + 0x400);
+
+            K051316_callback[K051316_chip_selected].handler(code, color);//(*K051316_callback[K051316_chip_selected])(&code,&color);
+
+            SET_TILE_INFO(K051316_gfxnum[K051316_chip_selected], code[0], color[0]);
+        }
+    };
+
+    public static int K051316_vh_start(int chip, int gfx_memory_region, int bpp, K051316_callbackProcPtr callback) {
+        int gfx_index;
+
+
+        /* find first empty slot to decode gfx */
+        for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++) {
+            if (Machine.gfx[gfx_index] == null) {
+                break;
+            }
+        }
+        if (gfx_index == MAX_GFX_ELEMENTS) {
+            return 1;
+        }
+
+        if (bpp == 4) {
+            GfxLayout charlayout = new GfxLayout(
+                    16, 16,
+                    0, /* filled in later */
+                    4,
+                    new int[]{0, 1, 2, 3},
+                    new int[]{0 * 4, 1 * 4, 2 * 4, 3 * 4, 4 * 4, 5 * 4, 6 * 4, 7 * 4,
+                        8 * 4, 9 * 4, 10 * 4, 11 * 4, 12 * 4, 13 * 4, 14 * 4, 15 * 4},
+                    new int[]{0 * 64, 1 * 64, 2 * 64, 3 * 64, 4 * 64, 5 * 64, 6 * 64, 7 * 64,
+                        8 * 64, 9 * 64, 10 * 64, 11 * 64, 12 * 64, 13 * 64, 14 * 64, 15 * 64},
+                    128 * 8
+            );
+
+
+            /* tweak the structure for the number of tiles we have */
+            charlayout.total = memory_region_length(gfx_memory_region) / 128;
+
+            /* decode the graphics */
+            Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region), charlayout);
+        } else if (bpp == 7) {
+            GfxLayout charlayout = new GfxLayout(
+                    16, 16,
+                    0, /* filled in later */
+                    7,
+                    new int[]{1, 2, 3, 4, 5, 6, 7},
+                    new int[]{0 * 8, 1 * 8, 2 * 8, 3 * 8, 4 * 8, 5 * 8, 6 * 8, 7 * 8,
+                        8 * 8, 9 * 8, 10 * 8, 11 * 8, 12 * 8, 13 * 8, 14 * 8, 15 * 8},
+                    new int[]{0 * 128, 1 * 128, 2 * 128, 3 * 128, 4 * 128, 5 * 128, 6 * 128, 7 * 128,
+                        8 * 128, 9 * 128, 10 * 128, 11 * 128, 12 * 128, 13 * 128, 14 * 128, 15 * 128},
+                    256 * 8
+            );
+
+
+            /* tweak the structure for the number of tiles we have */
+            charlayout.total = memory_region_length(gfx_memory_region) / 256;
+
+            /* decode the graphics */
+            Machine.gfx[gfx_index] = decodegfx(memory_region(gfx_memory_region), charlayout);
+        } else {
+            logerror("K051316_vh_start supports only 4 or 7 bpp\n");
+            return 1;
+        }
+
+        if (Machine.gfx[gfx_index] == null) {
+            return 1;
+        }
+
+        /* set the color information */
+        Machine.gfx[gfx_index].colortable = new UShortArray(Machine.remapped_colortable);
+        Machine.gfx[gfx_index].total_colors = Machine.drv.color_table_len / (1 << bpp);
+
+        K051316_memory_region[chip] = gfx_memory_region;
+        K051316_gfxnum[chip] = gfx_index;
+        K051316_bpp[chip] = bpp;
+        K051316_callback[chip] = callback;
+
+        K051316_tilemap[chip] = tilemap_create(K051316_get_tile_info, tilemap_scan_rows, TILEMAP_OPAQUE, 16, 16, 32, 32);
+
+        K051316_ram[chip] = new UBytePtr(0x800);
+
+        if (K051316_ram[chip] == null || K051316_tilemap[chip] == null) {
+            K051316_vh_stop(chip);
+            return 1;
+        }
+
+        tilemap_set_clip(K051316_tilemap[chip], null);
+
+        K051316_wraparound[chip] = 0;
+        /* default = no wraparound */
+
+        K051316_offset[chip][0] = K051316_offset[chip][1] = 0;
+
+        return 0;
+    }
+
+    public static int K051316_vh_start_0(int gfx_memory_region, int bpp,
+            K051316_callbackProcPtr callback) {
+        return K051316_vh_start(0, gfx_memory_region, bpp, callback);
+    }
+
+    public static int K051316_vh_start_1(int gfx_memory_region, int bpp,
+            K051316_callbackProcPtr callback) {
+        return K051316_vh_start(1, gfx_memory_region, bpp, callback);
+    }
+
+    public static int K051316_vh_start_2(int gfx_memory_region, int bpp,
+            K051316_callbackProcPtr callback) {
+        return K051316_vh_start(2, gfx_memory_region, bpp, callback);
+    }
+
+    public static void K051316_vh_stop(int chip) {
+        K051316_ram[chip] = null;
+    }
+
+    public static void K051316_vh_stop_0() {
+        K051316_vh_stop(0);
+    }
+
+    public static void K051316_vh_stop_1() {
+        K051316_vh_stop(1);
+    }
+
+    public static void K051316_vh_stop_2() {
+        K051316_vh_stop(2);
+    }
+
+    public static int K051316_r(int chip, int offset) {
+        return K051316_ram[chip].read(offset);
+    }
+
+    public static ReadHandlerPtr K051316_0_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_r(0, offset);
+        }
+    };
+
+    public static ReadHandlerPtr K051316_1_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_r(1, offset);
+        }
+    };
+
+    public static ReadHandlerPtr K051316_2_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_r(2, offset);
+        }
+    };
+
+    public static void K051316_w(int chip, int offset, int data) {
+        if (K051316_ram[chip].read(offset) != data) {
+            K051316_ram[chip].write(offset, data);
+            tilemap_mark_tile_dirty(K051316_tilemap[chip], offset & 0x3ff);
+        }
+    }
+
+    public static WriteHandlerPtr K051316_0_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            K051316_w(0, offset, data);
+        }
+    };
+
+    public static WriteHandlerPtr K051316_1_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            K051316_w(1, offset, data);
+        }
+    };
+
+    public static WriteHandlerPtr K051316_2_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            K051316_w(2, offset, data);
+        }
+    };
+
+    public static int K051316_rom_r(int chip, int offset) {
+        if ((K051316_ctrlram[chip][0x0e] & 0x01) == 0) {
+            int addr;
+
+            addr = offset + (K051316_ctrlram[chip][0x0c] << 11) + (K051316_ctrlram[chip][0x0d] << 19);
+            if (K051316_bpp[chip] <= 4) {
+                addr /= 2;
+            }
+            addr &= memory_region_length(K051316_memory_region[chip]) - 1;
+
+            /* #if 0
+             usrintf_showmessage("%04x: offset %04x addr %04x",cpu_get_pc(),offset,addr);
+             #endif*/
+            return memory_region(K051316_memory_region[chip]).read(addr);
+        } else {
+            logerror("%04x: read 051316 ROM offset %04x but reg 0x0c bit 0 not clear\n", cpu_get_pc(), offset);
+            return 0;
+        }
+    }
+
+    public static ReadHandlerPtr K051316_rom_0_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_rom_r(0, offset);
+        }
+    };
+
+    public static ReadHandlerPtr K051316_rom_1_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_rom_r(1, offset);
+        }
+    };
+
+    public static ReadHandlerPtr K051316_rom_2_r = new ReadHandlerPtr() {
+        public int handler(int offset) {
+            return K051316_rom_r(2, offset);
+        }
+    };
+
+    public static void K051316_ctrl_w(int chip, int offset, int data) {
+        K051316_ctrlram[chip][offset] = (char) (data & 0xFF);
+        if (offset >= 0x0c) {
+            logerror("%04x: write %02x to 051316 reg %x\n", cpu_get_pc(), data, offset);
+        }
+    }
+
+    public static WriteHandlerPtr K051316_ctrl_0_w = new WriteHandlerPtr() {
+        public void handler(int offset, int data) {
+            K051316_ctrl_w(0, offset, data);
+        }
+    };
+
+    /*TODO*///	
 /*TODO*///	public static WriteHandlerPtr K051316_ctrl_1_w = new WriteHandlerPtr() {public void handler(int offset, int data)
 /*TODO*///	{
 /*TODO*///		K051316_ctrl_w(1,offset,data);
@@ -3735,42 +3740,36 @@ public class konamiic {
 /*TODO*///		K051316_ctrl_w(2,offset,data);
 /*TODO*///	} };
 /*TODO*///	
-/*TODO*///	void K051316_wraparound_enable(int chip, int status)
-/*TODO*///	{
-/*TODO*///		K051316_wraparound[chip] = status;
-/*TODO*///	}
-/*TODO*///	
+    public static void K051316_wraparound_enable(int chip, int status) {
+        K051316_wraparound[chip] = status;
+    }
+
+    /*TODO*///	
 /*TODO*///	void K051316_set_offset(int chip, int xoffs, int yoffs)
 /*TODO*///	{
 /*TODO*///		K051316_offset[chip][0] = xoffs;
 /*TODO*///		K051316_offset[chip][1] = yoffs;
 /*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051316_tilemap_update(int chip)
-/*TODO*///	{
-/*TODO*///		K051316_preupdate(chip);
-/*TODO*///		tilemap_update(K051316_tilemap[chip]);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051316_tilemap_update_0(void)
-/*TODO*///	{
-/*TODO*///		K051316_tilemap_update(0);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051316_tilemap_update_1(void)
-/*TODO*///	{
-/*TODO*///		K051316_tilemap_update(1);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051316_tilemap_update_2(void)
-/*TODO*///	{
-/*TODO*///		K051316_tilemap_update(2);
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	
-/*TODO*///	void K051316_zoom_draw(int chip, struct osd_bitmap *bitmap,UINT32 priority)
-/*TODO*///	{
-/*TODO*///		UINT32 startx,starty;
+    public static void K051316_tilemap_update(int chip) {
+        K051316_preupdate(chip);
+        tilemap_update(K051316_tilemap[chip]);
+    }
+
+    public static void K051316_tilemap_update_0() {
+        K051316_tilemap_update(0);
+    }
+
+    public static void K051316_tilemap_update_1() {
+        K051316_tilemap_update(1);
+    }
+
+    public static void K051316_tilemap_update_2() {
+        K051316_tilemap_update(2);
+    }
+
+    public static void K051316_zoom_draw(int chip, osd_bitmap bitmap, int/*UINT32*/ priority) {
+        System.out.println("51316 zoom draw todo");
+        /*TODO*///		UINT32 startx,starty;
 /*TODO*///		int incxx,incxy,incyx,incyy;
 /*TODO*///		struct osd_bitmap *srcbitmap = K051316_tilemap[chip].pixmap;
 /*TODO*///	
@@ -3809,13 +3808,12 @@ public class konamiic {
 /*TODO*///				K051316_ctrlram[chip][0x0e],	/* 0 = test ROMs */
 /*TODO*///				K051316_ctrlram[chip][0x0f]);
 /*TODO*///	#endif
-/*TODO*///	}
-/*TODO*///	
-/*TODO*///	void K051316_zoom_draw_0(struct osd_bitmap *bitmap,UINT32 priority)
-/*TODO*///	{
-/*TODO*///		K051316_zoom_draw(0,bitmap,priority);
-/*TODO*///	}
-/*TODO*///	
+    }
+
+    public static void K051316_zoom_draw_0(osd_bitmap bitmap, int/*UINT32*/ priority) {
+        K051316_zoom_draw(0, bitmap, priority);
+    }
+    /*TODO*///	
 /*TODO*///	void K051316_zoom_draw_1(struct osd_bitmap *bitmap,UINT32 priority)
 /*TODO*///	{
 /*TODO*///		K051316_zoom_draw(1,bitmap,priority);

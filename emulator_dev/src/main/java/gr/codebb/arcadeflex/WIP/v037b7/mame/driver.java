@@ -175,6 +175,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.namcos86.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gbusters.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.aliens.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.flkatck.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ajax.*;
 
 public class driver {
 
@@ -2305,10 +2306,8 @@ public class driver {
         // driver_hcastlea,	/* GX768 (c) 1988 */
         /*TODO*/
         // driver_hcastlej,	/* GX768 (c) 1988 (Japan) */
-        /*TODO*/
-        // driver_ajax,		/* GX770 (c) 1987 */
-        /*TODO*/
-        // driver_ajaxj,		/* GX770 (c) 1987 (Japan) */
+        driver_ajax,		/* GX770 (c) 1987 */
+        driver_ajaxj,		/* GX770 (c) 1987 (Japan) */
         /*TODO*/
         // driver_scontra,	/* GX775 (c) 1988 */
         /*TODO*/
