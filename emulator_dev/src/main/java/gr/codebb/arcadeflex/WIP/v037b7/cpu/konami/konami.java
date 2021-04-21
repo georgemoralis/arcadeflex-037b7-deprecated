@@ -1171,59 +1171,6 @@ public class konami extends cpu_interface {
         }
     };
 
-    static opcode asl_ix = new opcode() {
-        public void handler() {
-            int t = RM(ea);
-            int r = t << 1;
-            CLR_NZVC();
-            SET_FLAGS8(t, t, r);
-            WM(ea, r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d asl_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-
-
-    static opcode asr_di = new opcode() {
-        public void handler() {
-            int t = DIRBYTE();
-            CLR_NZC();
-            konami.cc |= (t & CC_C);
-            t = (t & 0x80) | (t >> 1);
-            SET_NZ8(t);
-            WM(ea, t);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d asr_di :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode asr_ex = new opcode() {
-        public void handler() {
-            int t = EXTBYTE();
-            CLR_NZC();
-            konami.cc |= (t & CC_C);
-            t = (t & 0x80) | (t >> 1);
-            SET_NZ8(t);
-            WM(ea, t);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d asr_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
-    static opcode asr_ix = new opcode() {
-        public void handler() {
-            int t = RM(ea);
-            CLR_NZC();
-            konami.cc |= (t & CC_C);
-            t = (t & 0x80) | (t >>= 1);  // ???
-            SET_NZ8(t);
-            WM(ea, t);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d asr_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
     
     static opcode bita_ex = new opcode() {
         public void handler() {
@@ -1983,22 +1930,6 @@ public class konami extends cpu_interface {
         }
     };
 
-    static opcode ror_ix = new opcode() {
-        public void handler() {
-            int t = RM(ea);
-            int r = (konami.cc & CC_C) << 7;
-            CLR_NZC();
-            konami.cc |= t & CC_C;
-            r |= t >> 1;
-            SET_NZ8(r);
-            WM(ea, r);
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d ror_ix :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-
-        }
-    };
-
     static opcode rti = new opcode() {
         public void handler() {
             if (konamilog != null) {
@@ -2040,18 +1971,8 @@ public class konami extends cpu_interface {
         }
     };
 
-    static opcode sbca_ex = new opcode() {
-        public void handler() {
-            int t = EXTBYTE();
-            int r = konami.a - t - (konami.cc & CC_C);
-            CLR_NZVC();
-            SET_FLAGS8(konami.a, t, r);
-            konami.a=r&0xFF;
-            if (konamilog != null) {
-                fprintf(konamilog, "konami#%d sbca_ex :PC:%d,PPC:%d,A:%d,B:%d,D:%d,DP:%d,U:%d,S:%d,X:%d,Y:%d,CC:%d,EA:%d\n", cpu_getactivecpu(), konami.pc, konami.ppc, konami.a, konami.b, getDreg(), konami.dp, konami.u, konami.s, konami.x, konami.y, konami.cc, ea);
-            }
-        }
-    };
+
+
     
     static opcode sbca_ix = new opcode() {
         public void handler() {

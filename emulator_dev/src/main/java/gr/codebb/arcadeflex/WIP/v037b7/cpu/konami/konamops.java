@@ -69,19 +69,18 @@ public class konamops {
 /*TODO*///	WM(EAD,r);
 /*TODO*///}
 /*TODO*///
-/*TODO*////* $07 ASR direct ?**-* */
-/*TODO*///INLINE void asr_di( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	DIRBYTE(t);
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (t & CC_C);
-/*TODO*///	t = (t & 0x80) | (t >> 1);
-/*TODO*///	SET_NZ8(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $08 ASL direct ?**** */
+    public static opcode asr_di = new opcode() {
+        public void handler() {
+            int t = DIRBYTE() & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            t = ((t & 0x80) | (t >>> 1)) & 0xFF;
+            SET_NZ8(t);
+            WM(ea, t);
+        }
+    };
+
+    /*TODO*////* $08 ASL direct ?**** */
 /*TODO*///INLINE void asl_di( void )
 /*TODO*///{
 /*TODO*///	UINT16 t,r;
@@ -934,41 +933,41 @@ public class konamops {
         }
     };
 
-    /*TODO*////* $66 ROR indexed -**-* */
-/*TODO*///INLINE void ror_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t,r;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = (CC & CC_C) << 7;
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (t & CC_C);
-/*TODO*///	r |= t>>1; SET_NZ8(r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $67 ASR indexed ?**-* */
-/*TODO*///INLINE void asr_ix( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	CLR_NZC;
-/*TODO*///	CC |= (t & CC_C);
-/*TODO*///	t=(t&0x80)|(t>>=1);
-/*TODO*///	SET_NZ8(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $68 ASL indexed ?**** */
-/*TODO*///INLINE void asl_ix( void )
-/*TODO*///{
-/*TODO*///	UINT16 t,r;
-/*TODO*///	t = RM(EAD);
-/*TODO*///	r = t << 1;
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(t,t,r);
-/*TODO*///	WM(EAD,r);
-/*TODO*///}
-/*TODO*///
+    public static opcode ror_ix = new opcode() {
+        public void handler() {
+            int/*UINT8*/ t, r;
+            t = RM(ea) & 0xFF;
+            r = ((konami.cc & CC_C) << 7) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            r = (r | t >>> 1) & 0xFF;
+            SET_NZ8(r);
+            WM(ea, r);
+        }
+    };
+
+    public static opcode asr_ix = new opcode() {
+        public void handler() {
+            int t = RM(ea) & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            t = ((t & 0x80) | (t >>> 1)) & 0xFF;
+            SET_NZ8(t);
+            WM(ea, t);
+        }
+    };
+
+    public static opcode asl_ix = new opcode() {
+        public void handler() {
+            int/*UINT16*/ t, r;
+            t = RM(ea) & 0xFFFF;
+            r = (t << 1) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(t, t, r);
+            WM(ea, r);
+        }
+    };
+
     public static opcode rol_ix = new opcode() {
         public void handler() {
             int t, r;
@@ -1071,16 +1070,17 @@ public class konamops {
         }
     };
 
-    /*TODO*////* $77 ASR extended ?**-* */
-/*TODO*///INLINE void asr_ex( void )
-/*TODO*///{
-/*TODO*///	UINT8 t;
-/*TODO*///	EXTBYTE(t); CLR_NZC; CC |= (t & CC_C);
-/*TODO*///	t=(t&0x80)|(t>>1);
-/*TODO*///	SET_NZ8(t);
-/*TODO*///	WM(EAD,t);
-/*TODO*///}
-/*TODO*///
+    public static opcode asr_ex = new opcode() {
+        public void handler() {
+            int t = EXTBYTE() & 0xFF;
+            CLR_NZC();
+            konami.cc |= (t & CC_C);
+            t = ((t & 0x80) | (t >>> 1)) & 0xFF;
+            SET_NZ8(t);
+            WM(ea, t);
+        }
+    };
+
     public static opcode asl_ex = new opcode() {
         public void handler() {
             int/*UINT16*/ t, r;
@@ -1851,18 +1851,19 @@ public class konamops {
         }
     };
 
-    /*TODO*////* $b2 SBCA extended ?**** */
-/*TODO*///INLINE void sbca_ex( void )
-/*TODO*///{
-/*TODO*///	UINT16	  t,r;
-/*TODO*///	EXTBYTE(t);
-/*TODO*///	r = A - t - (CC & CC_C);
-/*TODO*///	CLR_NZVC;
-/*TODO*///	SET_FLAGS8(A,t,r);
-/*TODO*///	A = r;
-/*TODO*///}
-/*TODO*///
-/*TODO*////* $b3 SUBD (CMPD CMPU) extended -**** */
+    public static opcode sbca_ex = new opcode() {
+        public void handler() {
+            /*UINT16*/
+            int t, r;
+            t = EXTBYTE() & 0xFFFF;
+            r = (konami.a - t - (konami.cc & CC_C)) & 0xFFFF;
+            CLR_NZVC();
+            SET_FLAGS8(konami.a, t, r);
+            konami.a = r & 0xFF;
+        }
+    };
+
+    /*TODO*////* $b3 SUBD (CMPD CMPU) extended -**** */
 /*TODO*///INLINE void subd_ex( void )
 /*TODO*///{
 /*TODO*///	UINT32 r,d;
