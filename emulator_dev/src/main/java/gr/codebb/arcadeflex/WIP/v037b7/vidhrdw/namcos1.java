@@ -223,14 +223,14 @@ public class namcos1
 			r = namcos1_paletteram.read(offset);
 			g = namcos1_paletteram.read(offset + 0x0800);
 			b = namcos1_paletteram.read(offset + 0x1000);
-			palette_change_color(color,r,g,b);
+/*TODO*///			palette_change_color(color,r,g,b);
 	
 			if (offset >= 0x2000)
 			{
 				r = namcos1_paletteram.read(offset + 0x2000);
 				g = namcos1_paletteram.read(offset + 0x2800);
 				b = namcos1_paletteram.read(offset + 0x3000);
-				palette_change_color(color+TILECOLORS,r,g,b);
+/*TODO*///				palette_change_color(color+TILECOLORS,r,g,b);
 			}
 			offset++;
 		}

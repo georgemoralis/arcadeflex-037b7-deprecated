@@ -176,6 +176,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.gbusters.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.aliens.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.flkatck.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ajax.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers.simpsons.*;
 
 public class driver {
 
@@ -2371,12 +2372,9 @@ public class driver {
         // driver_xexex,		/* GX067 (c) 1991 (World) */
         /*TODO*/
         // driver_xexexj,	/* GX067 (c) 1991 (Japan) */
-        /*TODO*/
-        // driver_simpsons,	/* GX072 (c) 1991 */
-        /*TODO*/
-        // driver_simpsn2p,	/* GX072 (c) 1991 */
-        /*TODO*/
-        // driver_simps2pj,	/* GX072 (c) 1991 (Japan) */
+        driver_simpsons,	/* GX072 (c) 1991 */
+        driver_simpsn2p,	/* GX072 (c) 1991 */
+        driver_simps2pj,	/* GX072 (c) 1991 (Japan) */
         /*TODO*/
         // driver_vendetta,	/* GX081 (c) 1991 (Asia) */
         /*TODO*/

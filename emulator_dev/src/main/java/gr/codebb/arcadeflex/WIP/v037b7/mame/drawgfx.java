@@ -2315,16 +2315,16 @@ public static void copyrozbitmap(osd_bitmap dest, osd_bitmap src,
     }
 
     /*TODO*///
-/*TODO*///void pdrawgfxzoom( struct osd_bitmap *dest_bmp,const struct GfxElement *gfx,
-/*TODO*///		unsigned int code,unsigned int color,int flipx,int flipy,int sx,int sy,
-/*TODO*///		const struct rectangle *clip,int transparency,int transparent_color,int scalex, int scaley,
-/*TODO*///		UINT32 priority_mask)
-/*TODO*///{
+    public static void pdrawgfxzoom(osd_bitmap dest_bmp, GfxElement gfx,
+		int code, int color,int flipx,int flipy,int sx,int sy,
+		rectangle clip,int transparency,int transparent_color,int scalex, int scaley,
+		int priority_mask)
+    {
 /*TODO*///	profiler_mark(PROFILER_DRAWGFX);
-/*TODO*///	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
-/*TODO*///			clip,transparency,transparent_color,scalex,scaley,priority_bitmap,priority_mask);
+	common_drawgfxzoom(dest_bmp,gfx,code,color,flipx,flipy,sx,sy,
+			clip,transparency,transparent_color,scalex,scaley,priority_bitmap,priority_mask);
 /*TODO*///	profiler_mark(PROFILER_END);
-/*TODO*///}
+    }
 /*TODO*///
 /*TODO*///
 /*TODO*///void plot_pixel2(struct osd_bitmap *bitmap1,struct osd_bitmap *bitmap2,int x,int y,int pen)

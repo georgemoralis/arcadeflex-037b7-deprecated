@@ -1262,32 +1262,27 @@ public class memory {
     /*TODO*///READWORD(cpu_readmem16bew, TYPE_16BIT_BE, 16BEW, ALWAYS_ALIGNED)
     /*TODO*///#define READWORD(name,type,abits,align) 												\
     public static int cpu_readmem16bew_word(int address) {
-        char u8_hw;
-
-        
-        /* handle aligned case first */
-        
-            /* first-level lookup */
-            u8_hw = u8_cur_mrhard[/*(UINT32)*/address >>> (ABITS2_16BEW + ABITS_MIN_16BEW)];
-
-            if (u8_hw <= HT_BANKMAX) {
-                return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);
-            }
-
-            /* second-level lookup */
-            if (u8_hw >= MH_HARDMAX) {
-                u8_hw -= MH_HARDMAX;
-                u8_hw = u8_readhardware[(u8_hw << MH_SBITS) + ((/*(UINT32)*/address >>> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];
-                if (u8_hw <= HT_BANKMAX) {
-                    return cpu_bankbase[u8_hw].READ_WORD(address - memoryreadoffset[u8_hw]);
-                }
-            }
-
-            /* fall back to handler */
-            return (memoryreadhandler[u8_hw]).handler(address - memoryreadoffset[u8_hw]);
-         
-
-        //return 0;
+    	char hw;																	
+																						
+	/* handle aligned case first */ 													
+																						
+		/* first-level lookup */														
+		hw = u8_cur_mrhard[address >> (ABITS2_16BEW + ABITS_MIN_16BEW)];		
+		if (hw <= HT_BANKMAX)															
+			return cpu_bankbase[hw].READ_WORD(address - memoryreadoffset[hw]);		
+																						
+		/* second-level lookup */														
+		if (hw >= MH_HARDMAX)															
+		{																				
+			hw -= MH_HARDMAX;															
+			hw = u8_readhardware[(hw << MH_SBITS) + ((address >> ABITS_MIN_16BEW) & MHMASK(ABITS2_16BEW))];	
+			if (hw <= HT_BANKMAX)														
+				return cpu_bankbase[hw].READ_WORD(address - memoryreadoffset[hw]);	
+		}																				
+																						
+		/* fall back to handler */														
+		return (memoryreadhandler[hw]).handler(address - memoryreadoffset[hw]);				
+	
     }
 
     /*TODO*///
