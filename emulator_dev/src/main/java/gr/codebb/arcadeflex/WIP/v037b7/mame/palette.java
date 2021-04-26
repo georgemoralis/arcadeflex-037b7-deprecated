@@ -741,92 +741,111 @@ public class palette {
             return null;
         }
     }
+    
+    static int first_free_pen;
+    static int ran_out = 0;
+    static int __i, __color;
+    static int did_remap = 0;
+    static int need_refresh = 0;
+        
+    static int reuse_pens = 0;
+    static int need, avail;
+    
+    static boolean __continue=false;
+    static boolean __break=false;
 
     public static UBytePtr palette_recalc_8() {
-        int i, color;
-        int did_remap = 0;
-        int need_refresh = 0;
-        int first_free_pen;
-        int ran_out = 0;
-        int reuse_pens = 0;
-        int need, avail;
+        
+        __continue=false;
+        __break=false;
+        
+        first_free_pen=0;
+        ran_out = 0;
+        __i=0;
+        __color=0;
+        did_remap = 0;
+        need_refresh = 0;
 
+        reuse_pens = 0;
+        need=0;
+        avail=0;
+    
         //memset(just_remapped,0,Machine.drv.total_colors /* * sizeof(unsigned char)*/);
         for (int mem = 0; mem < Machine.drv.total_colors; mem++) {
             just_remapped.write(mem, 0);
         }
 
         /* first of all, apply the changes to the palette which were requested since last update */
-        for (color = 0; color < Machine.drv.total_colors; color++) {
-            if (palette_dirty.read(color) != 0) {
+        for (__color = 0; __color < Machine.drv.total_colors; __color++) {
+            if (palette_dirty.read(__color) != 0) {
                 int r, g, b, pen;
 
-                pen = palette_map[color];
-                r = new_palette.read(3 * color + 0);
-                g = new_palette.read(3 * color + 1);
-                b = new_palette.read(3 * color + 2);
+                pen = palette_map[__color];
+                r = new_palette.read(3 * __color + 0);
+                g = new_palette.read(3 * __color + 1);
+                b = new_palette.read(3 * __color + 2);
 
                 /* if the color maps to an exclusive pen, just change it */
                 if (pen_usage_count[pen] == 1) {
-                    palette_dirty.write(color, 0);
-                    game_palette[3 * color + 0] = (char) (r & 0xFF);
-                    game_palette[3 * color + 1] = (char) (g & 0xFF);
-                    game_palette[3 * color + 2] = (char) (b & 0xFF);
+                    palette_dirty.write(__color, 0);
+                    game_palette[3 * __color + 0] = (char) (r & 0xFF);
+                    game_palette[3 * __color + 1] = (char) (g & 0xFF);
+                    game_palette[3 * __color + 2] = (char) (b & 0xFF);
 
                     shrinked_palette[3 * pen + 0] = (char) (r & 0xFF);
                     shrinked_palette[3 * pen + 1] = (char) (g & 0xFF);
                     shrinked_palette[3 * pen + 2] = (char) (b & 0xFF);
-                    osd_modify_pen(Machine.pens[color], r, g, b);
+                    osd_modify_pen(Machine.pens[__color], r, g, b);
                 } else {
                     if (pen < RESERVED_PENS) {
                         /* the color uses a reserved pen, the only thing we can do is remap it */
-                        for (i = color; i < Machine.drv.total_colors; i++) {
-                            if (palette_dirty.read(i) != 0 && palette_map[i] == pen) {
-                                palette_dirty.write(i, 0);
-                                game_palette[3 * i + 0] = new_palette.read(3 * i + 0);
-                                game_palette[3 * i + 1] = new_palette.read(3 * i + 1);
-                                game_palette[3 * i + 2] = new_palette.read(3 * i + 2);
-                                old_used_colors.write(i, old_used_colors.read(i) | PALETTE_COLOR_NEEDS_REMAP);
+                        for (__i = __color; __i < Machine.drv.total_colors; __i++) {
+                            if (palette_dirty.read(__i) != 0 && palette_map[__i] == pen) {
+                                palette_dirty.write(__i, 0);
+                                game_palette[3 * __i + 0] = new_palette.read(3 * __i + 0);
+                                game_palette[3 * __i + 1] = new_palette.read(3 * __i + 1);
+                                game_palette[3 * __i + 2] = new_palette.read(3 * __i + 2);
+                                old_used_colors.write(__i, old_used_colors.read(__i) | PALETTE_COLOR_NEEDS_REMAP);
                             }
                         }
                     } else {
                         /* the pen is shared with other colors, let's see if all of them have been changed to the same value */
-                        for (i = 0; i < Machine.drv.total_colors; i++) {
-                            if (((old_used_colors.read(i) & PALETTE_COLOR_VISIBLE) != 0)
-                                    && palette_map[i] == pen) {
-                                if (palette_dirty.read(i) == 0
-                                        || new_palette.read(3 * i + 0) != r
-                                        || new_palette.read(3 * i + 1) != g
-                                        || new_palette.read(3 * i + 2) != b) {
+                        for (__i = 0; __i < Machine.drv.total_colors; __i++) {
+                            if (((old_used_colors.read(__i) & PALETTE_COLOR_VISIBLE) != 0)
+                                    && palette_map[__i] == pen) {
+                                if (palette_dirty.read(__i) == 0
+                                        || new_palette.read(3 * __i + 0) != r
+                                        || new_palette.read(3 * __i + 1) != g
+                                        || new_palette.read(3 * __i + 2) != b) {
                                     break;
                                 }
                             }
                         }
 
-                        if (i == Machine.drv.total_colors) {
+                        if (__i == Machine.drv.total_colors) {
                             /* all colors sharing this pen still are the same, so we just change the palette. */
                             shrinked_palette[3 * pen + 0] = (char) (r & 0xFF);
                             shrinked_palette[3 * pen + 1] = (char) (g & 0xFF);
                             shrinked_palette[3 * pen + 2] = (char) (b & 0xFF);
-                            osd_modify_pen(Machine.pens[color], r, g, b);
+                            osd_modify_pen(Machine.pens[__color], r, g, b);
 
-                            for (i = color; i < Machine.drv.total_colors; i++) {
-                                if (palette_dirty.read(i) != 0 && palette_map[i] == pen) {
-                                    palette_dirty.write(i, 0);
-                                    game_palette[3 * i + 0] = (char) (r & 0xFF);
-                                    game_palette[3 * i + 1] = (char) (g & 0xFF);
-                                    game_palette[3 * i + 2] = (char) (b & 0xFF);
+                            for (__i = __color; __i < Machine.drv.total_colors; __i++) {
+                                if (palette_dirty.read(__i) != 0 && palette_map[__i] == pen) {
+                                    palette_dirty.write(__i, 0);
+                                    game_palette[3 * __i + 0] = (char) (r & 0xFF);
+                                    game_palette[3 * __i + 1] = (char) (g & 0xFF);
+                                    game_palette[3 * __i + 2] = (char) (b & 0xFF);
                                 }
                             }
                         } else {
                             /* the colors sharing this pen now are different, we'll have to remap them. */
-                            for (i = color; i < Machine.drv.total_colors; i++) {
-                                if (palette_dirty.read(i) != 0 && palette_map[i] == pen) {
-                                    palette_dirty.write(i, 0);
-                                    game_palette[3 * i + 0] = new_palette.read(3 * i + 0);
-                                    game_palette[3 * i + 1] = new_palette.read(3 * i + 1);
-                                    game_palette[3 * i + 2] = new_palette.read(3 * i + 2);
-                                    old_used_colors.write(i, old_used_colors.read(i) | PALETTE_COLOR_NEEDS_REMAP);
+                            for (__i = __color; __i < Machine.drv.total_colors; __i++) {
+                                if (palette_dirty.read(__i) != 0 && palette_map[__i] == pen) {
+                                    palette_dirty.write(__i, 0);
+                                    game_palette[3 * __i + 0] = new_palette.read(3 * __i + 0);
+                                    game_palette[3 * __i + 1] = new_palette.read(3 * __i + 1);
+                                    game_palette[3 * __i + 2] = new_palette.read(3 * __i + 2);
+                                    old_used_colors.write(__i, old_used_colors.read(__i) | PALETTE_COLOR_NEEDS_REMAP);
                                 }
                             }
                         }
@@ -836,15 +855,15 @@ public class palette {
         }
 
         need = 0;
-        for (i = 0; i < Machine.drv.total_colors; i++) {
-            if (((palette_used_colors.read(i) & PALETTE_COLOR_VISIBLE) != 0) && palette_used_colors.read(i) != old_used_colors.read(i)) {
+        for (__i = 0; __i < Machine.drv.total_colors; __i++) {
+            if (((palette_used_colors.read(__i) & PALETTE_COLOR_VISIBLE) != 0) && palette_used_colors.read(__i) != old_used_colors.read(__i)) {
                 need++;
             }
         }
         if (need > 0) {
             avail = 0;
-            for (i = 0; i < DYNAMIC_MAX_PENS; i++) {
-                if (pen_usage_count[i] == 0) {
+            for (__i = 0; __i < DYNAMIC_MAX_PENS; __i++) {
+                if (pen_usage_count[__i] == 0) {
                     avail++;
                 }
             }
@@ -857,131 +876,95 @@ public class palette {
         }
 
         first_free_pen = RESERVED_PENS;
-        for (color = 0; color < Machine.drv.total_colors; color++) {
+        for (__color = 0; __color < Machine.drv.total_colors; __color++) {
             /* the comparison between palette_used_colors and old_used_colors also includes PALETTE_COLOR_NEEDS_REMAP which might have been set previously */
-            if (((palette_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0)
-                    && palette_used_colors.read(color) != old_used_colors.read(color)) {
+            if (((palette_used_colors.read(__color) & PALETTE_COLOR_VISIBLE) != 0)
+                    && palette_used_colors.read(__color) != old_used_colors.read(__color)) {
                 int r, g, b;
 
-                if ((old_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0) {
-                    pen_usage_count[palette_map[color]]--;
-                    old_used_colors.write(color, old_used_colors.read(color) & ~PALETTE_COLOR_VISIBLE);
+                if ((old_used_colors.read(__color) & PALETTE_COLOR_VISIBLE) != 0) {
+                    pen_usage_count[palette_map[__color]]--;
+                    old_used_colors.write(__color, old_used_colors.read(__color) & ~PALETTE_COLOR_VISIBLE);
                 }
 
-                r = game_palette[3 * color + 0];
-                g = game_palette[3 * color + 1];
-                b = game_palette[3 * color + 2];
+                r = game_palette[3 * __color + 0];
+                g = game_palette[3 * __color + 1];
+                b = game_palette[3 * __color + 2];
 
-                if ((palette_used_colors.read(color) & PALETTE_COLOR_TRANSPARENT_FLAG) != 0) {
-                    if (palette_map[color] != TRANSPARENT_PEN) {
+                if ((palette_used_colors.read(__color) & PALETTE_COLOR_TRANSPARENT_FLAG) != 0) {
+                    if (palette_map[__color] != TRANSPARENT_PEN) {
                         /* use the fixed transparent black for this */
                         did_remap = 1;
-                        if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0) {
+                        if ((old_used_colors.read(__color) & palette_used_colors.read(__color) & PALETTE_COLOR_CACHED) != 0) {
                             /* the color was and still is cached, we'll have to redraw everything */
                             need_refresh = 1;
-                            just_remapped.write(color, 1);
+                            just_remapped.write(__color, 1);
                         }
 
-                        palette_map[color] = TRANSPARENT_PEN;
+                        palette_map[__color] = TRANSPARENT_PEN;
                     }
-                    pen_usage_count[palette_map[color]]++;
-                    Machine.pens[color] = shrinked_pens[palette_map[color]];
-                    old_used_colors.write(color, palette_used_colors.read(color));
+                    pen_usage_count[palette_map[__color]]++;
+                    Machine.pens[__color] = shrinked_pens[palette_map[__color]];
+                    old_used_colors.write(__color, palette_used_colors.read(__color));
                 } else {
                     if (reuse_pens != 0) {
-                        i = rgb6_to_pen[r >> 2][g >> 2][b >> 2];
-                        if (i != DYNAMIC_MAX_PENS) {
-                            if (palette_map[color] != i) {
+                        __i = rgb6_to_pen[r >> 2][g >> 2][b >> 2];
+                        if (__i != DYNAMIC_MAX_PENS) {
+                            if (palette_map[__color] != __i) {
                                 did_remap = 1;
-                                if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0) {
+                                if ((old_used_colors.read(__color) & palette_used_colors.read(__color) & PALETTE_COLOR_CACHED) != 0) {
                                     /* the color was and still is cached, we'll have to redraw everything */
                                     need_refresh = 1;
-                                    just_remapped.write(color, 1);
+                                    just_remapped.write(__color, 1);
                                 }
 
-                                palette_map[color] = (char) i;
+                                palette_map[__color] = (char) __i;
                             }
-                            pen_usage_count[palette_map[color]]++;
-                            Machine.pens[color] = shrinked_pens[palette_map[color]];
-                            old_used_colors.write(color, palette_used_colors.read(color));
+                            pen_usage_count[palette_map[__color]]++;
+                            Machine.pens[__color] = shrinked_pens[palette_map[__color]];
+                            old_used_colors.write(__color, palette_used_colors.read(__color));
                         }
                     }
 
                     /* if we still haven't found a pen, choose a new one */
-                    if (old_used_colors.read(color) != palette_used_colors.read(color)) {
+                    if (old_used_colors.read(__color) != palette_used_colors.read(__color)) {
                         /* if possible, reuse the last associated pen */
-                        if (pen_usage_count[palette_map[color]] == 0) {
-                            pen_usage_count[palette_map[color]]++;
+                        if (pen_usage_count[palette_map[__color]] == 0) {
+                            pen_usage_count[palette_map[__color]]++;
                         } else /* allocate a new pen */ {
-                            retry:
-                            for (;;) {
-                                while (first_free_pen < DYNAMIC_MAX_PENS && pen_usage_count[first_free_pen] > 0) {
-                                    first_free_pen++;
-                                }
-
-                                if (first_free_pen < DYNAMIC_MAX_PENS) {
-                                    did_remap = 1;
-                                    if ((old_used_colors.read(color) & palette_used_colors.read(color) & PALETTE_COLOR_CACHED) != 0) {
-                                        /* the color was and still is cached, we'll have to redraw everything */
-                                        need_refresh = 1;
-                                        just_remapped.write(color, 1);
-                                    }
-
-                                    palette_map[color] = (char) first_free_pen;
-                                    pen_usage_count[palette_map[color]]++;
-                                    Machine.pens[color] = shrinked_pens[palette_map[color]];
-                                } else {
-                                    /* Ran out of pens! Let's see what we can do. */
-
-                                    if (ran_out == 0) {
-                                        ran_out++;
-
-                                        /* from now on, try to reuse already allocated pens */
-                                        reuse_pens = 1;
-                                        if (compress_palette() > 0) {
-                                            did_remap = 1;
-                                            need_refresh = 1;
-                                            /* we'll have to redraw everything */
-
-                                            first_free_pen = RESERVED_PENS;
-                                            continue retry;
-                                        }
-                                    }
-
-                                    ran_out++;
-
-                                    /* we failed, but go on with the loop, there might be some transparent pens to remap */
-                                    continue;
-                                }
-                                break;//for goto
-                            }//for goto
+                            retry();
+                            if (__continue)
+                                continue;
+                            if (__break)
+                                break;
+                            
                         }
 
                         {
                             int rr, gg, bb;
 
-                            i = palette_map[color];
-                            rr = shrinked_palette[3 * i + 0] >> 2;
-                            gg = shrinked_palette[3 * i + 1] >> 2;
-                            bb = shrinked_palette[3 * i + 2] >> 2;
-                            if (rgb6_to_pen[rr][gg][bb] == i) {
+                            __i = palette_map[__color];
+                            rr = shrinked_palette[3 * __i + 0] >> 2;
+                            gg = shrinked_palette[3 * __i + 1] >> 2;
+                            bb = shrinked_palette[3 * __i + 2] >> 2;
+                            if (rgb6_to_pen[rr][gg][bb] == __i) {
                                 rgb6_to_pen[rr][gg][bb] = DYNAMIC_MAX_PENS;
                             }
 
-                            shrinked_palette[3 * i + 0] = (char) (r & 0xFF);
-                            shrinked_palette[3 * i + 1] = (char) (g & 0xFF);
-                            shrinked_palette[3 * i + 2] = (char) (b & 0xFF);
-                            osd_modify_pen(Machine.pens[color], r, g, b);
+                            shrinked_palette[3 * __i + 0] = (char) (r & 0xFF);
+                            shrinked_palette[3 * __i + 1] = (char) (g & 0xFF);
+                            shrinked_palette[3 * __i + 2] = (char) (b & 0xFF);
+                            osd_modify_pen(Machine.pens[__color], r, g, b);
 
                             r >>= 2;
                             g >>= 2;
                             b >>= 2;
                             if (rgb6_to_pen[r][g][b] == DYNAMIC_MAX_PENS) {
-                                rgb6_to_pen[r][g][b] = (char) i;
+                                rgb6_to_pen[r][g][b] = (char) __i;
                             }
                         }
 
-                        old_used_colors.write(color, palette_used_colors.read(color));
+                        old_used_colors.write(__color, palette_used_colors.read(__color));
                     }
                 }
             }
@@ -992,20 +975,20 @@ public class palette {
         }
 
         /* Reclaim unused pens; we do this AFTER allocating the new ones, to avoid using the same pen for two different colors in two consecutive frames, which might cause flicker. */
-        for (color = 0; color < Machine.drv.total_colors; color++) {
-            if ((palette_used_colors.read(color) & PALETTE_COLOR_VISIBLE) == 0) {
-                if ((old_used_colors.read(color) & PALETTE_COLOR_VISIBLE) != 0) {
-                    pen_usage_count[palette_map[color]]--;
+        for (__color = 0; __color < Machine.drv.total_colors; __color++) {
+            if ((palette_used_colors.read(__color) & PALETTE_COLOR_VISIBLE) == 0) {
+                if ((old_used_colors.read(__color) & PALETTE_COLOR_VISIBLE) != 0) {
+                    pen_usage_count[palette_map[__color]]--;
                 }
-                old_used_colors.write(color, palette_used_colors.read(color));
+                old_used_colors.write(__color, palette_used_colors.read(__color));
 
             }
         }
 
         if (did_remap != 0) {
             /* rebuild the color lookup table */
-            for (i = 0; i < Machine.drv.color_table_len; i++) {
-                Machine.remapped_colortable.write(i, Machine.pens[Machine.game_colortable[i]]);
+            for (__i = 0; __i < Machine.drv.color_table_len; __i++) {
+                Machine.remapped_colortable.write(__i, Machine.pens[Machine.game_colortable[__i]]);
             }
         }
 
@@ -1581,4 +1564,51 @@ public class palette {
             changecolor_RRRRGGGGBBBBIIII(offset / 2, newword);
         }
     };
+
+    private static void retry() {
+        
+        while (first_free_pen < DYNAMIC_MAX_PENS && pen_usage_count[first_free_pen] > 0) {
+            first_free_pen++;
+        }
+
+        if (first_free_pen < DYNAMIC_MAX_PENS) {
+            did_remap = 1;
+            if ((old_used_colors.read(__color) & palette_used_colors.read(__color) & PALETTE_COLOR_CACHED) != 0) {
+                /* the color was and still is cached, we'll have to redraw everything */
+                need_refresh = 1;
+                just_remapped.write(__color, 1);
+            }
+
+            palette_map[__color] = (char) first_free_pen;
+            pen_usage_count[palette_map[__color]]++;
+            Machine.pens[__color] = shrinked_pens[palette_map[__color]];
+        } else {
+            /* Ran out of pens! Let's see what we can do. */
+
+            if (ran_out == 0) {
+                ran_out++;
+
+                /* from now on, try to reuse already allocated pens */
+                reuse_pens = 1;
+                if (compress_palette() > 0) {
+                    did_remap = 1;
+                    need_refresh = 1;
+                    /* we'll have to redraw everything */
+
+                    first_free_pen = RESERVED_PENS;
+                    //continue;
+                   retry();
+                }
+            }
+
+            ran_out++;
+
+            /* we failed, but go on with the loop, there might be some transparent pens to remap */
+            //continue;
+            __continue=true;
+        }
+        //break;//for goto
+        //__break=true;
+                            
+    }
 }
