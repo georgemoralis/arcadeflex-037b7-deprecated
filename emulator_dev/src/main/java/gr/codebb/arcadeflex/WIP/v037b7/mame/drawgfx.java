@@ -3687,102 +3687,174 @@ public static void copyrozbitmap(osd_bitmap dest, osd_bitmap src,
 /*TODO*///		srcheight--;
 /*TODO*///	}
 /*TODO*///})
-/*TODO*///
-/*TODO*///DECLARE(blockmove_8toN_transmask_pri_flipx,(
-/*TODO*///		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
-/*TODO*///		DATA_TYPE *dstdata,int dstmodulo,
-/*TODO*///		const UINT16 *paldata,int transmask,UINT8 *pridata,UINT32 pmask),
-/*TODO*///{
-/*TODO*///	DATA_TYPE *end;
-/*TODO*///	UINT32 *sd4;
-/*TODO*///
-/*TODO*///	pmask |= (1<<31);
-/*TODO*///
-/*TODO*///	srcmodulo += srcwidth;
-/*TODO*///	dstmodulo -= srcwidth;
-/*TODO*///	//srcdata += srcwidth-1;
-/*TODO*///	srcdata -= 3;
-/*TODO*///
-/*TODO*///	while (srcheight)
-/*TODO*///	{
-/*TODO*///		end = dstdata + srcwidth;
-/*TODO*///		while (((long)srcdata & 3) && dstdata < end)	/* longword align */
-/*TODO*///		{
-/*TODO*///			int col;
-/*TODO*///
-/*TODO*///			col = srcdata[3];
-/*TODO*///			srcdata--;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << *pridata) & pmask) == 0)
-/*TODO*///					*dstdata = paldata[col];
-/*TODO*///				*pridata = 31;
-/*TODO*///			}
-/*TODO*///			dstdata++;
-/*TODO*///			pridata++;
-/*TODO*///		}
-/*TODO*///		sd4 = (UINT32 *)srcdata;
-/*TODO*///		while (dstdata <= end - 4)
-/*TODO*///		{
-/*TODO*///			int col;
-/*TODO*///			UINT32 col4;
-/*TODO*///
-/*TODO*///			col4 = *(sd4--);
-/*TODO*///			col = (col4 >> 24) & 0xff;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << pridata[BL0]) & pmask) == 0)
-/*TODO*///					dstdata[BL0] = paldata[col];
-/*TODO*///				pridata[BL0] = 31;
-/*TODO*///			}
-/*TODO*///			col = (col4 >> 16) & 0xff;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << pridata[BL1]) & pmask) == 0)
-/*TODO*///					dstdata[BL1] = paldata[col];
-/*TODO*///				pridata[BL1] = 31;
-/*TODO*///			}
-/*TODO*///			col = (col4 >>  8) & 0xff;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << pridata[BL2]) & pmask) == 0)
-/*TODO*///					dstdata[BL2] = paldata[col];
-/*TODO*///				pridata[BL2] = 31;
-/*TODO*///			}
-/*TODO*///			col = (col4 >>  0) & 0xff;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << pridata[BL3]) & pmask) == 0)
-/*TODO*///					dstdata[BL3] = paldata[col];
-/*TODO*///				pridata[BL3] = 31;
-/*TODO*///			}
-/*TODO*///			dstdata += 4;
-/*TODO*///			pridata += 4;
-/*TODO*///		}
-/*TODO*///		srcdata = (UINT8 *)sd4;
-/*TODO*///		while (dstdata < end)
-/*TODO*///		{
-/*TODO*///			int col;
-/*TODO*///
-/*TODO*///			col = srcdata[3];
-/*TODO*///			srcdata--;
-/*TODO*///			if (PEN_IS_OPAQUE)
-/*TODO*///			{
-/*TODO*///				if (((1 << *pridata) & pmask) == 0)
-/*TODO*///					*dstdata = paldata[col];
-/*TODO*///				*pridata = 31;
-/*TODO*///			}
-/*TODO*///			dstdata++;
-/*TODO*///			pridata++;
-/*TODO*///		}
-/*TODO*///
-/*TODO*///		srcdata += srcmodulo;
-/*TODO*///		dstdata += dstmodulo;
-/*TODO*///		pridata += dstmodulo;
-/*TODO*///		srcheight--;
-/*TODO*///	}
-/*TODO*///})
-/*TODO*///
+    
+    public static void blockmove_8toN_transmask_pri8(UBytePtr srcdata, int srcwidth, int srcheight, int srcmodulo, UBytePtr dstdata, int dstmodulo, UShortArray paldata, int transmask, UBytePtr pridata, int pmask) {
+	int end;
+        IntPtr sd4;//UINT32 *sd4;
+
+        srcmodulo -= srcwidth;
+        dstmodulo -= srcwidth;
+
+        while (srcheight != 0) {
+            end = dstdata.offset + srcwidth;
+            while ((srcdata.offset & 3) != 0 && dstdata.offset < end)//while (((long)srcdata & 3) && dstdata < end)	/* longword align */
+            {
+                int col;
+
+                col = srcdata.read(0);
+                srcdata.offset++;
+                if (((1 << col) & transmask) == 0) {
+                   // dstdata.write(0, paldata.read(col)); //*dstdata = paldata[col];
+				   if (((1 << pridata.read()) & pmask) == 0)
+                                        dstdata.write(0, paldata.read(col));
+                                pridata.write(0, 31);
+                }
+                dstdata.offset++;
+		pridata.offset++;
+            }
+            sd4 = new IntPtr(srcdata);//sd4 = (UINT32 *)srcdata;
+            while (dstdata.offset <= end - 4) {
+                int col;
+                int col4;
+
+                col4 = sd4.read(0);
+                col = (col4 >> 0) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    //dstdata.write(0, paldata.read(col));
+					if (((1 << pridata.read(BL0)) & pmask) == 0)
+							dstdata.write(BL0, paldata.read(col));
+					pridata.write(BL0, 31);
+                }
+                col = (col4 >> 8) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    //dstdata.write(1, paldata.read(col));
+					if (((1 << pridata.read(BL1)) & pmask) == 0)
+							dstdata.write(BL1, paldata.read(col));
+					pridata.write(BL1, 31);
+                }
+                col = (col4 >> 16) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    //dstdata.write(2, paldata.read(col));
+					if (((1 << pridata.read(BL2)) & pmask) == 0)
+							dstdata.write(BL2, paldata.read(col));
+					pridata.write(BL2, 31);
+                }
+                col = (col4 >> 24) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    //dstdata.write(3, paldata.read(col));
+					if (((1 << pridata.read(BL3)) & pmask) == 0)
+							dstdata.write(BL3, paldata.read(col));
+					pridata.write(BL3, 31);
+                }
+                sd4.base += 4;
+                dstdata.offset += 4;
+				pridata.offset += 4;
+            }
+            srcdata.set(sd4.readCA(), sd4.getBase());//srcdata = (unsigned char *)sd4;
+
+            while (dstdata.offset < end) {
+                int col;
+
+                col = srcdata.read(0);
+                srcdata.offset++;
+                if (((1 << col) & transmask) == 0) {
+                    //dstdata.write(0, paldata.read(col));//*dstdata = paldata[col];
+					if (((1 << pridata.read()) & pmask) == 0)
+							dstdata.write(0, paldata.read(col));
+					pridata.write(0, 31);
+                }
+                dstdata.offset++;
+				pridata.offset++;
+            }
+
+            srcdata.offset += srcmodulo;
+            dstdata.offset += dstmodulo;
+			pridata.offset += dstmodulo;
+            srcheight--;
+        }
+    }
+
+    public static void blockmove_8toN_transmask_pri_flipx8(UBytePtr srcdata, int srcwidth, int srcheight, int srcmodulo, UBytePtr dstdata, int dstmodulo, UShortArray paldata, int transmask, UBytePtr pridata, int pmask) {
+	int end;
+        IntPtr sd4;//UINT32 *sd4;
+
+        srcmodulo += srcwidth;
+        dstmodulo -= srcwidth;
+        //srcdata += srcwidth-1;
+        srcdata.offset -= 3;
+
+        while (srcheight != 0) {
+            end = dstdata.offset + srcwidth;
+            while ((srcdata.offset & 3) != 0 && dstdata.offset < end)//while (((long)srcdata & 3) && dstdata < end)	/* longword align */
+            {
+                int col;
+
+                col = srcdata.read(3);
+                srcdata.offset--;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read()) & pmask) == 0)
+                            dstdata.write(0, paldata.read(col)); //*dstdata = paldata[col];
+                    pridata.write(0, 31);
+                }
+                dstdata.offset++;
+		pridata.offset++;
+            }
+            sd4 = new IntPtr(srcdata);//sd4 = (UINT32 *)srcdata;
+            while (dstdata.offset <= end - 4) {
+                int col;
+                int col4;
+                col4 = sd4.read(0);//col4 = *(sd4--);
+                col = (col4 >> 24) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read(BL0)) & pmask) == 0)
+                            dstdata.write(BL0, paldata.read(col));
+                    pridata.write(BL0, 31);
+                }
+                col = (col4 >> 16) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read(BL1)) & pmask) == 0)
+                            dstdata.write(BL1, paldata.read(col));
+                    pridata.write(BL1, 31);
+                }
+                col = (col4 >> 8) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read(BL2)) & pmask) == 0)
+                            dstdata.write(BL2, paldata.read(col));
+                    pridata.write(BL2, 31);
+                }
+                col = (col4 >> 0) & 0xff;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read(BL3)) & pmask) == 0)
+                            dstdata.write(BL3, paldata.read(col));
+                    pridata.write(BL3, 31);
+                }
+                sd4.base -= 4;
+                dstdata.offset += 4;
+		pridata.offset += 4;
+            }
+            srcdata.set(sd4.readCA(), sd4.getBase());//srcdata = (unsigned char *)sd4;
+
+            while (dstdata.offset < end) {
+                int col;
+
+                col = srcdata.read(3);
+                srcdata.offset--;
+                if (((1 << col) & transmask) == 0) {
+                    if (((1 << pridata.read()) & pmask) == 0)
+                            dstdata.write(0, paldata.read(col));
+                    pridata.write(0, 31);
+                }
+                dstdata.offset++;
+		pridata.offset++;
+            }
+
+            srcdata.offset += srcmodulo;
+            dstdata.offset += dstmodulo;
+            pridata.offset += dstmodulo;
+            srcheight--;
+        }
+    }
+
 /*TODO*///DECLARE(blockmove_8toN_transmask_raw,(
 /*TODO*///		const UINT8 *srcdata,int srcwidth,int srcheight,int srcmodulo,
 /*TODO*///		DATA_TYPE *dstdata,int dstmodulo,

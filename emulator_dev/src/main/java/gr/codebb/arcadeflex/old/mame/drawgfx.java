@@ -15,6 +15,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_8toN_transt
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_NtoN_opaque_noremap_flipx8;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_NtoN_transthrough_noremap8;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_NtoN_transthrough_noremap_flipx8;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_8toN_transmask_pri_flipx8;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.blockmove_8toN_transmask_pri8;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.copyscrollbitmap_remap;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.decodechar;
 import static gr.codebb.arcadeflex.v037b7.mame.driverH.*;
@@ -24,6 +26,8 @@ import static gr.codebb.arcadeflex.old.arcadeflex.video.osd_mark_dirty;
 import static gr.codebb.arcadeflex.old.mame.usrintrf.usrintf_showmessage;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfxH.*;
+import gr.codebb.arcadeflex.common.PtrLib;
+import gr.codebb.arcadeflex.common.SubArrays;
 
 public class drawgfx {
 
@@ -4710,10 +4714,12 @@ public class drawgfx {
                 }
                 break;
             case TRANSPARENCY_PENS:
-
                 if (pribuf != null) {
-                    /*TODO*///                    BLOCKMOVE(8toN_transmask_pri,flipx,(sd,sw,sh,sm,dd,dm,paldata,transparent_color,pribuf,pri_mask));				
-                    throw new UnsupportedOperationException("unsupported");
+                    if (flipx != 0) {
+                        blockmove_8toN_transmask_pri_flipx8(sd, sw, sh, sm, dd, dm, paldata, transparent_color, pribuf, pri_mask);
+                    } else {
+                        blockmove_8toN_transmask_pri8(sd, sw, sh, sm, dd, dm, paldata, transparent_color, pribuf, pri_mask);
+                    }                    
                 } else if (flipx != 0) {
                     blockmove_transmask_flipx8(sd, sw, sh, sm, dd, dm, paldata, transparent_color);
                 } else {
@@ -5511,4 +5517,5 @@ public class drawgfx {
 /*TODO*///
 /*TODO*///#endif /* DECLARE */
 /*TODO*///
-}
+
+    }
