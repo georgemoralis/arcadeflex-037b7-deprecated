@@ -750,6 +750,8 @@ import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_get_pc;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrf.cpu_getcurrentframe;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.ASSERT_LINE;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.cpuintrfH.CLEAR_LINE;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.copyrozbitmap;
+import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.drawgfxzoom;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.drawgfx.pdrawgfx;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.mame.Machine;
 import static gr.codebb.arcadeflex.WIP.v037b7.mame.tilemapC.*;
@@ -2315,70 +2317,71 @@ public class konamiic {
                     }
                 }
             } else {
-                System.out.println("unsuppoted sprites zoom");
-                //    throw new UnsupportedOperationException("Unsupported");
-                /*TODO*///				int sx,sy,zw,zh;
-/*TODO*///	
-/*TODO*///				for (y = 0;y < h;y++)
-/*TODO*///				{
-/*TODO*///					sy = oy + ((zoomy * y + (1<<11)) >> 12);
-/*TODO*///					zh = (oy + ((zoomy * (y+1) + (1<<11)) >> 12)) - sy;
-/*TODO*///	
-/*TODO*///					for (x = 0;x < w;x++)
-/*TODO*///					{
-/*TODO*///						int c = code;
-/*TODO*///	
-/*TODO*///						sx = ox + ((zoomx * x + (1<<11)) >> 12);
-/*TODO*///						zw = (ox + ((zoomx * (x+1) + (1<<11)) >> 12)) - sx;
-/*TODO*///						if (flipx != 0) c += xoffset[(w-1-x)];
-/*TODO*///						else c += xoffset[x];
-/*TODO*///						if (flipy != 0) c += yoffset[(h-1-y)];
-/*TODO*///						else c += yoffset[y];
-/*TODO*///	
-/*TODO*///						/* hack to simulate shadow */
-/*TODO*///						if (shadow != 0)
-/*TODO*///						{
-/*TODO*///							int o = K051960_gfx.colortable[16*color+15];
-/*TODO*///							K051960_gfx.colortable[16*color+15] = palette_transparent_pen;
-/*TODO*///							if (max_priority == -1)
-/*TODO*///								pdrawgfxzoom(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1) ? 0x8001 : 0x0001,
-/*TODO*///										(zw << 16) / 16,(zh << 16) / 16,pri);
-/*TODO*///							else
-/*TODO*///								drawgfxzoom(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PENS,(cpu_getcurrentframe() & 1) ? 0x8001 : 0x0001,
-/*TODO*///										(zw << 16) / 16,(zh << 16) / 16);
-/*TODO*///							K051960_gfx.colortable[16*color+15] = o;
-/*TODO*///						}
-/*TODO*///						else
-/*TODO*///						{
-/*TODO*///							if (max_priority == -1)
-/*TODO*///								pdrawgfxzoom(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PEN,0,
-/*TODO*///										(zw << 16) / 16,(zh << 16) / 16,pri);
-/*TODO*///							else
-/*TODO*///								drawgfxzoom(bitmap,K051960_gfx,
-/*TODO*///										c,
-/*TODO*///										color,
-/*TODO*///										flipx,flipy,
-/*TODO*///										sx & 0x1ff,sy,
-/*TODO*///										&Machine.visible_area,TRANSPARENCY_PEN,0,
-/*TODO*///										(zw << 16) / 16,(zh << 16) / 16);
-/*TODO*///						}
-/*TODO*///					}
-/*TODO*///				}
+                int sx, sy, zw, zh;
+
+                for (y = 0; y < h; y++) {
+                    sy = oy + ((zoomy * y + (1 << 11)) >> 12);
+                    zh = (oy + ((zoomy * (y + 1) + (1 << 11)) >> 12)) - sy;
+
+                    for (x = 0; x < w; x++) {
+                        int c = code[0];
+
+                        sx = ox + ((zoomx * x + (1 << 11)) >> 12);
+                        zw = (ox + ((zoomx * (x + 1) + (1 << 11)) >> 12)) - sx;
+                        if (flipx != 0) {
+                            c += xoffset[(w - 1 - x)];
+                        } else {
+                            c += xoffset[x];
+                        }
+                        if (flipy != 0) {
+                            c += yoffset[(h - 1 - y)];
+                        } else {
+                            c += yoffset[y];
+                        }
+
+                        /* hack to simulate shadow */
+                        if (shadow[0] != 0) {
+                            int o = K051960_gfx.colortable.read(16 * color[0] + 15);
+                            K051960_gfx.colortable.write(16 * color[0] + 15, palette_transparent_pen);
+                            if (max_priority == -1) {
+                                pdrawgfxzoom(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001,
+                                        (zw << 16) / 16, (zh << 16) / 16, pri[0]);
+                            } else {
+                                drawgfxzoom(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PENS, (cpu_getcurrentframe() & 1) != 0 ? 0x8001 : 0x0001,
+                                        (zw << 16) / 16, (zh << 16) / 16);
+                            }
+                            K051960_gfx.colortable.write(16 * color[0] + 15, o);
+                        } else {
+                            if (max_priority == -1) {
+                                pdrawgfxzoom(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PEN, 0,
+                                        (zw << 16) / 16, (zh << 16) / 16, pri[0]);
+                            } else {
+                                drawgfxzoom(bitmap, K051960_gfx,
+                                        c,
+                                        color[0],
+                                        flipx, flipy,
+                                        sx & 0x1ff, sy,
+                                        Machine.visible_area, TRANSPARENCY_PEN, 0,
+                                        (zw << 16) / 16, (zh << 16) / 16);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -3768,46 +3771,26 @@ public class konamiic {
     }
 
     public static void K051316_zoom_draw(int chip, osd_bitmap bitmap, int/*UINT32*/ priority) {
-        System.out.println("51316 zoom draw todo");
-        /*TODO*///		UINT32 startx,starty;
-/*TODO*///		int incxx,incxy,incyx,incyy;
-/*TODO*///		struct osd_bitmap *srcbitmap = K051316_tilemap[chip].pixmap;
-/*TODO*///	
-/*TODO*///		startx = 256 * ((INT16)(256 * K051316_ctrlram[chip][0x00] + K051316_ctrlram[chip][0x01]));
-/*TODO*///		incxx  =        (INT16)(256 * K051316_ctrlram[chip][0x02] + K051316_ctrlram[chip][0x03]);
-/*TODO*///		incyx  =        (INT16)(256 * K051316_ctrlram[chip][0x04] + K051316_ctrlram[chip][0x05]);
-/*TODO*///		starty = 256 * ((INT16)(256 * K051316_ctrlram[chip][0x06] + K051316_ctrlram[chip][0x07]));
-/*TODO*///		incxy  =        (INT16)(256 * K051316_ctrlram[chip][0x08] + K051316_ctrlram[chip][0x09]);
-/*TODO*///		incyy  =        (INT16)(256 * K051316_ctrlram[chip][0x0a] + K051316_ctrlram[chip][0x0b]);
-/*TODO*///	
-/*TODO*///		startx -= (16 + K051316_offset[chip][1]) * incyx;
-/*TODO*///		starty -= (16 + K051316_offset[chip][1]) * incyy;
-/*TODO*///	
-/*TODO*///		startx -= (89 + K051316_offset[chip][0]) * incxx;
-/*TODO*///		starty -= (89 + K051316_offset[chip][0]) * incxy;
-/*TODO*///	
-/*TODO*///		copyrozbitmap(bitmap,srcbitmap,startx << 5,starty << 5,
-/*TODO*///				incxx << 5,incxy << 5,incyx << 5,incyy << 5,K051316_wraparound[chip],
-/*TODO*///				&Machine.visible_area,TRANSPARENCY_PEN,palette_transparent_pen,priority);
-/*TODO*///	#if 0
-/*TODO*///		usrintf_showmessage("%02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x",
-/*TODO*///				K051316_ctrlram[chip][0x00],
-/*TODO*///				K051316_ctrlram[chip][0x01],
-/*TODO*///				K051316_ctrlram[chip][0x02],
-/*TODO*///				K051316_ctrlram[chip][0x03],
-/*TODO*///				K051316_ctrlram[chip][0x04],
-/*TODO*///				K051316_ctrlram[chip][0x05],
-/*TODO*///				K051316_ctrlram[chip][0x06],
-/*TODO*///				K051316_ctrlram[chip][0x07],
-/*TODO*///				K051316_ctrlram[chip][0x08],
-/*TODO*///				K051316_ctrlram[chip][0x09],
-/*TODO*///				K051316_ctrlram[chip][0x0a],
-/*TODO*///				K051316_ctrlram[chip][0x0b],
-/*TODO*///				K051316_ctrlram[chip][0x0c],	/* bank for ROM testing */
-/*TODO*///				K051316_ctrlram[chip][0x0d],
-/*TODO*///				K051316_ctrlram[chip][0x0e],	/* 0 = test ROMs */
-/*TODO*///				K051316_ctrlram[chip][0x0f]);
-/*TODO*///	#endif
+        long startx, starty;
+        int incxx, incxy, incyx, incyy;
+        osd_bitmap srcbitmap = K051316_tilemap[chip].pixmap;
+
+        startx = ((256 * ((short) (256 * K051316_ctrlram[chip][0x00] + K051316_ctrlram[chip][0x01])))) & 0xFFFFFFFFL;
+        incxx = (short) (256 * K051316_ctrlram[chip][0x02] + K051316_ctrlram[chip][0x03]);
+        incyx = (short) (256 * K051316_ctrlram[chip][0x04] + K051316_ctrlram[chip][0x05]);
+        starty = ((256 * ((short) (256 * K051316_ctrlram[chip][0x06] + K051316_ctrlram[chip][0x07])))) & 0xFFFFFFFFL;
+        incxy = (short) (256 * K051316_ctrlram[chip][0x08] + K051316_ctrlram[chip][0x09]);
+        incyy = (short) (256 * K051316_ctrlram[chip][0x0a] + K051316_ctrlram[chip][0x0b]);
+
+        startx = (startx - (16 + K051316_offset[chip][1]) * incyx) & 0xFFFFFFFFL;
+        starty = (starty - (16 + K051316_offset[chip][1]) * incyy) & 0xFFFFFFFFL;
+
+        startx = (startx - (89 + K051316_offset[chip][0]) * incxx) & 0xFFFFFFFFL;
+        starty = (starty - (89 + K051316_offset[chip][0]) * incxy) & 0xFFFFFFFFL;
+
+        copyrozbitmap(bitmap, srcbitmap, startx << 5, starty << 5,
+                incxx << 5, incxy << 5, incyx << 5, incyy << 5, K051316_wraparound[chip],
+                Machine.visible_area, TRANSPARENCY_PEN, palette_transparent_pen, priority);
     }
 
     public static void K051316_zoom_draw_0(osd_bitmap bitmap, int/*UINT32*/ priority) {
