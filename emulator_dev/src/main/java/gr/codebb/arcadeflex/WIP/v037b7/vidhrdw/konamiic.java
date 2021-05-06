@@ -3006,11 +3006,10 @@ public class konamiic {
         return 0;
     }
 
-    public static VhStopPtr K053247_vh_stop = new VhStopPtr() {
-        public void handler() {
-            K053247_ram = null;
-        }
-    };
+    public static void K053247_vh_stop() {
+        K053247_ram = null;
+    }
+
 
     /*TODO*///	public static ReadHandlerPtr K053247_word_r  = new ReadHandlerPtr() { public int handler(int offset)
 /*TODO*///	{

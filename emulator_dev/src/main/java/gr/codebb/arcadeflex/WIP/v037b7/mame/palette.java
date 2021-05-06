@@ -578,7 +578,7 @@ public class palette {
             }
         }
     }
-    static /*UINT8*/ char[][][] rgb6_to_pen = new char[64][64][64];
+    static /*UINT8*/ int[][][] u8_rgb6_to_pen = new int[64][64][64];
 
     static void build_rgb_to_pen() {
         int i, rr, gg, bb;
@@ -587,11 +587,11 @@ public class palette {
         for (int k = 0; k < 64; k++) {
             for (int j = 0; j < 64; j++) {
                 for (int l = 0; l < 64; l++) {
-                    rgb6_to_pen[k][j][l] = DYNAMIC_MAX_PENS;
+                    u8_rgb6_to_pen[k][j][l] = DYNAMIC_MAX_PENS;
                 }
             }
         }
-        rgb6_to_pen[0][0][0] = BLACK_PEN;
+        u8_rgb6_to_pen[0][0][0] = BLACK_PEN;
 
         for (i = 0; i < DYNAMIC_MAX_PENS; i++) {
             if (pen_usage_count[i] > 0) {
@@ -599,10 +599,10 @@ public class palette {
                 gg = shrinked_palette[3 * i + 1] >> 2;
                 bb = shrinked_palette[3 * i + 2] >> 2;
 
-                if (rgb6_to_pen[rr][gg][bb] == DYNAMIC_MAX_PENS) {
+                if (u8_rgb6_to_pen[rr][gg][bb] == DYNAMIC_MAX_PENS) {
                     int j, max;
 
-                    rgb6_to_pen[rr][gg][bb] = (char) (i & 0xFF);
+                    u8_rgb6_to_pen[rr][gg][bb] = i & 0xFF;
                     max = pen_usage_count[i];
 
                     /* to reduce flickering during remaps, find the pen used by most colors */
@@ -611,7 +611,7 @@ public class palette {
                                 && rr == (shrinked_palette[3 * j + 0] >> 2)
                                 && gg == (shrinked_palette[3 * j + 1] >> 2)
                                 && bb == (shrinked_palette[3 * j + 2] >> 2)) {
-                            rgb6_to_pen[rr][gg][bb] = (char) (j & 0xFF);
+                            u8_rgb6_to_pen[rr][gg][bb] = j & 0xFF;
                             max = pen_usage_count[j];
                         }
                     }
@@ -635,8 +635,8 @@ public class palette {
                 g = game_palette[3 * i + 1] >> 2;
                 b = game_palette[3 * i + 2] >> 2;
 
-                j = rgb6_to_pen[r][g][b];
-
+                j = u8_rgb6_to_pen[r][g][b];
+                System.out.println(j);
                 if (palette_map[i] != j) {
                     just_remapped.write(i, 1);
 
@@ -897,7 +897,7 @@ public class palette {
                     old_used_colors.write(rec_color, palette_used_colors.read(rec_color));
                 } else {
                     if (rec_reuse_pens != 0) {
-                        i = rgb6_to_pen[r >> 2][g >> 2][b >> 2];
+                        i = u8_rgb6_to_pen[r >> 2][g >> 2][b >> 2];
                         if (i != DYNAMIC_MAX_PENS) {
                             if (palette_map[rec_color] != i) {
                                 rec_did_remap = 1;
@@ -933,8 +933,8 @@ public class palette {
                             rr = shrinked_palette[3 * i + 0] >> 2;
                             gg = shrinked_palette[3 * i + 1] >> 2;
                             bb = shrinked_palette[3 * i + 2] >> 2;
-                            if (rgb6_to_pen[rr][gg][bb] == i) {
-                                rgb6_to_pen[rr][gg][bb] = DYNAMIC_MAX_PENS;
+                            if (u8_rgb6_to_pen[rr][gg][bb] == i) {
+                                u8_rgb6_to_pen[rr][gg][bb] = DYNAMIC_MAX_PENS;
                             }
 
                             shrinked_palette[3 * i + 0] = (char) (r & 0xFF);
@@ -945,8 +945,8 @@ public class palette {
                             r >>= 2;
                             g >>= 2;
                             b >>= 2;
-                            if (rgb6_to_pen[r][g][b] == DYNAMIC_MAX_PENS) {
-                                rgb6_to_pen[r][g][b] = (char) (i & 0xFF);
+                            if (u8_rgb6_to_pen[r][g][b] == DYNAMIC_MAX_PENS) {
+                                u8_rgb6_to_pen[r][g][b] = i & 0xFF;
                             }
                         }
 
