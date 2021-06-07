@@ -729,16 +729,16 @@ public class m6800ops {
         }
     };
 
-    /*TODO*////* $65 EIM --**0- */ /* HD63701YO only */
+    /* $65 EIM --**0- */ /* HD63701YO only */
     public static opcode eim_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t, r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	IDXBYTE(r);
-/*TODO*///	r ^= t;
-/*TODO*///	CLR_NZV; SET_NZ8(r);
-/*TODO*///	WM(EAD,r);
+            int/*UINT8*/ t, r;
+            t = IMMBYTE();
+            r = IDXBYTE();
+            r = (r ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+            WM(ea, r);
         }
     };
 
@@ -755,8 +755,8 @@ public class m6800ops {
             WM(ea, r);
         }
     };
-    /*TODO*///
-/*TODO*////* $67 ASR indexed ?**-* */
+    
+    /* $67 ASR indexed ?**-* */
     public static opcode asr_ix = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -909,17 +909,16 @@ public class m6800ops {
         }
     };
 
-    /*TODO*///
-/*TODO*////* $75 EIM --**0- */ /* HD63701YO only */
+    /* $75 EIM --**0- */ /* HD63701YO only */
     public static opcode eim_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t, r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	DIRBYTE(r);
-/*TODO*///	r ^= t;
-/*TODO*///	CLR_NZV; SET_NZ8(r);
-/*TODO*///	WM(EAD,r);
+            int/*UINT8*/ t, r;
+            t = IMMBYTE();
+            r = DIRBYTE();
+            r = (r ^ t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
+            WM(ea, r);
         }
     };
 
@@ -936,7 +935,7 @@ public class m6800ops {
         }
     };
 
-    /*TODO*////* $77 ASR extended ?**-* */
+    /* $77 ASR extended ?**-* */
     public static opcode asr_ex = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -981,16 +980,15 @@ public class m6800ops {
             WM(ea, t);
         }
     };
-    /*TODO*///
-/*TODO*////* $7b TIM --**0- */ /* HD63701YO only */
+    /* $7b TIM --**0- */ /* HD63701YO only */
     public static opcode tim_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t, r;
-/*TODO*///	IMMBYTE(t);
-/*TODO*///	DIRBYTE(r);
-/*TODO*///	r &= t;
-/*TODO*///	CLR_NZV; SET_NZ8(r);
+            int/*UINT8*/ t, r;
+            t = IMMBYTE();
+            r = DIRBYTE();
+            r = (r & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
         }
     };
 
@@ -1106,9 +1104,8 @@ public class m6800ops {
             SET_NZ8(m6800.a);
         }
     };
-    /*TODO*///
-/*TODO*////* is this a legal instruction? */
-/*TODO*////* $87 STA immediate -**0- */
+    /* is this a legal instruction? */
+ /* $87 STA immediate -**0- */
     public static opcode sta_im = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1201,8 +1198,8 @@ public class m6800ops {
             SET_NZ16(m6800.s);
         }
     };
-    /*TODO*///
-/*TODO*////* $8f STS immediate -**0- */
+
+    /* $8f STS immediate -**0- */
     public static opcode sts_im = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1524,31 +1521,31 @@ public class m6800ops {
             m6800.a = r & 0xFF;
         }
     };
-    /*TODO*///
-/*TODO*////* $ac CMPX indexed -***- */
+
+    /* $ac CMPX indexed -***- */
     public static opcode cmpx_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	IDXWORD(b);
-/*TODO*///	d = X;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZV;
-/*TODO*///	SET_NZ16(r); SET_V16(d,b.d,r);
+            int/*UINT32*/ r, d;
+            int b;
+            b = IDXWORD();
+            d = m6800.x;
+            r = d - b;
+            CLR_NZV();
+            SET_NZ16(r);
+            SET_V16(d, b, r);
         }
     };
-    /*TODO*///
-/*TODO*////* $ac CPX indexed -**** (6803)*/
+
+    /* $ac CPX indexed -**** (6803)*/
     public static opcode cpx_ix = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	IDXWORD(b);
-/*TODO*///	d = X;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC; SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b;
+            b = IDXWORD();
+            d = m6800.x;
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1568,7 +1565,7 @@ public class m6800ops {
             SET_NZ16(m6800.s);
         }
     };
-    
+
     /* $af STS indexed -**0- */
     public static opcode sts_ix = new opcode() {
         public void handler() {
@@ -1725,17 +1722,16 @@ public class m6800ops {
             SET_V16(d, b, r);
         }
     };
-    /*TODO*///
-/*TODO*////* $bc CPX extended -**** (6803) */
+    /* $bc CPX extended -**** (6803) */
     public static opcode cpx_ex = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT32 r,d;
-/*TODO*///	PAIR b;
-/*TODO*///	EXTWORD(b);
-/*TODO*///	d = X;
-/*TODO*///	r = d - b.d;
-/*TODO*///	CLR_NZVC; SET_FLAGS16(d,b.d,r);
+            int r, d;
+            int b;
+            b = EXTWORD();
+            d = m6800.x;
+            r = d - b;
+            CLR_NZVC();
+            SET_FLAGS16(d, b, r);
         }
     };
 
@@ -1755,7 +1751,7 @@ public class m6800ops {
             SET_NZ16(m6800.s);
         }
     };
-    
+
     /* $bf STS extended -**0- */
     public static opcode sts_ex = new opcode() {
         public void handler() {
@@ -1839,9 +1835,9 @@ public class m6800ops {
             SET_NZ8(m6800.b);
         }
     };
-    /*TODO*///
-/*TODO*////* is this a legal instruction? */
-/*TODO*////* $c7 STB immediate -**0- */
+
+    /* is this a legal instruction? */
+ /* $c7 STB immediate -**0- */
     public static opcode stb_im = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1902,8 +1898,8 @@ public class m6800ops {
         }
     };
 
-    /*TODO*////* is this a legal instruction? */
-/*TODO*////* $cd STD immediate -**0- */
+    /* is this a legal instruction? */
+ /* $cd STD immediate -**0- */
     public static opcode std_im = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1921,8 +1917,8 @@ public class m6800ops {
             SET_NZ16(m6800.x);
         }
     };
-    /*TODO*///
-/*TODO*////* $cf STX immediate -**0- */
+    
+    /* $cf STX immediate -**0- */
     public static opcode stx_im = new opcode() {
         public void handler() {
             throw new UnsupportedOperationException("Unsupported");
@@ -1987,14 +1983,15 @@ public class m6800ops {
             SET_NZ8(m6800.b);
         }
     };
-    /*TODO*///
-/*TODO*////* $d5 BITB direct -**0- */
+
+    /* $d5 BITB direct -**0- */
     public static opcode bitb_di = new opcode() {
         public void handler() {
-            throw new UnsupportedOperationException("Unsupported");
-            /*TODO*///	UINT8 t,r;
-/*TODO*///	DIRBYTE(t); r = B&t;
-/*TODO*///	CLR_NZV; SET_NZ8(r);
+            int t, r;
+            t = DIRBYTE();
+            r = (m6800.b & t) & 0xFF;
+            CLR_NZV();
+            SET_NZ8(r);
         }
     };
 
