@@ -107,7 +107,7 @@ public class hd63701  extends m6800 {
 	
 		do
 		{
-			m6800.ppc = m6800.pc;;
+			m6800.ppc = m6800.pc &0xFFFF;
 /*TODO*///			CALL_MAME_DEBUG;
 			ireg=M_RDOP(m6800.pc);
 			m6800.pc = (m6800.pc + 1) & 0xFFFF;

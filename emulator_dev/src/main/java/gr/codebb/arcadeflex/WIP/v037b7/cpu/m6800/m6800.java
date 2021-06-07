@@ -91,7 +91,6 @@ public class m6800 extends cpu_interface {
     };
 
     /* 6800 Registers */
-
     public static class m6800_Regs {
 
         //	int 	subtype;		/* CPU subtype */
@@ -149,20 +148,48 @@ public class m6800 extends cpu_interface {
         /* IRQ2 flags */
 
         public int /*UINT8*/ ram_ctrl;
-        public PAIRD counter = new PAIRD();
-        /* free running counter */
+        public int counterL;
+        public int counterH;/* free running counter */
 
-        public PAIRD output_compare = new PAIRD();
-        /* output compare       */
+        public int output_compareL;
+        public int output_compareH;/* output compare       */
 
-        public int /*UINT16*/ input_capture;
-        /* input capture        */
+        public int u16_input_capture;/* input capture        */
 
-        public PAIRD timer_over = new PAIRD();
+        public int timer_overL;
+        public int timer_overH;
     }
     public static m6800_Regs m6800 = new m6800_Regs();
+
+    public static long getCounterReg() {
+        return (m6800.counterH << 16 | m6800.counterL) & 0xFFFFFFFFL;
+    }
+
+    public static void setCounterReg(long reg) {
+        m6800.counterH = (int) (reg >>> 16 & 0xFFFF);
+        m6800.counterL = (int) (reg & 0xFFFF);
+    }
+
+    public static long getOutputReg() {
+        return (m6800.output_compareH << 16 | m6800.output_compareL) & 0xFFFFFFFFL;
+    }
+
+    public static void setOutputReg(int reg) {
+        m6800.output_compareH = (int) (reg >>> 16 & 0xFFFF);
+        m6800.output_compareL = (int) (reg & 0xFFFF);
+    }
+
+    public static long getTimeOverReg() {
+        return (m6800.timer_overH << 16 | m6800.timer_overL) & 0xFFFFFFFFL;
+    }
+
+    public static void setTimeOverReg(int reg) {
+        m6800.timer_overH = (int) (reg >>> 16 & 0xFFFF);
+        m6800.timer_overL = (int) (reg & 0xFFFF);
+    }
+
     /* point of next timer event */
-    static /*UINT32*/ long timer_next;
+    static /*UINT32*/ long u32_timer_next;
     public static int ea;
     static int cycles_6800[]
             = {
@@ -187,7 +214,6 @@ public class m6800 extends cpu_interface {
 
     /* CC masks                       HI NZVC
      7654 3210	*/
-
     public static void CLR_HNZVC() {
         m6800.cc &= 0xd0;
     }
@@ -293,7 +319,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* macros for CC -- CC bits affected should be reset before calling */
-
     public static void SET_Z(int a) {
         if (a == 0) {
             SEZ();
@@ -341,7 +366,7 @@ public class m6800 extends cpu_interface {
     }
 
     public static void WM(int addr, int value) {
-        cpu_writemem16(addr, value&0xFF);
+        cpu_writemem16(addr, value & 0xFF);
     }
 
     public char ROP(int addr) {
@@ -355,7 +380,7 @@ public class m6800 extends cpu_interface {
     static int RM16(int addr) {
         int i = RM(addr + 1 & 0xFFFF);
         i |= RM(addr) << 8;
-        return i &0xFFFF;
+        return i & 0xFFFF;
     }
 
     static void WM16(int addr, int reg) {
@@ -402,7 +427,7 @@ public class m6800 extends cpu_interface {
     {
         m6800.s = m6800.s + 1 & 0xFFFF;
         int b = RM(m6800.s);
-        return b&0xFF;
+        return b & 0xFF;
     }
 
     public static int PULLWORD()//S++; w.d = RM(SD)<<8; S++; w.d |= RM(SD)
@@ -412,7 +437,7 @@ public class m6800 extends cpu_interface {
         m6800.s = m6800.s + 1 & 0xFFFF;
         w |= RM(m6800.s);
 
-        return w &0xFFFF;
+        return w & 0xFFFF;
     }
 
     public static void CHANGE_PC() {
@@ -420,7 +445,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* macros to set status flags */
-
     public static void SEC() {
         m6800.cc |= 0x01l;
     }
@@ -514,7 +538,7 @@ public class m6800 extends cpu_interface {
 
     static int getDreg()//compose dreg
     {
-        return (m6800.a << 8 | m6800.b)&0xFFFF;
+        return (m6800.a << 8 | m6800.b) & 0xFFFF;
     }
 
     static void setDreg(int reg) //write to dreg
@@ -549,27 +573,26 @@ public class m6800 extends cpu_interface {
     }
 
     public static void SET_TIMRE_EVENT() {
-        timer_next = (m6800.output_compare.D < m6800.timer_over.D) ? m6800.output_compare.D : m6800.timer_over.D;
+        u32_timer_next = (getOutputReg() < getTimeOverReg()) ? getOutputReg() : getTimeOverReg();
     }
 
     public static void MODIFIED_counters() {
-        m6800.output_compare.SetH((m6800.output_compare.L >= m6800.counter.L) ? m6800.counter.H : m6800.counter.H + 1);
+        m6800.output_compareH = (m6800.output_compareL >= m6800.counterL) ? m6800.counterH : ((m6800.counterH + 1) & 0xFFFF);
         SET_TIMRE_EVENT();
     }
 
     /* cleanup high-word of counters */
-
     public void CLEANUP_conters() {
-        m6800.output_compare.SetH(m6800.output_compare.H - m6800.counter.H);//OCH -= CTH;
-        m6800.timer_over.SetL(m6800.timer_over.H - m6800.counter.H);//TOH -= CTH;
-        m6800.counter.SetH(0);//CTH = 0;								
+        m6800.output_compareH = (m6800.output_compareH - m6800.counterH) & 0xFFFF;//OCH -= CTH;									
+        m6800.timer_overH = (m6800.timer_overH - m6800.counterH) & 0xFFFF;//TOH -= CTH;									
+        m6800.counterH = 0;
         SET_TIMRE_EVENT();
     }
 
     public static void INCREMENT_COUNTER(int amount) {
         m6800_ICount[0] -= amount;
-        m6800.timer_over.SetD(m6800.timer_over.D + amount);//CTD += amount;					
-        if (m6800.timer_over.D >= timer_next) {
+        setCounterReg(getCounterReg() - amount);//CTD += amount;					
+        if (getCounterReg() >= u32_timer_next) {
             check_timer_event();
         }
     }
@@ -577,7 +600,7 @@ public class m6800 extends cpu_interface {
     public static void EAT_CYCLES() {
         int cycles_to_eat;
 
-        cycles_to_eat = (int) (timer_next - m6800.counter.D);
+        cycles_to_eat = (int) (u32_timer_next - getCounterReg());
         if (cycles_to_eat > m6800_ICount[0]) {
             cycles_to_eat = m6800_ICount[0];
         }
@@ -587,11 +610,10 @@ public class m6800 extends cpu_interface {
     }
 
     /* check OCI or TOI */
-
     public static void check_timer_event() {
         /* OCI */
-        if (m6800.timer_over.D >= m6800.output_compare.D) {
-            m6800.output_compare.AddH(1);//OCH++;	// next IRQ point
+        if (getCounterReg() >= getOutputReg()) {
+            m6800.output_compareH = (m6800.output_compareH + 1) & 0xFFFF;//OCH++;	// next IRQ point
             m6800.tcsr |= TCSR_OCF;
             m6800.pending_tcsr |= TCSR_OCF;
             MODIFIED_tcsr();
@@ -600,8 +622,8 @@ public class m6800 extends cpu_interface {
             }
         }
         /* TOI */
-        if (m6800.counter.D >= m6800.timer_over.D) {
-            m6800.timer_over.AddL(1);	// next IRQ point
+        if (getCounterReg() >= getTimeOverReg()) {
+            m6800.timer_overL = (m6800.timer_overL & 0xFFFF);	// next IRQ point
 
             m6800.tcsr |= TCSR_TOF;
             m6800.pending_tcsr |= TCSR_TOF;
@@ -615,7 +637,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* take interrupt */
-
     public static void TAKE_ICI() {
         ENTER_INTERRUPT("M6800#%d take ICI\n", 0xfff6);
     }
@@ -637,7 +658,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* IRQ enter */
-
     public static void ENTER_INTERRUPT(String message, int irq_vector) {
         //LOG((errorlog, message, cpu_getactivecpu()));
         if ((m6800.wai_state & (M6800_WAI | M6800_SLP)) != 0) {
@@ -659,7 +679,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* operate one instruction for */
-
     public static void ONE_MORE_INSN() {
         int ireg;
         m6800.ppc = m6800.pc;
@@ -671,7 +690,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* check the IRQ lines for pending interrupts */
-
     public static void CHECK_IRQ_LINES() {
         if ((m6800.cc & 0x10) == 0) {
             if (m6800.irq_state[M6800_IRQ_LINE] != CLEAR_LINE) {
@@ -688,7 +706,6 @@ public class m6800 extends cpu_interface {
     }
 
     /* check IRQ2 (internal irq) */
-
     public static void CHECK_IRQ2() {
         if ((m6800.irq2 & (TCSR_ICF | TCSR_OCF | TCSR_TOF)) != 0) {
             if ((m6800.irq2 & TCSR_ICF) != 0) {
@@ -729,9 +746,9 @@ public class m6800 extends cpu_interface {
         m6800.tcsr = 0x00;
         m6800.pending_tcsr = 0x00;
         m6800.irq2 = 0;
-        m6800.counter.SetD(0x0000);
-        m6800.output_compare.SetD(0xffff);
-        m6800.timer_over.SetD(0xffff);
+        setCounterReg(0x0000);
+        setOutputReg(0xffff);
+        setTimeOverReg(0xffff);
         m6800.ram_ctrl |= 0x40;
     }
 
@@ -1553,71 +1570,77 @@ public class m6800 extends cpu_interface {
 
     @Override
     public Object get_context() {
-        m6800_Regs regs=new m6800_Regs();
-         regs.ppc = m6800.ppc;
+        m6800_Regs regs = new m6800_Regs();
+        regs.ppc = m6800.ppc;
         regs.pc = m6800.pc;
         regs.s = m6800.s;
-        regs.x= m6800.x;
-        regs.a=m6800.a;
-        regs.b=m6800.b;
-        regs.cc=m6800.cc;
-        regs.wai_state=m6800.wai_state;
-        regs.nmi_state=m6800.nmi_state;
-        regs.irq_state[0]=m6800.irq_state[0];
-        regs.irq_state[1]=m6800.irq_state[1];
-        regs.ic_eddge=m6800.ic_eddge;
-        regs.irq_callback=m6800.irq_callback;
-        regs.extra_cycles=m6800.extra_cycles;
-        regs.insn=m6800.insn;
-        regs.cycles=m6800.cycles;
-        regs.port1_ddr=m6800.port1_ddr;
-        regs.port2_ddr=m6800.port2_ddr;
-        regs.port1_data=m6800.port1_data;
-        regs.port2_data=m6800.port2_data;
-        regs.tcsr=m6800.tcsr;
-        regs.pending_tcsr=m6800.pending_tcsr;
-        regs.irq2=m6800.irq2;
-        regs.ram_ctrl=m6800.ram_ctrl;
-        regs.counter.SetD(m6800.counter.D);
-        regs.output_compare.SetD(m6800.output_compare.D);
-        regs.input_capture=m6800.input_capture;
-        regs.timer_over.SetD(m6800.timer_over.D);
+        regs.x = m6800.x;
+        regs.a = m6800.a;
+        regs.b = m6800.b;
+        regs.cc = m6800.cc;
+        regs.wai_state = m6800.wai_state;
+        regs.nmi_state = m6800.nmi_state;
+        regs.irq_state[0] = m6800.irq_state[0];
+        regs.irq_state[1] = m6800.irq_state[1];
+        regs.ic_eddge = m6800.ic_eddge;
+        regs.irq_callback = m6800.irq_callback;
+        regs.extra_cycles = m6800.extra_cycles;
+        regs.insn = m6800.insn;
+        regs.cycles = m6800.cycles;
+        regs.port1_ddr = m6800.port1_ddr;
+        regs.port2_ddr = m6800.port2_ddr;
+        regs.port1_data = m6800.port1_data;
+        regs.port2_data = m6800.port2_data;
+        regs.tcsr = m6800.tcsr;
+        regs.pending_tcsr = m6800.pending_tcsr;
+        regs.irq2 = m6800.irq2;
+        regs.ram_ctrl = m6800.ram_ctrl;
+        regs.counterH = m6800.counterH;
+        regs.counterL = m6800.counterL;
+        regs.output_compareH = m6800.output_compareH;
+        regs.output_compareL = m6800.output_compareL;
+        regs.u16_input_capture = m6800.u16_input_capture;
+        regs.timer_overH = m6800.timer_overH;
+        regs.timer_overL = m6800.timer_overL;
         return regs;
     }
 
     @Override
     public void set_context(Object reg) {
-        m6800_Regs Regs = (m6800_Regs)reg;
+        m6800_Regs Regs = (m6800_Regs) reg;
         m6800.ppc = Regs.ppc;
         m6800.pc = Regs.pc;
         m6800.s = Regs.s;
-        m6800.x= Regs.x;
-        m6800.a=Regs.a;
-        m6800.b=Regs.b;
-        m6800.cc=Regs.cc;
-        m6800.wai_state=Regs.wai_state;
-        m6800.nmi_state=Regs.nmi_state;
-        m6800.irq_state[0]=Regs.irq_state[0];
-        m6800.irq_state[1]=Regs.irq_state[1];
-        m6800.ic_eddge=Regs.ic_eddge;
-        m6800.irq_callback=Regs.irq_callback;
-        m6800.extra_cycles=Regs.extra_cycles;
-        m6800.insn=Regs.insn;
-        m6800.cycles=Regs.cycles;
-        m6800.port1_ddr=Regs.port1_ddr;
-        m6800.port2_ddr=Regs.port2_ddr;
-        m6800.port1_data=Regs.port1_data;
-        m6800.port2_data=Regs.port2_data;
-        m6800.tcsr=Regs.tcsr;
-        m6800.pending_tcsr=Regs.pending_tcsr;
-        m6800.irq2=Regs.irq2;
-        m6800.ram_ctrl=Regs.ram_ctrl;
-        m6800.counter.SetD(Regs.counter.D);
-        m6800.output_compare.SetD(Regs.output_compare.D);
-        m6800.input_capture=Regs.input_capture;
-        m6800.timer_over.SetD(Regs.timer_over.D);
+        m6800.x = Regs.x;
+        m6800.a = Regs.a;
+        m6800.b = Regs.b;
+        m6800.cc = Regs.cc;
+        m6800.wai_state = Regs.wai_state;
+        m6800.nmi_state = Regs.nmi_state;
+        m6800.irq_state[0] = Regs.irq_state[0];
+        m6800.irq_state[1] = Regs.irq_state[1];
+        m6800.ic_eddge = Regs.ic_eddge;
+        m6800.irq_callback = Regs.irq_callback;
+        m6800.extra_cycles = Regs.extra_cycles;
+        m6800.insn = Regs.insn;
+        m6800.cycles = Regs.cycles;
+        m6800.port1_ddr = Regs.port1_ddr;
+        m6800.port2_ddr = Regs.port2_ddr;
+        m6800.port1_data = Regs.port1_data;
+        m6800.port2_data = Regs.port2_data;
+        m6800.tcsr = Regs.tcsr;
+        m6800.pending_tcsr = Regs.pending_tcsr;
+        m6800.irq2 = Regs.irq2;
+        m6800.ram_ctrl = Regs.ram_ctrl;
+        m6800.counterH = Regs.counterH;
+        m6800.counterL = Regs.counterL;
+        m6800.output_compareH = Regs.output_compareH;
+        m6800.output_compareL = Regs.output_compareL;
+        m6800.u16_input_capture = Regs.u16_input_capture;
+        m6800.timer_overH = Regs.timer_overH;
+        m6800.timer_overL = Regs.timer_overL;
         CHANGE_PC();
-	CHECK_IRQ_LINES();
+        CHECK_IRQ_LINES();
     }
 
     @Override
@@ -1699,7 +1722,7 @@ public class m6800 extends cpu_interface {
                 /* active eddge in */
                 m6800.tcsr |= TCSR_ICF;
                 m6800.pending_tcsr |= TCSR_ICF;
-                m6800.input_capture = (int) m6800.counter.L;
+                m6800.u16_input_capture = (int) m6800.counterL;
                 MODIFIED_tcsr();
                 if ((m6800.cc & 0x10) == 0) {
                     CHECK_IRQ2();

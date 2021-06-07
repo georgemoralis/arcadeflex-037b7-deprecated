@@ -918,29 +918,29 @@ public class m6803 extends m6800 {
                         m6800.tcsr &= ~TCSR_TOF;
                         MODIFIED_tcsr();
                     }
-                    return (int) (m6800.output_compare.L >> 8 & 0xFF);//m6800.output_compare.b.h;
+                    return (int) (m6800.output_compareL >> 8 & 0xFF);//m6800.output_compare.b.h;
                 case 0x0a:
-                    return (int) (m6800.output_compare.L & 0xFF);//m6800.counter.b.l;
+                    return (int) (m6800.output_compareL & 0xFF);//m6800.counter.b.l;
                 case 0x0b:
                     if ((m6800.pending_tcsr & TCSR_OCF) == 0) {
                         m6800.tcsr &= ~TCSR_OCF;
                         MODIFIED_tcsr();
                     }
-                    return (int) (m6800.output_compare.L >> 8 & 0xFF);//m6800.output_compare.b.h;
+                    return (int) (m6800.output_compareL >> 8 & 0xFF);//m6800.output_compare.b.h;
                 case 0x0c:
                     if ((m6800.pending_tcsr & TCSR_OCF) == 0) {
                         m6800.tcsr &= ~TCSR_OCF;
                         MODIFIED_tcsr();
                     }
-                    return (int) (m6800.output_compare.L & 0xFF);//m6800.counter.b.l;
+                    return (int) (m6800.output_compareL & 0xFF);//m6800.counter.b.l;
                 case 0x0d:
                     if ((m6800.pending_tcsr & TCSR_ICF) == 0) {
                         m6800.tcsr &= ~TCSR_ICF;
                         MODIFIED_tcsr();
                     }
-                    return (m6800.input_capture >> 0) & 0xff;
+                    return (m6800.u16_input_capture >> 0) & 0xff;
                 case 0x0e:
-                    return (m6800.input_capture >> 8) & 0xff;
+                    return (m6800.u16_input_capture >> 8) & 0xff;
                 case 0x0f:
                 case 0x10:
                 case 0x11:
@@ -1035,25 +1035,25 @@ public class m6803 extends m6800 {
                 case 0x09:
                     latch09 = data & 0xff;
                     /* 6301 only */
-                    m6800.counter.SetL(0xfff8);
-                    m6800.timer_over.SetL(m6800.counter.H);
+                    m6800.counterL=0xfff8;
+                    m6800.timer_overL=m6800.counterH;
                     MODIFIED_counters();
                     break;
                 case 0x0a:
                     /* 6301 only */
-                    m6800.counter.SetL((latch09 << 8) | (data & 0xff));
-                    m6800.timer_over.SetL(m6800.counter.H);
+                    m6800.counterL=(latch09 << 8) | (data & 0xff);
+                    m6800.timer_overL=m6800.counterH;
                     MODIFIED_counters();
                     break;
                 case 0x0b:
-                    if ((m6800.output_compare.L >> 8 & 0xFF) != data) {
-                        m6800.output_compare.SetLH(data);
+                    if ((m6800.output_compareL >> 8 & 0xFF) != data) {
+                        m6800.output_compareL=((data << 8) & 0xFF) | (m6800.output_compareL & 0xFF);
                         MODIFIED_counters();
                     }
                     break;
                 case 0x0c:
-                    if ((m6800.output_compare.L & 0xFF) != data) {
-                        m6800.output_compare.SetLL(data);
+                    if ((m6800.output_compareL & 0xFF) != data) {
+                        m6800.output_compareL = ((m6800.output_compareL << 8) & 0xFF) | (data & 0xFF);
                         MODIFIED_counters();
                     }
                     break;
