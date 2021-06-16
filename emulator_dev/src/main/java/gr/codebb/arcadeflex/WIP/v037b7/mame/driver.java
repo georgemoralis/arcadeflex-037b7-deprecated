@@ -177,6 +177,7 @@ import static gr.codebb.arcadeflex.WIP.v037b7.drivers.aliens.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.flkatck.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.ajax.*;
 import static gr.codebb.arcadeflex.WIP.v037b7.drivers.simpsons.*;
+import static gr.codebb.arcadeflex.WIP.v037b7.drivers._88games.*;
 
 public class driver {
 
@@ -2331,13 +2332,9 @@ public class driver {
         // driver_devstor3,	/* GX890 (c) 1988 */
         /*TODO*/
         // driver_garuka,	/* GX890 (c) 1988 (Japan) */
-        /*TODO*/
-        // driver_88games,	/* GX861 (c) 1988 */
-        /*TODO*/
-        // driver_konami88,	/* GX861 (c) 1988 */
-        /*TODO*/
-        // driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
-        /*TODO*/
+        driver_88games,	/* GX861 (c) 1988 */
+        driver_konami88,	/* GX861 (c) 1988 */
+        driver_hypsptsp,	/* GX861 (c) 1988 (Japan) */
         driver_gbusters, /* GX878 (c) 1988 */
         driver_crazycop, /* GX878 (c) 1988 (Japan) */
         /*TODO*/
